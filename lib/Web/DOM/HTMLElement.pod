@@ -18,7 +18,8 @@ class, following methods are available:
 
 Following methods return the current value or specify the new value
 for the attribute whose name is same as the method name: C<title>,
-C<lang>, C<itemid>, and C<accesskey>.
+C<lang>, C<itemid>, and C<accesskey>.  Following method returns the
+canonical value on getting: C<dir>.  [HTML]
 
 For example:
 
@@ -28,7 +29,7 @@ For example:
 
 Following methods return or specify whether the attribute whose name
 is same as the method name is set to the element or not: C<itemscope>
-and C<hidden>.
+and C<hidden>.  [HTML]
 
 For example:
 

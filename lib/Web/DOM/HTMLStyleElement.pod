@@ -1,0 +1,65 @@
+=head1 NAME
+
+Web::DOM::HTMLStyleElement - The DOM |HTMLStyleElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLStyleElement> class implements the DOM
+C<HTMLStyleElement> interface.  The class is used by the HTML C<style>
+element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->media
+
+=item $el->media ($string)
+
+Return or set the C<media> attribute.  [HTML]
+
+=item $boolean = $el->scoped
+
+=item $el->scoped ($boolean)
+
+Return or set whether the C<scoped> attribute is specified or not.
+[HTML]
+
+=item $string = $el->type
+
+=item $el->type ($string)
+
+Return or set the C<type> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#style>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

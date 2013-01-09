@@ -15,9 +15,15 @@ _define_reflect_string accesskey => 'accesskey';
 _define_reflect_boolean itemscope => 'itemscope';
 _define_reflect_boolean hidden => 'hidden';
 
-# XXX translate dir dataset itemtype itemref itemprop properties
-# itemvalue tabindex click focus blur accesskey_label draggable
-# dropzone contenteditable is_contenteditable contextmenu spellcheck
+_define_reflect_enumerated dir => 'dir', {
+  ltr => 'ltr',
+  rtl => 'rtl',
+  auto => 'auto',
+};
+
+# XXX translate dataset itemtype itemref itemprop properties itemvalue
+# tabindex click focus blur accesskey_label draggable dropzone
+# contenteditable is_contenteditable contextmenu spellcheck
 # forcespellcheck command* style
 
 package Web::DOM::HTMLUnknownElement;
@@ -35,40 +41,84 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLTitleElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Node;
 
-# XXX text
+sub text ($;$) {
+  if (@_ > 1) {
+    $_[0]->text_content ($_[1]);
+  }
+  
+  return join '',
+      map { $_->data }
+      grep { $_->node_type == TEXT_NODE } @{$_[0]->child_nodes};
+} # text
 
 package Web::DOM::HTMLBaseElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX href target
+# XXX href
+
+_define_reflect_string target => 'target';
 
 package Web::DOM::HTMLLinkElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 # XXX LinkStyle
+use Web::DOM::Element;
 
-# XXX href ...
+# XXX href rellist disabled sizes
+
+_define_reflect_string rel => 'rel';
+_define_reflect_string media => 'media';
+_define_reflect_string hreflang => 'hreflang';
+_define_reflect_string type => 'type';
+_define_reflect_string crossorigin => 'crossorigin';
 
 package Web::DOM::HTMLMetaElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX attrs
+_define_reflect_string name => 'name';
+_define_reflect_string content => 'content';
+_define_reflect_string http_equiv => 'http-equiv';
 
 package Web::DOM::HTMLStyleElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 # XXX LinkStyle
+use Web::DOM::Element;
 
-# XXX attrs
+# XXX disabled
+
+_define_reflect_string type => 'type';
+_define_reflect_string media => 'media';
+_define_reflect_boolean scoped => 'scoped';
 
 package Web::DOM::HTMLScriptElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Node;
+use Web::DOM::Element;
 
-# XXX attrs
+# XXX src async
+
+_define_reflect_string type => 'type';
+_define_reflect_string charset => 'charset';
+_define_reflect_string crossorigin => 'crossorigin';
+_define_reflect_boolean defer => 'defer';
+
+sub text ($;$) {
+  if (@_ > 1) {
+    $_[0]->text_content ($_[1]);
+  }
+  
+  return join '',
+      map { $_->data }
+      grep { $_->node_type == TEXT_NODE } @{$_[0]->child_nodes};
+} # text
 
 package Web::DOM::HTMLBodyElement;
 our $VERSION = '1.0';

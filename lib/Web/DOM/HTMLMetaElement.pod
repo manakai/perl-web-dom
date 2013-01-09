@@ -1,0 +1,65 @@
+=head1 NAME
+
+Web::DOM::HTMLMetaElement - The DOM |HTMLMetaElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLMetaElement> class implements the DOM
+C<HTMLMetaElement> interface.  The class is used by the HTML C<meta>
+element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+
+=item $string = $el->content
+
+=item $el->content ($string)
+
+Return or set the C<content> attribute.  [HTML]
+
+=item $string = $el->http_equiv
+
+=item $el->http_equiv ($string)
+
+Return or set the C<http-equiv> attribute.  [HTML]
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the C<name> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#meta>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
