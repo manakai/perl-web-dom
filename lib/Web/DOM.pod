@@ -194,7 +194,7 @@ the Git repository.
 Following features require the perl-web-markup package
 <https://github.com/manakai/perl-web-markup> (L<Web::HTML::Parser> and
 its family): C<inner_html>, C<outer_html>, C<insert_adjacent_html>,
-and C<DOMParser>.
+C<DOMParser>, and C<XMLSerializer>.
 
 Following features require the L<Web::CSS::Selectors::API> module in
 the perl-web-css package <https://github.com/manakai/perl-web-css>:
