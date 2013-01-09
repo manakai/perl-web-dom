@@ -30,7 +30,7 @@ Return or set the C<target> attribute.  [HTML]
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#base>.
+<http://www.whatwg.org/specs/web-apps/current-work/#the-base-element>.
 
 =back
 

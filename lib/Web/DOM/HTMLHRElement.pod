@@ -1,11 +1,11 @@
 =head1 NAME
 
-Web::DOM::HTMLHeadElement - The DOM |HTMLHeadElement| object
+Web::DOM::HTMLHRElement - The DOM |HTMLHRElement| object
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::HTMLHeadElement> class implements the DOM
-C<HTMLHeadElement> interface.  The class is used by the HTML C<head>
+The C<Web::DOM::HTMLHRElement> class implements the DOM
+C<HTMLHRElement> interface.  The class is used by the HTML C<hr>
 element.
 
 =head1 METHODS
@@ -26,7 +26,7 @@ XXX
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-head-element>.
+<http://www.whatwg.org/specs/web-apps/current-work/#the-hr-element>.
 
 =back
 

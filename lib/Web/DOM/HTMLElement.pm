@@ -123,8 +123,7 @@ sub text ($;$) {
 package Web::DOM::HTMLBodyElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
-
-# XXX attrs
+# XXX WindowEventHandlers
 
 package Web::DOM::HTMLHeadingElement;
 our $VERSION = '1.0';

@@ -43,7 +43,7 @@ Return or set the C<type> attribute.  [HTML]
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#style>.
+<http://www.whatwg.org/specs/web-apps/current-work/#the-style-element>.
 
 =back
 

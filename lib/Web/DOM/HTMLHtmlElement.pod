@@ -26,7 +26,7 @@ XXX
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#html>.
+<http://www.whatwg.org/specs/web-apps/current-work/#the-html-element>.
 
 =back
 

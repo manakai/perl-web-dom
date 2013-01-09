@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::HTMLHeadElement - The DOM |HTMLHeadElement| object
+Web::DOM::HTMLQuoteElement - The DOM |HTMLQuoteElement| object
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::HTMLHeadElement> class implements the DOM
-C<HTMLHeadElement> interface.  The class is used by the HTML C<head>
-element.
+The C<Web::DOM::HTMLQuoteElement> class implements the DOM
+C<HTMLQuoteElement> interface.  The class is used by the HTML
+C<blockquote> and C<q> elements.
 
 =head1 METHODS
 
@@ -26,7 +26,8 @@ XXX
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-head-element>.
+<http://www.whatwg.org/specs/web-apps/current-work/#the-blockquote-element>,
+<http://www.whatwg.org/specs/web-apps/current-work/#the-q-element>.
 
 =back
 
