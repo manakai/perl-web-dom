@@ -40,6 +40,7 @@ for my $test (
   ['script', 'charset'],
   ['script', 'type'],
   ['script', 'crossorigin'],
+  ['ol', 'type'],
 ) {
   my $attr = $test->[1];
   test {
@@ -83,6 +84,7 @@ for my $attr (qw(itemscope hidden)) {
 for my $test (
   ['style', 'scoped'],
   ['script', 'defer'],
+  ['ol', 'reversed'],
 ) {
   my $attr = $test->[1];
   test {

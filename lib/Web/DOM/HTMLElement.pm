@@ -150,8 +150,12 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLOListElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX attrs
+_define_reflect_string type => 'type';
+_define_reflect_boolean reversed => 'reversed';
+
+# XXX start
 
 package Web::DOM::HTMLUListElement;
 our $VERSION = '1.0';
@@ -160,8 +164,10 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLLIElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX attrs
+# XXX
+#_define_reflect_long value => 'value';
 
 package Web::DOM::HTMLDListElement;
 our $VERSION = '1.0';
