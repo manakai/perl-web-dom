@@ -166,8 +166,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX
-#_define_reflect_long value => 'value';
+_define_reflect_long value => 'value', sub { 0 };
 
 package Web::DOM::HTMLDListElement;
 our $VERSION = '1.0';

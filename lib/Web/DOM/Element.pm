@@ -753,6 +753,30 @@ sub _define_reflect_boolean ($$) {
   }, $class, $perl_name, $content_name, $content_name, $content_name or die $@;
 } # _define_reflect_boolean
 
+push @EXPORT, qw(_define_reflect_long);
+sub _define_reflect_long ($$$) {
+  my ($perl_name, $content_name, $get_default) = @_;
+  my $class = caller;
+  eval sprintf q{
+    sub %s::%s ($;$) {
+      if (@_ > 1) {
+        # WebIDL: long
+        $_[0]->set_attribute_ns
+            (undef, '%s', unpack 'l', pack 'L', $_[1] % 2**32);
+        return unless defined wantarray;
+      }
+
+      my $v = $_[0]->get_attribute_ns (undef, '%s');
+      if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
+        my $v = $1;
+        return 0+$v if -2**32 <= $v and $v <= 2**32-1;
+      }
+      return $get_default->($_[0]);
+    }
+    1;
+  }, $class, $perl_name, $content_name, $content_name or die $@;
+} # _define_reflect_long
+
 _define_reflect_string id => 'id';
 
 sub manakai_ids ($) {

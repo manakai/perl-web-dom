@@ -167,6 +167,9 @@ use Web::DOM::Document;
         is $node->substring_data (0, 20.5), '';
         is $node->substring_data (0, -1), '';
         is $node->substring_data (0, 2**32), '';
+        is $node->substring_data (0+"inf", 2**32), '';
+        is $node->substring_data (0+"-inf", 2**32), '';
+        is $node->substring_data (0+"nan", 2**32), '';
         is $node->substring_data (2**32, 20), '';
         for (
           [1, 40],
@@ -187,7 +190,7 @@ use Web::DOM::Document;
           is $@->message, 'Offset is greater than the length';
         }
         done $c;
-      } n => 8 + 4*9, name => 'substring_data empty';
+      } n => 11 + 4*9, name => 'substring_data empty';
     }
   }
 
@@ -224,6 +227,9 @@ use Web::DOM::Document;
         is $node->substring_data (13, -1), "a";
         is $node->substring_data (13, 2**31-1), "a";
         is $node->substring_data (13, 0), "";
+        is $node->substring_data (13, 0+"inf"), "";
+        is $node->substring_data (13, 0+"-inf"), "";
+        is $node->substring_data (13, 0+"nan"), "";
         is $node->substring_data (14, 0), "";
         is $node->substring_data (14, 1), "";
         is $node->substring_data (14, 10), "";
@@ -242,7 +248,7 @@ use Web::DOM::Document;
           is $@->message, 'Offset is greater than the length';
         }
         done $c;
-      } n => 28 + 4*5, name => 'substring_data not empty';
+      } n => 31 + 4*5, name => 'substring_data not empty';
     }
   }
 
