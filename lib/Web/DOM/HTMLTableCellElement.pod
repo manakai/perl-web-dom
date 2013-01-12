@@ -1,0 +1,62 @@
+=head1 NAME
+
+Web::DOM::HTMLTableCellElement - The DOM |HTMLTableCellElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLTableCellElement> class implements the DOM
+C<HTMLTableCellElement> interface.  The class is used by the HTML
+C<td> and C<th> elements.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $integer = $el->colspan
+
+=item $el->colspan ($integer)
+
+Return or set the C<colspan> attribute.  [HTML]
+
+=item $integer = $el->spanspan
+
+=item $el->spanspan ($integer)
+
+Return or set the C<spanspan> attribute.  [HTML]
+
+=back
+
+The C<td> element also implements the
+L<Web::DOM::HTMLTableDataCellElement> interface.  The C<th> element
+also implements the L<Web::DOM::HTMLTableHeaderCellElement> interface.
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#attributes-common-to-td-and-th-elements>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

@@ -1,0 +1,65 @@
+=head1 NAME
+
+Web::DOM::HTMLTableHeaderCellElement - The DOM |HTMLTableHeaderCellElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLTableHeaderCellElement> class implements the DOM
+C<HTMLTableHeaderCellElement> interface.  The class is used by the
+HTML C<th> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>,
+L<Web::DOM::HTMLElement>, and L<Web::DOM::HTMLTableCellElement>, the
+following method is available:
+
+=over 4
+
+=item $string = $el->abbr
+
+=item $el->abbr ($string)
+
+Return or set the C<abbr> attribute.  [HTML]
+
+=item $string = $el->scope
+
+=item $el->scope ($string)
+
+Return or set the C<scope> attribute.  [HTML]
+
+=item $string = $el->sorted
+
+=item $el->sorted ($string)
+
+Return or set the C<sorted> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-th-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

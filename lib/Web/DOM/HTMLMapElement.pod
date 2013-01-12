@@ -1,0 +1,52 @@
+=head1 NAME
+
+Web::DOM::HTMLMapElement - The DOM |HTMLMapElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLMapElement> class implements the DOM
+C<HTMLMapElement> interface.  The class is used by the HTML C<map>
+element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the C<name> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-map-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

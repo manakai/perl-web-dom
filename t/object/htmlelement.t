@@ -2,8 +2,10 @@ use strict;
 use warnings;
 use Path::Class;
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
+use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
 use Test::X1;
 use Test::More;
+use Test::DOM::Exception;
 use Web::DOM::Document;
 
 for my $attr (qw(title lang itemid accesskey)) {
@@ -73,10 +75,20 @@ for my $test (
   ['source', 'type'],
   ['source', 'media'],
   ['track', 'srclang'],
-  ['track', 'kind'],
   ['track', 'label'],
   ['video', 'crossorigin'],
   ['audio', 'crossorigin'],
+  ['map', 'name'],
+  ['area', 'alt'],
+  ['area', 'coords'],
+  ['area', 'shape'],
+  ['area', 'target'],
+  ['area', 'type'],
+  ['area', 'rel'],
+  ['area', 'hreflang'],
+  ['area', 'download'],
+  ['th', 'abbr'],
+  ['th', 'sorted'],
 ) {
   my $attr = $test->[1];
   test {
@@ -134,6 +146,7 @@ for my $test (
   ['audio', 'controls'],
   ['video', 'muted', 'default_muted'],
   ['audio', 'muted', 'default_muted'],
+  ['table', 'sortable'],
 ) {
   my $attr = $test->[2] // $test->[1];
   test {
@@ -306,6 +319,12 @@ for my $test (
 for my $test (
   ['video', 'width', 0],
   ['video', 'height', 0],
+  ['canvas', 'width', 300],
+  ['canvas', 'height', 150],
+  ['td', 'colspan', 1],
+  ['td', 'rowspan', 1],
+  ['th', 'colspan', 1],
+  ['th', 'rowspan', 1],
 ) {
   test {
     my $c = shift;
@@ -315,7 +334,7 @@ for my $test (
     is $el->$attr, $test->[2];
     for (
       [0 => 0],
-      [-10 => 0, 2**32-10],
+      [-10 => $test->[2], 2**32-10],
       [0.0006 => 0],
       [0.6 => 0],
       [0.9996 => 0],
@@ -328,22 +347,22 @@ for my $test (
       [(1/"inf") => 0],
       [(1/"-inf") => 0],
       ["abc" => 0],
-      ["-120abc" => 0, 2**32-120],
-      ["-120.524abc" => 0, 2**32-120],
+      ["-120abc" => $test->[2], 2**32-120],
+      ["-120.524abc" => $test->[2], 2**32-120],
       ["0 but true" => 0],
       ["34e6" => 34000000],
       ["34e-6" => 0],
       [2**32+1 => 1],
       [2**32 => 0],
-      [2**32-1 => 0, '4294967295'],
-      [2**32-14.6 => 0, '4294967281'],
-      [2**31+1 => 0, 2**31+1],
-      [2**31 => 0, 2**31],
+      [2**32-1 => $test->[2], '4294967295'],
+      [2**32-14.6 => $test->[2], '4294967281'],
+      [2**31+1 => $test->[2], 2**31+1],
+      [2**31 => $test->[2], 2**31],
       [2**31-1 => 2**31-1, 2**31-1],
-      [-2**31+1 => 0, 2**31+1],
-      [-2**31 => 0, 2**31],
+      [-2**31+1 => $test->[2], 2**31+1],
+      [-2**31 => $test->[2], 2**31],
       [-2**31-1 => 2**31-1],
-      [-2**31+1.7 => 0, 2**31+2],
+      [-2**31+1.7 => $test->[2], 2**31+2],
       [-2**31-1.7 => 2**31-1],
     ) {
       $el->$attr ($_->[0]);
@@ -355,7 +374,7 @@ for my $test (
       ["" => $test->[2]],
       ["0" => 0],
       ["+0.12" => 0],
-      ["-0.12" => $test->[2]],
+      ["-0.12" => 0],
       ["120.61" => 120],
       ["-6563abc" => $test->[2]],
       ["2147483647" => 2**31-1],
@@ -381,6 +400,168 @@ for my $test (
     done $c;
   } n => 1 + 2*30 + 1*22, name => ['reflect unsigned long', @$test];
 }
+
+for my $test (
+  ['colgroup', 'span', 1],
+  ['col', 'span', 1],
+) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($test->[0]);
+    my $attr = $test->[1];
+    is $el->$attr, $test->[2];
+    for (
+      [1 => 1],
+      [2 => 2],
+      [1265 => 1265],
+      [-10 => $test->[2], 2**32-10],
+      ["-120abc" => $test->[2], 2**32-120],
+      ["-120.524abc" => $test->[2], 2**32-120],
+      ["34e6" => 34000000],
+      [2**32+1 => 1],
+      [2**32-1 => $test->[2], '4294967295'],
+      [2**32-14.6 => $test->[2], '4294967281'],
+      [2**31+1 => $test->[2], 2**31+1],
+      [2**31 => $test->[2], 2**31],
+      [2**31-1 => 2**31-1, 2**31-1],
+      [-2**31+1 => $test->[2], 2**31+1],
+      [-2**31 => $test->[2], 2**31],
+      [-2**31-1 => 2**31-1],
+      [-2**31+1.7 => $test->[2], 2**31+2],
+      [-2**31-1.7 => 2**31-1],
+    ) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, $_->[1], [$_->[0], 'idl attr'];
+      is $el->get_attribute ($attr), $_->[2] // $_->[1],
+          [$_->[0], 'content attr'];
+    }
+    $el->set_attribute ($attr => '361');
+    for (
+      [0 => 0],
+      [0.0006 => 0],
+      [0.6 => 0],
+      [0.9996 => 0],
+      [-0.1 => 0],
+      [-0.6 => 0],
+      [-0.9 => 0],
+      [(0+"inf") => 0],
+      [(0+"-inf") => 0],
+      [(0+"nan") => 0],
+      [(1/"inf") => 0],
+      [(1/"-inf") => 0],
+      ["abc" => 0],
+      ["0 but true" => 0],
+      [2**32 => 0],
+      ["34e-6" => 0],
+    ) {
+      dies_here_ok {
+        $el->$attr ($_->[0]);
+      };
+      isa_ok $@, 'Web::DOM::Exception';
+      is $@->name, 'IndexSizeError';
+      is $@->message, 'Cannot set the value to zero';
+      is $el->$attr, 361;
+      is $el->get_attribute ($attr), 361;
+    }
+    for (
+      ["" => $test->[2]],
+      ["0" => 1],
+      ["+0.12" => 1],
+      ["-0.12" => 1],
+      ["120.61" => 120],
+      ["-6563abc" => $test->[2]],
+      ["2147483647" => 2**31-1],
+      ["2147483648" => $test->[2]],
+      ["1452151544454" => $test->[2]],
+      ["-1452151544454" => $test->[2]],
+      ["abc" => $test->[2]],
+      ["inf" => $test->[2]],
+      ["-inf" => $test->[2]],
+      ["nan" => $test->[2]],
+      [" 535" => 535],
+      [" -655" => $test->[2]],
+      ["- 513" => $test->[2]],
+      ["44_524" => 44],
+      ["0x124" => 1],
+      ["213e5" => 213],
+    ) {
+      test {
+        $el->set_attribute ($attr => $_->[0]);
+        is $el->$attr, $_->[1];
+      } $c, name => 'getter', n => 1;
+    }
+    done $c;
+  } n => 1 + 2*17 + 6*16 + 1*22, name => ['reflect unsigned long limited', @$test];
+}
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('track');
+  is $el->kind, 'subtitles';
+  for (
+    [captions => 'captions'],
+    [DEscRiptions => 'descriptions'],
+    [DescRiPTIons => 'descriptions'],
+    [SubTitles => 'subtitles'],
+    [ChapTERs => 'chapters'],
+    [Metadata => 'metadata'],
+  ) {
+    $el->kind ($_->[0]);
+    is $el->kind, $_->[1];
+    is $el->get_attribute ('kind'), $_->[0];
+  }
+  for (
+    ['ChaptErS  '],
+    [''],
+    ['0'],
+    ['#invalid'],
+    ['#missing'],
+  ) {
+    $el->kind ($_->[0]);
+    is $el->kind, 'subtitles';
+    is $el->get_attribute ('kind'), $_->[0];
+  }
+  $el->kind (undef);
+  is $el->kind, 'subtitles';
+  is $el->get_attribute ('kind'), '';
+  done $c;
+} n => 3 + 6*2 + 5*2, name => 'kind';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('th');
+  is $el->scope, '';
+  for (
+    [row => 'row'],
+    [COL => 'col'],
+    [rowGroup => 'rowgroup'],
+    [coLGrouP => 'colgroup'],
+  ) {
+    $el->scope ($_->[0]);
+    is $el->scope, $_->[1];
+    is $el->get_attribute ('scope'), $_->[0];
+  }
+  for (
+    ['ChaptErS  '],
+    ['row group'],
+    [''],
+    ['0'],
+    ['#invalid'],
+    ['#missing'],
+    ['auto'],
+  ) {
+    $el->scope ($_->[0]);
+    is $el->scope, '';
+    is $el->get_attribute ('scope'), $_->[0];
+  }
+  $el->scope (undef);
+  is $el->scope, '';
+  is $el->get_attribute ('scope'), '';
+  done $c;
+} n => 3 + 4*2 + 7*2, name => 'scope';
 
 run_tests;
 

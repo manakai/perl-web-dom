@@ -340,7 +340,14 @@ use Web::DOM::Element;
 
 # XXX src
 
-_define_reflect_string kind => 'kind';
+_define_reflect_enumerated kind => 'kind', {
+  'subtitles' => 'subtitles',
+  'captions' => 'captions',
+  'descriptions' => 'descriptions',
+  'chapters' => 'chapters',
+  'metadata' => 'metadata',
+  '#missing' => 'subtitles',
+};
 _define_reflect_string srclang => 'srclang';
 _define_reflect_string label => 'label';
 _define_reflect_boolean default => 'default';
@@ -357,26 +364,46 @@ sub ERROR () { 3 }
 package Web::DOM::HTMLCanvasElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_unsigned_long width => 'width', sub { 300 };
+_define_reflect_unsigned_long height => 'height', sub { 150 };
+
+# XXX and more
 
 package Web::DOM::HTMLMapElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_string name => 'name';
+
+# XXX areas images
 
 package Web::DOM::HTMLAreaElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX href ping rel_list URLUtils
+
+_define_reflect_string alt => 'alt';
+_define_reflect_string coords => 'coords';
+_define_reflect_string shape => 'shape';
+_define_reflect_string target => 'target';
+_define_reflect_string download => 'download';
+_define_reflect_string rel => 'rel';
+_define_reflect_string hreflang => 'hreflang';
+_define_reflect_string type => 'type';
 
 package Web::DOM::HTMLTableElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_boolean sortable => 'sortable';
+
+# XXX more...
 
 package Web::DOM::HTMLTableCaptionElement;
 our $VERSION = '1.0';
@@ -385,8 +412,9 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLTableColElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX
+_define_reflect_unsigned_long_positive span => 'span', sub { 1 };
 
 package Web::DOM::HTMLTableSectionElement;
 our $VERSION = '1.0';
@@ -403,8 +431,12 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLTableCellElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_unsigned_long colspan => 'colspan', sub { 1 };
+_define_reflect_unsigned_long rowspan => 'rowspan', sub { 1 };
+
+# XXX headers cell_index
 
 package Web::DOM::HTMLTableDataCellElement;
 our $VERSION = '1.0';
@@ -413,8 +445,19 @@ push our @ISA, qw(Web::DOM::HTMLTableCellElement);
 package Web::DOM::HTMLTableHeaderCellElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLTableCellElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_enumerated scope => 'scope', {
+  row => 'row',
+  col => 'col',
+  rowgroup => 'rowgroup',
+  colgroup => 'colgroup',
+  # #missing => #auto
+};
+_define_reflect_string abbr => 'abbr';
+_define_reflect_string sorted => 'sorted';
+
+# XXX sort
 
 package Web::DOM::HTMLFormElement;
 our $VERSION = '1.0';
