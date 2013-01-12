@@ -120,6 +120,28 @@ for my $test (
   ['menu', 'type'],
   ['menuitem', 'label'],
   ['menuitem', 'radiogroup'],
+  ['applet', 'align'],
+  ['applet', 'alt'],
+  ['applet', 'archive'],
+  ['applet', 'code'],
+  ['applet', 'height'],
+  ['applet', 'name'],
+  ['applet', 'width'],
+  ['marquee', 'bgcolor'],
+  ['marquee', 'height'],
+  ['marquee', 'width'],
+  ['frameset', 'cols'],
+  ['frameset', 'rows'],
+  ['frame', 'name'],
+  ['frame', 'scrolling'],
+  ['frame', 'frameborder'],
+  ['frame', 'marginwidth'],
+  ['frame', 'marginheight'],
+  ['a', 'coords'],
+  ['a', 'charset'],
+  ['a', 'name'],
+  ['a', 'rev'],
+  ['a', 'shape'],
 ) {
   my $attr = $test->[1];
   test {
@@ -208,6 +230,8 @@ for my $test (
   ['menuitem', 'default'],
   ['menuitem', 'disabled'],
   ['dialog', 'open'],
+  ['marquee', 'truespeed'],
+  ['frame', 'noresize'],
 ) {
   my $attr = $test->[2] // $test->[1];
   test {
@@ -457,6 +481,12 @@ for my $test (
   ['th', 'rowspan', 1],
   ['input', 'size', 0],
   ['select', 'size', 0],
+  ['applet', 'hspace', 0],
+  ['applet', 'vspace', 0],
+  ['marquee', 'hspace', 0],
+  ['marquee', 'vspace', 0],
+  ['marquee', 'scrollamount', 6],
+  ['marquee', 'scrolldelay', 85],
 ) {
   test {
     my $c = shift;
@@ -837,6 +867,25 @@ for my $test (
      [command => 'command'],
      [checkbox => 'checkbox'],
      [radio => 'radio'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default']]},
+  {element => 'marquee',
+   attr => 'behavior',
+   default => 'scroll',
+   valid_values => [
+     [Scroll => 'scroll'],
+     [SliDe => 'slide'],
+     [alTErnate => 'alternate'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default']]},
+  {element => 'marquee',
+   attr => 'direction',
+   default => 'left',
+   valid_values => [
+     [LEFT => 'left'],
+     [righT => 'right'],
+     [up => 'up'],
+     [dOWN => 'down'],
    ],
    invalid_values => [[''], ['0'], [undef], ['default']]},
 ) {

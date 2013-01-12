@@ -110,7 +110,7 @@ See also L<Web::DOM/DEPENDENCY>.
 
 =item $name = $el->local_name
 
-=item $name = $el->manakai_local_name (DEPRECATED)
+=item $name = $el->manakai_local_name [DEPRECATED]
 
 Return the local name of the element.  [DOM] [MANAKAI]
 

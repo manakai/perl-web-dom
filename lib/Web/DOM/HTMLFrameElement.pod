@@ -1,0 +1,85 @@
+=head1 NAME
+
+Web::DOM::HTMLFrameElement - The DOM |HTMLFrameElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLFrameElement> class implements the DOM
+C<HTMLFrameElement> interface.  The class is used by the HTML C<frame>
+element.
+
+The interface, as well as the C<frame> element, is obsolete.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->frameborder [OBSOLETE]
+
+=item $el->frameborder ($string) [OBSOLETE]
+
+Return or set the C<frameborder> attribute.  [HTML]
+
+=item $string = $el->marginheight [OBSOLETE]
+
+=item $el->marginheight ($string) [OBSOLETE]
+
+Return or set the C<marginheight> attribute.  [HTML]
+
+=item $string = $el->marginwidth [OBSOLETE]
+
+=item $el->marginwidth ($string) [OBSOLETE]
+
+Return or set the C<marginwidth> attribute.  [HTML]
+
+=item $string = $el->name [OBSOLETE]
+
+=item $el->name ($string) [OBSOLETE]
+
+Return or set the C<name> attribute.  [HTML]
+
+=item $boolean = $el->noresize [OBSOLETE]
+
+=item $el->noresize ($boolean) [OBSOLETE]
+
+Return or set whether the C<noresize> attribute is specified or not.
+[HTML]
+
+=item $string = $el->scrolling [OBSOLETE]
+
+=item $el->scrolling ($string) [OBSOLETE]
+
+Return or set the C<scrolling> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-frames-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

@@ -189,6 +189,12 @@ _define_reflect_string rel => 'rel';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
 
+_define_reflect_string coords => 'coords';
+_define_reflect_string charset => 'charset';
+_define_reflect_string name => 'name';
+_define_reflect_string rev => 'rev';
+_define_reflect_string shape => 'shape';
+
 sub text ($;$) {
   if (@_ > 1) {
     $_[0]->text_content ($_[1]);
@@ -395,6 +401,8 @@ _define_reflect_string download => 'download';
 _define_reflect_string rel => 'rel';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
+
+_define_reflect_boolean nohref => 'nohref';
 
 package Web::DOM::HTMLTableElement;
 our $VERSION = '1.0';
@@ -823,26 +831,71 @@ _define_reflect_boolean open => 'open';
 package Web::DOM::HTMLAppletElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX codebase object
+
+_define_reflect_string align => 'align';
+_define_reflect_string alt => 'alt';
+_define_reflect_string archive => 'archive';
+_define_reflect_string code => 'code';
+_define_reflect_string height => 'height';
+_define_reflect_string name => 'name';
+_define_reflect_string width => 'width';
+_define_reflect_unsigned_long hspace => 'hspace', sub { 0 };
+_define_reflect_unsigned_long vspace => 'vspace', sub { 0 };
 
 package Web::DOM::HTMLMarqueeElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_enumerated behavior => 'behavior', {
+  'scroll' => 'scroll',
+  'slide' => 'slide',
+  'alternate' => 'alternate',
+  '#missing' => 'scroll',
+};
+_define_reflect_string bgcolor => 'bgcolor';
+_define_reflect_enumerated direction => 'direction', {
+  'left' => 'left',
+  'right' => 'right',
+  'up' => 'up',
+  'down' => 'down',
+  '#missing' => 'left',
+};
+_define_reflect_string height => 'height';
+_define_reflect_unsigned_long hspace => 'hspace', sub { 0 };
+_define_reflect_unsigned_long scrollamount => 'scrollamount', sub { 6 };
+_define_reflect_unsigned_long scrolldelay => 'scrolldelay', sub { 85 };
+_define_reflect_unsigned_long vspace => 'vspace', sub { 0 };
+_define_reflect_string width => 'width';
+_define_reflect_boolean truespeed => 'truespeed';
+
+# XXX loop on* start stop
 
 package Web::DOM::HTMLFrameSetElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+# XXX WindowEventHandlers
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_string cols => 'cols';
+_define_reflect_string rows => 'rows';
 
 package Web::DOM::HTMLFrameElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX src longdesc content*
+
+_define_reflect_string name => 'name';
+_define_reflect_string scrolling => 'scrolling';
+_define_reflect_string frameborder => 'frameborder';
+_define_reflect_boolean noresize => 'noresize';
+_define_reflect_string marginheight => 'marginheight';
+_define_reflect_string marginwidth => 'marginwidth';
 
 package Web::DOM::HTMLBaseFontElement;
 our $VERSION = '1.0';

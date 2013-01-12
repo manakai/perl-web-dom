@@ -694,6 +694,24 @@ sub _define_reflect_string ($$) {
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_string
 
+push @EXPORT, qw(_define_reflect_string_undef);
+sub _define_reflect_string_undef ($$) {
+  my ($perl_name, $content_name) = @_;
+  my $class = caller;
+  eval sprintf q{
+    sub %s::%s ($;$) {
+      if (@_ > 1) {
+        $_[0]->set_attribute_ns (undef, '%s', defined $_[1] ? $_[1] : '');
+        return unless defined wantarray;
+      }
+
+      my $v = $_[0]->get_attribute_ns (undef, '%s');
+      return defined $v ? $v : '';
+    }
+    1;
+  }, $class, $perl_name, $content_name, $content_name or die $@;
+} # _define_reflect_string_undef
+
 push @EXPORT, qw(_define_reflect_enumerated);
 sub _define_reflect_enumerated ($$$) {
   my ($perl_name, $content_name, $values) = @_;

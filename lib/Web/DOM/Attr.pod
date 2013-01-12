@@ -25,7 +25,7 @@ Return whether the attribute is C<id> or not.  [MANAKAI]
 
 =item $name = $attr->local_name
 
-=item $name = $attr->manakai_local_name (DEPRECATED)
+=item $name = $attr->manakai_local_name [DEPRECATED]
 
 Return the local name of the attribute.  [DOM] [MANAKAI]
 
@@ -41,7 +41,7 @@ an element, C<undef> is returned.  [DOMATTREXODUS]
 
 =item $name = $attr->name
 
-=item $name = $attr->manakai_name (DEPRECATED)
+=item $name = $attr->manakai_name [DEPRECATED]
 
 Return the attribute name.  [DOM] [MANAKAI]
 

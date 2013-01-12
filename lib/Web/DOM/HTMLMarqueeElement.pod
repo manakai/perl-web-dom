@@ -1,0 +1,109 @@
+=head1 NAME
+
+Web::DOM::HTMLMarqueeElement - The DOM |HTMLMarqueeElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLMarqueeElement> class implements the DOM
+C<HTMLMarqueeElement> interface.  The class is used by the HTML
+C<marquee> element.
+
+The interface, as well as the C<marquee> element, is obsolete.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->behavior [OBSOLETE]
+
+=item $el->behavior ($string) [OBSOLETE]
+
+Return or set the C<behavior> attribute.  [HTML]
+
+=item $string = $el->bgcolor [OBSOLETE]
+
+=item $el->bgcolor ($string) [OBSOLETE]
+
+Return or set the C<bgcolor> attribute.  [HTML]
+
+=item $string = $el->direction [OBSOLETE]
+
+=item $el->direction ($string) [OBSOLETE]
+
+Return or set the C<direction> attribute.  [HTML]
+
+=item $string = $el->height [OBSOLETE]
+
+=item $el->height ($string) [OBSOLETE]
+
+Return or set the C<height> attribute.  [HTML]
+
+=item $integer = $el->hspace [OBSOLETE]
+
+=item $el->hspace ($integer) [OBSOLETE]
+
+Return or set the C<hspace> attribute.  [HTML]
+
+=item $string = $el->scrollamount [OBSOLETE]
+
+=item $el->scrollamount ($string) [OBSOLETE]
+
+Return or set the C<scrollamount> attribute.  [HTML]
+
+=item $string = $el->scrolldelay [OBSOLETE]
+
+=item $el->scrolldelay ($string) [OBSOLETE]
+
+Return or set the C<scrolldelay> attribute.  [HTML]
+
+=item $boolean = $el->truespeed [OBSOLETE]
+
+=item $el->truespeed ($boolean) [OBSOLETE]
+
+Return or set whether the C<truespeed> attribute is specified or not.
+[HTML]
+
+=item $integer = $el->vspace [OBSOLETE]
+
+=item $el->vspace ($integer) [OBSOLETE]
+
+Return or set the C<vspace> attribute.  [HTML]
+
+=item $string = $el->width [OBSOLETE]
+
+=item $el->width ($string) [OBSOLETE]
+
+Return or set the C<width> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-marquee-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

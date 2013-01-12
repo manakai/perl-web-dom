@@ -47,6 +47,9 @@ Return or set the C<type> attribute.  [HTML]
 
 =back
 
+Following obsolete methods are also available: C<coords>, C<charset>,
+C<name>, C<rev>, and C<shape>.  [HTML]
+
 =head1 SPECIFICATION
 
 =over 4

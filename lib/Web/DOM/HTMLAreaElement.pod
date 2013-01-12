@@ -59,6 +59,8 @@ Return or set the C<type> attribute.  [HTML]
 
 =back
 
+The obsolete C<nohref> method is also available.  [HTML]
+
 =head1 SPECIFICATION
 
 =over 4

@@ -240,6 +240,14 @@ for my $test (
    ['HTMLUnknownElement']],
   [[HTML_NS, 'menuitem'], ['Element', 'HTMLElement', 'HTMLMenuItemElement'],
    ['HTMLUnknownElement']],
+  [[HTML_NS, 'applet'], ['Element', 'HTMLElement', 'HTMLAppletElement'],
+   ['HTMLUnknownElement']],
+  [[HTML_NS, 'marquee'], ['Element', 'HTMLElement', 'HTMLMarqueeElement'],
+   ['HTMLUnknownElement']],
+  [[HTML_NS, 'frameset'], ['Element', 'HTMLElement', 'HTMLFrameSetElement'],
+   ['HTMLUnknownElement']],
+  [[HTML_NS, 'frame'], ['Element', 'HTMLElement', 'HTMLFrameElement'],
+   ['HTMLUnknownElement']],
 ) {
   test {
     my $c = shift;
