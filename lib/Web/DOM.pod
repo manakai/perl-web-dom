@@ -239,12 +239,20 @@ setter, DOM3 configuration parameters, configuration parameters for
 DOM3 spec compatible DTD-based node operations, DOM3 DOMError,
 DOMErrorHandler, UserDataHandler, DOMLocator, isId and family,
 internalSubset, TypeInfo and schemaTypeInfo, DOM3 LS, namespaces for
-DOM3 events, DocumentType->implementation, URIReference,
-InternetMediaType, SerialWalker, overloaded operators C<==>, C<!=>,
-and C<.=>, write operations through overloaded C<@{}> and C<%{}>
-operators for NodeList, NamedNodeMap, and HTMLCollection.  Attr,
-Entity, and AttributeDefinition nodes can no longer contain Text
-nodes.
+DOM3 events, DocumentType->implementation,
+Document->createXHTMLDocument, URIReference, InternetMediaType,
+SerialWalker.  HTMLAnchorElement->media, HTMLAreaElement->media,
+HTMLCommandElement, HTMLDataGridElement, HTMLEventSourceElement,
+HTMLIsIndexElement, HTMLLegendElement->form,
+HTMLMenuElement->autosubmit, HTMLBlockquoteElement,
+HTMLStrictlyInlineContainerExtended,
+HTMLStructuredInlineContainerExtended,
+HTMLStructuredInlineContainerExtended, HTMLSectioningElementExtended,
+HTMLListElementExtended, HTMLDListElementExtended.  Overloaded
+operators C<==>, C<!=>, and C<.=>, write operations through overloaded
+C<@{}> and C<%{}> operators for NodeList, NamedNodeMap, and
+HTMLCollection.  Attr, Entity, and AttributeDefinition nodes can no
+longer contain Text nodes.
 
 By default the C<DocumentType> node can no longer contain
 C<ProcessingInstruction> nodes as children.  The old behavior can be
@@ -297,13 +305,14 @@ methods and attributes [DOM]; Range.prototype.createContextualFragment
 Element.prototype.manakaiComputedStyle,
 Window.prototype.manakaiGetComputedStyle, Window.prototype.setDocument
 
-=item HTML DOM [HTML]
-
 =item Atom DOM [ATOMDOM]
 
 =item WebVTT DOM [HTML]
 
 =back
+
+In addition, source codes of the modules include many "XXX" markers,
+indicating TODO items.
 
 =head1 AUTHOR
 

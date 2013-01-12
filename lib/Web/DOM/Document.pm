@@ -762,6 +762,12 @@ sub get_element_by_id ($$) {
   return undef;
 } # get_element_by_id
 
+# XXX HTML DOM
+
+sub clear ($) { }
+
+# XXX *color anchors applets all
+
 1;
 
 =head1 LICENSE

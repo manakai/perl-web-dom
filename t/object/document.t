@@ -592,6 +592,16 @@ test {
   done $c;
 } n => 1, name => 'get_element_by_id';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $doc->append_child ($el);
+  $doc->clear;
+  is $doc->child_nodes->length, 1;
+  done $c;
+} n => 1, name => 'clear';
+
 run_tests;
 
 =head1 LICENSE

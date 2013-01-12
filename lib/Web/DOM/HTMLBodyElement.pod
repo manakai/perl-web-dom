@@ -11,13 +11,9 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
-
-=over 4
-
-XXX
-
-=back
+and L<Web::DOM::HTMLElement>, the following obsolete methods are
+available: C<alink>, C<background>, C<bgcolor>, C<text>, C<link>, and
+C<vlink>.  [HTML]
 
 =head1 SPECIFICATION
 

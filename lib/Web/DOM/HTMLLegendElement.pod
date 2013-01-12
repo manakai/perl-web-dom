@@ -19,6 +19,8 @@ XXX
 
 =back
 
+Additionally, the obsolete C<align> method is available.  [HTML]
+
 =head1 SPECIFICATION
 
 =over 4

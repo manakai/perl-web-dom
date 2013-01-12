@@ -12,13 +12,7 @@ C<td> element.
 
 In addition to the methods available for classes L<Web::DOM::Element>,
 L<Web::DOM::HTMLElement>, and L<Web::DOM::HTMLTableCellElement>, the
-following method is available:
-
-=over 4
-
-XXX
-
-=back
+obsolete C<abbr> method is available.  [HTML]
 
 =head1 SPECIFICATION
 
@@ -33,7 +27,7 @@ HTML Standard
 
 =head1 SEE ALSO
 
-L<Web::DOM::HTMLElement>.
+L<Web::DOM::HTMLElement>, L<Web::DOM::HTMLTableCellElement>.
 
 =head1 AUTHOR
 

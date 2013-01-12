@@ -23,6 +23,8 @@ Return or set the C<value> attribute.  [HTML]
 
 =back
 
+Additionally, the obsolete C<type> method is available.  [HTML]
+
 =head1 SPECIFICATION
 
 =over 4

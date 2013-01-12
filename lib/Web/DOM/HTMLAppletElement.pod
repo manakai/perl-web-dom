@@ -13,59 +13,9 @@ The interface, as well as the C<applet> element, is obsolete.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
-
-=over 4
-
-=item $string = $el->align [OBSOLETE]
-
-=item $el->align ($string) [OBSOLETE]
-
-Return or set the C<align> attribute.  [HTML]
-
-=item $string = $el->alt [OBSOLETE]
-
-=item $el->alt ($string) [OBSOLETE]
-
-Return or set the C<alt> attribute.  [HTML]
-
-=item $string = $el->archive [OBSOLETE]
-
-=item $el->archive ($string) [OBSOLETE]
-
-Return or set the C<archive> attribute.  [HTML]
-
-=item $string = $el->height [OBSOLETE]
-
-=item $el->height ($string) [OBSOLETE]
-
-Return or set the C<height> attribute.  [HTML]
-
-=item $integer = $el->hspace [OBSOLETE]
-
-=item $el->hspace ($integer) [OBSOLETE]
-
-Return or set the C<hspace> attribute.  [HTML]
-
-=item $string = $el->name [OBSOLETE]
-
-=item $el->name ($string) [OBSOLETE]
-
-Return or set the C<name> attribute.  [HTML]
-
-=item $integer = $el->vspace [OBSOLETE]
-
-=item $el->vspace ($integer) [OBSOLETE]
-
-Return or set the C<vspace> attribute.  [HTML]
-
-=item $string = $el->width [OBSOLETE]
-
-=item $el->width ($string) [OBSOLETE]
-
-Return or set the C<width> attribute.  [HTML]
-
-=back
+and L<Web::DOM::HTMLElement>, the following obsolete methods are
+available: C<align>, C<alt>, C<archive>, C<height>, C<hspace>,
+C<name>, C<vspace>, and C<width>.  [HTML]
 
 =head1 SPECIFICATION
 

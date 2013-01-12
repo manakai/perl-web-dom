@@ -11,7 +11,7 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
@@ -167,6 +167,9 @@ Return or set the C<step> attribute.  [HTML]
 Return or set the C<type> attribute.  [HTML]
 
 =back
+
+Additionally, the following obsolete methods are available: C<align>
+and C<usemap>.  [HTML]
 
 =head1 SPECIFICATION
 

@@ -142,6 +142,113 @@ for my $test (
   ['a', 'name'],
   ['a', 'rev'],
   ['a', 'shape'],
+  ['basefont', 'color'],
+  ['basefont', 'face'],
+  ['body', 'text'],
+  ['body', 'link'],
+  ['body', 'alink'],
+  ['body', 'vlink'],
+  ['body', 'bgcolor'],
+  ['body', 'background'],
+  ['br', 'clear'],
+  ['caption', 'align'],
+  ['col', 'align'],
+  ['col', 'width'],
+  ['col', 'ch', 'char'],
+  ['col', 'ch_off', 'charoff'],
+  ['col', 'valign'],
+  ['colgroup', 'align'],
+  ['colgroup', 'width'],
+  ['colgroup', 'ch', 'char'],
+  ['colgroup', 'ch_off', 'charoff'],
+  ['colgroup', 'valign'],
+  ['div', 'align'],
+  ['embed', 'align'],
+  ['embed', 'name'],
+  ['font', 'color'],
+  ['font', 'face'],
+  ['font', 'size'],
+  ['h1', 'align'],
+  ['h2', 'align'],
+  ['h3', 'align'],
+  ['h4', 'align'],
+  ['h5', 'align'],
+  ['h6', 'align'],
+  ['hr', 'align'],
+  ['hr', 'color'],
+  ['hr', 'size'],
+  ['hr', 'width'],
+  ['html', 'version'],
+  ['iframe', 'align'],
+  ['iframe', 'scrolling'],
+  ['iframe', 'frameborder'],
+  ['iframe', 'marginwidth'],
+  ['iframe', 'marginheight'],
+  ['img', 'align'],
+  ['img', 'name'],
+  ['img', 'border'],
+  ['input', 'align'],
+  ['input', 'usemap'],
+  ['legend', 'align'],
+  ['li', 'type'],
+  ['link', 'charset'],
+  ['link', 'rev'],
+  ['link', 'target'],
+  ['meta', 'scheme'],
+  ['object', 'align'],
+  ['object', 'archive'],
+  ['object', 'border'],
+  ['object', 'code'],
+  ['object', 'standby'],
+  ['object', 'codetype'],
+  ['object', 'border'],
+  ['p', 'align'],
+  ['param', 'type'],
+  ['param', 'valuetype'],
+  ['table', 'border'],
+  ['table', 'align'],
+  ['table', 'frame'],
+  ['table', 'summary'],
+  ['table', 'rules'],
+  ['table', 'width'],
+  ['table', 'bgcolor'],
+  ['table', 'cellpadding'],
+  ['table', 'cellspacing'],
+  ['tbody', 'align'],
+  ['tbody', 'ch', 'char'],
+  ['tbody', 'ch_off', 'charoff'],
+  ['tbody', 'valign'],
+  ['thead', 'align'],
+  ['thead', 'ch', 'char'],
+  ['thead', 'ch_off', 'charoff'],
+  ['thead', 'valign'],
+  ['tfoot', 'align'],
+  ['tfoot', 'ch', 'char'],
+  ['tfoot', 'ch_off', 'charoff'],
+  ['tfoot', 'valign'],
+  ['td', 'align'],
+  ['td', 'ch', 'char'],
+  ['td', 'ch_off', 'charoff'],
+  ['td', 'valign'],
+  ['td', 'axis'],
+  ['td', 'height'],
+  ['td', 'width'],
+  ['td', 'bgcolor'],
+  ['th', 'align'],
+  ['th', 'ch', 'char'],
+  ['th', 'ch_off', 'charoff'],
+  ['th', 'valign'],
+  ['th', 'axis'],
+  ['th', 'height'],
+  ['th', 'width'],
+  ['th', 'bgcolor'],
+  ['td', 'abbr'],
+  ['tr', 'align'],
+  ['tr', 'ch', 'char'],
+  ['tr', 'ch_off', 'charoff'],
+  ['tr', 'valign'],
+  ['tr', 'bgcolor'],
+  ['ul', 'type'],
 ) {
   my $attr = $test->[1];
   test {
@@ -158,8 +265,14 @@ for my $test (
     is $el->$attr, '';
     $el->set_attribute ($test->[2] || $attr => 124);
     is $el->$attr, 124;
+    $el->$attr ("\x{5000}");
+    is $el->$attr, "\x{5000}";
+    $el->$attr (undef);
+    is $el->$attr, '';
+    $el->set_attribute ($test->[2] || $attr => 124);
+    is $el->$attr, 124;
     done $c;
-  } n => 6, name => ['string reflect attributes', @$test];
+  } n => 9, name => ['string reflect attributes', @$test];
 }
 
 for my $attr (qw(itemscope hidden)) {
@@ -232,6 +345,15 @@ for my $test (
   ['dialog', 'open'],
   ['marquee', 'truespeed'],
   ['frame', 'noresize'],
+  ['dir', 'compact'],
+  ['dl', 'compact'],
+  ['hr', 'noshade'],
+  ['menu', 'compact'],
+  ['object', 'declare'],
+  ['ol', 'compact'],
+  ['td', 'nowrap'],
+  ['th', 'nowrap'],
+  ['ul', 'compact'],
 ) {
   my $attr = $test->[2] // $test->[1];
   test {
@@ -305,6 +427,8 @@ for my $test (
 
 for my $test (
   ['li', 'value', 0],
+  ['basefont', 'size', 0],
+  ['pre', 'width', 0],
 ) {
   test {
     my $c = shift;
@@ -487,6 +611,10 @@ for my $test (
   ['marquee', 'vspace', 0],
   ['marquee', 'scrollamount', 6],
   ['marquee', 'scrolldelay', 85],
+  ['img', 'hspace', 0],
+  ['img', 'vspace', 0],
+  ['object', 'hspace', 0],
+  ['object', 'vspace', 0],
 ) {
   test {
     my $c = shift;
@@ -964,6 +1092,32 @@ test {
   is $el->type, 'output';
   done $c;
 } n => 1, name => 'output type';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('script');
+  is $el->event, '';
+  $el->event ('hoge');
+  is $el->event, '';
+  is $el->get_attribute ('event'), undef;
+  $el->set_attribute (event => 'foo');
+  is $el->event, '';
+  done $c;
+} n => 4, name => 'script.event';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('script');
+  is $el->html_for, '';
+  $el->html_for ('hoge');
+  is $el->html_for, '';
+  is $el->get_attribute ('for'), undef;
+  $el->set_attribute (for => 'foo');
+  is $el->html_for, '';
+  done $c;
+} n => 4, name => 'script.html_for';
 
 run_tests;
 

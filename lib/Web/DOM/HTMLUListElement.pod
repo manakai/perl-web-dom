@@ -11,13 +11,8 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
-
-=over 4
-
-XXX
-
-=back
+and L<Web::DOM::HTMLElement>, the obsolete methods C<compact> and
+C<type> are available.  [HTML]
 
 =head1 SPECIFICATION
 
@@ -26,7 +21,7 @@ XXX
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-script-element>.
+<http://www.whatwg.org/specs/web-apps/current-work/#the-ul-element>.
 
 =back
 

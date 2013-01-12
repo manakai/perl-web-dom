@@ -19,6 +19,9 @@ XXX
 
 =back
 
+Additionally, the following obsolete methods are available: C<align>,
+C<ch>, C<ch_off>, and C<valign>.  [HTML]
+
 =head1 SPECIFICATION
 
 =over 4

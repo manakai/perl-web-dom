@@ -220,7 +220,7 @@ for (
   ['mark' => 'HTMLElement'],
   ['ruby' => 'HTMLElement'],
   ['rt' => 'HTMLElement'],
-  ['rb' => 'HTMLElement'],
+  ['rp' => 'HTMLElement'],
   ['bdi' => 'HTMLElement'],
   ['bdo' => 'HTMLElement'],
   ['span' => 'HTMLSpanElement'],
@@ -277,6 +277,9 @@ for (
   ['basefont' => 'HTMLBaseFontElement'],
   ['dir' => 'HTMLDirectoryElement'],
   ['font' => 'HTMLFontElement'],
+  ['listing' => 'HTMLElement'],
+  ['plaintext' => 'HTMLElement'],
+  ['xmp' => 'HTMLElement'],
   ['template' => 'HTMLTemplateElement'],
 ) {
   $ElementClass->{Web::DOM::Internal::HTML_NS}->{$_->[0]}

@@ -11,13 +11,8 @@ C<h2>, C<h3>, C<h4>, C<h5>, and C<h6> elements.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
-
-=over 4
-
-XXX
-
-=back
+and L<Web::DOM::HTMLElement>, the obsolete C<align> method is
+available.  [HTML]
 
 =head1 SPECIFICATION
 

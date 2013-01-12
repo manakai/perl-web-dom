@@ -11,10 +11,9 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
-
 
 =item $string = $el->content
 
@@ -35,6 +34,8 @@ Return or set the C<http-equiv> attribute.  [HTML]
 Return or set the C<name> attribute.  [HTML]
 
 =back
+
+In addition, the obsolete C<scheme> method is available.  [HTML]
 
 =head1 SPECIFICATION
 

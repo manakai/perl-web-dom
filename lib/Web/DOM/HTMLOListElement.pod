@@ -11,7 +11,7 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
@@ -29,6 +29,8 @@ Return or set whether the C<reversed> attribute is specified or not.
 Return or set the C<type> attribute.  [HTML]
 
 =back
+
+Additionally, the obsolete C<compact> method is available.  [HTML]
 
 =head1 SPECIFICATION
 

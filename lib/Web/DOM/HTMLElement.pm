@@ -33,6 +33,9 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLHtmlElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_string version => 'version';
 
 package Web::DOM::HTMLHeadElement;
 our $VERSION = '1.0';
@@ -76,6 +79,10 @@ _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
 _define_reflect_string crossorigin => 'crossorigin';
 
+_define_reflect_string charset => 'charset';
+_define_reflect_string rev => 'rev';
+_define_reflect_string target => 'target';
+
 package Web::DOM::HTMLMetaElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
@@ -84,6 +91,8 @@ use Web::DOM::Element;
 _define_reflect_string name => 'name';
 _define_reflect_string content => 'content';
 _define_reflect_string http_equiv => 'http-equiv';
+
+_define_reflect_string scheme => 'scheme';
 
 package Web::DOM::HTMLStyleElement;
 our $VERSION = '1.0';
@@ -120,26 +129,53 @@ sub text ($;$) {
       grep { $_->node_type == TEXT_NODE } @{$_[0]->child_nodes};
 } # text
 
+sub event ($;$) { '' }
+sub html_for ($;$) { '' }
+
 package Web::DOM::HTMLBodyElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 # XXX WindowEventHandlers
+use Web::DOM::Element;
+
+_define_reflect_string_undef text => 'text';
+_define_reflect_string_undef link => 'link';
+_define_reflect_string_undef alink => 'alink';
+_define_reflect_string_undef vlink => 'vlink';
+_define_reflect_string_undef bgcolor => 'bgcolor';
+_define_reflect_string background => 'background';
 
 package Web::DOM::HTMLHeadingElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_string align => 'align';
 
 package Web::DOM::HTMLParagraphElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_string align => 'align';
 
 package Web::DOM::HTMLHRElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_string align => 'align';
+_define_reflect_string color => 'color';
+_define_reflect_string size => 'size';
+_define_reflect_string width => 'width';
+_define_reflect_boolean noshade => 'noshade';
 
 package Web::DOM::HTMLPreElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_long width => 'width', sub { 0 };
 
 package Web::DOM::HTMLQuoteElement;
 our $VERSION = '1.0';
@@ -157,9 +193,15 @@ _define_reflect_boolean reversed => 'reversed';
 
 # XXX start
 
+_define_reflect_boolean compact => 'compact';
+
 package Web::DOM::HTMLUListElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_boolean compact => 'compact';
+_define_reflect_string type => 'type';
 
 package Web::DOM::HTMLLIElement;
 our $VERSION = '1.0';
@@ -167,14 +209,21 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
 _define_reflect_long value => 'value', sub { 0 };
+_define_reflect_string type => 'type';
 
 package Web::DOM::HTMLDListElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_boolean compact => 'compact';
 
 package Web::DOM::HTMLDivElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_string align => 'align';
 
 package Web::DOM::HTMLAnchorElement;
 our $VERSION = '1.0';
@@ -223,6 +272,9 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLBRElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_string clear => 'clear';
 
 package Web::DOM::HTMLModElement;
 our $VERSION = '1.0';
@@ -248,6 +300,14 @@ _define_reflect_boolean ismap => 'ismap';
 
 # XXX width height natural_width natural_height complete
 
+# XXX longdesc
+
+_define_reflect_string align => 'align';
+_define_reflect_string name => 'name';
+_define_reflect_string_undef border => 'border';
+_define_reflect_unsigned_long hspace => 'hspace', sub { 0 };
+_define_reflect_unsigned_long vspace => 'vspace', sub { 0 };
+
 package Web::DOM::HTMLIFrameElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
@@ -262,6 +322,14 @@ _define_reflect_boolean allowfullscreen => 'allowfullscreen';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
 
+# XXX longdesc
+
+_define_reflect_string align => 'align';
+_define_reflect_string frameborder => 'frameborder';
+_define_reflect_string scrolling => 'scrolling';
+_define_reflect_string_undef marginwidth => 'marginwidth';
+_define_reflect_string_undef marginheight => 'marginheight';
+
 package Web::DOM::HTMLEmbedElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
@@ -274,6 +342,9 @@ _define_reflect_string src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
+
+_define_reflect_string align => 'align';
+_define_reflect_string name => 'name';
 
 package Web::DOM::HTMLObjectElement;
 our $VERSION = '1.0';
@@ -292,6 +363,18 @@ _define_reflect_string usemap => 'usemap';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
 
+_define_reflect_string align => 'align';
+_define_reflect_string archive => 'archive';
+_define_reflect_string_undef border => 'border';
+_define_reflect_string code => 'code';
+_define_reflect_boolean declare => 'declare';
+_define_reflect_unsigned_long hspace => 'hspace', sub { 0 };
+_define_reflect_string standby => 'standby';
+_define_reflect_unsigned_long vspace => 'vspace', sub { 0 };
+_define_reflect_string codetype => 'codetype';
+
+# XXX codebase
+
 package Web::DOM::HTMLParamElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
@@ -299,6 +382,9 @@ use Web::DOM::Element;
 
 _define_reflect_string name => 'name';
 _define_reflect_string value => 'value';
+
+_define_reflect_string type => 'type';
+_define_reflect_string valuetype => 'valuetype';
 
 package Web::DOM::HTMLMediaElement;
 our $VERSION = '1.0';
@@ -413,9 +499,22 @@ _define_reflect_boolean sortable => 'sortable';
 
 # XXX more...
 
+_define_reflect_string align => 'align';
+_define_reflect_string border => 'border';
+_define_reflect_string frame => 'frame';
+_define_reflect_string rules => 'rules';
+_define_reflect_string summary => 'summary';
+_define_reflect_string width => 'width';
+_define_reflect_string_undef bgcolor => 'bgcolor';
+_define_reflect_string_undef cellpadding => 'cellpadding';
+_define_reflect_string_undef cellspacing => 'cellspacing';
+
 package Web::DOM::HTMLTableCaptionElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_string align => 'align';
 
 package Web::DOM::HTMLTableColElement;
 our $VERSION = '1.0';
@@ -424,17 +523,36 @@ use Web::DOM::Element;
 
 _define_reflect_unsigned_long_positive span => 'span', sub { 1 };
 
+_define_reflect_string align => 'align';
+_define_reflect_string width => 'width';
+_define_reflect_string ch => 'char';
+_define_reflect_string ch_off => 'charoff';
+_define_reflect_string valign => 'valign';
+
 package Web::DOM::HTMLTableSectionElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
 # XXX
+
+_define_reflect_string align => 'align';
+_define_reflect_string ch => 'char';
+_define_reflect_string ch_off => 'charoff';
+_define_reflect_string valign => 'valign';
 
 package Web::DOM::HTMLTableRowElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
 # XXX
+
+_define_reflect_string align => 'align';
+_define_reflect_string_undef bgcolor => 'bgcolor';
+_define_reflect_string ch => 'char';
+_define_reflect_string ch_off => 'charoff';
+_define_reflect_string valign => 'valign';
 
 package Web::DOM::HTMLTableCellElement;
 our $VERSION = '1.0';
@@ -446,9 +564,22 @@ _define_reflect_unsigned_long rowspan => 'rowspan', sub { 1 };
 
 # XXX headers cell_index
 
+_define_reflect_string align => 'align';
+_define_reflect_string axis => 'axis';
+_define_reflect_string height => 'height';
+_define_reflect_string ch => 'char';
+_define_reflect_string ch_off => 'charoff';
+_define_reflect_boolean nowrap => 'nowrap';
+_define_reflect_string valign => 'valign';
+_define_reflect_string width => 'width';
+_define_reflect_string_undef bgcolor => 'bgcolor';
+
 package Web::DOM::HTMLTableDataCellElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLTableCellElement);
+use Web::DOM::Element;
+
+_define_reflect_string abbr => 'abbr';
 
 package Web::DOM::HTMLTableHeaderCellElement;
 our $VERSION = '1.0';
@@ -520,8 +651,11 @@ sub type ($) { 'fieldset' }
 package Web::DOM::HTMLLegendElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
 # XXX form
+
+_define_reflect_string align => 'align';
 
 package Web::DOM::HTMLLabelElement;
 our $VERSION = '1.0';
@@ -614,6 +748,9 @@ _define_reflect_enumerated type => 'type', {
   '#missing' => 'text',
 };
 _define_reflect_string default_value => 'value';
+
+_define_reflect_string align => 'align';
+_define_reflect_string usemap => 'usemap';
 
 package Web::DOM::HTMLButtonElement;
 our $VERSION = '1.0';
@@ -800,6 +937,8 @@ use Web::DOM::Element;
 _define_reflect_string type => 'type';
 _define_reflect_string label => 'label';
 
+_define_reflect_boolean compact => 'compact';
+
 package Web::DOM::HTMLMenuItemElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
@@ -894,26 +1033,33 @@ _define_reflect_string name => 'name';
 _define_reflect_string scrolling => 'scrolling';
 _define_reflect_string frameborder => 'frameborder';
 _define_reflect_boolean noresize => 'noresize';
-_define_reflect_string marginheight => 'marginheight';
-_define_reflect_string marginwidth => 'marginwidth';
+_define_reflect_string_undef marginheight => 'marginheight';
+_define_reflect_string_undef marginwidth => 'marginwidth';
 
 package Web::DOM::HTMLBaseFontElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_string color => 'color';
+_define_reflect_string face => 'face';
+_define_reflect_long size => 'size', sub { 0 };
 
 package Web::DOM::HTMLDirectoryElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_boolean compact => 'compact';
 
 package Web::DOM::HTMLFontElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_string color => 'color';
+_define_reflect_string face => 'face';
+_define_reflect_string size => 'size';
 
 package Web::DOM::HTMLTemplateElement;
 our $VERSION = '1.0';

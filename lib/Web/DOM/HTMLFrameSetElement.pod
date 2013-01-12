@@ -13,23 +13,8 @@ The interface, as well as the C<frameset> element, is obsolete.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
-
-=over 4
-
-=item $string = $el->cols [OBSOLETE]
-
-=item $el->cols ($string) [OBSOLETE]
-
-Return or set the C<cols> attribute.  [HTML]
-
-=item $string = $el->rows [OBSOLETE]
-
-=item $el->rows ($string) [OBSOLETE]
-
-Return or set the C<rows> attribute.  [HTML]
-
-=back
+and L<Web::DOM::HTMLElement>, the following obsolete methods are
+available: C<cols> and C<rows>.  [HTML]
 
 =head1 SPECIFICATION
 

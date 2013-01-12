@@ -24,6 +24,10 @@ Return or set whether the C<sortable> attribute is specified or not.
 
 =back
 
+Additionally, the following obsolete methods are available: C<align>,
+C<bgcolor>, C<border>, C<cellpadding>, C<cellspacing>, C<frame>,
+C<summary>, C<rules>, and C<width>.  [HTML]
+
 =head1 SPECIFICATION
 
 =over 4

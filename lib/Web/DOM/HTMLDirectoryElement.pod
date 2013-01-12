@@ -1,24 +1,20 @@
 =head1 NAME
 
-Web::DOM::HTMLDListElement - The DOM |HTMLDListElement| object
+Web::DOM::HTMLDirectoryElement - The DOM |HTMLDirectoryElement| object
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::HTMLDListElement> class implements the DOM
-C<HTMLDListElement> interface.  The class is used by the HTML C<dl>
-element.
+The C<Web::DOM::HTMLDirectoryElement> class implements the DOM
+C<HTMLDirectoryElement> interface.  The class is used by the HTML
+C<dir> element.
+
+The interface, as well as the C<dir> element, is obsolete.
 
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
 and L<Web::DOM::HTMLElement>, the obsolete C<compact> method is
 available.  [HTML]
-
-=over 4
-
-XXX
-
-=back
 
 =head1 SPECIFICATION
 
@@ -27,7 +23,7 @@ XXX
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-script-element>.
+<http://www.whatwg.org/specs/web-apps/current-work/#htmldirectoryelement>.
 
 =back
 

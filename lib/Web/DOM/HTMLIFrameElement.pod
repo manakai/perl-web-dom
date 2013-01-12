@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::HTMLObjectElement - The DOM |HTMLObjectElement| object
+Web::DOM::HTMLIFrameElement - The DOM |HTMLIFrameElement| object
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::HTMLObjectElement> class implements the DOM
-C<HTMLObjectElement> interface.  The class is used by the HTML
-C<object> element.
+The C<Web::DOM::HTMLIFrameElement> class implements the DOM
+C<HTMLIFrameElement> interface.  The class is used by the HTML
+C<iframe> element.
 
 =head1 METHODS
 
@@ -15,11 +15,12 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
-=item $string = $el->data
+=item $boolean = $el->allowfullscreen
 
-=item $el->data ($string)
+=item $el->allowfullscreen ($boolean)
 
-Return or set the C<data> attribute.  [HTML]
+Return or set whether the C<allowfullscreen> attribute is specified or
+not.  [HTML]
 
 =item $string = $el->height
 
@@ -33,24 +34,18 @@ Return or set the C<height> attribute.  [HTML]
 
 Return or set the C<name> attribute.  [HTML]
 
-=item $string = $el->type
+=item $boolean = $el->seamless
 
-=item $el->type ($string)
+=item $el->seamless ($boolean)
 
-Return or set the C<type> attribute.  [HTML]
+Return or set whether the C<seamless> attribute is specified or not.
+[HTML]
 
-=item $boolean = $el->typemustmatch
+=item $string = $el->srcdoc
 
-=item $el->typemustmatch ($boolean)
+=item $el->srcdoc ($string)
 
-Return or set whether the C<typemustmatch> attribute is specified or
-not.  [HTML]
-
-=item $string = $el->usemap
-
-=item $el->usemap ($string)
-
-Return or set the C<usemap> attribute.  [HTML]
+Return or set the C<srcdoc> attribute.  [HTML]
 
 =item $string = $el->width
 
@@ -61,8 +56,8 @@ Return or set the C<width> attribute.  [HTML]
 =back
 
 Additionally, the following obsolete methods are available: C<align>,
-C<archive>, C<border>, C<code>, C<codetype>, C<declare>, C<hspace>,
-C<standby>, and C<vspace>.  [HTML]
+C<frameborder>, C<marginheight>, C<marginwidth>, and C<scrolling>.
+[HTML]
 
 =head1 SPECIFICATION
 
@@ -71,7 +66,7 @@ C<standby>, and C<vspace>.  [HTML]
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-object-element>.
+<http://www.whatwg.org/specs/web-apps/current-work/#the-iframe-element>.
 
 =back
 

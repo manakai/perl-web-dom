@@ -23,6 +23,9 @@ Return or set the C<span> attribute.  [HTML]
 
 =back
 
+Additionally, the following obsolete methods are available: C<align>,
+C<ch>, C<ch_off>, C<valign>, and C<width>.  [HTML]
+
 =head1 SPECIFICATION
 
 =over 4

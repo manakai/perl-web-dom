@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::HTMLMenuElement - The DOM |HTMLMenuElement| object
+Web::DOM::HTMLEmbedElement - The DOM |HTMLEmbedElement| embed
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::HTMLMenuElement> class implements the DOM
-C<HTMLMenuElement> interface.  The class is used by the HTML C<menu>
-element.
+The C<Web::DOM::HTMLEmbedElement> class implements the DOM
+C<HTMLEmbedElement> interface.  The class is used by the HTML
+C<embed> element.
 
 =head1 METHODS
 
@@ -15,11 +15,11 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
-=item $string = $el->label
+=item $string = $el->height
 
-=item $el->label ($string)
+=item $el->height ($string)
 
-Return or set the C<label> attribute.  [HTML]
+Return or set the C<height> attribute.  [HTML]
 
 =item $string = $el->type
 
@@ -27,9 +27,16 @@ Return or set the C<label> attribute.  [HTML]
 
 Return or set the C<type> attribute.  [HTML]
 
+=item $string = $el->width
+
+=item $el->width ($string)
+
+Return or set the C<width> attribute.  [HTML]
+
 =back
 
-Additionally, the obsolete C<compact> method is available.  [HTML]
+Additionally, obsolete methods C<align> and C<name> are available.
+[HTML]
 
 =head1 SPECIFICATION
 
@@ -38,7 +45,7 @@ Additionally, the obsolete C<compact> method is available.  [HTML]
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-menu-element>.
+<http://www.whatwg.org/specs/web-apps/current-work/#the-embed-element>.
 
 =back
 

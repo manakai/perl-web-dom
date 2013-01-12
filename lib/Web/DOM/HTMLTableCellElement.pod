@@ -11,7 +11,7 @@ C<td> and C<th> elements.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
@@ -21,13 +21,17 @@ and L<Web::DOM::HTMLElement>, the following method is available:
 
 Return or set the C<colspan> attribute.  [HTML]
 
-=item $integer = $el->spanspan
+=item $integer = $el->rowspan
 
-=item $el->spanspan ($integer)
+=item $el->rowspan ($integer)
 
-Return or set the C<spanspan> attribute.  [HTML]
+Return or set the C<rowspan> attribute.  [HTML]
 
 =back
+
+Additionally, the following obsolete methods are available: C<align>,
+C<axis>, C<bgcolor>, C<ch>, C<ch_off>, C<height>, C<nowrap>,
+C<valign>, and C<width>.  [HTML]
 
 The C<td> element also implements the
 L<Web::DOM::HTMLTableDataCellElement> interface.  The C<th> element
@@ -46,7 +50,8 @@ HTML Standard
 
 =head1 SEE ALSO
 
-L<Web::DOM::HTMLElement>.
+L<Web::DOM::HTMLElement>, L<Web::DOM::HTMLTableDataCellElement>,
+L<Web::DOM::HTML::TableHeaderCellElement>.
 
 =head1 AUTHOR
 

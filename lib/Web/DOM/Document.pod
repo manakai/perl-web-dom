@@ -55,6 +55,10 @@ Return the encoding of the document.  [DOM] [MANAKAI]
 Return or set the C<charset> parameter value of the C<Content-Type>
 metadata.  [MANAKAI]
 
+=item $doc->clear
+
+Do nothing.  [HTML]
+
 =item $string = $doc->compat_mode
 
 Return C<BackComat> if the document is in the quirks mode, or
