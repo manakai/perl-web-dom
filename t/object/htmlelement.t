@@ -41,6 +41,35 @@ for my $test (
   ['script', 'type'],
   ['script', 'crossorigin'],
   ['ol', 'type'],
+  ['a', 'target'],
+  ['a', 'type'],
+  ['a', 'rel'],
+  ['a', 'hreflang'],
+  ['a', 'download'],
+  ['data', 'value'],
+  ['time', 'datetime'],
+  ['ins', 'datetime'],
+  ['del', 'datetime'],
+  ['img', 'alt'],
+  ['img', 'srcset'],
+  ['img', 'crossorigin'],
+  ['img', 'usemap'],
+  ['iframe', 'name'],
+  ['iframe', 'srcdoc'],
+  ['iframe', 'width'],
+  ['iframe', 'height'],
+  ['embed', 'src'],
+  ['embed', 'type'],
+  ['embed', 'width'],
+  ['embed', 'height'],
+  ['object', 'data'],
+  ['object', 'type'],
+  ['object', 'name'],
+  ['object', 'usemap'],
+  ['object', 'width'],
+  ['object', 'height'],
+  ['param', 'name'],
+  ['param', 'value'],
 ) {
   my $attr = $test->[1];
   test {
@@ -85,6 +114,10 @@ for my $test (
   ['style', 'scoped'],
   ['script', 'defer'],
   ['ol', 'reversed'],
+  ['img', 'ismap'],
+  ['iframe', 'seamless'],
+  ['iframe', 'allowfullscreen'],
+  ['object', 'typemustmatch'],
 ) {
   my $attr = $test->[1];
   test {
@@ -146,6 +179,29 @@ for my $el_name (qw(title script)) {
     $el->append_child ($doc->create_element ('foo'))->text_content ('abc');
     my $node1 = $el->append_child ($doc->create_text_node ('ahq'));
     is $el->text, 'hogeahq';
+    $el->text ('');
+    is $el->first_child, undef;
+    is $node1->parent_node, undef;
+    $el->text ('abc');
+    is $el->text, 'abc';
+    my $text = $el->first_child;
+    $el->text ('bbqa');
+    is $text->parent_node, undef;
+    done $c;
+  } n => 7, name => [$el_name, 'text'];
+}
+
+for my $el_name (qw(a)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($el_name);
+    is $el->text, '';
+    $el->text ('hoge');
+    is $el->text, 'hoge';
+    $el->append_child ($doc->create_element ('foo'))->text_content ('abc');
+    my $node1 = $el->append_child ($doc->create_text_node ('ahq'));
+    is $el->text, 'hogeabcahq';
     $el->text ('');
     is $el->first_child, undef;
     is $node1->parent_node, undef;

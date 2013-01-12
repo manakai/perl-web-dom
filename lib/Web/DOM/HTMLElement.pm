@@ -179,26 +179,40 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLAnchorElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX
+# XXX href ping rel_list URLUtils
+
+_define_reflect_string target => 'target';
+_define_reflect_string download => 'download';
+_define_reflect_string rel => 'rel';
+_define_reflect_string hreflang => 'hreflang';
+_define_reflect_string type => 'type';
+
+sub text ($;$) {
+  if (@_ > 1) {
+    $_[0]->text_content ($_[1]);
+  }
+  return $_[0]->text_content;
+} # text
 
 package Web::DOM::HTMLDataElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX
+_define_reflect_string value => 'value';
 
 package Web::DOM::HTMLTimeElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX
+_define_reflect_string datetime => 'datetime';
 
 package Web::DOM::HTMLSpanElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
-
-# XXX
 
 package Web::DOM::HTMLBRElement;
 our $VERSION = '1.0';
@@ -207,42 +221,78 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLModElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX
+# XXX cite
+
+_define_reflect_string datetime => 'datetime';
 
 package Web::DOM::HTMLImageElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX
+# XXX constructor src
+
+_define_reflect_string alt => 'alt';
+_define_reflect_string srcset => 'srcset';
+_define_reflect_string crossorigin => 'crossorigin';
+_define_reflect_string usemap => 'usemap';
+_define_reflect_boolean ismap => 'ismap';
+
+# XXX width height natural_width natural_height complete
 
 package Web::DOM::HTMLIFrameElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX
+# XXX src sandbox content_document content_window
+
+_define_reflect_string srcdoc => 'srcdoc';
+_define_reflect_string name => 'name';
+_define_reflect_boolean seamless => 'seamless';
+_define_reflect_boolean allowfullscreen => 'allowfullscreen';
+_define_reflect_string width => 'width';
+_define_reflect_string height => 'height';
 
 package Web::DOM::HTMLEmbedElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
-
-# XXX
-
+use Web::DOM::Element;
 # XXX plugin-specific interface
+
+# XXX legacycaller
+
+_define_reflect_string src => 'src';
+_define_reflect_string type => 'type';
+_define_reflect_string width => 'width';
+_define_reflect_string height => 'height';
 
 package Web::DOM::HTMLObjectElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
-
-# XXX
-
+use Web::DOM::Element;
 # XXX plugin-specific interface
+
+# XXX legacycaller form content_document content_window will_validate
+# validity validation_message check_validity set_custom_validity
+
+_define_reflect_string data => 'data';
+_define_reflect_string type => 'type';
+_define_reflect_boolean typemustmatch => 'typemustmatch';
+_define_reflect_string name => 'name';
+_define_reflect_string usemap => 'usemap';
+_define_reflect_string width => 'width';
+_define_reflect_string height => 'height';
 
 package Web::DOM::HTMLParamElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX
+_define_reflect_string name => 'name';
+_define_reflect_string value => 'value';
 
 package Web::DOM::HTMLMediaElement;
 our $VERSION = '1.0';

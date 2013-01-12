@@ -1,0 +1,89 @@
+=head1 NAME
+
+Web::DOM::HTMLObjectElement - The DOM |HTMLObjectElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLObjectElement> class implements the DOM
+C<HTMLObjectElement> interface.  The class is used by the HTML
+C<object> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->data
+
+=item $el->data ($string)
+
+Return or set the C<data> attribute.  [HTML]
+
+=item $string = $el->height
+
+=item $el->height ($string)
+
+Return or set the C<height> attribute.  [HTML]
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the C<name> attribute.  [HTML]
+
+=item $string = $el->type
+
+=item $el->type ($string)
+
+Return or set the C<type> attribute.  [HTML]
+
+=item $boolean = $el->typemustmatch
+
+=item $el->typemustmatch ($boolean)
+
+Return or set whether the C<typemustmatch> attribute is specified or
+not.  [HTML]
+
+=item $string = $el->usemap
+
+=item $el->usemap ($string)
+
+Return or set the C<usemap> attribute.  [HTML]
+
+=item $string = $el->width
+
+=item $el->width ($string)
+
+Return or set the C<width> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-object-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
