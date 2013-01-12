@@ -70,6 +70,13 @@ for my $test (
   ['object', 'height'],
   ['param', 'name'],
   ['param', 'value'],
+  ['source', 'type'],
+  ['source', 'media'],
+  ['track', 'srclang'],
+  ['track', 'kind'],
+  ['track', 'label'],
+  ['video', 'crossorigin'],
+  ['audio', 'crossorigin'],
 ) {
   my $attr = $test->[1];
   test {
@@ -118,8 +125,17 @@ for my $test (
   ['iframe', 'seamless'],
   ['iframe', 'allowfullscreen'],
   ['object', 'typemustmatch'],
+  ['track', 'default'],
+  ['video', 'autoplay'],
+  ['audio', 'autoplay'],
+  ['video', 'loop'],
+  ['audio', 'loop'],
+  ['video', 'controls'],
+  ['audio', 'controls'],
+  ['video', 'muted', 'default_muted'],
+  ['audio', 'muted', 'default_muted'],
 ) {
-  my $attr = $test->[1];
+  my $attr = $test->[2] // $test->[1];
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
@@ -127,13 +143,13 @@ for my $test (
     ok not $el->$attr;
     $el->$attr (1);
     ok $el->$attr;
-    is $el->get_attribute_ns (undef, $attr), '';
+    is $el->get_attribute_ns (undef, $test->[1]), '';
     $el->$attr (0);
     ok not $el->$attr;
-    is $el->get_attribute_ns (undef, $attr), undef;
-    $el->set_attribute_ns (undef, $attr, 'false');
+    is $el->get_attribute_ns (undef, $test->[1]), undef;
+    $el->set_attribute_ns (undef, $test->[1], 'false');
     ok $el->$attr;
-    $el->remove_attribute_ns (undef, $attr);
+    $el->remove_attribute_ns (undef, $test->[1]);
     ok not $el->$attr;
     done $c;
   } n => 7, name => ['boolean reflect attributes', @$test];
@@ -254,7 +270,7 @@ for my $test (
     ) {
       $el->$attr ($_->[0]);
       is $el->$attr, $_->[1];
-      is $el->get_attribute ($attr), $_->[1];
+      is $el->get_attribute ($attr), $_->[2] // $_->[1];
     }
     for (
       ["" => $test->[2]],
@@ -263,24 +279,107 @@ for my $test (
       ["-0.12" => 0],
       ["120.61" => 120],
       ["-6563abc" => -6563],
+      ["2147483647" => 2**31-1],
+      ["2147483648" => 0],
       ["1452151544454" => 0],
       ["-1452151544454" => 0],
-      ["abc" => 0],
-      ["inf" => 0],
-      ["-inf" => 0],
-      ["nan" => 0],
+      ["abc" => $test->[2]],
+      ["inf" => $test->[2]],
+      ["-inf" => $test->[2]],
+      ["nan" => $test->[2]],
       [" 535" => 535],
       [" -655" => -655],
-      ["- 513" => 0],
+      ["- 513" => $test->[2]],
       ["44_524" => 44],
       ["0x124" => 0],
       ["213e5" => 213],
     ) {
-      $el->set_attribute ($attr => $_->[0]);
-      is $el->$attr, $_->[1];
+      test {
+        $el->set_attribute ($attr => $_->[0]);
+        is $el->$attr, $_->[1];
+      } $c, name => 'getter', n => 1;
     }
     done $c;
-  } n => 1 + 2*27 + 1*18, name => ['reflect long', @$test];
+  } n => 1 + 2*27 + 1*20, name => ['reflect long', @$test];
+}
+
+for my $test (
+  ['video', 'width', 0],
+  ['video', 'height', 0],
+) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($test->[0]);
+    my $attr = $test->[1];
+    is $el->$attr, $test->[2];
+    for (
+      [0 => 0],
+      [-10 => 0, 2**32-10],
+      [0.0006 => 0],
+      [0.6 => 0],
+      [0.9996 => 0],
+      [-0.1 => 0],
+      [-0.6 => 0],
+      [-0.9 => 0],
+      [(0+"inf") => 0],
+      [(0+"-inf") => 0],
+      [(0+"nan") => 0],
+      [(1/"inf") => 0],
+      [(1/"-inf") => 0],
+      ["abc" => 0],
+      ["-120abc" => 0, 2**32-120],
+      ["-120.524abc" => 0, 2**32-120],
+      ["0 but true" => 0],
+      ["34e6" => 34000000],
+      ["34e-6" => 0],
+      [2**32+1 => 1],
+      [2**32 => 0],
+      [2**32-1 => 0, '4294967295'],
+      [2**32-14.6 => 0, '4294967281'],
+      [2**31+1 => 0, 2**31+1],
+      [2**31 => 0, 2**31],
+      [2**31-1 => 2**31-1, 2**31-1],
+      [-2**31+1 => 0, 2**31+1],
+      [-2**31 => 0, 2**31],
+      [-2**31-1 => 2**31-1],
+      [-2**31+1.7 => 0, 2**31+2],
+      [-2**31-1.7 => 2**31-1],
+    ) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, $_->[1], [$_->[0], 'idl attr'];
+      is $el->get_attribute ($attr), $_->[2] // $_->[1],
+          [$_->[0], 'content attr'];
+    }
+    for (
+      ["" => $test->[2]],
+      ["0" => 0],
+      ["+0.12" => 0],
+      ["-0.12" => $test->[2]],
+      ["120.61" => 120],
+      ["-6563abc" => $test->[2]],
+      ["2147483647" => 2**31-1],
+      ["2147483648" => $test->[2]],
+      ["1452151544454" => $test->[2]],
+      ["-1452151544454" => $test->[2]],
+      ["abc" => $test->[2]],
+      ["inf" => $test->[2]],
+      ["-inf" => $test->[2]],
+      ["nan" => $test->[2]],
+      [" 535" => 535],
+      [" -655" => $test->[2]],
+      ["- 513" => $test->[2]],
+      ["44_524" => 44],
+      ["0x124" => 0],
+      ["213e5" => 213],
+    ) {
+      test {
+        $el->set_attribute ($attr => $_->[0]);
+        is $el->$attr, $_->[1];
+      } $c, name => 'getter', n => 1;
+    }
+    done $c;
+  } n => 1 + 2*30 + 1*22, name => ['reflect unsigned long', @$test];
 }
 
 run_tests;

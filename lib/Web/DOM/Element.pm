@@ -8,23 +8,12 @@ use Web::DOM::Node;
 use Web::DOM::ParentNode;
 use Web::DOM::ChildNode;
 push our @ISA, qw(Web::DOM::ParentNode Web::DOM::ChildNode Web::DOM::Node);
-use Carp;
 use Char::Class::XML qw(
   InXMLNameChar InXMLNameStartChar
   InXMLNCNameChar InXMLNCNameStartChar
 );
 
 our @EXPORT;
-sub import ($;@) {
-  my $from_class = shift;
-  my ($to_class, $file, $line) = caller;
-  for (@_ ? @_ : @EXPORT) {
-    my $code = $from_class->can ($_)
-        or croak qq{"$_" is not exported by the $from_class module at $file line $line};
-    no strict 'refs';
-    *{$to_class . '::' . $_} = $code;
-  }
-} # import
 
 *node_name = \&tag_name;
 
@@ -762,20 +751,44 @@ sub _define_reflect_long ($$$) {
       if (@_ > 1) {
         # WebIDL: long
         $_[0]->set_attribute_ns
-            (undef, '%s', unpack 'l', pack 'L', $_[1] % 2**32);
+            (undef, '%s', unpack 'l', pack 'L', $_[1] %% 2**32);
         return unless defined wantarray;
       }
 
       my $v = $_[0]->get_attribute_ns (undef, '%s');
       if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
         my $v = $1;
-        return 0+$v if -2**32 <= $v and $v <= 2**32-1;
+        return 0+$v if -2**31 <= $v and $v <= 2**31-1;
       }
       return $get_default->($_[0]);
     }
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_long
+
+push @EXPORT, qw(_define_reflect_unsigned_long);
+sub _define_reflect_unsigned_long ($$$) {
+  my ($perl_name, $content_name, $get_default) = @_;
+  my $class = caller;
+  eval sprintf q{
+    sub %s::%s ($;$) {
+      if (@_ > 1) {
+        # WebIDL: unsigned long
+        $_[0]->set_attribute_ns
+            (undef, '%s', unpack 'L', pack 'L', $_[1] %% 2**32);
+        return unless defined wantarray;
+      }
+
+      my $v = $_[0]->get_attribute_ns (undef, '%s');
+      if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
+        my $v = $1;
+        return 0+$v if 0 <= $v and $v <= 2**31-1;
+      }
+      return $get_default->($_[0]);
+    }
+    1;
+  }, $class, $perl_name, $content_name, $content_name or die $@;
+} # _define_reflect_unsigned_long
 
 _define_reflect_string id => 'id';
 

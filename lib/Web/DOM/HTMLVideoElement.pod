@@ -1,0 +1,59 @@
+=head1 NAME
+
+Web::DOM::HTMLVideoElement - The DOM |HTMLVideoElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLVideoElement> class implements the DOM
+C<HTMLVideoElement> interface.  The class is used by the HTML C<video>
+element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>,
+L<Web::DOM::HTMLElement>, and L<Web::DOM::HTMLMediaElement>, the
+following method is available:
+
+=over 4
+
+=item $integer = $el->height
+
+=item $el->height ($integer)
+
+Return or set the C<height> attribute.  [HTML]
+
+=item $integer = $el->width
+
+=item $el->width ($integer)
+
+Return or set the C<width> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-video-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

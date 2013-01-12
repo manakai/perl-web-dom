@@ -26,16 +26,7 @@ use overload
     fallback => 1;
 
 our @EXPORT;
-sub import ($;@) {
-  my $from_class = shift;
-  my ($to_class, $file, $line) = caller;
-  for (@_ ? @_ : @EXPORT) {
-    my $code = $from_class->can ($_)
-        or croak qq{"$_" is not exported by the $from_class module at $file line $line};
-    no strict 'refs';
-    *{$to_class . '::' . $_} = $code;
-  }
-} # import
+*import = \&Web::DOM::Internal::import;
 
 push @EXPORT, qw(
   ELEMENT_NODE ATTRIBUTE_NODE TEXT_NODE CDATA_SECTION_NODE 

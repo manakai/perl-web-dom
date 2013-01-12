@@ -297,14 +297,25 @@ _define_reflect_string value => 'value';
 package Web::DOM::HTMLMediaElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX
+_define_reflect_string crossorigin => 'crossorigin';
+_define_reflect_boolean autoplay => 'autoplay';
+_define_reflect_boolean loop => 'loop';
+_define_reflect_boolean controls => 'controls';
+_define_reflect_boolean default_muted => 'muted';
+
+# XXX and more
 
 package Web::DOM::HTMLVideoElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLMediaElement);
+use Web::DOM::Element;
 
-# XXX
+_define_reflect_unsigned_long width => 'width', sub { 0 };
+_define_reflect_unsigned_long height => 'height', sub { 0 };
+
+# XXX video_width video_height poster
 
 package Web::DOM::HTMLAudioElement;
 our $VERSION = '1.0';
@@ -315,14 +326,33 @@ push our @ISA, qw(Web::DOM::HTMLMediaElement);
 package Web::DOM::HTMLSourceElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX src
+
+_define_reflect_string type => 'type';
+_define_reflect_string media => 'media';
 
 package Web::DOM::HTMLTrackElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX src
+
+_define_reflect_string kind => 'kind';
+_define_reflect_string srclang => 'srclang';
+_define_reflect_string label => 'label';
+_define_reflect_boolean default => 'default';
+
+our @EXPORT = qw(NONE LOADING LOADED ERROR);
+
+sub NONE () { 0 }
+sub LOADING () { 1 }
+sub LOADED () { 2 }
+sub ERROR () { 3 }
+
+# XXX ready_state track
 
 package Web::DOM::HTMLCanvasElement;
 our $VERSION = '1.0';

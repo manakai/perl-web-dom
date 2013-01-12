@@ -1,0 +1,80 @@
+=head1 NAME
+
+Web::DOM::HTMLTrackElement - The DOM |HTMLTrackElement| track
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLTrackElement> class implements the DOM
+C<HTMLTrackElement> interface.  The class is used by the HTML
+C<track> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $boolean = $el->default
+
+=item $el->default ($boolean)
+
+Return or set whether the C<default> attribute is specified or not.
+[HTML]
+
+=item $string = $el->kind
+
+=item $el->kind ($string)
+
+Return or set the C<kind> attribute.  [HTML]
+
+=item $string = $el->label
+
+=item $el->label ($string)
+
+Return or set the C<label> attribute.  [HTML]
+
+=item $string = $el->srclang
+
+=item $el->srclang ($string)
+
+Return or set the C<srclang> attribute.  [HTML]
+
+=back
+
+=head1 CONSTANTS
+
+Constants are exported from the L<Web::DOM::HTMLTrackElement> module
+by default.  In addition, they are accessible as methods of
+C<HTMLTrackElement> objects.
+
+Following declared type constants used by the C<ready_state> attribute
+are exported [HTML]: C<NONE>, C<LOADING>, C<LOADED>, and C<ERROR>.
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-track-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

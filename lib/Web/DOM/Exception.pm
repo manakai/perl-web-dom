@@ -5,19 +5,10 @@ no warnings 'utf8';
 use Web::DOM::Error;
 push our @ISA, qw(Web::DOM::Error);
 our $VERSION = '1.0';
-use Carp;
+use Web::DOM::Internal;
 
 our @EXPORT;
-sub import ($;@) {
-  my $from_class = shift;
-  my ($to_class, $file, $line) = caller;
-  for (@_ ? @_ : @EXPORT) {
-    my $code = $from_class->can ($_)
-        or croak qq{"$_" is not exported by the $from_class module at $file line $line};
-    no strict 'refs';
-    *{$to_class . '::' . $_} = $code;
-  }
-} # import
+*import = \&Web::DOM::Internal::import;
 
 sub INDEX_SIZE_ERR () { 1 }
 sub DOMSTRING_SIZE_ERR () { 2 }

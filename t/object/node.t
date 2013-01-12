@@ -8,6 +8,7 @@ use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
 use Web::DOM::Document;
+use Web::DOM::Node;
 
 {
   package test::DestroyCallback;
