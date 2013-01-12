@@ -767,6 +767,36 @@ sub _define_reflect_long ($$$) {
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_long
 
+push @EXPORT, qw(_define_reflect_long_nn);
+sub _define_reflect_long_nn ($$$) {
+  my ($perl_name, $content_name, $get_default) = @_;
+  my $class = caller;
+  eval sprintf q{
+    sub %s::%s ($;$) {
+      if (@_ > 1) {
+        # WebIDL: long
+        my $v = unpack 'l', pack 'L', $_[1] %% 2**32;
+warn $v;
+        if ($v < 0) {
+warn "?";
+          _throw Web::DOM::Exception 'IndexSizeError',
+              'The value cannot be set to a negative value';
+        }
+        $_[0]->set_attribute_ns (undef, '%s', $v);
+        return unless defined wantarray;
+      }
+
+      my $v = $_[0]->get_attribute_ns (undef, '%s');
+      if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
+        my $v = $1;
+        return 0+$v if 0 <= $v and $v <= 2**31-1;
+      }
+      return $get_default->($_[0]);
+    }
+    1;
+  }, $class, $perl_name, $content_name, $content_name or die $@;
+} # _define_reflect_long_nn
+
 push @EXPORT, qw(_define_reflect_unsigned_long);
 sub _define_reflect_unsigned_long ($$$) {
   my ($perl_name, $content_name, $get_default) = @_;
@@ -802,7 +832,7 @@ sub _define_reflect_unsigned_long_positive ($$$) {
         my $v = unpack 'L', pack 'L', $_[1] %% 2**32;
         if ($v == 0) {
           _throw Web::DOM::Exception 'IndexSizeError',
-              'Cannot set the value to zero';
+              'The value cannot be set to zero';
         }
         $_[0]->set_attribute_ns (undef, '%s', $v);
         return unless defined wantarray;

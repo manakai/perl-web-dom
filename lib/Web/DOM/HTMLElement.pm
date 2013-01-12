@@ -513,19 +513,99 @@ package Web::DOM::HTMLLegendElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 
-# XXX 
+# XXX form
 
 package Web::DOM::HTMLLabelElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_string html_for => 'for';
+
+# XXX form control
 
 package Web::DOM::HTMLInputElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX autocomplete checked form files formaction height indeterminate
+# list src value* width ...
+
+_define_reflect_string accept => 'accept';
+_define_reflect_string alt => 'alt';
+_define_reflect_boolean autofocus => 'autofocus';
+_define_reflect_boolean default_checked => 'checked';
+_define_reflect_string dirname => 'dirname';
+_define_reflect_boolean disabled => 'disabled';
+_define_reflect_enumerated formenctype => 'formenctype', {
+  'application/x-www-form-urlencoded' => 'application/x-www-form-urlencoded',
+  'multipart/form-data' => 'multipart/form-data',
+  'text/plain' => 'text/plain',
+  '#invalid' => 'application/x-www-form-urlencoded',
+  # #missing
+};
+_define_reflect_enumerated formmethod => 'formmethod', {
+  get => 'get',
+  post => 'post',
+  dialog => 'dialog',
+  '#invalid' => 'get',
+  # #missing
+};
+_define_reflect_boolean formnovalidate => 'formnovalidate';
+_define_reflect_string formtarget => 'formtarget';
+_define_reflect_enumerated inputmode => 'inputmode', {
+  verbatim => 'verbatim',
+  latin => 'latin',
+  'latin-name' => 'latin-name',
+  'latin-prose' => 'latin-prose',
+  'full-width-latin' => 'full-width-latin',
+  kana => 'kana',
+  katakana => 'katakana',
+  numeric => 'numeric',
+  tel => 'tel',
+  email => 'email',
+  url => 'url',
+  # #missing => default
+};
+_define_reflect_string max => 'max';
+_define_reflect_long_nn maxlength => 'maxlength', sub { -1 };
+_define_reflect_string min => 'min';
+_define_reflect_boolean multiple => 'multiple';
+_define_reflect_string name => 'name';
+_define_reflect_string pattern => 'pattern';
+_define_reflect_string placeholder => 'placeholder';
+_define_reflect_boolean readonly => 'readonly';
+_define_reflect_boolean required => 'required';
+_define_reflect_unsigned_long size => 'size', sub { 0 };
+_define_reflect_string step => 'step';
+_define_reflect_enumerated type => 'type', {
+  hidden => 'hidden',
+  text => 'text',
+  search => 'search',
+  tel => 'tel',
+  url => 'url',
+  email => 'email',
+  password => 'password',
+  datetime => 'datetime',
+  date => 'date',
+  month => 'month',
+  week => 'week',
+  time => 'time',
+  'datetime-local' => 'datetime-local',
+  number => 'number',
+  range => 'range',
+  color => 'color',
+  checkbox => 'checkbox',
+  radio => 'radio',
+  file => 'file',
+  submit => 'submit',
+  image => 'image',
+  reset => 'reset',
+  button => 'button',
+  '#missing' => 'text',
+};
+_define_reflect_string default_value => 'value';
 
 package Web::DOM::HTMLButtonElement;
 our $VERSION = '1.0';

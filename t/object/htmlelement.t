@@ -93,6 +93,18 @@ for my $test (
   ['form', 'name', 'name'],
   ['form', 'target', 'target'],
   ['fieldset', 'name'],
+  ['label', 'html_for', 'for'],
+  ['input', 'accept'],
+  ['input', 'alt'],
+  ['input', 'dirname'],
+  ['input', 'formtarget'],
+  ['input', 'max'],
+  ['input', 'min'],
+  ['input', 'name'],
+  ['input', 'pattern'],
+  ['input', 'placeholder'],
+  ['input', 'step'],
+  ['input', 'default_value', 'value'],
 ) {
   my $attr = $test->[1];
   test {
@@ -153,6 +165,13 @@ for my $test (
   ['table', 'sortable'],
   ['form', 'novalidate'],
   ['fieldset', 'disabled'],
+  ['input', 'autofocus'],
+  ['input', 'checked', 'default_checked'],
+  ['input', 'disabled'],
+  ['input', 'formnovalidate'],
+  ['input', 'multiple'],
+  ['input', 'readonly'],
+  ['input', 'required'],
 ) {
   my $attr = $test->[2] // $test->[1];
   test {
@@ -294,6 +313,99 @@ for my $test (
 }
 
 for my $test (
+  ['input', 'maxlength', -1],
+) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($test->[0]);
+    my $attr = $test->[1];
+    is $el->$attr, $test->[2];
+    for (
+      [1 => 1],
+      [2 => 2],
+      [1265 => 1265],
+      ["34e6" => 34000000],
+      [2**32+1 => 1],
+      [2**31-1 => 2**31-1, 2**31-1],
+      [0 => 0],
+      [0.0006 => 0],
+      [0.6 => 0],
+      [0.9996 => 0],
+      [-0.1 => 0],
+      [-0.6 => 0],
+      [-0.9 => 0],
+      [(0+"inf") => 0],
+      [(0+"-inf") => 0],
+      [(0+"nan") => 0],
+      [(1/"inf") => 0],
+      [(1/"-inf") => 0],
+      ["abc" => 0],
+      ["0 but true" => 0],
+      [2**32 => 0],
+      ["34e-6" => 0],
+      [-2**31-1 => 2**31-1],
+      [-2**31-1.7 => 2**31-1],
+    ) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, $_->[1], [$_->[0], 'idl attr'];
+      is $el->get_attribute ($attr), $_->[2] // $_->[1],
+          [$_->[0], 'content attr'];
+    }
+    $el->set_attribute ($attr => '361');
+    for (
+      [-10 => $test->[2], 2**32-10],
+      ["-120abc" => $test->[2], 2**32-120],
+      ["-120.524abc" => $test->[2], 2**32-120],
+      [2**32-1 => $test->[2], '4294967295'],
+      [2**32-14.6 => $test->[2], '4294967281'],
+      [2**31+1 => $test->[2], 2**31+1],
+      [2**31 => $test->[2], 2**31],
+      [-2**31+1 => $test->[2], 2**31+1],
+      [-2**31 => $test->[2], 2**31],
+      [-2**31+1.7 => $test->[2], 2**31+2],
+    ) {
+      dies_here_ok {
+        $el->$attr ($_->[0]);
+      };
+      isa_ok $@, 'Web::DOM::Exception';
+      is $@->name, 'IndexSizeError';
+      is $@->message, 'The value cannot be set to a negative value';
+      is $el->$attr, 361;
+      is $el->get_attribute ($attr), 361;
+    }
+    for (
+      ["" => $test->[2]],
+      ["0" => 0],
+      ["+0.12" => 0],
+      ["-0.12" => 0],
+      ["120.61" => 120],
+      ["-6563abc" => $test->[2]],
+      ["2147483647" => 2**31-1],
+      ["2147483648" => $test->[2]],
+      ["1452151544454" => $test->[2]],
+      ["-1452151544454" => $test->[2]],
+      ["abc" => $test->[2]],
+      ["inf" => $test->[2]],
+      ["-inf" => $test->[2]],
+      ["nan" => $test->[2]],
+      [" 535" => 535],
+      [" -655" => $test->[2]],
+      ["- 513" => $test->[2]],
+      ["44_524" => 44],
+      ["0x124" => 0],
+      ["213e5" => 213],
+    ) {
+      test {
+        $el->set_attribute ($attr => $_->[0]);
+        is $el->$attr, $_->[1];
+      } $c, name => 'getter', n => 1;
+    }
+    done $c;
+  } n => 1 + 2*23 + 6*10 + 1*22, name => ['reflect long limited', @$test];
+}
+
+for my $test (
   ['video', 'width', 0],
   ['video', 'height', 0],
   ['canvas', 'width', 300],
@@ -302,6 +414,7 @@ for my $test (
   ['td', 'rowspan', 1],
   ['th', 'colspan', 1],
   ['th', 'rowspan', 1],
+  ['input', 'size', 0],
 ) {
   test {
     my $c = shift;
@@ -437,7 +550,7 @@ for my $test (
       };
       isa_ok $@, 'Web::DOM::Exception';
       is $@->name, 'IndexSizeError';
-      is $@->message, 'Cannot set the value to zero';
+      is $@->message, 'The value cannot be set to zero';
       is $el->$attr, 361;
       is $el->get_attribute ($attr), 361;
     }
@@ -550,6 +663,73 @@ for my $test (
      ['Dialog' => 'dialog'],
    ],
    invalid_values => [[''], ['0'], [undef]]},
+  {element => 'input',
+   attr => 'formenctype',
+   default => '',
+   invalid_default => 'application/x-www-form-urlencoded',
+   valid_values => [
+     ['application/x-www-form-URLEncoded' =>
+          'application/x-www-form-urlencoded'],
+     ['multipart/form-data' => 'multipart/form-data'],
+     ['Text/Plain' => 'text/plain'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'input',
+   attr => 'formmethod',
+   default => '',
+   invalid_default => 'get',
+   valid_values => [
+     ['get' => 'get'],
+     ['POST' => 'post'],
+     ['Dialog' => 'dialog'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'input',
+   attr => 'inputmode',
+   default => '',
+   valid_values => [
+     [verbatim => 'verbatim'],
+     [latin => 'latin'],
+     ['latin-name' => 'latin-name'],
+     ['latin-prose' => 'latin-prose'],
+     ['full-width-latin' => 'full-width-latin'],
+     [kana => 'kana'],
+     [katakana => 'katakana'],
+     [numeric => 'numeric'],
+     [tel => 'tel'],
+     [email => 'email'],
+     [url => 'url'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default']]},
+  {element => 'input',
+   attr => 'type',
+   default => 'text',
+   valid_values => [
+     [hidden => 'hidden'],
+     [text => 'text'],
+     [search => 'search'],
+     [tel => 'tel'],
+     [url => 'url'],
+     [email => 'email'],
+     [password => 'password'],
+     [datetime => 'datetime'],
+     [date => 'date'],
+     [month => 'month'],
+     [week => 'week'],
+     [time => 'time'],
+     ['datetime-local' => 'datetime-local'],
+     [number => 'number'],
+     [range => 'range'],
+     [color => 'color'],
+     [checkbox => 'checkbox'],
+     [radio => 'radio'],
+     [file => 'file'],
+     [submit => 'submit'],
+     [image => 'image'],
+     [reset => 'reset'],
+     [button => 'button'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default']]},
 ) {
   my $attr = $test->{attr};
   test {

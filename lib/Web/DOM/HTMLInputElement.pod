@@ -1,0 +1,197 @@
+=head1 NAME
+
+Web::DOM::HTMLInputElement - The DOM |HTMLInputElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLInputElement> class implements the DOM
+C<HTMLInputElement> interface.  The class is used by the HTML C<input>
+element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->accept
+
+=item $el->accept ($string)
+
+Return or set the C<accept> attribute.  [HTML]
+
+=item $string = $el->alt
+
+=item $el->alt ($string)
+
+Return or set the C<alt> attribute.  [HTML]
+
+=item $boolean = $el->autofocus
+
+=item $el->autofocus ($boolean)
+
+Return or set whether the C<autofocus> attribute is specified or not.
+[HTML]
+
+=item $boolean = $el->default_checked
+
+=item $el->default_checked ($boolean)
+
+Return or set whether the C<checked> attribute is specified or not.
+[HTML]
+
+=item $string = $el->default_value
+
+=item $el->default_value ($string)
+
+Return or set the C<value> attribute.  [HTML]
+
+=item $string = $el->dirname
+
+=item $el->dirname ($string)
+
+Return or set the C<dirname> attribute.  [HTML]
+
+=item $boolean = $el->disabled
+
+=item $el->disabled ($boolean)
+
+Return or set whether the C<disabled> attribute is specified or not.
+[HTML]
+
+=item $string = $el->formenctype
+
+=item $el->formenctype ($string)
+
+Return or set the C<formenctype> attribute.  [HTML]
+
+=item $string = $el->formmethod
+
+=item $el->formmethod ($string)
+
+Return or set the C<formmethod> attribute.  [HTML]
+
+=item $boolean = $el->formnovalidate
+
+=item $el->formnovalidate ($boolean)
+
+Return or set whether the C<formnovalidate> attribute is specified or
+not.  [HTML]
+
+=item $string = $el->formtarget
+
+=item $el->formtarget ($string)
+
+Return or set the C<formtarget> attribute.  [HTML]
+
+=item $string = $el->inputmode
+
+=item $el->inputmode ($string)
+
+Return or set the C<inputmode> attribute.  [HTML]
+
+=item $string = $el->max
+
+=item $el->max ($string)
+
+Return or set the C<max> attribute.  [HTML]
+
+=item $integer = $el->maxlength
+
+=item $el->maxlength ($integer)
+
+Return or set the C<maxlength> attribute.  [HTML]
+
+=item $string = $el->min
+
+=item $el->min ($string)
+
+Return or set the C<min> attribute.  [HTML]
+
+=item $boolean = $el->multiple
+
+=item $el->multiple ($boolean)
+
+Return or set whether the C<multiple> attribute is specified or not.
+[HTML]
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the C<name> attribute.  [HTML]
+
+=item $string = $el->pattern
+
+=item $el->pattern ($string)
+
+Return or set the C<pattern> attribute.  [HTML]
+
+=item $string = $el->placeholder
+
+=item $el->placeholder ($string)
+
+Return or set the C<placeholder> attribute.  [HTML]
+
+=item $boolean = $el->readonly
+
+=item $el->readonly ($boolean)
+
+Return or set whether the C<readonly> attribute is specified or not.
+[HTML]
+
+=item $boolean = $el->required
+
+=item $el->required ($boolean)
+
+Return or set whether the C<required> attribute is specified or not.
+[HTML]
+
+=item $integer = $el->size
+
+=item $el->size ($integer)
+
+Return or set the C<size> attribute.  [HTML]
+
+=item $string = $el->step
+
+=item $el->step ($string)
+
+Return or set the C<step> attribute.  [HTML]
+
+=item $string = $el->type
+
+=item $el->type ($string)
+
+Return or set the C<type> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-input-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
