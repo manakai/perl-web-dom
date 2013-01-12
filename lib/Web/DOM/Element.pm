@@ -776,9 +776,7 @@ sub _define_reflect_long_nn ($$$) {
       if (@_ > 1) {
         # WebIDL: long
         my $v = unpack 'l', pack 'L', $_[1] %% 2**32;
-warn $v;
         if ($v < 0) {
-warn "?";
           _throw Web::DOM::Exception 'IndexSizeError',
               'The value cannot be set to a negative value';
         }

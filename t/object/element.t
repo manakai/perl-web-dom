@@ -216,6 +216,12 @@ for my $test (
    ['HTMLUnknownElement']],
   [[HTML_NS, 'select'], ['Element', 'HTMLElement', 'HTMLSelectElement'],
    ['HTMLUnknownElement']],
+  [[HTML_NS, 'datalist'], ['Element', 'HTMLElement', 'HTMLDataListElement'],
+   ['HTMLUnknownElement']],
+  [[HTML_NS, 'optgroup'], ['Element', 'HTMLElement', 'HTMLOptGroupElement'],
+   ['HTMLUnknownElement', 'HTMLOptionElement']],
+  [[HTML_NS, 'option'], ['Element', 'HTMLElement', 'HTMLOptionElement'],
+   ['HTMLUnknownElement', 'HTMLOptGroupElement']],
   [[HTML_NS, 'summary'], ['Element', 'HTMLElement'],
    ['HTMLUnknownElement']],
 ) {

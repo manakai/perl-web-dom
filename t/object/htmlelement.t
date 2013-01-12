@@ -105,6 +105,11 @@ for my $test (
   ['input', 'placeholder'],
   ['input', 'step'],
   ['input', 'default_value', 'value'],
+  ['button', 'formtarget'],
+  ['button', 'name'],
+  ['button', 'value'],
+  ['select', 'name'],
+  ['optgroup', 'label'],
 ) {
   my $attr = $test->[1];
   test {
@@ -172,6 +177,16 @@ for my $test (
   ['input', 'multiple'],
   ['input', 'readonly'],
   ['input', 'required'],
+  ['button', 'autofocus'],
+  ['button', 'disabled'],
+  ['button', 'formnovalidate'],
+  ['select', 'autofocus'],
+  ['select', 'disabled'],
+  ['select', 'multiple'],
+  ['select', 'required'],
+  ['optgroup', 'disabled'],
+  ['option', 'disabled'],
+  ['option', 'selected', 'default_selected'],
 ) {
   my $attr = $test->[2] // $test->[1];
   test {
@@ -415,6 +430,7 @@ for my $test (
   ['th', 'colspan', 1],
   ['th', 'rowspan', 1],
   ['input', 'size', 0],
+  ['select', 'size', 0],
 ) {
   test {
     my $c = shift;
@@ -730,6 +746,37 @@ for my $test (
      [button => 'button'],
    ],
    invalid_values => [[''], ['0'], [undef], ['default']]},
+  {element => 'button',
+   attr => 'formenctype',
+   default => '',
+   invalid_default => 'application/x-www-form-urlencoded',
+   valid_values => [
+     ['application/x-www-form-URLEncoded' =>
+          'application/x-www-form-urlencoded'],
+     ['multipart/form-data' => 'multipart/form-data'],
+     ['Text/Plain' => 'text/plain'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'button',
+   attr => 'formmethod',
+   default => '',
+   invalid_default => 'get',
+   valid_values => [
+     ['get' => 'get'],
+     ['POST' => 'post'],
+     ['Dialog' => 'dialog'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'button',
+   attr => 'type',
+   default => 'submit',
+   valid_values => [
+     [submit => 'submit'],
+     [reset => 'reset'],
+     [button => 'button'],
+     [menu => 'menu'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default']]},
 ) {
   my $attr = $test->{attr};
   test {
@@ -765,6 +812,23 @@ test {
   is $el->type, 'fieldset';
   done $c;
 } n => 1, name => 'fieldset type';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('select');
+  is $el->type, 'select-one';
+  done $c;
+} n => 1, name => 'select-one type';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('select');
+  $el->multiple (1);
+  is $el->type, 'select-multiple';
+  done $c;
+} n => 1, name => 'select-multiple type';
 
 run_tests;
 

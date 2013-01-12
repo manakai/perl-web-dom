@@ -1,0 +1,60 @@
+=head1 NAME
+
+Web::DOM::HTMLOptionElement - The DOM |HTMLOptionElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLOptionElement> class implements the DOM
+C<HTMLOptionElement> interface.  The class is used by the HTML
+C<option> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $boolean = $el->default_selected
+
+=item $el->default_selected ($boolean)
+
+Return or set whether the C<selected> attribute is specified or not.
+[HTML]
+
+=item $boolean = $el->disabled
+
+=item $el->disabled ($boolean)
+
+Return or set whether the C<disabled> attribute is specified or not.
+[HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-option-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

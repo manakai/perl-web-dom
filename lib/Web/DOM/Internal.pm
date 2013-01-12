@@ -259,7 +259,7 @@ for (
   ['select' => 'HTMLSelectElement'],
   ['datalist' => 'HTMLDataListElement'],
   ['optgroup' => 'HTMLOptGroupElement'],
-  ['option' => 'HTMLOptGroupElement'],
+  ['option' => 'HTMLOptionElement'],
   ['textarea' => 'HTMLTextAreaElement'],
   ['keygen' => 'HTMLKeygenElement'],
   ['output' => 'HTMLOutputElement'],

@@ -610,14 +610,59 @@ _define_reflect_string default_value => 'value';
 package Web::DOM::HTMLButtonElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX form formaction menu and more...
+
+_define_reflect_boolean autofocus => 'autofocus';
+_define_reflect_boolean disabled => 'disabled';
+_define_reflect_enumerated formenctype => 'formenctype', {
+  'application/x-www-form-urlencoded' => 'application/x-www-form-urlencoded',
+  'multipart/form-data' => 'multipart/form-data',
+  'text/plain' => 'text/plain',
+  '#invalid' => 'application/x-www-form-urlencoded',
+  # #missing
+};
+_define_reflect_enumerated formmethod => 'formmethod', {
+  get => 'get',
+  post => 'post',
+  dialog => 'dialog',
+  '#invalid' => 'get',
+  # #missing
+};
+_define_reflect_boolean formnovalidate => 'formnovalidate';
+_define_reflect_string formtarget => 'formtarget';
+_define_reflect_string name => 'name';
+_define_reflect_enumerated type => 'type', {
+  submit => 'submit',
+  reset => 'reset',
+  button => 'button',
+  menu => 'menu',
+  '#missing' => 'submit',
+};
+_define_reflect_string value => 'value';
 
 package Web::DOM::HTMLSelectElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX form
+
+_define_reflect_boolean autofocus => 'autofocus';
+_define_reflect_boolean disabled => 'disabled';
+_define_reflect_boolean multiple => 'multiple';
+_define_reflect_string name => 'name';
+_define_reflect_boolean required => 'required';
+_define_reflect_unsigned_long size => 'size', sub { 0 };
+
+sub type ($) {
+  if ($_[0]->has_attribute ('multiple')) {
+    return 'select-multiple';
+  } else {
+    return 'select-one';
+  }
+} # type
 
 package Web::DOM::HTMLDataListElement;
 our $VERSION = '1.0';
@@ -628,14 +673,20 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLOptGroupElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_boolean disabled => 'disabled';
+_define_reflect_string label => 'label';
 
 package Web::DOM::HTMLOptionElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX constructor form label selected value text index
+
+_define_reflect_boolean disabled => 'disabled';
+_define_reflect_boolean default_selected => 'selected';
 
 package Web::DOM::HTMLTextAreaElement;
 our $VERSION = '1.0';
