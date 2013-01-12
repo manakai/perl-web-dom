@@ -89,6 +89,9 @@ for my $test (
   ['area', 'download'],
   ['th', 'abbr'],
   ['th', 'sorted'],
+  ['form', 'accept_charset', 'accept-charset'],
+  ['form', 'name', 'name'],
+  ['form', 'target', 'target'],
 ) {
   my $attr = $test->[1];
   test {
@@ -147,6 +150,7 @@ for my $test (
   ['video', 'muted', 'default_muted'],
   ['audio', 'muted', 'default_muted'],
   ['table', 'sortable'],
+  ['form', 'novalidate'],
 ) {
   my $attr = $test->[2] // $test->[1];
   test {
@@ -167,35 +171,6 @@ for my $test (
     done $c;
   } n => 7, name => ['boolean reflect attributes', @$test];
 }
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('em');
-  is $el->dir, '';
-  $el->dir ('ltr');
-  is $el->dir, 'ltr';
-  is $el->get_attribute ('dir'), 'ltr';
-  $el->dir ('RtL');
-  is $el->dir, 'rtl';
-  is $el->get_attribute ('dir'), 'RtL';
-  $el->dir ('auTO');
-  is $el->dir, 'auto';
-  is $el->get_attribute ('dir'), 'auTO';
-  $el->dir ('ltr  ');
-  is $el->dir, '';
-  is $el->get_attribute ('dir'), 'ltr  ';
-  $el->dir ('');
-  is $el->dir, '';
-  is $el->get_attribute ('dir'), '';
-  $el->dir ('0');
-  is $el->dir, '';
-  is $el->get_attribute ('dir'), '0';
-  $el->dir (undef);
-  is $el->dir, '';
-  is $el->get_attribute ('dir'), '';
-  done $c;
-} n => 15, name => 'dir';
 
 for my $el_name (qw(title script)) {
   test {
@@ -495,73 +470,111 @@ for my $test (
   } n => 1 + 2*17 + 6*16 + 1*22, name => ['reflect unsigned long limited', @$test];
 }
 
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('track');
-  is $el->kind, 'subtitles';
-  for (
-    [captions => 'captions'],
-    [DEscRiptions => 'descriptions'],
-    [DescRiPTIons => 'descriptions'],
-    [SubTitles => 'subtitles'],
-    [ChapTERs => 'chapters'],
-    [Metadata => 'metadata'],
-  ) {
-    $el->kind ($_->[0]);
-    is $el->kind, $_->[1];
-    is $el->get_attribute ('kind'), $_->[0];
-  }
-  for (
-    ['ChaptErS  '],
-    [''],
-    ['0'],
-    ['#invalid'],
-    ['#missing'],
-  ) {
-    $el->kind ($_->[0]);
-    is $el->kind, 'subtitles';
-    is $el->get_attribute ('kind'), $_->[0];
-  }
-  $el->kind (undef);
-  is $el->kind, 'subtitles';
-  is $el->get_attribute ('kind'), '';
-  done $c;
-} n => 3 + 6*2 + 5*2, name => 'kind';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('th');
-  is $el->scope, '';
-  for (
-    [row => 'row'],
-    [COL => 'col'],
-    [rowGroup => 'rowgroup'],
-    [coLGrouP => 'colgroup'],
-  ) {
-    $el->scope ($_->[0]);
-    is $el->scope, $_->[1];
-    is $el->get_attribute ('scope'), $_->[0];
-  }
-  for (
-    ['ChaptErS  '],
-    ['row group'],
-    [''],
-    ['0'],
-    ['#invalid'],
-    ['#missing'],
-    ['auto'],
-  ) {
-    $el->scope ($_->[0]);
-    is $el->scope, '';
-    is $el->get_attribute ('scope'), $_->[0];
-  }
-  $el->scope (undef);
-  is $el->scope, '';
-  is $el->get_attribute ('scope'), '';
-  done $c;
-} n => 3 + 4*2 + 7*2, name => 'scope';
+for my $test (
+  {element => 'em',
+   attr => 'dir',
+   default => '',
+   valid_values => [
+     ['ltr' => 'ltr'],
+     ['rTl' => 'rtl'],
+     ['auTO' => 'auto'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'track',
+   attr => 'kind',
+   default => 'subtitles',
+   valid_values => [
+     [captions => 'captions'],
+     [DEscRiptions => 'descriptions'],
+     [DescRiPTIons => 'descriptions'],
+     [SubTitles => 'subtitles'],
+     [ChapTERs => 'chapters'],
+     [Metadata => 'metadata'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'th',
+   attr => 'scope',
+   default => '',
+   valid_values => [
+     [row => 'row'],
+     [COL => 'col'],
+     [rowGroup => 'rowgroup'],
+     [coLGrouP => 'colgroup'],
+   ],
+   invalid_values => [
+     [''], ['0'], [undef],
+     ['ChaptErS  '],
+     ['row group'],
+     ['auto'],
+   ]},
+  {element => 'form',
+   attr => 'autocomplete',
+   default => 'on',
+   valid_values => [
+     [On => 'on'],
+     [off => 'off'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'form',
+   attr => 'enctype',
+   default => '',
+   invalid_default => 'application/x-www-form-urlencoded',
+   valid_values => [
+     ['application/x-www-form-URLEncoded' =>
+          'application/x-www-form-urlencoded'],
+     ['multipart/form-data' => 'multipart/form-data'],
+     ['Text/Plain' => 'text/plain'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'form',
+   attr => 'encode',
+   content_attr => 'enctype',
+   default => '',
+   invalid_default => 'application/x-www-form-urlencoded',
+   valid_values => [
+     ['application/x-www-form-URLEncoded' =>
+          'application/x-www-form-urlencoded'],
+     ['multipart/form-data' => 'multipart/form-data'],
+     ['Text/Plain' => 'text/plain'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'form',
+   attr => 'method',
+   default => '',
+   invalid_default => 'get',
+   valid_values => [
+     ['get' => 'get'],
+     ['POST' => 'post'],
+     ['Dialog' => 'dialog'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+) {
+  my $attr = $test->{attr};
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($test->{element});
+    is $el->$attr, $test->{default};
+    for (@{$test->{valid_values}}) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, $_->[1];
+      is $el->get_attribute ($test->{content_attr} // $attr), $_->[0];
+    }
+    for (
+      (map { [$_->[0].'  '] } @{$test->{valid_values}}),
+      @{$test->{invalid_values}},
+      ['#invalid'],
+      ['#missing'],
+    ) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, $test->{invalid_default} // $test->{default};
+      is $el->get_attribute ($test->{content_attr} // $attr), $_->[0] // '';
+    }
+    done $c;
+  } n => 3 + @{$test->{valid_values}}*2 +
+      (@{$test->{valid_values}} + @{$test->{invalid_values}} + 1)*2,
+      name => ['reflect enumerated attr', $test->{element}, $test->{attr}];
+}
 
 run_tests;
 

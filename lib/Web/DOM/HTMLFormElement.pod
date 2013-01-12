@@ -1,0 +1,95 @@
+=head1 NAME
+
+Web::DOM::HTMLFormElement - The DOM |HTMLFormElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLFormElement> class implements the DOM
+C<HTMLFormElement> interface.  The class is used by the HTML C<form>
+element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->accept_charset
+
+=item $el->accept_charset ($string)
+
+Return or set the C<accept-charset> attribute.  [HTML]
+
+=item $string = $el->autocomplete
+
+=item $el->autocomplete ($string)
+
+Return or set the C<autocomplete> attribute.  [HTML]
+
+=item $string = $el->enctype
+
+=item $el->enctype ($string)
+
+Return or set the C<enctype> attribute.  [HTML]
+
+=item $string = $el->encode
+
+=item $el->encode ($string)
+
+Return or set the C<enctype> attribute.  [HTML]
+
+=item $string = $el->method
+
+=item $el->method ($string)
+
+Return or set the C<method> attribute.  [HTML]
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the C<name> attribute.  [HTML]
+
+=item $boolean = $el->novalidate
+
+=item $el->novalidate ($boolean)
+
+Return or set whether the C<novalidate> attribute is specified or not.
+[HTML]
+
+=item $string = $el->target
+
+=item $el->target ($string)
+
+Return or set the C<target> attribute.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-form-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

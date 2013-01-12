@@ -462,8 +462,40 @@ _define_reflect_string sorted => 'sorted';
 package Web::DOM::HTMLFormElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_string accept_charset => 'accept-charset';
+_define_reflect_enumerated autocomplete => 'autocomplete', {
+  on => 'on',
+  off => 'off',
+  '#missing' => 'on',
+};
+_define_reflect_enumerated enctype => 'enctype', {
+  'application/x-www-form-urlencoded' => 'application/x-www-form-urlencoded',
+  'multipart/form-data' => 'multipart/form-data',
+  'text/plain' => 'text/plain',
+  '#invalid' => 'application/x-www-form-urlencoded',
+  # #missing
+};
+_define_reflect_enumerated encode => 'enctype', {
+  'application/x-www-form-urlencoded' => 'application/x-www-form-urlencoded',
+  'multipart/form-data' => 'multipart/form-data',
+  'text/plain' => 'text/plain',
+  '#invalid' => 'application/x-www-form-urlencoded',
+  # #missing
+};
+_define_reflect_enumerated method => 'method', {
+  get => 'get',
+  post => 'post',
+  dialog => 'dialog',
+  '#invalid' => 'get',
+  # #missing
+};
+_define_reflect_string name => 'name';
+_define_reflect_boolean novalidate => 'novalidate';
+_define_reflect_string target => 'target';
+
+# XXX action elements length getter submit reset check_validity
 
 package Web::DOM::HTMLFieldSetElement;
 our $VERSION = '1.0';
