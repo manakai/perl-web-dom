@@ -1,0 +1,132 @@
+=head1 NAME
+
+Web::DOM::HTMLTextAreaElement - The DOM |HTMLTextAreaElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLTextAreaElement> class implements the DOM
+C<HTMLTextAreaElement> interface.  The class is used by the HTML
+C<textarea> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $boolean = $el->autofocus
+
+=item $el->autofocus ($boolean)
+
+Return or set whether the C<autofocus> attribute is specified or not.
+[HTML]
+
+=item $integer = $el->cols
+
+=item $el->cols ($integer)
+
+Return or set the C<cols> attribute.  [HTML]
+
+=item $string = $el->default_value
+
+=item $el->default_value ($string)
+
+Return or set the text content of the element.  [HTML]
+
+=item $string = $el->dirname
+
+=item $el->dirname ($string)
+
+Return or set the C<dirname> attribute.  [HTML]
+
+=item $boolean = $el->disabled
+
+=item $el->disabled ($boolean)
+
+Return or set whether the C<disabled> attribute is specified or not.
+[HTML]
+
+=item $string = $el->inputmode
+
+=item $el->inputmode ($string)
+
+Return or set the C<inputmode> attribute.  [HTML]
+
+=item $integer = $el->maxlength
+
+=item $el->maxlength ($integer)
+
+Return or set the C<maxlength> attribute.  [HTML]
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the C<name> attribute.  [HTML]
+
+=item $string = $el->placeholder
+
+=item $el->placeholder ($string)
+
+Return or set the C<placeholder> attribute.  [HTML]
+
+=item $boolean = $el->readonly
+
+=item $el->readonly ($boolean)
+
+Return or set whether the C<readonly> attribute is specified or not.
+[HTML]
+
+=item $boolean = $el->required
+
+=item $el->required ($boolean)
+
+Return or set whether the C<required> attribute is specified or not.
+[HTML]
+
+=item $integer = $el->rows
+
+=item $el->rows ($integer)
+
+Return or set the C<rows> attribute.  [HTML]
+
+=item $string = $el->wrap
+
+=item $el->wrap ($string)
+
+Return or set the C<wrap> attribute.  [HTML]
+
+=item $string = $el->type
+
+Return the string C<textarea>.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-textarea-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

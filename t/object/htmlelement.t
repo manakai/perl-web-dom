@@ -110,6 +110,16 @@ for my $test (
   ['button', 'value'],
   ['select', 'name'],
   ['optgroup', 'label'],
+  ['textarea', 'dirname'],
+  ['textarea', 'name'],
+  ['textarea', 'placeholder'],
+  ['keygen', 'challenge'],
+  ['keygen', 'name'],
+  ['output', 'name'],
+  ['menu', 'label'],
+  ['menu', 'type'],
+  ['menuitem', 'label'],
+  ['menuitem', 'radiogroup'],
 ) {
   my $attr = $test->[1];
   test {
@@ -187,6 +197,17 @@ for my $test (
   ['optgroup', 'disabled'],
   ['option', 'disabled'],
   ['option', 'selected', 'default_selected'],
+  ['textarea', 'autofocus'],
+  ['textarea', 'disabled'],
+  ['textarea', 'readonly'],
+  ['textarea', 'required'],
+  ['keygen', 'autofocus'],
+  ['keygen', 'disabled'],
+  ['details', 'open'],
+  ['menuitem', 'checked'],
+  ['menuitem', 'default'],
+  ['menuitem', 'disabled'],
+  ['dialog', 'open'],
 ) {
   my $attr = $test->[2] // $test->[1];
   test {
@@ -231,27 +252,31 @@ for my $el_name (qw(title script)) {
   } n => 7, name => [$el_name, 'text'];
 }
 
-for my $el_name (qw(a)) {
+for my $test (
+  ['a', 'text'],
+  ['textarea', 'default_value'],
+) {
+  my $attr = $test->[1];
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($el_name);
-    is $el->text, '';
-    $el->text ('hoge');
-    is $el->text, 'hoge';
+    my $el = $doc->create_element ($test->[0]);
+    is $el->$attr, '';
+    $el->$attr ('hoge');
+    is $el->$attr, 'hoge';
     $el->append_child ($doc->create_element ('foo'))->text_content ('abc');
     my $node1 = $el->append_child ($doc->create_text_node ('ahq'));
-    is $el->text, 'hogeabcahq';
-    $el->text ('');
+    is $el->$attr, 'hogeabcahq';
+    $el->$attr ('');
     is $el->first_child, undef;
     is $node1->parent_node, undef;
-    $el->text ('abc');
-    is $el->text, 'abc';
+    $el->$attr ('abc');
+    is $el->$attr, 'abc';
     my $text = $el->first_child;
-    $el->text ('bbqa');
+    $el->$attr ('bbqa');
     is $text->parent_node, undef;
     done $c;
-  } n => 7, name => [$el_name, 'text'];
+  } n => 7, name => [$test->[0], $attr];
 }
 
 for my $test (
@@ -329,6 +354,7 @@ for my $test (
 
 for my $test (
   ['input', 'maxlength', -1],
+  ['textarea', 'maxlength', -1],
 ) {
   test {
     my $c = shift;
@@ -510,6 +536,8 @@ for my $test (
 for my $test (
   ['colgroup', 'span', 1],
   ['col', 'span', 1],
+  ['textarea', 'cols', 20],
+  ['textarea', 'rows', 2],
 ) {
   test {
     my $c = shift;
@@ -572,9 +600,9 @@ for my $test (
     }
     for (
       ["" => $test->[2]],
-      ["0" => 1],
-      ["+0.12" => 1],
-      ["-0.12" => 1],
+      ["0" => $test->[2]],
+      ["+0.12" => $test->[2]],
+      ["-0.12" => $test->[2]],
       ["120.61" => 120],
       ["-6563abc" => $test->[2]],
       ["2147483647" => 2**31-1],
@@ -589,7 +617,7 @@ for my $test (
       [" -655" => $test->[2]],
       ["- 513" => $test->[2]],
       ["44_524" => 44],
-      ["0x124" => 1],
+      ["0x124" => $test->[2]],
       ["213e5" => 213],
     ) {
       test {
@@ -717,6 +745,23 @@ for my $test (
      [url => 'url'],
    ],
    invalid_values => [[''], ['0'], [undef], ['default']]},
+  {element => 'textarea',
+   attr => 'inputmode',
+   default => '',
+   valid_values => [
+     [verbatim => 'verbatim'],
+     [latin => 'latin'],
+     ['latin-name' => 'latin-name'],
+     ['latin-prose' => 'latin-prose'],
+     ['full-width-latin' => 'full-width-latin'],
+     [kana => 'kana'],
+     [katakana => 'katakana'],
+     [numeric => 'numeric'],
+     [tel => 'tel'],
+     [email => 'email'],
+     [url => 'url'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default']]},
   {element => 'input',
    attr => 'type',
    default => 'text',
@@ -777,6 +822,23 @@ for my $test (
      [menu => 'menu'],
    ],
    invalid_values => [[''], ['0'], [undef], ['default']]},
+  {element => 'textarea',
+   attr => 'wrap',
+   default => 'soft',
+   valid_values => [
+     ['soft' => 'soft'],
+     ['HARd' => 'hard'],
+   ],
+   invalid_values => [[''], ['0'], [undef]]},
+  {element => 'menuitem',
+   attr => 'type',
+   default => 'command',
+   valid_values => [
+     [command => 'command'],
+     [checkbox => 'checkbox'],
+     [radio => 'radio'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default']]},
 ) {
   my $attr = $test->{attr};
   test {
@@ -829,6 +891,30 @@ test {
   is $el->type, 'select-multiple';
   done $c;
 } n => 1, name => 'select-multiple type';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('textarea');
+  is $el->type, 'textarea';
+  done $c;
+} n => 1, name => 'textarea type';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('keygen');
+  is $el->type, 'keygen';
+  done $c;
+} n => 1, name => 'keygen type';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('output');
+  is $el->type, 'output';
+  done $c;
+} n => 1, name => 'output type';
 
 run_tests;
 

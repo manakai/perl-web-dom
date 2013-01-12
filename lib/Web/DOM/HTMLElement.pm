@@ -691,20 +691,79 @@ _define_reflect_boolean default_selected => 'selected';
 package Web::DOM::HTMLTextAreaElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX autocomplete form
+
+_define_reflect_boolean autofocus => 'autofocus';
+_define_reflect_unsigned_long_positive cols => 'cols', sub { 20 };
+_define_reflect_string dirname => 'dirname';
+_define_reflect_boolean disabled => 'disabled';
+_define_reflect_enumerated inputmode => 'inputmode', {
+  verbatim => 'verbatim',
+  latin => 'latin',
+  'latin-name' => 'latin-name',
+  'latin-prose' => 'latin-prose',
+  'full-width-latin' => 'full-width-latin',
+  kana => 'kana',
+  katakana => 'katakana',
+  numeric => 'numeric',
+  tel => 'tel',
+  email => 'email',
+  url => 'url',
+  # #missing => default
+};
+_define_reflect_long_nn maxlength => 'maxlength', sub { -1 };
+_define_reflect_string name => 'name';
+_define_reflect_string placeholder => 'placeholder';
+_define_reflect_boolean readonly => 'readonly';
+_define_reflect_boolean required => 'required';
+_define_reflect_unsigned_long_positive rows => 'rows', sub { 2 };
+_define_reflect_enumerated wrap => 'wrap', {
+  soft => 'soft',
+  hard => 'hard',
+  '#missing' => 'soft',
+};
+
+sub type ($) { 'textarea' }
+
+sub default_value ($;$) {
+  if (@_ > 1) {
+    $_[0]->text_content ($_[1]);
+  }
+  return $_[0]->text_content;
+} # default_value
+
+# XXX value text_length validation labels selection
 
 package Web::DOM::HTMLKeygenElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX form keytype
+
+_define_reflect_boolean autofocus => 'autofocus';
+_define_reflect_string challenge => 'challenge';
+_define_reflect_boolean disabled => 'disabled';
+_define_reflect_string name => 'name';
+
+sub type ($) { 'keygen' }
+
+# XXX validity labels
 
 package Web::DOM::HTMLOutputElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX form html_for
+
+_define_reflect_string name => 'name';
+
+sub type ($) { 'output' }
+
+# XXX default_value value validity labels
 
 package Web::DOM::HTMLProgressElement;
 our $VERSION = '1.0';
@@ -721,26 +780,45 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLDetailsElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_boolean open => 'open';
 
 package Web::DOM::HTMLMenuElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_string type => 'type';
+_define_reflect_string label => 'label';
 
 package Web::DOM::HTMLMenuItemElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+# XXX icon command
+
+_define_reflect_enumerated type => 'type', {
+  'command' => 'command',
+  'checkbox' => 'checkbox',
+  'radio' => 'radio',
+  '#missing' => 'command',
+};
+_define_reflect_string label => 'label';
+_define_reflect_string radiogroup => 'radiogroup';
+_define_reflect_boolean disabled => 'disabled';
+_define_reflect_boolean checked => 'checked';
+_define_reflect_boolean default => 'default';
 
 package Web::DOM::HTMLDialogElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_boolean open => 'open';
+
+# XXX return_value show* close
 
 package Web::DOM::HTMLAppletElement;
 our $VERSION = '1.0';

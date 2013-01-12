@@ -1,0 +1,76 @@
+=head1 NAME
+
+Web::DOM::HTMLKeygenElement - The DOM |HTMLKeygenElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLKeygenElement> class implements the DOM
+C<HTMLKeygenElement> interface.  The class is used by the HTML
+C<keygen> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $boolean = $el->autofocus
+
+=item $el->autofocus ($boolean)
+
+Return or set whether the C<autofocus> attribute is specified or not.
+[HTML]
+
+=item $string = $el->challenge
+
+=item $el->challenge ($string)
+
+Return or set the C<challenge> attribute.  [HTML]
+
+=item $boolean = $el->disabled
+
+=item $el->disabled ($boolean)
+
+Return or set whether the C<disabled> attribute is specified or not.
+[HTML]
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the C<name> attribute.  [HTML]
+
+=item $string = $el->type
+
+Return the string C<keygen>.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-keygen-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
