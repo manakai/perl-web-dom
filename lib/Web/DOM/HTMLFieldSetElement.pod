@@ -1,0 +1,64 @@
+=head1 NAME
+
+Web::DOM::HTMLFieldSetElement - The DOM |HTMLFieldSetElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLFieldSetElement> class implements the DOM
+C<HTMLFieldSetElement> interface.  The class is used by the HTML
+C<fieldset> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+
+=item $boolean = $el->disabled
+
+=item $el->disabled ($boolean)
+
+Return or set whether the C<disabled> attribute is specified or not.
+[HTML]
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the C<name> attribute.  [HTML]
+
+=item $string = $el->type
+
+Return the string C<fieldset>.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-fieldset-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

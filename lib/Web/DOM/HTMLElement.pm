@@ -500,8 +500,14 @@ _define_reflect_string target => 'target';
 package Web::DOM::HTMLFieldSetElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX 
+_define_reflect_boolean disabled => 'disabled';
+_define_reflect_string name => 'name';
+
+sub type ($) { 'fieldset' }
+
+# XXX and more
 
 package Web::DOM::HTMLLegendElement;
 our $VERSION = '1.0';

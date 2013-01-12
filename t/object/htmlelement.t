@@ -92,6 +92,7 @@ for my $test (
   ['form', 'accept_charset', 'accept-charset'],
   ['form', 'name', 'name'],
   ['form', 'target', 'target'],
+  ['fieldset', 'name'],
 ) {
   my $attr = $test->[1];
   test {
@@ -151,6 +152,7 @@ for my $test (
   ['audio', 'muted', 'default_muted'],
   ['table', 'sortable'],
   ['form', 'novalidate'],
+  ['fieldset', 'disabled'],
 ) {
   my $attr = $test->[2] // $test->[1];
   test {
@@ -575,6 +577,14 @@ for my $test (
       (@{$test->{valid_values}} + @{$test->{invalid_values}} + 1)*2,
       name => ['reflect enumerated attr', $test->{element}, $test->{attr}];
 }
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('fieldset');
+  is $el->type, 'fieldset';
+  done $c;
+} n => 1, name => 'fieldset type';
 
 run_tests;
 
