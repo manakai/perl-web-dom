@@ -608,11 +608,11 @@ _define_reflect_string_undef cellspacing => 'cellspacing';
 sub caption ($;$) {
   if (@_ > 1) {
     _throw Web::DOM::TypeError
-        'The new value is not an HTMLTableCaptionElement'
+        'The new value is not a |caption| element'
         if defined $_[1] and
            not UNIVERSAL::isa ($_[1], 'Web::DOM::HTMLTableCaptionElement');
     _throw Web::DOM::Exception 'HierarchyRequestError',
-        'The new value is undef' unless defined $_[1];
+        'The new value is not a |caption| element' unless defined $_[1];
     my $cap = $_[0]->caption; # recursive!
     $_[0]->remove_child ($cap) if defined $cap;
     $_[0]->insert_before ($_[1], $_[0]->first_child);
@@ -642,6 +642,210 @@ sub delete_caption ($) {
   $_[0]->remove_child ($caption) if defined $caption;
   return;
 } # delete_caption
+
+sub thead ($;$) {
+  if (@_ > 1) {
+    _throw Web::DOM::TypeError
+        'The new value is not a |thead| element'
+        if defined $_[1] and
+           not UNIVERSAL::isa ($_[1], 'Web::DOM::HTMLTableSectionElement');
+    _throw Web::DOM::Exception 'HierarchyRequestError',
+        'The new value is not a |thead| element'
+            if not defined $_[1] or not $_[1]->local_name eq 'thead';
+    my $current = $_[0]->thead; # recursive!
+    $_[0]->remove_child ($current) if defined $current;
+    my $after;
+    for ($_[0]->child_nodes->to_list) {
+      next unless $_->node_type == ELEMENT_NODE;
+      next if $_->manakai_element_type_match (HTML_NS, 'caption');
+      next if $_->manakai_element_type_match (HTML_NS, 'colgroup');
+      $after = $_;
+      last;
+    }
+    $_[0]->insert_before ($_[1], $after);
+    return unless defined wantarray;
+  }
+
+  for ($_[0]->child_nodes->to_list) {
+    if ($_->node_type == ELEMENT_NODE and
+        $_->manakai_element_type_match (HTML_NS, 'thead')) {
+      return $_;
+    }
+  }
+  return undef;
+} # thead
+
+sub create_thead ($) {
+  my $current = $_[0]->thead;
+  unless (defined $current) {
+    $current = $_[0]->owner_document->create_element ('thead');
+    $_[0]->thead ($current);
+  }
+  return $current;
+} # create_thead
+
+sub delete_thead ($) {
+  my $current = $_[0]->thead;
+  $_[0]->remove_child ($current) if defined $current;
+  return;
+} # delete_thead
+
+sub tfoot ($;$) {
+  if (@_ > 1) {
+    _throw Web::DOM::TypeError
+        'The new value is not a |tfoot| element'
+        if defined $_[1] and
+           not UNIVERSAL::isa ($_[1], 'Web::DOM::HTMLTableSectionElement');
+    _throw Web::DOM::Exception 'HierarchyRequestError',
+        'The new value is not a |tfoot| element'
+            if not defined $_[1] or not $_[1]->local_name eq 'tfoot';
+    my $current = $_[0]->tfoot; # recursive!
+    $_[0]->remove_child ($current) if defined $current;
+    my $after;
+    for ($_[0]->child_nodes->to_list) {
+      next unless $_->node_type == ELEMENT_NODE;
+      next if $_->manakai_element_type_match (HTML_NS, 'caption');
+      next if $_->manakai_element_type_match (HTML_NS, 'colgroup');
+      next if $_->manakai_element_type_match (HTML_NS, 'thead');
+      $after = $_;
+      last;
+    }
+    $_[0]->insert_before ($_[1], $after);
+    return unless defined wantarray;
+  }
+
+  for ($_[0]->child_nodes->to_list) {
+    if ($_->node_type == ELEMENT_NODE and
+        $_->manakai_element_type_match (HTML_NS, 'tfoot')) {
+      return $_;
+    }
+  }
+  return undef;
+} # tfoot
+
+sub create_tfoot ($) {
+  my $current = $_[0]->tfoot;
+  unless (defined $current) {
+    $current = $_[0]->owner_document->create_element ('tfoot');
+    $_[0]->tfoot ($current);
+  }
+  return $current;
+} # create_tfoot
+
+sub delete_tfoot ($) {
+  my $current = $_[0]->tfoot;
+  $_[0]->remove_child ($current) if defined $current;
+  return;
+} # delete_tfoot
+
+sub tbodies ($) {
+  my $self = shift;
+  return $$self->[0]->collection ('tbodies', $self, sub {
+    my $node = $_[0];
+    return grep {
+      $$node->[0]->{data}->[$_]->{node_type} == ELEMENT_NODE and
+      ${$$node->[0]->{data}->[$_]->{namespace_uri} || \''} eq HTML_NS and
+      ${$$node->[0]->{data}->[$_]->{local_name}} eq 'tbody';
+    } @{$$node->[0]->{data}->[$$node->[1]]->{child_nodes} or []};
+  });
+} # tbodies
+
+sub create_tbody ($) {
+  my $tbody;
+  for (reverse $_[0]->child_nodes->to_list) {
+    if ($_->node_type == ELEMENT_NODE and
+        $_->manakai_element_type_match (HTML_NS, 'tbody')) {
+      $tbody = $_;
+      last;
+    }
+  }
+  my $new = $_[0]->owner_document->create_element ('tbody');
+  $_[0]->insert_before ($new, $tbody ? $tbody->next_sibling : undef);
+  return $new;
+} # create_tbody
+
+sub rows ($) {
+  my $self = shift;
+  return $$self->[0]->collection ('rows', $self, sub {
+    my $node = $_[0];
+    my @head;
+    my @body;
+    my @foot;
+    for (@{$$node->[0]->{data}->[$$node->[1]]->{child_nodes} or []}) {
+      my $data = $$node->[0]->{data}->[$_];
+      next unless $data->{node_type} == ELEMENT_NODE;
+      next unless ${$data->{namespace_uri} || \''} eq HTML_NS;
+      my $ln = ${$data->{local_name}};
+      if ($ln eq 'tbody') {
+        push @body, @{$$node->[0]->{data}->[$_]->{child_nodes} or []};
+      } elsif ($ln eq 'thead') {
+        push @head, @{$$node->[0]->{data}->[$_]->{child_nodes} or []};
+      } elsif ($ln eq 'tfoot') {
+        push @foot, @{$$node->[0]->{data}->[$_]->{child_nodes} or []};
+      } elsif ($ln eq 'tr') {
+        push @body, $_;
+      }
+    }
+    return grep {
+      $$node->[0]->{data}->[$_]->{node_type} == ELEMENT_NODE and
+      ${$$node->[0]->{data}->[$_]->{namespace_uri} || \''} eq HTML_NS and
+      ${$$node->[0]->{data}->[$_]->{local_name}} eq 'tr';
+    } @head, @body, @foot;
+  });
+} # rows
+
+sub insert_row ($;$) {
+  # WebIDL: long optional
+  my $index = unpack 'l', pack 'L', (defined $_[1] ? $_[1] : -1) % 2**32;
+  my $rows = $_[0]->rows;
+  my $row_count = $rows->length;
+
+  if ($index < -1 or $index > $row_count) {
+    _throw Web::DOM::Exception 'IndexSizeError',
+        'The specified row index is invalid';
+  } elsif ($row_count == 0) {
+    my $tbodies = $_[0]->tbodies;
+    if ($tbodies->length == 0) {
+      my $doc = $_[0]->owner_document;
+      my $tbody = $doc->create_element ('tbody');
+      my $tr = $doc->create_element ('tr');
+      $tbody->append_child ($tr);
+      $_[0]->append_child ($tbody);
+      return $tr;
+    } else {
+      my $tr = $_[0]->owner_document->create_element ('tr');
+      return $tbodies->[-1]->append_child ($tr);
+    }
+  } elsif ($index == -1 or $index == $row_count) {
+    my $tr = $_[0]->owner_document->create_element ('tr');
+    return $rows->[-1]->parent_node->append_child ($tr);
+  } else {
+    my $tr = $_[0]->owner_document->create_element ('tr');
+    my $after = $rows->[$index];
+    return $after->parent_node->insert_before ($tr, $after);
+  }
+} # insert_row
+
+sub delete_row ($$) {
+  # WebIDL: long
+  my $index = unpack 'l', pack 'L', $_[1] % 2**32;
+  my $rows = $_[0]->rows;
+  my $row_count = @$rows;
+
+  # 1.
+  $index = $row_count - 1 if $index == -1;
+
+  # 2.
+  if ($index < 0 or $index >= $row_count) {
+    _throw Web::DOM::Exception 'IndexSizeError',
+        'The specified row index is invalid';
+  }
+
+  # 3.
+  my $row = $rows->[$index];
+  $row->parent_node->remove_child ($row);
+  return;
+} # delete_row
 
 package Web::DOM::HTMLTableCaptionElement;
 our $VERSION = '1.0';

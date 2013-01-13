@@ -345,6 +345,8 @@ sub node ($$) {
 ##   - {scripts}                  - $node->scripts
 ##   - {links}                    - $node->links
 ##   - {anchors}                  - $node->anchors
+##   - {tbodies}                  - $node->tbodies
+##   - {rows}                     - $node->rows
 ##   - {"by_class_name$;$cls"}    - $node->get_elements_by_class_name ($cls)
 ##   - {"by_tag_name$;$ln"}       - $node->get_elements_by_tag_name ($ln)
 ##   - {"by_tag_name_ns$;$n$;$l"} - $node->get_elements_by_tag_name_ns ($n, $l)

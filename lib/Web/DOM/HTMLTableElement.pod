@@ -27,9 +27,48 @@ Return the C<caption> element for the table.  If the table does not
 contain the C<caption> element, a new element is created and returned.
 [HTML]
 
+=item $tbody = $el->create_tbody
+
+Create a new C<tbody> element, insert it after the last C<tbody>
+element (or the end of the table), and return it.  [HTML]
+
+=item $thead = $el->create_tfoot
+
+Return the C<tfoot> element for the table.  If the table does not
+contain the C<tfoot> element, a new element is created and returned.
+[HTML]
+
+=item $thead = $el->create_thead
+
+Return the C<thead> element for the table.  If the table does not
+contain the C<thead> element, a new element is created and returned.
+[HTML]
+
 =item $el->delete_caption
 
 Remove the C<caption> element from the table, if any.  [HTML]
+
+=item $el->delete_row ($index)
+
+Return the table row (C<tr> element) with the specified index.  [HTML]
+
+=item $el->delete_tfoot
+
+Remove the C<tfoot> element from the table, if any.  [HTML]
+
+=item $el->delete_thead
+
+Remove the C<thead> element from the table, if any.  [HTML]
+
+=item $tr = $el->insert_row ($index)
+
+Insert a table row (C<tr> element) at the specified postion in the
+table and return the element.  [HTML]
+
+=item $col = $el->rows
+
+Return the L<Web::DOM::HTMLCollection> containing the rows (C<tr>
+elements) of the table.  [HTML]
 
 =item $boolean = $el->sortable
 
@@ -37,6 +76,23 @@ Remove the C<caption> element from the table, if any.  [HTML]
 
 Return or set whether the C<sortable> attribute is specified or not.
 [HTML]
+
+=item $col = $el->tbodies
+
+Return the L<Web::DOM::HTMLCollection> containing the C<tbody>
+children of the element.  [HTML]
+
+=item $tfoot = $el->tfoot
+
+=item $el->tfoot ($tfoot)
+
+Return or set the C<tfoot> element for the table.  [HTML]
+
+=item $thead = $el->thead
+
+=item $el->thead ($thead)
+
+Return or set the C<thead> element for the table.  [HTML]
 
 =back
 

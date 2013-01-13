@@ -1484,141 +1484,440 @@ test {
   done $c;
 } n => 4, name => 'script.html_for';
 
+for my $name (qw(caption thead tfoot)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    is $table->$name, undef;
+
+    my $cap1 = $doc->create_element ($name);
+    $table->$name ($cap1);
+    is $table->$name, $cap1;
+    is $cap1->parent_node, $table;
+
+    my $cap2 = $doc->create_element ($name);
+    $table->$name ($cap2);
+    is $table->$name, $cap2;
+    is $cap2->parent_node, $table;
+    is $cap1->parent_node, undef;
+
+    $table->append_child ($doc->create_element ('foo'));
+    $table->insert_before ($doc->create_element ('foo'), $cap2);
+    $table->$name ($cap2);
+    is $table->first_child, $cap2;
+    $table->append_child ($cap1);
+    $table->append_child ($cap2);
+
+    is $table->$name, $cap1;
+    my $cap3 = $doc->create_element ($name);
+    $table->$name ($cap3);
+    is $table->$name, $cap3;
+    is $cap1->parent_node, undef;
+    is $cap2->parent_node, $table;
+    is $cap3->parent_node, $table;
+    is $table->first_child, $cap3;
+
+    done $c;
+  } n => 13, name => ['table', $name];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    dies_here_ok {
+      $table->$name (undef);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'HierarchyRequestError';
+    is $@->message, "The new value is not a |$name| element";
+    is $table->first_child, undef;
+    done $c;
+  } n => 5, name => ['table', $name, 'undef'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    dies_here_ok {
+      $table->$name ($doc->create_element_ns (undef, $name));
+    };
+    isa_ok $@, 'Web::DOM::TypeError';
+    is $@->name, 'TypeError';
+    is $@->message, "The new value is not a |$name| element";
+    is $table->first_child, undef;
+    done $c;
+  } n => 5, name => ['table', $name, 'not expected element'];
+
+  my $create_name = "create_$name";
+  my $pfx = $name eq 'caption' ? '' : '<tr><td>';
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html ('<tr><th><td>hoge<tbody>');
+    my $cap = $table->$create_name;
+    is $table->child_nodes->length, 3;
+    is $table->first_child, $cap;
+    isa_ok $cap, 'Web::DOM::HTMLElement';
+    is $cap->namespace_uri, 'http://www.w3.org/1999/xhtml';
+    is $cap->local_name, $name;
+    is $cap->first_child, undef;
+    done $c;
+  } n => 6, name => ['table', $create_name, 'new'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name>");
+    my $caption = $table->last_child;
+    my $cap = $table->$create_name;
+    is $table->child_nodes->length, 3;
+    is $table->last_child, $cap;
+    isa_ok $cap, 'Web::DOM::HTMLElement';
+    is $cap, $caption;
+    is $cap->text_content, 'hoge';
+    done $c;
+  } n => 5, name => ['table', $create_name, 'existing'];
+
+  my $delete_name = "delete_$name";
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name>");
+    my $caption = $table->last_child;
+    $table->$delete_name;
+    is $table->child_nodes->length, 2;
+    is $caption->parent_node, undef;
+    done $c;
+  } n => 2, name => ['table', $delete_name, 'deleted'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html
+        ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name><$name>${pfx}hogefuga</$name>");
+    my $caption1 = $table->last_child;
+    my $caption2 = $caption1->previous_sibling;
+    $table->$delete_name;
+    is $table->child_nodes->length, 3;
+    is $caption2->parent_node, undef;
+    is $caption1->parent_node, $table;
+    is $table->last_child, $caption1;
+    done $c;
+  } n => 4, name => ['table', $delete_name, 'deleted multiple'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html ('<tr><th><td>hoge<tbody>');
+    $table->$delete_name;
+    is $table->child_nodes->length, 2;
+    done $c;
+  } n => 1, name => ['table', $delete_name, 'not found'];
+}
+
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $table = $doc->create_element ('table');
-  is $table->caption, undef;
+  $table->inner_html ('<colgroup/><caption/><caption/><!----> <col/><tbody/>');
+  my $thead = $doc->create_element ('thead');
+  $table->thead ($thead);
+  is $table->child_nodes->[5], $thead;
+  done $c;
+} n => 1, name => 'thead insertion point';
 
-  my $cap1 = $doc->create_element ('caption');
-  $table->caption ($cap1);
-  is $table->caption, $cap1;
-  is $cap1->parent_node, $table;
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  $table->inner_html ('<colgroup/><caption/><caption/><!----> <col/><tbody/>');
+  my $thead = $table->create_thead;
+  is $table->child_nodes->[5], $thead;
+  done $c;
+} n => 1, name => 'create_thead insertion point';
 
-  my $cap2 = $doc->create_element ('caption');
-  $table->caption ($cap2);
-  is $table->caption, $cap2;
-  is $cap2->parent_node, $table;
-  is $cap1->parent_node, undef;
+for my $name (qw(tbody tfoot)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    $table->inner_html ('<colgroup/><caption/><caption/><!----> <col/><tbody/>');
+    my $tbody = $doc->create_element ($name);
+    dies_here_ok {
+      $table->thead ($tbody);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'HierarchyRequestError';
+    is $@->message, 'The new value is not a |thead| element';
+    is $tbody->parent_node, undef;
+    is $table->child_nodes->length, 7;
+    done $c;
+  } n => 6, name => ['create_thead bad element', $name];
+}
 
-  $table->append_child ($doc->create_element ('foo'));
-  $table->insert_before ($doc->create_element ('foo'), $cap2);
-  $table->caption ($cap2);
-  is $table->first_child, $cap2;
-  $table->append_child ($cap1);
-  $table->append_child ($cap2);
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  $table->inner_html ('<colgroup/><caption/><caption/><thead/><!----> <col/><tbody/>');
+  my $tfoot = $doc->create_element ('tfoot');
+  $table->tfoot ($tfoot);
+  is $table->child_nodes->[6], $tfoot;
+  done $c;
+} n => 1, name => 'tfoot insertion point';
 
-  is $table->caption, $cap1;
-  my $cap3 = $doc->create_element ('caption');
-  $table->caption ($cap3);
-  is $table->caption, $cap3;
-  is $cap1->parent_node, undef;
-  is $cap2->parent_node, $table;
-  is $cap3->parent_node, $table;
-  is $table->first_child, $cap3;
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  $table->inner_html ('<colgroup/><caption/><thead/><caption/><!----> <col/><tbody/>');
+  my $tfoot = $table->create_tfoot;
+  is $table->child_nodes->[6], $tfoot;
+  done $c;
+} n => 1, name => 'create_tfoot insertion point';
+
+for my $name (qw(thead tbody)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    $table->inner_html ('<colgroup/><caption/><caption/><!----> <col/><tbody/>');
+    my $tbody = $doc->create_element ($name);
+    dies_here_ok {
+      $table->tfoot ($tbody);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'HierarchyRequestError';
+    is $@->message, 'The new value is not a |tfoot| element';
+    is $tbody->parent_node, undef;
+    is $table->child_nodes->length, 7;
+    done $c;
+  } n => 6, name => ['create_tfoot bad element', $name];
+}
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  my $tbody = $table->create_tbody;
+  isa_ok $tbody, 'Web::DOM::HTMLTableSectionElement';
+  is $tbody->namespace_uri, q<http://www.w3.org/1999/xhtml>;
+  is $tbody->local_name, 'tbody';
+  is $table->first_child, $tbody;
+  is $table->child_nodes->length, 1;
+  is $tbody->child_nodes->length, 0;
+  done $c;
+} n => 6, name => 'create_tbody empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  $table->inner_html (q{<tbody/><!----><tfoot/><a/><!---->});
+  my $tbody = $table->create_tbody;
+  isa_ok $tbody, 'Web::DOM::HTMLTableSectionElement';
+  is $tbody->namespace_uri, q<http://www.w3.org/1999/xhtml>;
+  is $tbody->local_name, 'tbody';
+  is $table->child_nodes->length, 6;
+  is $table->child_nodes->[1], $tbody;
+  is $tbody->child_nodes->length, 0;
+  done $c;
+} n => 6, name => 'create_tbody not empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  $table->inner_html (q{<tbody xmlns=""/><!----><tfoot/><a/><!---->});
+  my $tbody = $table->create_tbody;
+  isa_ok $tbody, 'Web::DOM::HTMLTableSectionElement';
+  is $tbody->namespace_uri, q<http://www.w3.org/1999/xhtml>;
+  is $tbody->local_name, 'tbody';
+  is $table->child_nodes->length, 6;
+  is $table->child_nodes->[5], $tbody;
+  is $tbody->child_nodes->length, 0;
+  done $c;
+} n => 6, name => 'create_tbody not empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  $table->inner_html (q{<tbody/><tfoot><tbody/></tfoot><tbody/><tbody/><caption/><tbody xmlns=""/> <!----><tbody/>});
+  my $col1 = $table->tbodies;
+  isa_ok $col1, 'Web::DOM::HTMLCollection';
+  is $col1->length, 4;
+  is $col1->[0], $table->first_child;
+  is $col1->[1], $table->child_nodes->[2];
+  is $col1->[2], $table->child_nodes->[3];
+  is $col1->[3], $table->child_nodes->[-1];
+  my $el1 = $doc->create_element ('tbody');
+  $table->insert_before ($el1, $table->first_child);
+  is $col1->length, 5;
+  is $col1->[0], $el1;
+  is $table->tbodies, $col1;
+  isnt $doc->create_element ('table')->tbodies, $col1;
+  done $c;
+} n => 10, name => 'tbodies';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  my $col1 = $table->rows;
+  isa_ok $col1, 'Web::DOM::HTMLCollection';
+  is $col1->length, 0;
+
+  $table->inner_html (q{<caption><tr n="1"/></caption><thead
+><tr n="2"/><tr n="3"/>
+<hoge/></thead><tfoot><tr n="4"/></tfoot>
+<tbody/><tr n="5"/>
+<tbody><tr n="6"/><tr n="7"/><tr n="8"><tr n="9"/></tr
+><thead><tr n="10"/></thead></tbody>
+<tr n="11"/><foo><tr n="12"/></foo><tfoot><tr n="12"/></tfoot>});
+  is $col1->length, 9;
+  is $col1->[0]->get_attribute ('n'), 2;
+  is $col1->[1]->get_attribute ('n'), 3;
+  is $col1->[2]->get_attribute ('n'), 5;
+  is $col1->[3]->get_attribute ('n'), 6;
+  is $col1->[4]->get_attribute ('n'), 7;
+  is $col1->[5]->get_attribute ('n'), 8;
+  is $col1->[6]->get_attribute ('n'), 11;
+  is $col1->[7]->get_attribute ('n'), 4;
+  is $col1->[8]->get_attribute ('n'), 12;
+  is $table->rows, $col1;
+  done $c;
+} n => 13, name => 'rows';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  $table->inner_html (q{<!----> hoge <td/> <thead/>});
+  my $tr = $table->insert_row (0);
+  is $tr->namespace_uri, $table->namespace_uri;
+  is $tr->local_name, 'tr';
+  is $tr->parent_node, $table->last_child;
+  is $table->last_child->local_name, 'tbody';
+  is $table->last_child->namespace_uri, $tr->namespace_uri;
+  my $tbody = $table->last_child;
+  is $tr->first_child, undef;
+
+  my $tr2 = $table->insert_row (1);
+  is $tr2->previous_sibling, $tr;
+  is $tr2->local_name, 'tr';
+
+  $tr->parent_node->text_content ('');
+  
+  my $tr3 = $table->insert_row (0);
+  is $tr3->local_name, 'tr';
+  is $tr3->parent_node, $tbody;
+
+  my $tr4 = $doc->create_element ('tr');
+  $table->append_child ($tr4);
+  my $tr5 = $table->insert_row (-1);
+  is $tr5->previous_sibling, $tr4;
+
+  my $tfoot = $doc->create_element ('tfoot');
+  $tfoot->inner_html (q{<tr/>});
+  my $tr6 = $tfoot->first_child;
+
+  $table->insert_before ($tfoot, $table->first_child);
+
+  my $tr7 = $table->insert_row (4);
+  is $tr7->previous_sibling, $tr6;
+
+  my $tr8 = $table->insert_row (3);
+  is $tr8->previous_sibling, undef;
+  is $tr8->parent_node, $tfoot;
 
   done $c;
-} n => 13, name => 'table.caption';
+} n => 14, name => 'insert_row';
 
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $table = $doc->create_element ('table');
-  dies_here_ok {
-    $table->caption (undef);
-  };
-  isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'HierarchyRequestError';
-  is $@->message, 'The new value is undef';
-  is $table->first_child, undef;
-  done $c;
-} n => 5, name => 'table.caption undef';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
-  dies_here_ok {
-    $table->caption ($doc->create_element_ns (undef, 'caption'));
-  };
-  isa_ok $@, 'Web::DOM::TypeError';
-  is $@->name, 'TypeError';
-  is $@->message, 'The new value is not an HTMLTableCaptionElement';
-  is $table->first_child, undef;
-  done $c;
-} n => 5, name => 'table.caption not caption';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  $doc->manakai_is_html (1);
-  my $table = $doc->create_element ('table');
-  $table->inner_html ('<tr><th><td>hoge<tbody>');
-  my $cap = $table->create_caption;
-  is $table->child_nodes->length, 3;
-  is $table->first_child, $cap;
-  isa_ok $cap, 'Web::DOM::HTMLTableCaptionElement';
-  is $cap->namespace_uri, 'http://www.w3.org/1999/xhtml';
-  is $cap->local_name, 'caption';
-  is $cap->first_child, undef;
-  done $c;
-} n => 6, name => 'table.create_caption new';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  $doc->manakai_is_html (1);
-  my $table = $doc->create_element ('table');
-  $table->inner_html ('<tr><th><td>hoge<tbody><caption>hoge</caption>');
-  my $caption = $table->last_child;
-  my $cap = $table->create_caption;
-  is $table->child_nodes->length, 3;
-  is $table->last_child, $cap;
-  isa_ok $cap, 'Web::DOM::HTMLTableCaptionElement';
-  is $cap, $caption;
-  is $cap->text_content, 'hoge';
-  done $c;
-} n => 5, name => 'table.create_caption existing';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  $doc->manakai_is_html (1);
-  my $table = $doc->create_element ('table');
-  $table->inner_html ('<tr><th><td>hoge<tbody><caption>hoge</caption>');
-  my $caption = $table->last_child;
-  $table->delete_caption;
+  $table->inner_html (q{<tbody><tr/></tbody><tr/>});
+  for my $index (-6, -51, 3, 12, 21, 2**32+3, 2**31) {
+    dies_here_ok {
+      $table->insert_row ($index);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'IndexSizeError';
+    is $@->message, 'The specified row index is invalid';
+  }
   is $table->child_nodes->length, 2;
-  is $caption->parent_node, undef;
+  is $table->first_child->child_nodes->length, 1;
   done $c;
-} n => 2, name => 'table.delete_caption deleted';
+} n => 7*4+2, name => 'insert_row index size error';
 
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  $doc->manakai_is_html (1);
   my $table = $doc->create_element ('table');
-  $table->inner_html ('<tr><th><td>hoge<tbody><caption>hoge</caption><caption>hogefuga</caption>');
-  my $caption1 = $table->last_child;
-  my $caption2 = $caption1->previous_sibling;
-  $table->delete_caption;
-  is $table->child_nodes->length, 3;
-  is $caption2->parent_node, undef;
-  is $caption1->parent_node, $table;
-  is $table->last_child, $caption1;
+  $table->inner_html (q{<tbody><tr/></tbody><tr/>});
+  
+  $table->insert_row (0+'nan')->set_attribute (id => 1);
+  $table->insert_row (0+'inf')->set_attribute (id => 2);
+  $table->insert_row (1.41)->set_attribute (id => 3);
+  $table->insert_row (2**32-1)->set_attribute (id => 4);
+
+  is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr id="2"></tr><tr id="3"></tr><tr id="1"></tr><tr></tr></tbody><tr xmlns="http://www.w3.org/1999/xhtml"></tr><tr xmlns="http://www.w3.org/1999/xhtml" id="4"></tr>};
   done $c;
-} n => 4, name => 'table.delete_caption deleted multiple';
+} n => 1, name => 'insert_row index stupid';
 
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  $doc->manakai_is_html (1);
   my $table = $doc->create_element ('table');
-  $table->inner_html ('<tr><th><td>hoge<tbody>');
-  $table->delete_caption;
-  is $table->child_nodes->length, 2;
+  $table->insert_row->set_attribute (id => 1);
+  $table->insert_row->set_attribute (id => 2);
+  is $table->outer_html, q{<table xmlns="http://www.w3.org/1999/xhtml"><tbody><tr id="1"></tr><tr id="2"></tr></tbody></table>};
   done $c;
-} n => 1, name => 'table.delete_caption not found';
+} n => 1, name => 'insert_row default';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  $table->inner_html (q{<tbody><tr/><tr/></tbody><tr/>});
+  $table->delete_row (-1);
+  is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr></tr><tr></tr></tbody>};
+  $table->delete_row (1);
+  is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr></tr></tbody>};
+  $table->delete_row (2**32);
+  is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"></tbody>};
+  done $c;
+} n => 3, name => 'delete_row';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  $table->inner_html (q{<tbody><tr/><tr/></tbody><tr/>});
+  for (2**32-2, -50.12, 100.21, 3, -2) {
+    dies_here_ok {
+      $table->delete_row ($_);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'IndexSizeError';
+    is $@->message, 'The specified row index is invalid';
+  }
+  is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr></tr><tr></tr></tbody><tr xmlns="http://www.w3.org/1999/xhtml"></tr>};
+  done $c;
+} n => 4*5 + 1, name => 'delete_row error';
 
 run_tests;
 
