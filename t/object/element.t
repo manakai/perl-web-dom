@@ -256,8 +256,16 @@ for my $test (
    ['HTMLUnknownElement']],
   [[HTML_NS, 'plaintext'], ['Element', 'HTMLElement'],
    ['HTMLUnknownElement']],
-  [[HTML_NS, 'xmp'], ['Element', 'HTMLElement'],
-   ['HTMLUnknownElement']],
+  [[HTML_NS, 'xmp'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
+  [[HTML_NS, 'acronym'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
+  [[HTML_NS, 'noframes'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
+  [[HTML_NS, 'noembed'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
+  [[HTML_NS, 'strike'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
+  [[HTML_NS, 'big'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
+  [[HTML_NS, 'blink'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
+  [[HTML_NS, 'center'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
+  [[HTML_NS, 'nobr'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
+  [[HTML_NS, 'tt'], ['Element', 'HTMLElement'], ['HTMLUnknownElement']],
   [[HTML_NS, 'bgsound'], ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
   [[HTML_NS, 'isindex'], ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
   [[HTML_NS, 'multicol'], ['Element', 'HTMLElement', 'HTMLUnknownElement'],
@@ -265,10 +273,16 @@ for my $test (
   [[HTML_NS, 'nextid'], ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
   [[HTML_NS, 'rb'], ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
   [[HTML_NS, 'spacer'], ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
+  [[HTML_NS, 'unknown'], ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
+  [[HTML_NS, 'Strong'], ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
+  [[HTML_NS, "\x{500}"], ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
+  [[HTML_NS, [undef, 'html:p']],
+   ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
 ) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
+    $doc->strict_error_checking (0);
     my $el = $doc->create_element_ns (@{$test->[0]});
     for (@{$test->[1]}) {
       ok $el->isa ("Web::DOM::$_");

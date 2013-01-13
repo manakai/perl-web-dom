@@ -280,6 +280,15 @@ for (
   ['listing' => 'HTMLElement'],
   ['plaintext' => 'HTMLElement'],
   ['xmp' => 'HTMLElement'],
+  ['acronym' => 'HTMLElement'],
+  ['noframes' => 'HTMLElement'],
+  ['noembed' => 'HTMLElement'],
+  ['strike' => 'HTMLElement'],
+  ['big' => 'HTMLElement'],
+  ['blink' => 'HTMLElement'],
+  ['center' => 'HTMLElement'],
+  ['nobr' => 'HTMLElement'],
+  ['tt' => 'HTMLElement'],
   ['template' => 'HTMLTemplateElement'],
 ) {
   $ElementClass->{Web::DOM::Internal::HTML_NS}->{$_->[0]}
