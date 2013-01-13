@@ -268,12 +268,24 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 package Web::DOM::HTMLOListElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
+use Web::DOM::Node;
 use Web::DOM::Element;
 
 _define_reflect_string type => 'type';
 _define_reflect_boolean reversed => 'reversed';
 
-# XXX start
+_define_reflect_long start => 'start', sub {
+  if ($_[0]->reversed) {
+    my @n = grep {
+      $_->node_type == ELEMENT_NODE and
+      $_->manakai_element_type_match (HTML_NS, 'li');
+    } $_[0]->child_nodes->to_list;
+    return scalar @n;
+  } else {
+    return 1;
+  }
+};
 
 _define_reflect_boolean compact => 'compact';
 
@@ -575,6 +587,8 @@ _define_reflect_boolean nohref => 'nohref';
 package Web::DOM::HTMLTableElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
+use Web::DOM::Node;
 use Web::DOM::Element;
 
 _define_reflect_boolean sortable => 'sortable';
@@ -590,6 +604,44 @@ _define_reflect_string width => 'width';
 _define_reflect_string_undef bgcolor => 'bgcolor';
 _define_reflect_string_undef cellpadding => 'cellpadding';
 _define_reflect_string_undef cellspacing => 'cellspacing';
+
+sub caption ($;$) {
+  if (@_ > 1) {
+    _throw Web::DOM::TypeError
+        'The new value is not an HTMLTableCaptionElement'
+        if defined $_[1] and
+           not UNIVERSAL::isa ($_[1], 'Web::DOM::HTMLTableCaptionElement');
+    _throw Web::DOM::Exception 'HierarchyRequestError',
+        'The new value is undef' unless defined $_[1];
+    my $cap = $_[0]->caption; # recursive!
+    $_[0]->remove_child ($cap) if defined $cap;
+    $_[0]->insert_before ($_[1], $_[0]->first_child);
+    return unless defined wantarray;
+  }
+
+  for ($_[0]->child_nodes->to_list) {
+    if ($_->node_type == ELEMENT_NODE and
+        $_->manakai_element_type_match (HTML_NS, 'caption')) {
+      return $_;
+    }
+  }
+  return undef;
+} # caption
+
+sub create_caption ($) {
+  my $caption = $_[0]->caption;
+  unless (defined $caption) {
+    $caption = $_[0]->owner_document->create_element ('caption');
+    $_[0]->insert_before ($caption, $_[0]->first_child);
+  }
+  return $caption;
+} # create_caption
+
+sub delete_caption ($) {
+  my $caption = $_[0]->caption;
+  $_[0]->remove_child ($caption) if defined $caption;
+  return;
+} # delete_caption
 
 package Web::DOM::HTMLTableCaptionElement;
 our $VERSION = '1.0';

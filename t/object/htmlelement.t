@@ -429,6 +429,7 @@ for my $test (
   ['li', 'value', 0],
   ['basefont', 'size', 0],
   ['pre', 'width', 0],
+  ['ol', 'start', 1],
 ) {
   test {
     my $c = shift;
@@ -477,9 +478,9 @@ for my $test (
       ["120.61" => 120],
       ["-6563abc" => -6563],
       ["2147483647" => 2**31-1],
-      ["2147483648" => 0],
-      ["1452151544454" => 0],
-      ["-1452151544454" => 0],
+      ["2147483648" => $test->[2]],
+      ["1452151544454" => $test->[2]],
+      ["-1452151544454" => $test->[2]],
       ["abc" => $test->[2]],
       ["inf" => $test->[2]],
       ["-inf" => $test->[2]],
@@ -494,11 +495,34 @@ for my $test (
       test {
         $el->set_attribute ($attr => $_->[0]);
         is $el->$attr, $_->[1];
-      } $c, name => 'getter', n => 1;
+      } $c, name => ['getter', $_->[0]], n => 1;
     }
     done $c;
   } n => 1 + 2*27 + 1*20, name => ['reflect long', @$test];
 }
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('ol');
+  $el->reversed (1);
+  is $el->start, 0;
+  $el->append_child ($doc->create_element ('li'));
+  is $el->start, 1;
+  $el->append_child ($doc->create_element_ns (undef, 'li'));
+  $el->append_child ($doc->create_comment ('foo'));
+  is $el->start, 1;
+  $el->append_child ($doc->create_element ('li'));
+  $el->append_child ($doc->create_element ('ul'))
+      ->append_child ($doc->create_element ('li'));
+  $el->append_child ($doc->create_element ('li'));
+  is $el->start, 3;
+  $el->start (4);
+  is $el->start, 4;
+  $el->start (-13);
+  is $el->start, -13;
+  done $c;
+} n => 6, name => 'reflect long ol reversed';
 
 for my $test (
   ['input', 'maxlength', -1],
@@ -1459,6 +1483,142 @@ test {
   is $el->html_for, '';
   done $c;
 } n => 4, name => 'script.html_for';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  is $table->caption, undef;
+
+  my $cap1 = $doc->create_element ('caption');
+  $table->caption ($cap1);
+  is $table->caption, $cap1;
+  is $cap1->parent_node, $table;
+
+  my $cap2 = $doc->create_element ('caption');
+  $table->caption ($cap2);
+  is $table->caption, $cap2;
+  is $cap2->parent_node, $table;
+  is $cap1->parent_node, undef;
+
+  $table->append_child ($doc->create_element ('foo'));
+  $table->insert_before ($doc->create_element ('foo'), $cap2);
+  $table->caption ($cap2);
+  is $table->first_child, $cap2;
+  $table->append_child ($cap1);
+  $table->append_child ($cap2);
+
+  is $table->caption, $cap1;
+  my $cap3 = $doc->create_element ('caption');
+  $table->caption ($cap3);
+  is $table->caption, $cap3;
+  is $cap1->parent_node, undef;
+  is $cap2->parent_node, $table;
+  is $cap3->parent_node, $table;
+  is $table->first_child, $cap3;
+
+  done $c;
+} n => 13, name => 'table.caption';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  dies_here_ok {
+    $table->caption (undef);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  is $@->message, 'The new value is undef';
+  is $table->first_child, undef;
+  done $c;
+} n => 5, name => 'table.caption undef';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+  dies_here_ok {
+    $table->caption ($doc->create_element_ns (undef, 'caption'));
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->name, 'TypeError';
+  is $@->message, 'The new value is not an HTMLTableCaptionElement';
+  is $table->first_child, undef;
+  done $c;
+} n => 5, name => 'table.caption not caption';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $table = $doc->create_element ('table');
+  $table->inner_html ('<tr><th><td>hoge<tbody>');
+  my $cap = $table->create_caption;
+  is $table->child_nodes->length, 3;
+  is $table->first_child, $cap;
+  isa_ok $cap, 'Web::DOM::HTMLTableCaptionElement';
+  is $cap->namespace_uri, 'http://www.w3.org/1999/xhtml';
+  is $cap->local_name, 'caption';
+  is $cap->first_child, undef;
+  done $c;
+} n => 6, name => 'table.create_caption new';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $table = $doc->create_element ('table');
+  $table->inner_html ('<tr><th><td>hoge<tbody><caption>hoge</caption>');
+  my $caption = $table->last_child;
+  my $cap = $table->create_caption;
+  is $table->child_nodes->length, 3;
+  is $table->last_child, $cap;
+  isa_ok $cap, 'Web::DOM::HTMLTableCaptionElement';
+  is $cap, $caption;
+  is $cap->text_content, 'hoge';
+  done $c;
+} n => 5, name => 'table.create_caption existing';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $table = $doc->create_element ('table');
+  $table->inner_html ('<tr><th><td>hoge<tbody><caption>hoge</caption>');
+  my $caption = $table->last_child;
+  $table->delete_caption;
+  is $table->child_nodes->length, 2;
+  is $caption->parent_node, undef;
+  done $c;
+} n => 2, name => 'table.delete_caption deleted';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $table = $doc->create_element ('table');
+  $table->inner_html ('<tr><th><td>hoge<tbody><caption>hoge</caption><caption>hogefuga</caption>');
+  my $caption1 = $table->last_child;
+  my $caption2 = $caption1->previous_sibling;
+  $table->delete_caption;
+  is $table->child_nodes->length, 3;
+  is $caption2->parent_node, undef;
+  is $caption1->parent_node, $table;
+  is $table->last_child, $caption1;
+  done $c;
+} n => 4, name => 'table.delete_caption deleted multiple';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $table = $doc->create_element ('table');
+  $table->inner_html ('<tr><th><td>hoge<tbody>');
+  $table->delete_caption;
+  is $table->child_nodes->length, 2;
+  done $c;
+} n => 1, name => 'table.delete_caption not found';
 
 run_tests;
 

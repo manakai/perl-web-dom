@@ -11,9 +11,25 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
+
+=item $caption = $el->caption
+
+=item $el->caption ($caption)
+
+Return or set the C<caption> element for the table.  [HTML]
+
+=item $caption = $el->create_caption
+
+Return the C<caption> element for the table.  If the table does not
+contain the C<caption> element, a new element is created and returned.
+[HTML]
+
+=item $el->delete_caption
+
+Remove the C<caption> element from the table, if any.  [HTML]
 
 =item $boolean = $el->sortable
 

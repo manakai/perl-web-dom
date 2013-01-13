@@ -22,6 +22,12 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 Return or set whether the C<reversed> attribute is specified or not.
 [HTML]
 
+=item $integer = $el->start
+
+=item $el->start ($integer)
+
+Return or set the C<start> attribute.  [HTML]
+
 =item $string = $el->type
 
 =item $el->type ($string)
