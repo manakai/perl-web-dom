@@ -339,10 +339,16 @@ sub node ($$) {
 ##   - {general_entities}         - $node->general_entities
 ##   - {notations}                - $node->notations
 ##   - {children}                 - $node->children
+##   - {images}                   - $node->images
+##   - {embeds}                   - $node->embeds
+##   - {forms}                    - $node->forms
+##   - {scripts}                  - $node->scripts
+##   - {links}                    - $node->links
+##   - {anchors}                  - $node->anchors
 ##   - {"by_class_name$;$cls"}    - $node->get_elements_by_class_name ($cls)
 ##   - {"by_tag_name$;$ln"}       - $node->get_elements_by_tag_name ($ln)
 ##   - {"by_tag_name_ns$;$n$;$l"} - $node->get_elements_by_tag_name_ns ($n, $l)
-##   - {images}                   - $node->images
+##   - {"by_name$;$name"}         - $node->get_elements_by_name ($name)
 
 my $CollectionClass = {
   child_nodes => 'Web::DOM::NodeList',
@@ -351,6 +357,7 @@ my $CollectionClass = {
   element_types => 'Web::DOM::NamedNodeMap',
   general_entities => 'Web::DOM::NamedNodeMap',
   notations => 'Web::DOM::NamedNodeMap',
+  by_name => 'Web::DOM::NodeList',
 }; # $CollectionClass
 
 sub collection ($$$$) {
@@ -358,12 +365,32 @@ sub collection ($$$$) {
   my $id = $$root_node->[1];
   return $self->{cols}->[$id]->{$key}
       if $self->{cols}->[$id]->{$key};
-  my $class = $CollectionClass->{$key} || 'Web::DOM::HTMLCollection';
+  my $class = $CollectionClass->{[split /$;/, $key]->[0]}
+      || 'Web::DOM::HTMLCollection';
   eval qq{ require $class } or die $@;
   my $nl = bless \[$root_node, $filter, undef, $key], $class;
   weaken ($self->{cols}->[$id]->{$key} = $nl);
   return $nl;
 } # collection
+
+sub collection_by_el ($$$$$) {
+  my ($self, $node, $key, $ns, $ln) = @_;
+  return $self->collection ($key, $node, sub {
+    my $node = $_[0];
+    my $data = $$node->[0]->{data};
+    my @node_id = @{$data->[$$node->[1]]->{child_nodes} or []};
+    my @id;
+    while (@node_id) {
+      my $id = shift @node_id;
+      next unless $data->[$id]->{node_type} == 1; # ELEMENT_NODE
+      unshift @node_id, @{$data->[$id]->{child_nodes} or []};
+      next unless ${$data->[$id]->{local_name}} eq $ln;
+      next unless ${$data->[$id]->{namespace_uri} || \''} eq $ns;
+      push @id, $id;
+    }
+    return @id;
+  });
+} # collection_by_el
 
 ## Live token data structure
 ##

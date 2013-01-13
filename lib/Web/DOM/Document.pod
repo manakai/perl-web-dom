@@ -52,10 +52,6 @@ Return the encoding of the document.  [DOM] [MANAKAI]
 Return or set the C<charset> parameter value of the C<Content-Type>
 metadata.  [MANAKAI]
 
-=item $doc->clear
-
-Do nothing.  [HTML]
-
 =item $string = $doc->compat_mode
 
 Return C<BackComat> if the document is in the quirks mode, or
@@ -181,10 +177,27 @@ Return the document element of the document, if any.  [DOM]
 Return the L<Web::DOM::Configuration> object for the document.
 [DOM3CORE] [MANAKAI]
 
+=item $col = $doc->embeds
+
+=item $col = $doc->plugins
+
+Return the L<Web::DOM::HTMLCollection> object containing the C<embed>
+elements in the document.  [HTML]
+
+=item $col = $doc->forms
+
+Return the L<Web::DOM::HTMLCollection> object containing the C<form>
+elements in the document.  [HTML]
+
 =item $el = $doc->get_element_by_id ($id)
 
 Return the element whose ID is equal to the argument, if any, or
 C<undef>.  [DOM]
+
+=item $col = $doc->get_elements_by_name ($name)
+
+Return the L<Web::DOM::NodeList> containing the elements whose C<name>
+is equal to the specified value.  [HTML]
 
 =item $bool = $doc->manakai_has_bom
 
@@ -204,6 +217,11 @@ Return the C<head> element of the document, if any, or C<undef>.
 
 Return the C<html> element of the document, if any, or C<undef>.
 [MANAKAI]
+
+=item $col = $doc->images
+
+Return the L<Web::DOM::HTMLCollection> object containing the C<img>
+elements in the document.  [HTML]
 
 =item $impl = $doc->implementation
 
@@ -229,6 +247,16 @@ Return or set whether the document is an HTML document or not.
 
 Return or set whether the document is an C<iframe> C<srcdoc> document
 or not.  [MANAKAI]
+
+=item $col = $doc->links
+
+Return the L<Web::DOM::HTMLCollection> object containing the C<a> or
+C<area> elements with the C<href> attribute in the document.  [HTML]
+
+=item $col = $doc->scripts
+
+Return the L<Web::DOM::HTMLCollection> object containing the C<script>
+elements in the document.  [HTML]
 
 =item $bool = $doc->strict_error_checking
 
@@ -277,6 +305,9 @@ pseudo-attribute of the XML declaration of the document, if it is an
 XML document.  [DOM3CORE]
 
 =back
+
+Additionally, the following obsolete methods are available:
+C<anchors>, C<applets>, and C<clear>.  [HTML]
 
 =head1 SPECIFICATIONS
 

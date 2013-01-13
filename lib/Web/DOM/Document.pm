@@ -417,7 +417,95 @@ sub get_element_by_id ($$) {
   return undef;
 } # get_element_by_id
 
-# XXX anchors applets all
+sub images ($) {
+  return ${$_[0]}->[0]->collection_by_el ($_[0], 'images', HTML_NS, 'img');
+} # images
+
+sub embeds ($) {
+  return ${$_[0]}->[0]->collection_by_el ($_[0], 'embeds', HTML_NS, 'embed');
+} # embeds
+
+*plugins = \&embeds;
+
+sub forms ($) {
+  return ${$_[0]}->[0]->collection_by_el ($_[0], 'forms', HTML_NS, 'form');
+} # forms
+
+sub scripts ($) {
+  return ${$_[0]}->[0]->collection_by_el ($_[0], 'scripts', HTML_NS, 'script');
+} # scripts
+
+sub applets ($) {
+  return ${$_[0]}->[0]->collection_by_el ($_[0], 'applets', HTML_NS, 'applet');
+} # applets
+
+sub links ($) {
+  my $self = $_[0];
+  return $$self->[0]->collection ('links', $self, sub {
+    my $node = $_[0];
+    my $data = $$node->[0]->{data};
+    my @node_id = @{$data->[$$node->[1]]->{child_nodes} or []};
+    my @id;
+    while (@node_id) {
+      my $id = shift @node_id;
+      next unless $data->[$id]->{node_type} == ELEMENT_NODE;
+      unshift @node_id, @{$data->[$id]->{child_nodes} or []};
+      next unless ${$data->[$id]->{local_name}} eq 'a' or
+                  ${$data->[$id]->{local_name}} eq 'area';
+      next unless ${$data->[$id]->{namespace_uri} || \''} eq HTML_NS;
+      next unless defined $data->[$id]->{attrs}->{''}->{href};
+      push @id, $id;
+    }
+    return @id;
+  });
+} # links
+
+sub anchors ($) {
+  my $self = $_[0];
+  return $$self->[0]->collection ('anchors', $self, sub {
+    my $node = $_[0];
+    my $data = $$node->[0]->{data};
+    my @node_id = @{$data->[$$node->[1]]->{child_nodes} or []};
+    my @id;
+    while (@node_id) {
+      my $id = shift @node_id;
+      next unless $data->[$id]->{node_type} == ELEMENT_NODE;
+      unshift @node_id, @{$data->[$id]->{child_nodes} or []};
+      next unless ${$data->[$id]->{local_name}} eq 'a';
+      next unless ${$data->[$id]->{namespace_uri} || \''} eq HTML_NS;
+      next unless defined $data->[$id]->{attrs}->{''}->{name};
+      push @id, $id;
+    }
+    return @id;
+  });
+} # anchors
+
+sub get_elements_by_name ($$) {
+  my $self = $_[0];
+  my $name = ''.$_[1];
+  return $$self->[0]->collection ("by_name$;$name", $self, sub {
+    my $node = $_[0];
+    my $data = $$node->[0]->{data};
+    my @node_id = @{$data->[$$node->[1]]->{child_nodes} or []};
+    my @id;
+    while (@node_id) {
+      my $id = shift @node_id;
+      next unless $data->[$id]->{node_type} == ELEMENT_NODE;
+      unshift @node_id, @{$data->[$id]->{child_nodes} or []};
+      next unless ${$data->[$id]->{namespace_uri} || \''} eq HTML_NS;
+      next unless defined (my $value = $data->[$id]->{attrs}->{''}->{name});
+      if (ref $value) {
+        next unless $$value eq $name;
+      } else {
+        next unless $data->[$value]->{value} eq $name;
+      }
+      push @id, $id;
+    }
+    return @id;
+  });
+} # get_elements_by_name
+
+# XXX all commands get_items css_element_map
 
 # XXX getter
 
@@ -897,7 +985,7 @@ sub adopt_node ($$) {
 
 ## ------ Markup interaction ------
 
-# XXX
+# XXX open close write writeln current_script
 
 sub clear ($) { }
 
@@ -905,7 +993,7 @@ sub clear ($) { }
 
 ## ------ Browsing context and user interaction ------
 
-# XXX
+# XXX default_view active_element has_focus design_mode *command*
 
 1;
 
