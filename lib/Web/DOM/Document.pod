@@ -30,15 +30,12 @@ of the specified node and its descendant nodes to the document.  [DOM]
 Return or set the [all declarations processed] property value of the
 document.  [MANAKAI]
 
-=item $adef = $doc->create_attribute_definition ($name)
-
-Create an attribute definition (L<Web::DOM::AttributeDefinition>) with
-the specified name.  [DOMDTDEF]
-
 =item $el = $doc->body
 
-Return the body element of the document (i.e. the C<body> element or
-the C<frameset> element), if any, or C<undef>.  [HTML]
+=item $doc->body ($el)
+
+Return or set the body element of the document (i.e. the C<body>
+element or the C<frameset> element).  [HTML]
 
 =item $string = $doc->character_set
 
@@ -90,6 +87,11 @@ namespace URL and qualified name.  [MANAKAI]
 The qualified name can be represented as an array reference, where the
 first item is the prefix (or C<undef> for the null namespace) and the
 second item is the local name.  [DOMPERL]
+
+=item $adef = $doc->create_attribute_definition ($name)
+
+Create an attribute definition (L<Web::DOM::AttributeDefinition>) with
+the specified name.  [DOMDTDEF]
 
 =item $doc->create_cdata_section ($text)
 
@@ -158,6 +160,13 @@ Create a new processing instruction node
 (L<Web::DOM::ProcessingInstruction>) with the specified target and
 data.  [DOM]
 
+=item $text = $doc->dir
+
+=item $doc->dir ($text)
+
+Return or set the C<dir> attribute of the C<html> element, if any.
+[HTML]
+
 =item $dt = $doc->doctype
 
 Return the L<Web::DOM::DocumentType> node of the document, if any.
@@ -186,7 +195,7 @@ BOM or not.  [MANAKAI]
 
 =item $el = $doc->head
 
-=item $el = $doc->manakai_head
+=item $el = $doc->manakai_head [DEPRECATED]
 
 Return the C<head> element of the document, if any, or C<undef>.
 [HTML] [MANAKAI]

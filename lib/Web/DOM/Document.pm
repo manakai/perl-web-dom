@@ -7,11 +7,13 @@ use Web::DOM::Node;
 use Web::DOM::ParentNode;
 push our @ISA, qw(Web::DOM::ParentNode Web::DOM::Node);
 use Web::DOM::Internal;
+use Web::DOM::TypeError;
 use Web::DOM::Exception;
 use Char::Class::XML qw(
   InXMLNameChar InXMLNameStartChar
   InXMLNCNameChar InXMLNCNameStartChar
 );
+# XXX EventHandlers
 
 sub new ($) {
   my $data = {node_type => DOCUMENT_NODE};
@@ -151,7 +153,7 @@ sub url ($) {
 
 # XXX domain
 
-# XXX referrer cookie lastModified readyState
+# XXX referrer cookie lastModified
 
 sub xml_version ($;$) {
   if (@_ > 1) {
@@ -223,6 +225,15 @@ sub strict_error_checking ($;$) {
 } # strict_error_checking
 
 ## ------ Attributes ------
+
+sub dir ($;$) {
+  my $de = shift->manakai_html;
+  if (defined $de) {
+    return $de->dir (@_);
+  } else {
+    return '';
+  }
+} # dir
 
 # XXX *color
 
@@ -344,11 +355,45 @@ sub title ($;$) {
 } # title
 
 sub body ($;$) {
+  my $self = $_[0];
   if (@_ > 1) {
-    # XXX setter
+    # WebIDL
+    if (defined $_[1] and
+        not UNIVERSAL::isa ($_[1], 'Web::DOM::HTMLElement')) {
+      _throw Web::DOM::TypeError 'The argument is not an HTMLElement';
+    }
+
+    # 1.
+    if (not defined $_[1] or
+        not HTML_NS eq ($_[1]->namespace_uri || '') or
+        not ($_[1]->local_name eq 'body' or $_[1]->local_name eq 'frameset')) {
+      _throw Web::DOM::Exception 'HierarchyRequestError',
+          'The specified value cannot be used as the body element';
+    }
+
+    my $body = $self->body; # recursive!
+    
+    if (defined $body and $body eq $_[1]) {
+      # 2.
+      #
+    } elsif (defined $body) {
+      # 3.
+      $body->parent_node->replace_child ($_[1], $body);
+    } else {
+      # 4.
+      my $de = $self->document_element;
+      if (defined $de) {
+        $de->append_child ($_[1]);
+      } else {
+        _throw Web::DOM::Exception 'HierarchyRequestError',
+            'There is no root element';
+      }
+    }
     return unless defined wantarray;
   }
-  my $html = $_[0]->manakai_html or return undef;
+
+  # The body element
+  my $html = $self->manakai_html or return undef;
   for ($html->child_nodes->to_list) {
     if ($_->manakai_element_type_match (HTML_NS, 'body') or
         $_->manakai_element_type_match (HTML_NS, 'frameset')) {
@@ -850,9 +895,17 @@ sub adopt_node ($$) {
 
 # XXX createTreeWalker
 
-# XXX HTML DOM
+## ------ Markup interaction ------
+
+# XXX
 
 sub clear ($) { }
+
+# XXX readystate onreadystatechange
+
+## ------ Browsing context and user interaction ------
+
+# XXX
 
 1;
 

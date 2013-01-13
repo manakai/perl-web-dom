@@ -508,6 +508,203 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('body');
+  $el1->append_child ($el3);
+  my $el4 = $doc->create_element ('body');
+  $doc->body ($el4);
+  is $doc->body, $el4;
+  is $el3->parent_node, undef;
+  is $el4->parent_node, $el1;
+  done $c;
+} n => 3, name => 'body setter body';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('body');
+  $el1->append_child ($el3);
+  my $el4 = $doc->create_element ('frameset');
+  $doc->body ($el4);
+  is $doc->body, $el4;
+  is $el3->parent_node, undef;
+  is $el4->parent_node, $el1;
+  done $c;
+} n => 3, name => 'body setter frameset';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('body');
+  $el1->append_child ($el3);
+  my $el4 = $doc->create_element ('body');
+  $el1->append_child ($el4);
+  my $el5 = $doc->create_element ('body');
+  $doc->body ($el5);
+  is $doc->body, $el5;
+  is $el3->parent_node, undef;
+  is $el4->parent_node, $el1;
+  is $el5->parent_node, $el1;
+  is $el5->next_sibling, $el4;
+  done $c;
+} n => 5, name => 'body setter multiple body';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('frameset');
+  $el1->append_child ($el3);
+  my $el4 = $doc->create_element ('body');
+  $el1->append_child ($el4);
+  my $el5 = $doc->create_element ('body');
+  $doc->body ($el5);
+  is $doc->body, $el5;
+  is $el3->parent_node, undef;
+  is $el4->parent_node, $el1;
+  is $el5->parent_node, $el1;
+  is $el5->next_sibling, $el4;
+  done $c;
+} n => 5, name => 'body setter multiple body';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('body');
+  $el1->append_child ($el3);
+  $doc->body ($el3);
+  is $doc->body, $el3;
+  is $el3->parent_node, $el1;
+  done $c;
+} n => 2, name => 'body setter self';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('frameset');
+  $el1->append_child ($el3);
+  $doc->body ($el3);
+  is $doc->body, $el3;
+  is $el3->parent_node, $el1;
+  done $c;
+} n => 2, name => 'body setter self frameset';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element_ns (undef, 'hoge');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('body');
+  $doc->body ($el2);
+  is $doc->body, undef;
+  is $el2->parent_node, $el1;
+  my $el3 = $doc->create_element ('frameset');
+  $doc->body ($el3);
+  is $doc->body, undef;
+  is $el3->parent_node, $el1;
+  is $el1->child_nodes->length, 2;
+  done $c;
+} n => 5, name => 'body setter non-html root';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('body');
+  $el1->append_child ($el3);
+  dies_here_ok {
+    $doc->body (undef);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  is $@->message, 'The specified value cannot be used as the body element';
+  is $doc->body, $el3;
+  done $c;
+} n => 5, name => 'body setter undef';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('body');
+  $el1->append_child ($el3);
+  my $el4 = $doc->create_element ('Body');
+  dies_here_ok {
+    $doc->body ($el4);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  is $@->message, 'The specified value cannot be used as the body element';
+  is $doc->body, $el3;
+  done $c;
+} n => 5, name => 'body setter not body';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('body');
+  $el1->append_child ($el3);
+  my $el4 = $doc->create_element_ns (undef, 'body');
+  dies_here_ok {
+    $doc->body ($el4);
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->name, 'TypeError';
+  is $@->message, 'The argument is not an HTMLElement';
+  is $doc->body, $el3;
+  done $c;
+} n => 5, name => 'body setter not htmlelement';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('body');
+  dies_here_ok {
+    $doc->body ($el1);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  is $@->message, 'There is no root element';
+  is $doc->body, undef;
+  is $el1->parent_node, undef;
+  done $c;
+} n => 6, name => 'body setter no root element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ('hoge');
   $el->id ('foo');
   $doc->append_child ($el);
@@ -957,6 +1154,81 @@ test {
   is $text->text_content, 'fff';
   done $c;
 } n => 3, name => 'title setter head/title old child';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  is $doc->dir, '';
+  $doc->dir ('ltr');
+  is $doc->dir, '';
+  done $c;
+} n => 2, name => 'dir empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('head');
+  $el->dir ('rtl');
+  $doc->append_child ($el);
+  is $doc->dir, '';
+  $doc->dir ('ltr');
+  is $doc->dir, '';
+  is $el->get_attribute ('dir'), 'rtl';
+  done $c;
+} n => 3, name => 'dir not html element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (undef, 'html');
+  $el->set_attribute (dir => 'rtl');
+  $doc->append_child ($el);
+  is $doc->dir, '';
+  $doc->dir ('ltr');
+  is $doc->dir, '';
+  is $el->get_attribute ('dir'), 'rtl';
+  done $c;
+} n => 3, name => 'dir not html element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('html');
+  $doc->append_child ($el);
+  is $doc->dir, '';
+  $doc->dir ('Rtl');
+  is $doc->dir, 'rtl';
+  is $el->get_attribute ('dir'), 'Rtl';
+  $doc->dir ('abc');
+  is $doc->dir, '';
+  is $el->get_attribute ('dir'), 'abc';
+  done $c;
+} n => 5, name => 'dir html element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('html');
+  $el->dir ('rtl');
+  $doc->append_child ($el);
+  is $doc->dir, 'rtl';
+  $doc->dir ('ltr');
+  is $doc->dir, 'ltr';
+  is $el->get_attribute ('dir'), 'ltr';
+  done $c;
+} n => 3, name => 'dir html element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('head');
+  $doc->append_child ($el);
+  is $doc->dir, '';
+  $doc->dir ('ltr');
+  is $doc->dir, '';
+  is $el->attributes->length, 0;
+  done $c;
+} n => 3, name => 'dir not html element';
 
 test {
   my $c = shift;
