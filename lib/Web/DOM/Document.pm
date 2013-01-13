@@ -22,6 +22,8 @@ sub new ($) {
   return $objs->node ($id);
 } # new
 
+## ------ Basic node properties ------
+
 sub node_name ($) {
   return '#document';
 } # node_name
@@ -30,20 +32,11 @@ sub owner_document ($) {
   return undef;
 } # owner_document
 
-sub text_content ($;$) {
-  if (${$_[0]}->[0]->{config}->{not_manakai_strict_document_children}) {
-    return shift->SUPER::text_content (@_);
-  } else {
-    return undef;
-  }
-} # text_content
+## ------ Document properties ------
 
-sub manakai_append_text ($$) {
-  if (${$_[0]}->[0]->{config}->{not_manakai_strict_document_children}) {
-    $_[0]->SUPER::manakai_append_text ($_[1]);
-  }
-  return $_[0];
-} # manakai_append_text
+sub content_type ($) {
+  return ${$_[0]}->[2]->{content_type} || 'application/xml';
+} # content_type
 
 sub manakai_is_html ($;$) {
   my $self = $_[0];
@@ -68,9 +61,48 @@ sub manakai_is_html ($;$) {
   return $$self->[2]->{is_html};
 } # manakai_is_html
 
-sub content_type ($) {
-  return ${$_[0]}->[2]->{content_type} || 'application/xml';
-} # content_type
+sub compat_mode ($) {
+  my $self = $_[0];
+  if ($$self->[2]->{is_html}) {
+    if (defined $$self->[2]->{compat_mode} and
+        $$self->[2]->{compat_mode} eq 'quirks') {
+      return 'BackCompat';
+    }
+  }
+  return 'CSS1Compat';
+} # compat_mode
+
+sub manakai_compat_mode ($;$) {
+  my $self = $_[0];
+  if ($$self->[2]->{is_html}) {
+    if (@_ > 1 and defined $_[1] and
+        {'no quirks' => 1, 'limited quirks' => 1, 'quirks' => 1}->{$_[1]}) {
+      $$self->[2]->{compat_mode} = $_[1];
+      for my $cols (@{$$self->[0]->{cols} or []}) {
+        next unless $cols;
+        for my $key (keys %$cols) {
+          next unless $cols->{$key};
+          delete ${$cols->{$key}}->[2];
+          delete ${$cols->{$key}}->[4];
+        }
+      }
+    }
+    return $$self->[2]->{compat_mode} || 'no quirks';
+  } else {
+    return 'no quirks';
+  }
+} # manakai_compat_mode
+
+sub manakai_is_srcdoc ($;$) {
+  if (@_ > 1) {
+    if ($_[1]) {
+      ${$_[0]}->[2]->{is_srcdoc} = 1;
+    } else {
+      delete ${$_[0]}->[2]->{is_srcdoc};
+    }
+  }
+  return ${$_[0]}->[2]->{is_srcdoc};
+} # manakai_is_srcdoc
 
 sub character_set ($) {
   return ${$_[0]}->[2]->{encoding} || 'utf-8';
@@ -113,37 +145,63 @@ sub url ($) {
 
 *document_uri = \&url;
 
-sub compat_mode ($) {
-  my $self = $_[0];
-  if ($$self->[2]->{is_html}) {
-    if (defined $$self->[2]->{compat_mode} and
-        $$self->[2]->{compat_mode} eq 'quirks') {
-      return 'BackCompat';
-    }
-  }
-  return 'CSS1Compat';
-} # compat_mode
+# XXX location
 
-sub manakai_compat_mode ($;$) {
-  my $self = $_[0];
-  if ($$self->[2]->{is_html}) {
-    if (@_ > 1 and defined $_[1] and
-        {'no quirks' => 1, 'limited quirks' => 1, 'quirks' => 1}->{$_[1]}) {
-      $$self->[2]->{compat_mode} = $_[1];
-      for my $cols (@{$$self->[0]->{cols} or []}) {
-        next unless $cols;
-        for my $key (keys %$cols) {
-          next unless $cols->{$key};
-          delete ${$cols->{$key}}->[2];
-          delete ${$cols->{$key}}->[4];
-        }
-      }
+# XXX manakai_entity_base_uri
+
+# XXX domain
+
+# XXX referrer cookie lastModified readyState
+
+sub xml_version ($;$) {
+  if (@_ > 1) {
+    my $version = ''.$_[1];
+    if ($version eq '1.0' or $version eq '1.1' or
+        ${$_[0]}->[2]->{no_strict_error_checking}) {
+      ${$_[0]}->[2]->{xml_version} = $version;
+    } else {
+      _throw Web::DOM::Exception 'NotSupportedError',
+          'Specified XML version is not supported';
     }
-    return $$self->[2]->{compat_mode} || 'no quirks';
-  } else {
-    return 'no quirks';
   }
-} # manakai_compat_mode
+  return defined ${$_[0]}->[2]->{xml_version}
+      ? ${$_[0]}->[2]->{xml_version} : '1.0';
+} # xml_version
+
+sub xml_encoding ($;$) {
+  if (@_ > 1) {
+    if (defined $_[1]) {
+      ${$_[0]}->[2]->{xml_encoding} = ''.$_[1];
+    } else {
+      delete ${$_[0]}->[2]->{xml_encoding};
+    }
+  }
+  return ${$_[0]}->[2]->{xml_encoding};
+} # xml_encoding
+
+sub xml_standalone ($;$) {
+  if (@_ > 1) {
+    if ($_[1]) {
+      ${$_[0]}->[2]->{xml_standalone} = 1;
+    } else {
+      delete ${$_[0]}->[2]->{xml_standalone};
+    }
+  }
+  return ${$_[0]}->[2]->{xml_standalone};
+} # xml_standalone
+
+sub all_declarations_processed ($;$) {
+  if (@_ > 1) {
+    if ($_[1]) {
+      ${$_[0]}->[2]->{all_declarations_processed} = 1;
+    } else {
+      delete ${$_[0]}->[2]->{all_declarations_processed};
+    }
+  }
+  return ${$_[0]}->[2]->{all_declarations_processed};
+} # all_declarations_processed
+
+## ------ Document configuration ------
 
 sub implementation ($) {
   return ${$_[0]}->[0]->impl;
@@ -152,6 +210,107 @@ sub implementation ($) {
 sub dom_config ($) {
   return ${$_[0]}->[0]->config;
 } # dom_config
+
+sub strict_error_checking ($;$) {
+  if (@_ > 1) {
+    if ($_[1]) {
+      delete ${$_[0]}->[2]->{no_strict_error_checking};
+    } else {
+      ${$_[0]}->[2]->{no_strict_error_checking} = 1;
+    }
+  }
+  return not ${$_[0]}->[2]->{no_strict_error_checking};
+} # strict_error_checking
+
+## ------ Attributes ------
+
+# XXX *color
+
+## ------ Content ------
+
+sub text_content ($;$) {
+  if (${$_[0]}->[0]->{config}->{not_manakai_strict_document_children}) {
+    return shift->SUPER::text_content (@_);
+  } else {
+    return undef;
+  }
+} # text_content
+
+sub manakai_append_text ($$) {
+  if (${$_[0]}->[0]->{config}->{not_manakai_strict_document_children}) {
+    $_[0]->SUPER::manakai_append_text ($_[1]);
+  }
+  return $_[0];
+} # manakai_append_text
+
+sub doctype ($) {
+  for ($_[0]->child_nodes->to_list) {
+    if ($_->node_type == DOCUMENT_TYPE_NODE) {
+      return $_;
+    }
+  }
+  return undef;
+} # doctype
+
+sub document_element ($) {
+  for ($_[0]->child_nodes->to_list) {
+    if ($_->node_type == ELEMENT_NODE) {
+      return $_;
+    }
+  }
+  return undef;
+} # document_element
+
+sub manakai_html ($) {
+  my $html = $_[0]->document_element or return undef;
+  return $html if $html->manakai_element_type_match (HTML_NS, 'html');
+  return undef;
+} # manakai_html
+
+sub head ($) {
+  my $html = $_[0]->manakai_html or return undef;
+  for ($html->child_nodes->to_list) {
+    if ($_->manakai_element_type_match (HTML_NS, 'head')) {
+      return $_;
+    }
+  }
+  return undef;
+} # head
+
+*manakai_head = \&head;
+
+sub body ($;$) {
+  if (@_ > 1) {
+    # XXX setter
+    return unless defined wantarray;
+  }
+  my $html = $_[0]->manakai_html or return undef;
+  for ($html->child_nodes->to_list) {
+    if ($_->manakai_element_type_match (HTML_NS, 'body') or
+        $_->manakai_element_type_match (HTML_NS, 'frameset')) {
+      return $_;
+    }
+  }
+  return undef;
+} # body
+
+# XXX need O(1) implementation...
+sub get_element_by_id ($$) {
+  my $id = ''.$_[1];
+  return undef unless length $id;
+  my @nodes = $_[0]->child_nodes->to_list;
+   while (@nodes) {
+    my $node = shift @nodes;
+    next unless $node->node_type == ELEMENT_NODE;
+    return $node if $node->id eq $id;
+    unshift @nodes, $node->child_nodes->to_list;
+  }
+  return undef;
+} # get_element_by_id
+
+# XXX anchors applets all
+
+## ------ Node factory ------
 
 sub create_element ($$) {
   my $self = $_[0];
@@ -625,148 +784,9 @@ sub adopt_node ($$) {
 
 # XXX createTreeWalker
 
-sub xml_version ($;$) {
-  if (@_ > 1) {
-    my $version = ''.$_[1];
-    if ($version eq '1.0' or $version eq '1.1' or
-        ${$_[0]}->[2]->{no_strict_error_checking}) {
-      ${$_[0]}->[2]->{xml_version} = $version;
-    } else {
-      _throw Web::DOM::Exception 'NotSupportedError',
-          'Specified XML version is not supported';
-    }
-  }
-  return defined ${$_[0]}->[2]->{xml_version}
-      ? ${$_[0]}->[2]->{xml_version} : '1.0';
-} # xml_version
-
-sub xml_encoding ($;$) {
-  if (@_ > 1) {
-    if (defined $_[1]) {
-      ${$_[0]}->[2]->{xml_encoding} = ''.$_[1];
-    } else {
-      delete ${$_[0]}->[2]->{xml_encoding};
-    }
-  }
-  return ${$_[0]}->[2]->{xml_encoding};
-} # xml_encoding
-
-sub xml_standalone ($;$) {
-  if (@_ > 1) {
-    if ($_[1]) {
-      ${$_[0]}->[2]->{xml_standalone} = 1;
-    } else {
-      delete ${$_[0]}->[2]->{xml_standalone};
-    }
-  }
-  return ${$_[0]}->[2]->{xml_standalone};
-} # xml_standalone
-
-sub strict_error_checking ($;$) {
-  if (@_ > 1) {
-    if ($_[1]) {
-      delete ${$_[0]}->[2]->{no_strict_error_checking};
-    } else {
-      ${$_[0]}->[2]->{no_strict_error_checking} = 1;
-    }
-  }
-  return not ${$_[0]}->[2]->{no_strict_error_checking};
-} # strict_error_checking
-
-# XXX manakai_entity_base_uri
-
-sub all_declarations_processed ($;$) {
-  if (@_ > 1) {
-    if ($_[1]) {
-      ${$_[0]}->[2]->{all_declarations_processed} = 1;
-    } else {
-      delete ${$_[0]}->[2]->{all_declarations_processed};
-    }
-  }
-  return ${$_[0]}->[2]->{all_declarations_processed};
-} # all_declarations_processed
-
-sub manakai_is_srcdoc ($;$) {
-  if (@_ > 1) {
-    if ($_[1]) {
-      ${$_[0]}->[2]->{is_srcdoc} = 1;
-    } else {
-      delete ${$_[0]}->[2]->{is_srcdoc};
-    }
-  }
-  return ${$_[0]}->[2]->{is_srcdoc};
-} # manakai_is_srcdoc
-
-sub doctype ($) {
-  for ($_[0]->child_nodes->to_list) {
-    if ($_->node_type == DOCUMENT_TYPE_NODE) {
-      return $_;
-    }
-  }
-  return undef;
-} # doctype
-
-sub document_element ($) {
-  for ($_[0]->child_nodes->to_list) {
-    if ($_->node_type == ELEMENT_NODE) {
-      return $_;
-    }
-  }
-  return undef;
-} # document_element
-
-sub manakai_html ($) {
-  my $html = $_[0]->document_element or return undef;
-  return $html if $html->manakai_element_type_match (HTML_NS, 'html');
-  return undef;
-} # manakai_html
-
-sub head ($) {
-  my $html = $_[0]->manakai_html or return undef;
-  for ($html->child_nodes->to_list) {
-    if ($_->manakai_element_type_match (HTML_NS, 'head')) {
-      return $_;
-    }
-  }
-  return undef;
-} # head
-
-*manakai_head = \&head;
-
-sub body ($;$) {
-  if (@_ > 1) {
-    # XXX setter
-    return unless defined wantarray;
-  }
-  my $html = $_[0]->manakai_html or return undef;
-  for ($html->child_nodes->to_list) {
-    if ($_->manakai_element_type_match (HTML_NS, 'body') or
-        $_->manakai_element_type_match (HTML_NS, 'frameset')) {
-      return $_;
-    }
-  }
-  return undef;
-} # body
-
-# XXX need O(1) implementation...
-sub get_element_by_id ($$) {
-  my $id = ''.$_[1];
-  return undef unless length $id;
-  my @nodes = $_[0]->child_nodes->to_list;
-   while (@nodes) {
-    my $node = shift @nodes;
-    next unless $node->node_type == ELEMENT_NODE;
-    return $node if $node->id eq $id;
-    unshift @nodes, $node->child_nodes->to_list;
-  }
-  return undef;
-} # get_element_by_id
-
 # XXX HTML DOM
 
 sub clear ($) { }
-
-# XXX *color anchors applets all
 
 1;
 
