@@ -12,8 +12,9 @@ sub text ($$) {
   return defined $_[1] ? $Text->{$_[1]} ||= \(''.$_[1]) : undef;
 } # text
 
-push @EXPORT, qw(HTML_NS XML_NS XMLNS_NS);
+push @EXPORT, qw(HTML_NS SVG_NS XML_NS XMLNS_NS);
 sub HTML_NS () { q<http://www.w3.org/1999/xhtml> }
+sub SVG_NS () { q<http://www.w3.org/2000/svg> }
 sub XML_NS () { q<http://www.w3.org/XML/1998/namespace> }
 sub XMLNS_NS () { q<http://www.w3.org/2000/xmlns/> }
 

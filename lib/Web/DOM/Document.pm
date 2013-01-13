@@ -279,6 +279,70 @@ sub head ($) {
 
 *manakai_head = \&head;
 
+sub title ($;$) {
+  my $self = $_[0];
+
+  # Getter 1. / Setter 1.
+  my $re = $self->document_element;
+  if (defined $re and $re->manakai_element_type_match (SVG_NS, 'svg')) {
+    if (@_ > 1) {
+      my $value = ''.$_[1];
+      return unless defined wantarray;
+    }
+
+    # SVG spec is unclear...
+    for ($re->child_nodes->to_list) {
+      if ($_->node_type == ELEMENT_NODE and
+          $_->manakai_element_type_match (SVG_NS, 'title')) {
+        return $_->text_content;
+      }
+    }
+    return '';
+  }
+
+  # The |title| element
+  my $te = $self->get_elements_by_tag_name ('title')->[0];
+
+  if (@_ > 1) {
+    if (not defined $te) {
+      my $he = $self->head;
+      if (defined $he) {
+        # 3.
+        $te = $self->create_element ('title');
+        $he->append_child ($te);
+      } else {
+        # 2.
+        #
+      }
+    }
+
+    if (defined $te) {
+      # 4.
+      $te->text_content ('');
+
+      # 5.
+      $te->append_child ($self->create_text_node (''.$_[1]));
+    }
+
+    return unless defined wantarray;
+  }
+
+  # 2.
+  my $value = '';
+  if (defined $te) {
+    $value = join '', map { $_->data }
+        grep { $_->node_type == TEXT_NODE } $te->child_nodes->to_list;
+  }
+
+  # 3.-4.
+  $value =~ s/[\x09\x0A\x0C\x0D\x20]+/ /g;
+  $value =~ s/\A //;
+  $value =~ s/ \z//;
+  
+  # 5.
+  return $value;
+} # title
+
 sub body ($;$) {
   if (@_ > 1) {
     # XXX setter
@@ -309,6 +373,8 @@ sub get_element_by_id ($$) {
 } # get_element_by_id
 
 # XXX anchors applets all
+
+# XXX getter
 
 ## ------ Node factory ------
 

@@ -595,6 +595,372 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  is $doc->title, '';
+  done $c;
+} n => 1, name => 'title not found';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el);
+  is $doc->title, '';
+  done $c;
+} n => 1, name => 'title /svg/empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el);
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
+  $el2->text_content ('');
+  $el->append_child ($el2);
+  is $doc->title, '';
+  done $c;
+} n => 1, name => 'title /svg/title/empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el);
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
+  $el2->text_content ('hoge fuga');
+  $el->append_child ($el2);
+  is $doc->title, 'hoge fuga';
+  done $c;
+} n => 1, name => 'title /svg/title/text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el);
+  my $el1 = $doc->create_element ('title');
+  $el1->text_content ('aaa');
+  $el->append_child ($el1);
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
+  $el2->inner_html ('hoge <p>fuga</p>bar');
+  $el->append_child ($el2);
+  is $doc->title, 'hoge fugabar';
+  done $c;
+} n => 1, name => 'title /svg/{html:title|title}';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el);
+  my $el1 = $doc->create_element ('title');
+  $el1->text_content ('aaa');
+  $el->append_child ($el1);
+  is $doc->title, '';
+  done $c;
+} n => 1, name => 'title /svg/html:title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el);
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
+  $el2->inner_html ('hoge <p>fuga</p>bar  ');
+  $el->append_child ($el2);
+  is $doc->title, 'hoge fugabar  ';
+  done $c;
+} n => 1, name => 'title /svg/title/nodes';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  is $doc->title, '';
+  done $c;
+} n => 1, name => 'title /html';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  is $doc->title, '';
+  done $c;
+} n => 1, name => 'title /html/head';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('title');
+  $el2->append_child ($el3);
+  is $doc->title, '';
+  done $c;
+} n => 1, name => 'title /html/head/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('title');
+  $el2->append_child ($el3);
+  $el3->text_content ('hpoge ');
+  is $doc->title, 'hpoge';
+  done $c;
+} n => 1, name => 'title /html/head/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('title');
+  $el2->append_child ($el3);
+  $el3->text_content ("\x09\x0C\x0Dhp\x0A\x20og\x09e ");
+  is $doc->title, 'hp og e';
+  done $c;
+} n => 1, name => 'title /html/head/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('title');
+  $el2->append_child ($el3);
+  $el3->text_content ("\x09\x0C\x0Dhp\x0A\x20og\x09e ");
+  $el3->append_child ($doc->create_element ('title'))->text_content ('abc');
+  $el3->manakai_append_text (' aa  bc');
+  is $doc->title, 'hp og e aa bc';
+  done $c;
+} n => 1, name => 'title /html/head/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->title ('hoge');
+  is $doc->title, '';
+  is $doc->first_child, undef;
+  done $c;
+} n => 2, name => 'title setter empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('foo');
+  $doc->append_child ($el1);
+  $doc->title ('hoge');
+  is $doc->title, '';
+  is $doc->first_child, $el1;
+  done $c;
+} n => 2, name => 'title setter /root';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('title');
+  $doc->append_child ($el1);
+  $doc->title ('hoge');
+  is $doc->title, 'hoge';
+  is $doc->first_child, $el1;
+  is $el1->text_content, 'hoge';
+  done $c;
+} n => 3, name => 'title setter /title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el1);
+  $doc->title ('hoge');
+  is $doc->title, '';
+  is $doc->first_child, $el1;
+  done $c;
+} n => 2, name => 'title setter /svg';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
+  $el1->append_child ($el2);
+  $doc->title ('hoge');
+  is $doc->title, '';
+  is $el2->first_child, undef;
+  done $c;
+} n => 2, name => 'title setter /svg/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
+  $el1->append_child ($el2);
+  $el2->inner_html ('foo<p>bar</p>');
+  $doc->title ('hoge');
+  is $doc->title, 'foobar';
+  is $el2->child_nodes->length, 2;
+  done $c;
+} n => 2, name => 'title setter /svg/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'g');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
+  $el2->append_child ($el3);
+  $el3->inner_html ('foo<p>bar</p>');
+  $doc->title ('hoge');
+  is $doc->title, '';
+  is $el3->child_nodes->length, 2;
+  done $c;
+} n => 2, name => 'title setter /svg/g/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'g');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/html', 'title');
+  $el2->append_child ($el3);
+  $el3->inner_html ('foo<p>bar</p>');
+  $doc->title ('hoge');
+  is $doc->title, '';
+  is $el3->child_nodes->length, 2;
+  done $c;
+} n => 2, name => 'title setter /svg/g/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('hoge');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('title');
+  $el1->append_child ($el2);
+  $doc->title ("fo\x0C\x09o bar  ");
+  is $doc->title, 'fo o bar';
+  is $el2->text_content, "fo\x0C\x09o bar  ";
+  done $c;
+} n => 2, name => 'title setter html';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('hoge');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('title');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('title');
+  $el1->append_child ($el3);
+  $doc->title ("fo\x0C\x09o bar  ");
+  is $doc->title, 'fo o bar';
+  is $el2->text_content, "fo\x0C\x09o bar  ";
+  is $el3->text_content, '';
+  done $c;
+} n => 3, name => 'title setter html';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  $doc->title ('foo ');
+  is $doc->title, 'foo';
+  is $el2->first_child->local_name, 'title';
+  is $el2->first_child->text, 'foo ';
+  done $c;
+} n => 3, name => 'title setter head/null';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('title');
+  $el2->append_child ($el3);
+  $doc->title ('foo ');
+  is $doc->title, 'foo';
+  is $el2->first_child, $el3;
+  is $el2->first_child->text, 'foo ';
+  done $c;
+} n => 3, name => 'title setter head/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('title');
+  $el1->append_child ($el3);
+  $doc->title ('foo ');
+  is $doc->title, 'foo';
+  is $el2->first_child, undef;
+  is $el3->text, 'foo ';
+  done $c;
+} n => 3, name => 'title setter head/title';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('title');
+  $el2->append_child ($el3);
+  $doc->title ('');
+  is $doc->title, '';
+  is $el3->first_child->node_type, 3;
+  done $c;
+} n => 2, name => 'title setter head/title empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('html');
+  $doc->append_child ($el1);
+  my $el2 = $doc->create_element ('head');
+  $el1->append_child ($el2);
+  my $el3 = $doc->create_element ('title');
+  $el2->append_child ($el3);
+  $el3->text_content ("fff");
+  my $text = $el3->first_child;
+  $doc->title ('abc');
+  is $doc->title, 'abc';
+  is $text->parent_node, undef;
+  is $text->text_content, 'fff';
+  done $c;
+} n => 3, name => 'title setter head/title old child';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ('hoge');
   $doc->append_child ($el);
   $doc->clear;
