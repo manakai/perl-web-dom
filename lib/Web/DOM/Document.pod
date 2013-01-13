@@ -197,7 +197,7 @@ C<undef>.  [DOM]
 =item $col = $doc->get_elements_by_name ($name)
 
 Return the L<Web::DOM::NodeList> containing the elements whose C<name>
-is equal to the specified value.  [HTML]
+is equal to the specified value.  [HTML] [MANAKAI]
 
 =item $bool = $doc->manakai_has_bom
 

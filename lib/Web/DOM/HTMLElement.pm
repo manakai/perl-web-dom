@@ -3,7 +3,9 @@ use strict;
 use warnings;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::Element);
+use Web::DOM::Internal;
 use Web::DOM::Element;
+use Web::DOM::Exception;
 
 # XXX implements *EventHandlers
 
@@ -21,10 +23,90 @@ _define_reflect_enumerated dir => 'dir', {
   auto => 'auto',
 };
 
-# XXX translate dataset itemtype itemref itemprop properties itemvalue
-# tabindex click focus blur accesskey_label draggable dropzone
-# contenteditable is_contenteditable contextmenu spellcheck
-# forcespellcheck command* style
+sub translate ($;$) {
+  if (@_ > 1) {
+    $_[0]->set_attribute_ns (undef, translate => $_[1] ? 'yes' : 'no');
+    return unless defined wantarray;
+  }
+
+  my $value = ($_[0]->namespace_uri || '') eq HTML_NS
+      ? $_[0]->get_attribute_ns (undef, 'translate') : undef;
+  if (defined $value) {
+    if ($value eq '' or $value =~ /\A[Yy][Ee][Ss]\z/) {
+      return 1;
+    } elsif ($value =~ /\A[Nn][Oo]\z/) {
+      return 0;
+    }
+  }
+  my $pe = $_[0]->parent_element;
+  if (defined $pe) {
+    return $pe->Web::DOM::HTMLElement::translate;
+  }
+  return 1;
+} # translate
+
+sub draggable ($;$) {
+  if (@_ > 1) {
+    $_[0]->set_attribute_ns (undef, 'draggable', $_[1] ? 'true' : 'false');
+    return unless defined wantarray;
+  }
+
+  my $value = $_[0]->get_attribute_ns (undef, 'draggable');
+  if (defined $value) {
+    if ($value =~ /\A[Tt][Rr][Uu][Ee]\z/) {
+      return 1;
+    } elsif ($value =~ /\A[Ff][Aa][Ll][Ss][Ee]\z/) {
+      return 0;
+    }
+  }
+  if (($_[0]->namespace_uri || '') eq HTML_NS) {
+    my $ln = $_[0]->local_name;
+    if ($ln eq 'img') {
+      return 1;
+    } elsif ($ln eq 'a' and $_[0]->has_attribute_ns (undef, 'href')) {
+      return 1;
+    }
+  }
+  return 0;
+} # draggable
+
+sub contenteditable ($;$) {
+  if (@_ > 1) {
+    my $value = ''.$_[1];
+    if ($value =~ /\A[Tt][Rr][Uu][Ee]\z/) {
+      $_[0]->set_attribute_ns (undef, contenteditable => 'true');
+    } elsif ($value =~ /\A[Ff][Aa][Ll][Ss][Ee]\z/) {
+      $_[0]->set_attribute_ns (undef, contenteditable => 'false');
+    } elsif ($value =~ /\A[Ii][Nn][Hh][Ee][Rr][Ii][Tt]\z/) {
+      $_[0]->remove_attribute_ns (undef, 'contenteditable');
+    } else {
+      _throw Web::DOM::Exception 'SyntaxError',
+          'An invalid |contenteditable| value is specified';
+    }
+    return unless defined wantarray;
+  }
+
+  my $value = $_[0]->get_attribute_ns (undef, 'contenteditable');
+  if (defined $value) {
+    if ($value =~ /\A[Tt][Rr][Uu][Ee]\z/) {
+      return 'true';
+    } elsif ($value =~ /\A[Ff][Aa][Ll][Ss][Ee]\z/) {
+      return 'false';
+    }
+  }
+  return 'inherit';
+} # contenteditable
+
+_define_reflect_idref contextmenu => 'contextmenu',
+    'Web::DOM::HTMLMenuElement';
+
+# XXX dataset itemtype itemref itemprop properties itemvalue dropzone
+# command* style
+
+## ------ User interaction ------
+
+# XXX tabindex click focus blur accesskey_label is_contenteditable
+# spellcheck force_spell_check
 
 package Web::DOM::HTMLUnknownElement;
 our $VERSION = '1.0';

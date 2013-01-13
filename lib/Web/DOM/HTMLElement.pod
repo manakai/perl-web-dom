@@ -14,22 +14,43 @@ class, following methods are available:
 
 =over 4
 
-=item Reflecting methods
+=item $string = $el->accesskey
 
-Following methods return the current value or specify the new value
-for the attribute whose name is same as the method name: C<title>,
-C<lang>, C<itemid>, and C<accesskey>.  Following method returns the
-canonical value on getting: C<dir>.  [HTML]
+=item $el->accesskey ($string)
 
-For example:
+Return or set the C<accesskey> attribute.  [HTML]
 
-  $el->lang ('ja');
-  is $el->lang, 'ja';
-  is $el->get_attribute ('lang'), 'ja';
+=item $string = $el->contenteditable
 
-Following methods return or specify whether the attribute whose name
-is same as the method name is set to the element or not: C<itemscope>
-and C<hidden>.  [HTML]
+=item $el->contenteditable ($string)
+
+Return or set the C<contenteditable> attribute.  [HTML]
+
+=item $el2 = $el->contextmenu
+
+=item $el->contextmenu ($el2)
+
+Return or set the element pointed by the C<contextmenu> attribute.
+[HTML]
+
+=item $string = $el->dir
+
+=item $el->dir ($string)
+
+Return or set the C<dir> attribute.  [HTML]
+
+=item $boolean = $el->draggable
+
+=item $el->draggable ($boolean)
+
+Return or set whether the element is draggable or not.  [HTML]
+
+=item $boolean = $el->hidden
+
+=item $el->hidden ($boolean)
+
+Return or set whether the C<hidden> attribute is specified or not.
+[HTML]
 
 For example:
 
@@ -37,6 +58,37 @@ For example:
   ok not $el->hidden; # <span>
   $el->hidden (1);
   ok $el->hidden; # <span hidden>
+
+=item $string = $el->itemid
+
+=item $el->itemid ($string)
+
+Return or set the C<itemid> attribute.  [HTML]
+
+=item $boolean = $el->itemscope
+
+=item $el->itemscope ($boolean)
+
+Return or set whether the C<itemscope> attribute is specified or not.
+[HTML]
+
+=item $string = $el->lang
+
+=item $el->lang ($string)
+
+Return or set the C<lang> attribute.  [HTML]
+
+For example:
+
+  $el->lang ('ja');
+  is $el->lang, 'ja';
+  is $el->get_attribute ('lang'), 'ja';
+
+=item $string = $el->title
+
+=item $el->title ($string)
+
+Return or set the C<title> attribute.  [HTML]
 
 =back
 

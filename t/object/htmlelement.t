@@ -1047,6 +1047,347 @@ for my $test (
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('dfn');
+  is $el->contextmenu, undef;
+
+  my $el2 = $doc->create_element ('menu');
+  $el2->set_attribute (id => 'abc');
+  $doc->append_child ($el2);
+  my $el5 = $doc->create_element ('hoge');
+  $el5->set_attribute (id => 'abc');
+  $el2->append_child ($el5);
+  my $el3 = $doc->create_element ('menu');
+  $el3->set_attribute (id => 'abc');
+  $el2->append_child ($el3);
+
+  $el->contextmenu ($el2);
+  is $el->contextmenu, $el2;
+  is $el->get_attribute ('contextmenu'), 'abc';
+  
+  $el->contextmenu ($el3);
+  is $el->contextmenu, undef;
+  is $el->get_attribute ('contextmenu'), '';
+
+  $el->remove_attribute ('contextmenu');
+  my $el4 = $doc->create_element ('menu');
+  $el4->set_attribute (id => 'abc');
+  $el->contextmenu ($el4);
+  is $el->contextmenu, undef;
+  is $el->get_attribute ('contextmenu'), '';
+
+  $el->remove_attribute ('contextmenu');
+  $el4->append_child ($el);
+  $el->contextmenu ($el4);
+  is $el->contextmenu, undef;
+  is $el->get_attribute ('contextmenu'), '';
+
+  $el->remove_attribute ('contextmenu');
+  $el2->id ('');
+  $el->contextmenu ($el2);
+  is $el->contextmenu, undef;
+  is $el->get_attribute ('contextmenu'), '';
+
+  $el->set_attribute (contextmenu => $el5->id);
+  is $el->contextmenu, undef;
+
+  $el->remove_attribute ('contextmenu');
+  $el->contextmenu ($el3);
+  is $el->contextmenu, undef;
+  is $el->get_attribute ('contextmenu'), '';
+
+  $el->set_attribute (contextmenu => 'fuga');
+  is $el->contextmenu, undef;
+
+  done $c;
+} n => 15, name => 'reflect HTMLElement contextmenu';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('dfn');
+  $el->set_attribute (contextmenu => 'aa');
+  my $e = $doc->create_element ('foo');
+  dies_here_ok {
+    $el->contextmenu ($e);
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->name, 'TypeError';
+  is $@->message, 'The argument is not a Web::DOM::HTMLMenuElement';
+  is $el->get_attribute ('contextmenu'), 'aa';
+  done $c;
+} n => 5, name => 'reflect HTMLElement contextmenu bad new value';
+
+for (
+  ['not in document' => sub { }],
+  ['document element' => sub { $_[0]->append_child ($_[1]) }],
+  ['document > non-html > html' => sub {
+     my $el = $_[0]->create_element_ns ('hhh', 'fff');
+     $_[0]->append_child ($el);
+     $el->append_child ($_[1]);
+   }],
+) {
+  my $code = $_->[1];
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('xmp');
+    $code->($doc, $el);
+    ok $el->translate;
+    $el->translate (1);
+    ok $el->translate;
+    is $el->get_attribute_ns (undef, 'translate'), 'yes';
+    $el->translate (0);
+    ok not $el->translate;
+    is $el->get_attribute_ns (undef, 'translate'), 'no';
+    $el->set_attribute (translate => 'No');
+    ok not $el->translate;
+    $el->set_attribute (translate => 'YES');
+    ok $el->translate;
+    $el->set_attribute (translate => '');
+    ok $el->translate;
+    $el->set_attribute (translate => 'hoge');
+    ok $el->translate;
+    done $c;
+  } n => 9, name => ['translate not in document', $_->[0]];
+}
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('b');
+  $el1->append_child ($el2);
+
+  ok $el2->translate;
+  $el1->translate (0);
+  ok not $el2->translate;
+  $el1->translate (1);
+  ok $el2->translate;
+  $el2->translate (0);
+  ok not $el2->translate;
+  $el2->translate (1);
+  ok $el2->translate;
+  $el1->translate (0);
+  ok $el2->translate;
+  $el2->set_attribute (translate => '');
+  ok $el2->translate;
+  $el2->set_attribute (translate => 'auto');
+  ok not $el2->translate;
+  $el1->translate (1);
+  ok $el2->translate;
+  done $c;
+} n => 9, name => 'translate inherit';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element_ns (undef, 'a');
+  my $el2 = $doc->create_element ('b');
+  $el1->append_child ($el2);
+
+  ok $el2->translate;
+  $el1->set_attribute (translate => 'no');
+  ok $el2->translate;
+  $el1->set_attribute (translate => 'yes');
+  ok $el2->translate;
+  $el2->translate (0);
+  ok not $el2->translate;
+  $el2->translate (1);
+  ok $el2->translate;
+  $el1->set_attribute (translate => 'no');
+  ok $el2->translate;
+  $el2->set_attribute (translate => '');
+  ok $el2->translate;
+  $el2->set_attribute (translate => 'auto');
+  ok $el2->translate;
+  $el1->set_attribute (translate => 'yes');
+  ok $el2->translate;
+  done $c;
+} n => 9, name => 'translate inherit not html';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el0 = $doc->create_element ('c');
+  my $el2 = $doc->create_element ('b');
+  $el1->append_child ($el0);
+  $el0->append_child ($el2);
+
+  ok $el2->translate;
+  $el1->translate (0);
+  ok not $el2->translate;
+  $el1->translate (1);
+  ok $el2->translate;
+  $el2->translate (0);
+  ok not $el2->translate;
+  $el2->translate (1);
+  ok $el2->translate;
+  $el1->translate (0);
+  ok $el2->translate;
+  $el2->set_attribute (translate => '');
+  ok $el2->translate;
+  $el2->set_attribute (translate => 'auto');
+  ok not $el2->translate;
+  $el1->translate (1);
+  ok $el2->translate;
+  done $c;
+} n => 9, name => 'translate inherit html > html > html';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el0 = $doc->create_element_ns (undef, 'c');
+  my $el2 = $doc->create_element ('b');
+  $el1->append_child ($el0);
+  $el0->append_child ($el2);
+
+  ok $el2->translate;
+  $el1->translate (0);
+  ok not $el2->translate;
+  $el1->translate (1);
+  ok $el2->translate;
+  $el2->translate (0);
+  ok not $el2->translate;
+  $el2->translate (1);
+  ok $el2->translate;
+  $el1->translate (0);
+  ok $el2->translate;
+  $el2->set_attribute (translate => '');
+  ok $el2->translate;
+  $el2->set_attribute (translate => 'auto');
+  ok not $el2->translate;
+  $el1->translate (1);
+  ok $el2->translate;
+  done $c;
+} n => 9, name => 'translate inherit html > non-html > html';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('small');
+  ok not $el->draggable;
+  $el->draggable (1);
+  ok $el->draggable;
+  is $el->get_attribute_ns (undef, 'draggable'), 'true';
+  $el->draggable (0);
+  ok not $el->draggable;
+  is $el->get_attribute_ns (undef, 'draggable'), 'false';
+  $el->set_attribute (draggable => 'TruE');
+  ok $el->draggable;
+  $el->set_attribute (draggable => 'FALSe');
+  ok not $el->draggable;
+  $el->set_attribute (draggable => 'hoge');
+  ok not $el->draggable;
+  done $c;
+} n => 8, name => 'draggable normal element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('img');
+  ok $el->draggable;
+  $el->draggable (1);
+  ok $el->draggable;
+  is $el->get_attribute_ns (undef, 'draggable'), 'true';
+  $el->draggable (0);
+  ok not $el->draggable;
+  is $el->get_attribute_ns (undef, 'draggable'), 'false';
+  $el->set_attribute (draggable => 'TruE');
+  ok $el->draggable;
+  $el->set_attribute (draggable => 'FALSe');
+  ok not $el->draggable;
+  $el->set_attribute (draggable => 'hoge');
+  ok $el->draggable;
+  done $c;
+} n => 8, name => 'draggable img';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  ok not $el->draggable;
+  $el->draggable (1);
+  ok $el->draggable;
+  is $el->get_attribute_ns (undef, 'draggable'), 'true';
+  $el->draggable (0);
+  ok not $el->draggable;
+  is $el->get_attribute_ns (undef, 'draggable'), 'false';
+  $el->set_attribute (draggable => 'TruE');
+  ok $el->draggable;
+  $el->set_attribute (draggable => 'FALSe');
+  ok not $el->draggable;
+  $el->set_attribute (draggable => 'hoge');
+  ok not $el->draggable;
+  done $c;
+} n => 8, name => 'draggable a without href';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->set_attribute (href => '');
+  ok $el->draggable;
+  $el->draggable (1);
+  ok $el->draggable;
+  is $el->get_attribute_ns (undef, 'draggable'), 'true';
+  $el->draggable (0);
+  ok not $el->draggable;
+  is $el->get_attribute_ns (undef, 'draggable'), 'false';
+  $el->set_attribute (draggable => 'TruE');
+  ok $el->draggable;
+  $el->set_attribute (draggable => 'FALSe');
+  ok not $el->draggable;
+  $el->set_attribute (draggable => 'hoge');
+  ok $el->draggable;
+  done $c;
+} n => 8, name => 'draggable a[href]';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('strike');
+  is $el->contenteditable, 'inherit';
+  for my $value (qw(true TruE false FalSE FALSE)) {
+    $el->contenteditable ($value);
+    is $el->contenteditable, lc $value;
+    is $el->get_attribute ('contenteditable'), lc $value;
+
+    $el->set_attribute (contenteditable => $value);
+    is $el->contenteditable, lc $value;
+  }
+  $el->contenteditable ('inherit');
+  is $el->contenteditable, 'inherit';
+  ok not $el->has_attribute ('contenteditable');
+  $el->contenteditable ('true');
+  $el->contenteditable ('INHERIT');
+  is $el->contenteditable, 'inherit';
+  ok not $el->has_attribute ('contenteditable');
+  $el->set_attribute (contenteditable => 'InherIT');
+  is $el->contenteditable, 'inherit';
+  done $c;
+} n => 21, name => 'contenteditable';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('foo');
+  $el->contenteditable ('false');
+
+  dies_here_ok {
+    $el->contenteditable ('yes');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'An invalid |contenteditable| value is specified';
+  is $el->contenteditable, 'false';
+  done $c;
+} n => 5, name => 'contenteditable bad value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ('fieldset');
   is $el->type, 'fieldset';
   done $c;
