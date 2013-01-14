@@ -1,0 +1,64 @@
+=head1 NAME
+
+Web::DOM::HTMLOutputElement - The DOM |HTMLOutputElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLOutputElement> class implements the DOM
+C<HTMLOutputElement> interface.  The class is used by the HTML
+C<output> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::HTMLElement>, the following method is available:
+
+=over 4
+
+=item $tokens = $el->html_for
+
+=item $el->html_for ($string)
+
+Return the L<Web::DOM::SettableTokenList> object for the C<for>
+attribute, or set the C<for> attribute to the specified string value.
+[HTML]
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the C<name> attribute.  [HTML]
+
+=item $string = $el->type
+
+Return the string C<output>.  [HTML]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#the-output-element>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

@@ -34,6 +34,14 @@ Return or set the C<height> attribute.  [HTML]
 
 Return or set the C<name> attribute.  [HTML]
 
+=item $tokens = $el->sandbox
+
+=item $el->sandbox ($string)
+
+Return the L<Web::DOM::SettableTokenList> object for the C<sandbox>
+attribute, or set the C<sandbox> attribute to the specified string
+value.  [HTML]
+
 =item $boolean = $el->seamless
 
 =item $el->seamless ($boolean)

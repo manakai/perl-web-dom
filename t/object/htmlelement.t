@@ -1069,6 +1069,81 @@ for my $test (
 }
 
 for my $test (
+  {element => 'a', attr => 'rel', method => 'rel_list'},
+  {element => 'area', attr => 'rel', method => 'rel_list'},
+  {element => 'link', attr => 'rel', method => 'rel_list'},
+  {element => 'td', attr => 'headers'},
+  {element => 'th', attr => 'headers'},
+  {element => 'em', attr => 'dropzone'},
+  {element => 'em', attr => 'itemprop'},
+  {element => 'em', attr => 'itemref'},
+  {element => 'em', attr => 'itemtype'},
+  {element => 'link', attr => 'sizes'},
+  {element => 'iframe', attr => 'sandbox'},
+  {element => 'output', attr => 'for', method => 'html_for'},
+) {
+  my $el_name = $test->{element};
+  my $method = $test->{method} || $test->{attr};
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($el_name);
+    my $tokens = $el->$method;
+
+    isa_ok $tokens, 'Web::DOM::TokenList';
+    if ($method eq 'rel_list') {
+      ok not $tokens->isa ('Web::DOM::SettableTokenList');
+    } else {
+      isa_ok $tokens, 'Web::DOM::SettableTokenList';
+    }
+    is scalar @$tokens, 0;
+
+    push @$tokens, 'aaa';
+    is $el->get_attribute ($test->{attr}), 'aaa';
+
+    $el->set_attribute ($test->{attr} => 'bb  ccc  ');
+    is ''.$tokens, 'bb ccc';
+    is $el->get_attribute ($test->{attr}), 'bb  ccc  ';
+    
+    done $c;
+  } n => 6, name => ['reflect DOMTokenList', $el_name, $test->{attr}];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($el_name);
+    $el->$method->remove ('foo');
+    ok not $el->has_attribute ($test->{attr});
+    $el->$method->add;
+    ok not $el->has_attribute ($test->{attr});
+    $el->$method->add ('bar');
+    is $el->get_attribute ($test->{attr}), 'bar';
+    $el->$method->remove ('bar');
+    is $el->get_attribute ($test->{attr}), '';
+    done $c;
+  } n => 4, name => ['reflect DOMTokenList attribute existence', $el_name];
+
+  if ($method ne 'rel_list') {
+    test {
+      my $c = shift;
+      my $doc = new Web::DOM::Document;
+      my $el = $doc->create_element ($el_name);
+      $el->$method ('');
+      ok not $el->has_attribute_ns (undef, $test->{attr});
+
+      $el->$method ("foo bar\x09\x0C");
+      is $el->get_attribute ($test->{attr}), 'foo bar';
+
+      $el->$method ("\x09\x0C");
+      is $el->get_attribute ($test->{attr}), '';
+
+      done $c;
+    } n => 3, name => ['reflect DOMSettableTokenList',
+                       $el_name, $test->{attr}];
+  }
+}
+
+for my $test (
   {element => 'dfn', attr => 'contextmenu', target_element => 'menu'},
   {element => 'button', attr => 'menu', target_element => 'menu'},
 ) {

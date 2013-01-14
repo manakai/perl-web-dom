@@ -7,6 +7,9 @@ Web::DOM::TokenList - The DOM |DOMTokenList| object
 The C<Web::DOM::TokenList> class implements the DOM C<DOMTokenList>
 interface.
 
+The C<DOMTokenList> object is used by the C<class_list> method of the
+elements and the C<rel_list> method of the HTML hyperlink elements.
+
 =head1 METHODS
 
 Following methods are available:

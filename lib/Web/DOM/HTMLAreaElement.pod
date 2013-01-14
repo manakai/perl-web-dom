@@ -45,6 +45,11 @@ Return or set the C<hreflang> attribute.  [HTML]
 
 Return or set the C<rel> attribute.  [HTML]
 
+=item $tokens = $el->rel_list
+
+Return the L<Web::DOM::TokenList> object for the C<rel> attribute.
+[HTML]
+
 =item $string = $el->shape
 
 =item $el->shape ($string)

@@ -39,6 +39,19 @@ Return or set the C<media> attribute.  [HTML]
 
 Return or set the C<rel> attribute.  [HTML]
 
+=item $tokens = $el->rel_list
+
+Return the L<Web::DOM::TokenList> object for the C<rel> attribute.
+[HTML]
+
+=item $tokens = $el->sizes
+
+=item $el->sizes ($string)
+
+Return the L<Web::DOM::SettableTokenList> object for the C<sizes>
+attribute, or set the C<sizes> attribute to the specified string
+value.  [HTML]
+
 =item $string = $el->type
 
 =item $el->type ($string)

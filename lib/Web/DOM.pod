@@ -286,8 +286,6 @@ the very initial phase of the development include:
 
 =item DOMStringMap [HTML]
 
-=item DOMSettableTokenList interface [DOM] as well as tokens-reflecting methods [HTML]
-
 =item HTMLAllCollection [HTML]
 
 =back

@@ -657,6 +657,11 @@ sub remove_attribute_node ($$) {
   return $attr;
 } # remove_attribute_node
 
+my $DOMTokenListAttributeMapping = {
+  class => 'class_list',
+  rel => 'rel_list',
+};
+
 sub _attribute_is ($$$%) {
   my ($self, $nsref, $lnref, %args) = @_;
   ## - attribute is set
@@ -664,13 +669,16 @@ sub _attribute_is ($$$%) {
   ## - attribute is changed
   ## - attribute is removed
 
-  if (not defined $nsref and defined $lnref and $$lnref eq 'class') {
-    my $value = $self->get_attribute_ns (undef, $$lnref);
-    my %found;
-    @{$$self->[2]->{class_list} ||= []}
-        = grep { length $_ and not $found{$_}++ }
-          split /[\x09\x0A\x0C\x0D\x20]+/,
-          (defined $value ? $value : '');
+  if (not defined $nsref and defined $lnref) {
+    my $key = $DOMTokenListAttributeMapping->{$$lnref};
+    if (defined $key) {
+      my $value = $self->get_attribute_ns (undef, $$lnref);
+      my %found;
+      @{$$self->[2]->{$key} ||= []}
+          = grep { length $_ and not $found{$_}++ }
+            split /[\x09\x0A\x0C\x0D\x20]+/,
+            (defined $value ? $value : '');
+    }
   }
 
   $$self->[0]->children_changed ($$self->[1], ATTRIBUTE_NODE);
@@ -865,6 +873,31 @@ sub _define_reflect_unsigned_long_positive ($$$) {
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_unsigned_long_positive
 
+push @EXPORT, qw(_define_reflect_settable_token_list);
+sub _define_reflect_settable_token_list ($$) {
+  my ($perl_name, $content_name) = @_;
+  my $class = caller;
+  eval sprintf q{
+    sub %s::%s ($;$) {
+      my $self = $_[0];
+      if (@_ > 1) {
+        $self->%s->value ($_[1]); # recursive!
+        return unless defined wantarray;
+      }
+
+      return $$self->[0]->tokens ('%s', $self, sub {
+        my $new = $$self->[2]->{%s} || [];
+        $self->set_attribute_ns (undef, '%s' => join ' ', @$new)
+            if @$new or $self->has_attribute_ns (undef, '%s');
+      }, '%s');
+    }
+    1;
+  }, $class, $perl_name, $perl_name,
+     $perl_name, $perl_name, $content_name, $content_name, $content_name
+     or die $@;
+  $DOMTokenListAttributeMapping->{$content_name} = $perl_name;
+} # _define_reflect_settable_token_list
+
 push @EXPORT, qw(_define_reflect_idref);
 sub _define_reflect_idref ($$$) {
   my ($perl_name, $content_name, $el_class) = @_;
@@ -920,7 +953,7 @@ sub class_list ($) {
   return $$self->[0]->tokens ('class_list', $self, sub {
     $self->set_attribute_ns
         (undef, class => join ' ', @{$$self->[2]->{class_list} ||= []});
-  });
+  }, 'class');
 } # class_list
 
 sub manakai_base_uri ($;$) {

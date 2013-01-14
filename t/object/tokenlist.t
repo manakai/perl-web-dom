@@ -225,6 +225,48 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('f');
+  my $tokens = $el->class_list;
+  $tokens->add ('foo');
+  $tokens->add ('foo');
+  is scalar @$tokens, 1;
+  is $el->class_name, 'foo';
+  push @$tokens, 'foo';
+  is scalar @$tokens, 1;
+  is $el->class_name, 'foo';
+  $tokens->add ('bar', 'bar');
+  is scalar @$tokens, 2;
+  is $el->class_name, 'foo bar';
+  push @$tokens, 'baz', 'baz';
+  is scalar @$tokens, 3;
+  is $el->class_name, 'foo bar baz';
+  done $c;
+} n => 8, name => 'add unique';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('td');
+  my $tokens = $el->headers;
+  $tokens->add ('foo');
+  $tokens->add ('foo');
+  is scalar @$tokens, 1;
+  is $el->get_attribute ('headers'), 'foo';
+  push @$tokens, 'foo';
+  is scalar @$tokens, 1;
+  is $el->get_attribute ('headers'), 'foo';
+  $tokens->add ('bar', 'bar');
+  is scalar @$tokens, 2;
+  is $el->get_attribute ('headers'), 'foo bar';
+  push @$tokens, 'baz', 'baz';
+  is scalar @$tokens, 3;
+  is $el->get_attribute ('headers'), 'foo bar baz';
+  done $c;
+} n => 8, name => 'add unique DOMSettableTokenList';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ('hhe');
   my $tokens = $el->class_list;
   $el->set_attribute (class => 'abc def   aa abc Def');

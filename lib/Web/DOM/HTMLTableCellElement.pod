@@ -30,6 +30,14 @@ cells.
 
 Return or set the C<colspan> attribute.  [HTML]
 
+=item $tokens = $el->headers
+
+=item $el->headers ($string)
+
+Return the L<Web::DOM::SettableTokenList> object for the C<headers>
+attribute, or set the C<headers> attribute to the specified string
+value.  [HTML]
+
 =item $integer = $el->rowspan
 
 =item $el->rowspan ($integer)

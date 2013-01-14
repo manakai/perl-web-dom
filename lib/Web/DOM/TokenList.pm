@@ -49,7 +49,8 @@ sub contains ($$) {
 } # contains
 
 sub add ($;@) {
-  (tied @{+shift})->append (@_);
+  my %found = map { $_ => 1 } @{$_[0]};
+  (tied @{+shift})->append (grep { not $found{$_}++ } @_);
   return;
 } # add
 

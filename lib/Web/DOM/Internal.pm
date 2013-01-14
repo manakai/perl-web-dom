@@ -404,6 +404,15 @@ sub collection_by_el ($$$$$) {
 ## $self->{tokens}->[$node_id]->
 ## 
 ##   - {class_list}           - $el->class_list
+##   - {rel_list}             - $el->rel_list
+##   - {dropzone}             - $el->dropzone
+##   - {headers}              - $el->headers
+##   - {html_for}             - $el->html_for
+##   - {itemprop}             - $el->itemprop
+##   - {itemref}              - $el->itemref
+##   - {itemtype}             - $el->itemtype
+##   - {sandbox}              - $el->sandbox
+##   - {sizes}                - $el->sizes
 ##
 ## $element->class_name ------------------------------------------->+
 ## $$element->[2]->{attr...}... = class attribute <--------------<--+
@@ -416,29 +425,48 @@ sub collection_by_el ($$$$$) {
 ##   1 - update steps --------------------------------------------->+
 ## ], DOMTokenList
 
-our $TokenListClass = {};
+our $TokenListClass = {
+  class_list => 'Web::DOM::TokenList',
+  rel_list => 'Web::DOM::TokenList',
+};
 
-sub tokens ($$$$) {
-  my ($self, $key, $node, $updater) = @_;
+sub tokens ($$$$$) {
+  my ($self, $key, $node, $updater, $attr_name) = @_;
   my $id = $$node->[1];
   return $self->{tokens}->[$id]->{$key}
       if $self->{tokens}->[$id]->{$key};
 
+  my $uniquer = sub {
+    my %found;
+    @{$$node->[2]->{$key}} = grep {
+      length $_ and not $found{$_}++;
+    } @{$$node->[2]->{$key}};
+  };
+  my %found;
+  $$node->[2]->{$key} ||= [
+    grep { length $_ and not $found{$_}++ }
+    split /[\x09\x0A\x0C\x0D\x20]+/,
+    do { my $v = $node->get_attribute_ns (undef, $attr_name);
+         defined $v ? $v : '' }
+  ];
+
   require Web::DOM::StringArray;
   require Web::DOM::Exception;
-  tie my @array, 'Web::DOM::StringArray', $$node->[2]->{$key} ||= [], $updater,
-      sub {
-        if ($_[0] eq '') {
-          _throw Web::DOM::Exception 'SyntaxError',
-              'The token cannot be the empty string';
-        } elsif ($_[0] =~ /[\x09\x0A\x0C\x0D\x20]/) {
-          _throw Web::DOM::Exception 'InvalidCharacterError',
-              'The token cannot contain any ASCII white space character';
-        }
-        return $_[0];
-      };
+  tie my @array, 'Web::DOM::StringArray', $$node->[2]->{$key}, sub {
+    $uniquer->();
+    $updater->();
+  }, sub {
+    if ($_[0] eq '') {
+      _throw Web::DOM::Exception 'SyntaxError',
+          'The token cannot be the empty string';
+    } elsif ($_[0] =~ /[\x09\x0A\x0C\x0D\x20]/) {
+      _throw Web::DOM::Exception 'InvalidCharacterError',
+          'The token cannot contain any ASCII white space character';
+    }
+    return $_[0];
+  };
 
-  my $class = $TokenListClass->{$key} || 'Web::DOM::TokenList';
+  my $class = $TokenListClass->{$key} || 'Web::DOM::SettableTokenList';
   eval qq{ require $class } or die $@;
   my $nl = bless \@array, $class;
   weaken ($self->{tokens}->[$id]->{$key} = $nl);

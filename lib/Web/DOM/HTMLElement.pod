@@ -45,6 +45,14 @@ Return or set the C<dir> attribute.  [HTML]
 
 Return or set whether the element is draggable or not.  [HTML]
 
+=item $tokens = $el->dropzone
+
+=item $el->dropzone ($string)
+
+Return the L<Web::DOM::SettableTokenList> object for the C<dropzone>
+attribute, or set the C<dropzone> attribute to the specified string
+value.  [HTML]
+
 =item $boolean = $el->hidden
 
 =item $el->hidden ($boolean)
@@ -65,12 +73,36 @@ For example:
 
 Return or set the C<itemid> attribute.  [HTML]
 
+=item $tokens = $el->itemprop
+
+=item $el->itemprop ($string)
+
+Return the L<Web::DOM::SettableTokenList> object for the C<itemprop>
+attribute, or set the C<itemprop> attribute to the specified string
+value.  [HTML]
+
+=item $tokens = $el->itemref
+
+=item $el->itemref ($string)
+
+Return the L<Web::DOM::SettableTokenList> object for the C<itemref>
+attribute, or set the C<itemref> attribute to the specified string
+value.  [HTML]
+
 =item $boolean = $el->itemscope
 
 =item $el->itemscope ($boolean)
 
 Return or set whether the C<itemscope> attribute is specified or not.
 [HTML]
+
+=item $tokens = $el->itemtype
+
+=item $el->itemtype ($string)
+
+Return the L<Web::DOM::SettableTokenList> object for the C<itemtype>
+attribute, or set the C<itemtype> attribute to the specified string
+value.  [HTML]
 
 =item $string = $el->lang
 

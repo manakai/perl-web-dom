@@ -13,10 +13,12 @@ _define_reflect_string title => 'title';
 _define_reflect_string lang => 'lang';
 _define_reflect_string itemid => 'itemid';
 _define_reflect_string accesskey => 'accesskey';
-
 _define_reflect_boolean itemscope => 'itemscope';
 _define_reflect_boolean hidden => 'hidden';
-
+_define_reflect_settable_token_list dropzone => 'dropzone';
+_define_reflect_settable_token_list itemtype => 'itemtype';
+_define_reflect_settable_token_list itemprop => 'itemprop';
+_define_reflect_settable_token_list itemref => 'itemref';
 _define_reflect_enumerated dir => 'dir', {
   ltr => 'ltr',
   rtl => 'rtl',
@@ -100,8 +102,7 @@ sub contenteditable ($;$) {
 _define_reflect_idref contextmenu => 'contextmenu',
     'Web::DOM::HTMLMenuElement';
 
-# XXX dataset itemtype itemref itemprop properties itemvalue dropzone
-# command* style
+# XXX dataset properties itemvalue command* style
 
 ## ------ User interaction ------
 
@@ -153,17 +154,27 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 # XXX LinkStyle
 use Web::DOM::Element;
 
-# XXX href rellist disabled sizes
+# XXX href disabled
 
 _define_reflect_string rel => 'rel';
 _define_reflect_string media => 'media';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
 _define_reflect_string crossorigin => 'crossorigin';
+_define_reflect_settable_token_list sizes => 'sizes';
 
 _define_reflect_string charset => 'charset';
 _define_reflect_string rev => 'rev';
 _define_reflect_string target => 'target';
+
+sub rel_list ($) {
+  my $self = $_[0];
+  return $$self->[0]->tokens ('rel_list', $self, sub {
+    my $new = $$self->[2]->{rel_list} || [];
+    $self->set_attribute_ns (undef, rel => join ' ', @$new)
+        if @$new or $self->has_attribute_ns (undef, 'rel');
+  }, 'rel');
+} # rel_list
 
 package Web::DOM::HTMLMetaElement;
 our $VERSION = '1.0';
@@ -324,7 +335,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX href ping rel_list URLUtils
+# XXX href ping URLUtils toString
 
 _define_reflect_string target => 'target';
 _define_reflect_string download => 'download';
@@ -337,6 +348,15 @@ _define_reflect_string charset => 'charset';
 _define_reflect_string name => 'name';
 _define_reflect_string rev => 'rev';
 _define_reflect_string shape => 'shape';
+
+sub rel_list ($) {
+  my $self = $_[0];
+  return $$self->[0]->tokens ('rel_list', $self, sub {
+    my $new = $$self->[2]->{rel_list} || [];
+    $self->set_attribute_ns (undef, rel => join ' ', @$new)
+        if @$new or $self->has_attribute_ns (undef, 'rel');
+  }, 'rel');
+} # rel_list
 
 sub text ($;$) {
   return shift->text_content (@_);
@@ -404,7 +424,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX src sandbox content_document content_window
+# XXX src content_document content_window
 
 _define_reflect_string srcdoc => 'srcdoc';
 _define_reflect_string name => 'name';
@@ -412,6 +432,7 @@ _define_reflect_boolean seamless => 'seamless';
 _define_reflect_boolean allowfullscreen => 'allowfullscreen';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
+_define_reflect_settable_token_list sandbox => 'sandbox';
 
 # XXX longdesc
 
@@ -568,7 +589,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX href ping rel_list URLUtils
+# XXX href ping URLUtils toString
 
 _define_reflect_string alt => 'alt';
 _define_reflect_string coords => 'coords';
@@ -580,6 +601,15 @@ _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
 
 _define_reflect_boolean nohref => 'nohref';
+
+sub rel_list ($) {
+  my $self = $_[0];
+  return $$self->[0]->tokens ('rel_list', $self, sub {
+    my $new = $$self->[2]->{rel_list} || [];
+    $self->set_attribute_ns (undef, rel => join ' ', @$new)
+        if @$new or $self->has_attribute_ns (undef, 'rel');
+  }, 'rel');
+} # rel_list
 
 package Web::DOM::HTMLTableElement;
 our $VERSION = '1.0';
@@ -1029,8 +1059,7 @@ use Web::DOM::Element;
 
 _define_reflect_unsigned_long colspan => 'colspan', sub { 1 };
 _define_reflect_unsigned_long rowspan => 'rowspan', sub { 1 };
-
-# XXX headers
+_define_reflect_settable_token_list headers => 'headers';
 
 _define_reflect_string align => 'align';
 _define_reflect_string axis => 'axis';
@@ -1485,9 +1514,10 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX form html_for
+# XXX form
 
 _define_reflect_string name => 'name';
+_define_reflect_settable_token_list html_for => 'for';
 
 sub type ($) { 'output' }
 
