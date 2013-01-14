@@ -11,11 +11,24 @@ C<tbody>, C<thead>, and C<tfoot> elements.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
-XXX
+=item $el->delete_row ($index)
+
+Return the table row (C<tr> element) with the specified index in the
+table row group.  [HTML]
+
+=item $tr = $el->insert_row ($index)
+
+Insert a table row (C<tr> element) at the specified postion in the
+table row group and return the element.  [HTML]
+
+=item $col = $el->rows
+
+Return the L<Web::DOM::HTMLCollection> containing the rows (C<tr>
+elements) of the table row group.  [HTML]
 
 =back
 
@@ -35,7 +48,7 @@ HTML Standard
 
 =head1 SEE ALSO
 
-L<Web::DOM::HTMLElement>.
+L<Web::DOM::HTMLElement>, L<Web::DOM::HTMLTableElement>.
 
 =head1 AUTHOR
 

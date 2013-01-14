@@ -1919,6 +1919,358 @@ test {
   done $c;
 } n => 4*5 + 1, name => 'delete_row error';
 
+for my $section (qw(tbody thead tfoot)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    my $col1 = $table->rows;
+    isa_ok $col1, 'Web::DOM::HTMLCollection';
+    is $col1->length, 0;
+
+    $table->inner_html (q{<caption><tr n="1"/></caption><thead
+><tr n="2"/><tr n="3"/>
+<hoge/></thead><tfoot><tr n="4"/></tfoot>
+<tbody/><tr n="5"/>
+<tbody><tr n="6"/><tr n="7"/><tr n="8"><tr n="9"/></tr
+><thead><tr n="10"/></thead></tbody>
+<tr n="11"/><foo><tr n="12"/></foo><tfoot><tr n="12"/></tfoot>});
+    is $col1->length, 2;
+    is $col1->[0]->get_attribute ('n'), 5;
+    is $col1->[1]->get_attribute ('n'), 11;
+    is $table->rows, $col1;
+    done $c;
+  } n => 6, name => ['rows', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<!----> hoge <td/> <thead/>});
+    my $tr = $table->insert_row (0);
+    is $tr->namespace_uri, $table->namespace_uri;
+    is $tr->local_name, 'tr';
+    is $tr->parent_node, $table;
+    is $table->last_child, $tr;
+    is $tr->first_child, undef;
+
+    my $tr2 = $table->insert_row (1);
+    is $tr2->previous_sibling, $tr;
+    is $tr2->local_name, 'tr';
+
+    my $tr4 = $doc->create_element ('tr');
+    $table->append_child ($tr4);
+    my $tr5 = $table->insert_row (-1);
+    is $tr5->previous_sibling, $tr4;
+
+    my $tfoot = $doc->create_element ('tfoot');
+    $tfoot->inner_html (q{<tr/>});
+    my $tr6 = $tfoot->first_child;
+
+    $table->insert_before ($tfoot, $table->first_child);
+
+    my $tr7 = $table->insert_row (3);
+    is $table->last_child, $tr5;
+    is $tr5->previous_sibling, $tr7;
+
+    done $c;
+  } n => 10, name => ['insert_row', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<tbody><tr/></tbody><tr/>});
+    for my $index (-6, -51, 3, 12, 21, 2**32+3, 2**31) {
+      dies_here_ok {
+        $table->insert_row ($index);
+      };
+      isa_ok $@, 'Web::DOM::Exception';
+      is $@->name, 'IndexSizeError';
+      is $@->message, 'The specified row index is invalid';
+    }
+    is $table->child_nodes->length, 2;
+    is $table->first_child->child_nodes->length, 1;
+    done $c;
+  } n => 7*4+2, name => ['insert_row index size error', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<tbody><tr/></tbody><tr/>});
+    
+    $table->insert_row (0+'nan')->set_attribute (id => 1);
+    $table->insert_row (0+'inf')->set_attribute (id => 2);
+    $table->insert_row (1.41)->set_attribute (id => 3);
+    $table->insert_row (2**32-1)->set_attribute (id => 4);
+    
+    is $table->outer_html, qq{<$section xmlns="http://www.w3.org/1999/xhtml"><tbody><tr></tr></tbody><tr id="2"></tr><tr id="3"></tr><tr id="1"></tr><tr></tr><tr id="4"></tr></$section>};
+    done $c;
+  } n => 1, name => ['insert_row index stupid', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->insert_row->set_attribute (id => 1);
+    $table->insert_row->set_attribute (id => 2);
+    is $table->outer_html, qq{<$section xmlns="http://www.w3.org/1999/xhtml"><tr id="1"></tr><tr id="2"></tr></$section>};
+    done $c;
+  } n => 1, name => ['insert_row default', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<tbody><tr/><tr/></tbody><tr/><tr/><tr/>});
+    $table->delete_row (2);
+    is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr></tr><tr></tr></tbody><tr xmlns="http://www.w3.org/1999/xhtml"></tr><tr xmlns="http://www.w3.org/1999/xhtml"></tr>};
+    $table->delete_row (1);
+    is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr></tr><tr></tr></tbody><tr xmlns="http://www.w3.org/1999/xhtml"></tr>};
+    $table->delete_row (2**32);
+    is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr></tr><tr></tr></tbody>};
+    done $c;
+  } n => 3, name => ['delete_row', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<tbody><tr/><tr/></tbody><tr/>});
+    for (2**32-2, -50.12, 100.21, 3, -2, -1, 1) {
+      dies_here_ok {
+        $table->delete_row ($_);
+      };
+      isa_ok $@, 'Web::DOM::Exception';
+      is $@->name, 'IndexSizeError';
+      is $@->message, 'The specified row index is invalid';
+    }
+    is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr></tr><tr></tr></tbody><tr xmlns="http://www.w3.org/1999/xhtml"></tr>};
+    done $c;
+  } n => 4*7 + 1, name => ['delete_row error', $section];
+}
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $table = $doc->create_element ('table');
+
+  $table->inner_html (q{<caption><tr n="1"/></caption><thead
+><tr n="2"/><tr n="3"/>
+<hoge/></thead><tfoot><tr n="4"/></tfoot>
+<tbody/><tr n="5"/>
+<tbody><tr n="6"/><tr n="7"/><tr n="8"><tr n="9"/></tr
+><thead><tr n="10"/></thead></tbody>
+<tr n="11"/><foo><tr n="12"/></foo><tfoot><tr n="12"/></tfoot>});
+  my $trs = $table->get_elements_by_tag_name ('tr');
+  for (
+    [0 => -1, -1],
+    [1 => 0, 0],
+    [2 => 1, 1],
+    [3 => 7, 0],
+    [4 => 2, 2],
+    [5 => 3, 0],
+    [6 => 4, 1],
+    [7 => 5, 2],
+    [8 => -1, -1],
+    [9 => -1, 0],
+    [10 => 6, 6],
+    [11 => -1, -1],
+    [12 => 8, 0],
+  ) {
+    is $trs->[$_->[0]]->row_index, $_->[1];
+    is $trs->[$_->[0]]->section_row_index, $_->[2];
+  }
+  done $c;
+} n => 2*13, name => 'row_index section_row_index';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('tr');
+  is $el->row_index, -1;
+  is $el->section_row_index, -1;
+  $doc->append_child ($el);
+  is $el->row_index, -1;
+  is $el->section_row_index, -1;
+  my $el2 = $doc->create_element ('div');
+  $el2->append_child ($el);
+  is $el->row_index, -1;
+  is $el->section_row_index, -1;
+  for my $section (qw(thead tbody tfoot)) {
+    my $el3 = $doc->create_element ($section);
+    $el3->append_child ($el);
+    is $el->row_index, -1;
+    is $el->section_row_index, 0;
+  }
+  done $c;
+} n => 12, name => 'row_index section_row_index no parent table';
+
+for my $section (qw(tr)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    my $col1 = $table->cells;
+    isa_ok $col1, 'Web::DOM::HTMLCollection';
+    is $col1->length, 0;
+
+    $table->inner_html (q{<caption><td n="1"/></caption><thead
+><th n="2"/><td n="3"/>
+<hoge/></thead><tfoot><td n="4"/></tfoot>
+<tbody/><td n="5"/><tr/>
+<tbody><th n="6"/><td n="7"/><th n="8"><td n="9"/></th
+><thead><th n="10"/></thead></tbody>
+<td n="11"/><foo><th n="12"/></foo><tfoot><td n="12"/></tfoot>});
+    is $col1->length, 2;
+    is $col1->[0]->get_attribute ('n'), 5;
+    is $col1->[1]->get_attribute ('n'), 11;
+    is $table->cells, $col1;
+    done $c;
+  } n => 6, name => ['cells', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<!----> hoge <tr/> <thead/>});
+    my $tr = $table->insert_cell (0);
+    is $tr->namespace_uri, $table->namespace_uri;
+    is $tr->local_name, 'td';
+    is $tr->parent_node, $table;
+    is $table->last_child, $tr;
+    is $tr->first_child, undef;
+
+    my $tr2 = $table->insert_cell (1);
+    is $tr2->previous_sibling, $tr;
+    is $tr2->local_name, 'td';
+
+    my $tr4 = $doc->create_element ('th');
+    $table->append_child ($tr4);
+    my $tr5 = $table->insert_cell (-1);
+    is $tr5->previous_sibling, $tr4;
+
+    my $tfoot = $doc->create_element ('tfoot');
+    $tfoot->inner_html (q{<td/>});
+    my $tr6 = $tfoot->first_child;
+
+    $table->insert_before ($tfoot, $table->first_child);
+
+    my $tr7 = $table->insert_cell (3);
+    is $table->last_child, $tr5;
+    is $tr5->previous_sibling, $tr7;
+
+    done $c;
+  } n => 10, name => ['insert_cell', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<tbody><th/></tbody><th/>});
+    for my $index (-6, -51, 3, 12, 21, 2**32+3, 2**31) {
+      dies_here_ok {
+        $table->insert_cell ($index);
+      };
+      isa_ok $@, 'Web::DOM::Exception';
+      is $@->name, 'IndexSizeError';
+      is $@->message, 'The specified cell index is invalid';
+    }
+    is $table->child_nodes->length, 2;
+    is $table->first_child->child_nodes->length, 1;
+    done $c;
+  } n => 7*4+2, name => ['insert_cell index size error', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<tbody><td/></tbody><td/>});
+    
+    $table->insert_cell (0+'nan')->set_attribute (id => 1);
+    $table->insert_cell (0+'inf')->set_attribute (id => 2);
+    $table->insert_cell (1.41)->set_attribute (id => 3);
+    $table->insert_cell (2**32-1)->set_attribute (id => 4);
+    
+    is $table->outer_html, qq{<$section xmlns="http://www.w3.org/1999/xhtml"><tbody><td></td></tbody><td id="2"></td><td id="3"></td><td id="1"></td><td></td><td id="4"></td></$section>};
+    done $c;
+  } n => 1, name => ['insert_cell index stupid', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->insert_cell->set_attribute (id => 1);
+    $table->insert_cell->set_attribute (id => 2);
+    is $table->outer_html, qq{<$section xmlns="http://www.w3.org/1999/xhtml"><td id="1"></td><td id="2"></td></$section>};
+    done $c;
+  } n => 1, name => ['insert_cell default', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<tbody><td/><td/></tbody><td/><th/><td/>});
+    $table->delete_cell (2);
+    is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><td></td><td></td></tbody><td xmlns="http://www.w3.org/1999/xhtml"></td><th xmlns="http://www.w3.org/1999/xhtml"></th>};
+    $table->delete_cell (1);
+    is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><td></td><td></td></tbody><td xmlns="http://www.w3.org/1999/xhtml"></td>};
+    $table->delete_cell (2**32);
+    is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><td></td><td></td></tbody>};
+    done $c;
+  } n => 3, name => ['delete_cell', $section];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ($section);
+    $table->inner_html (q{<tbody><td/><td/></tbody><td/>});
+    for (2**32-2, -50.12, 100.21, 3, -2, -1, 1) {
+      dies_here_ok {
+        $table->delete_cell ($_);
+      };
+      isa_ok $@, 'Web::DOM::Exception';
+      is $@->name, 'IndexSizeError';
+      is $@->message, 'The specified cell index is invalid';
+    }
+    is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><td></td><td></td></tbody><td xmlns="http://www.w3.org/1999/xhtml"></td>};
+    done $c;
+  } n => 4*7 + 1, name => ['delete_cell error', $section];
+}
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $td = $doc->create_element ('td');
+  is $td->cell_index, -1;
+  my $th = $doc->create_element ('th');
+  is $th->cell_index, -1;
+  $doc->append_child ($td);
+  is $td->cell_index, -1;
+  $doc->replace_child ($th, $td);
+  is $th->cell_index, -1;
+  my $el = $doc->create_element ('table');
+  $el->append_child ($td);
+  $el->append_child ($th);
+  is $td->cell_index, -1;
+  is $th->cell_index, -1;
+  done $c;
+} n => 6, name => 'cell_index no parent';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $tr = $doc->create_element ('tr');
+  my $td = $doc->create_element ('td');
+  $tr->append_child ($td);
+  is $td->cell_index, 0;
+  my $th = $doc->create_element ('th');
+  $tr->append_child ($th);
+  is $th->cell_index, 1;
+  done $c;
+} n => 2, name => 'cell_index has tr parent';
+
 run_tests;
 
 =head1 LICENSE

@@ -314,6 +314,19 @@ Window.prototype.manakaiGetComputedStyle, Window.prototype.setDocument
 In addition, source codes of the modules include many "XXX" markers,
 indicating TODO items.
 
+=head1 LIMITATIONS
+
+Methods returning the index or position in some list or string, whose
+IDL type is a number type, do not convert the value as specified by
+the WebIDL specification and the DOM Perl Binding specification.  This
+should not be a problem as it is not realistic to have lists of items
+whose length is greater than, or nearly equal to 2**31 in both Perl's
+runtime environment and realworld use cases.
+
+Although the modules implement APIs as used in the Web platform, they
+does not support the Web's security model, i.e. the same-origin
+policy.  It does not make sense for Perl applications.
+
 =head1 AUTHOR
 
 Wakaba <wakaba@suikawiki.org>.

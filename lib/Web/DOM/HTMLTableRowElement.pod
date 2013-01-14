@@ -11,11 +11,33 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
-XXX
+=item $col = $el->cells
+
+Return the L<Web::DOM::HTMLCollection> containing the cells (C<td> or
+C<th> elements) anchored to the table row.  [HTML]
+
+=item $el->delete_cell ($index)
+
+Return the table cell (C<td> or C<th> element) with the specified
+index in the list of the cells anchored in the row.  [HTML]
+
+=item $td = $el->insert_cell ($index)
+
+Insert a table data cell (C<td> element) at the specified postion in
+the list of the cells anchored in the row and return the element.
+[HTML]
+
+=item $index = $el->row_index
+
+Return the index of the row in the table.  [HTML]
+
+=item $index = $el->section_row_index
+
+Return the index of the row in the table row group.  [HTML]
 
 =back
 
@@ -35,7 +57,8 @@ HTML Standard
 
 =head1 SEE ALSO
 
-L<Web::DOM::HTMLElement>.
+L<Web::DOM::HTMLElement>, L<Web::DOM::HTMLTableElement>,
+L<Web::DOM::HTMLTableCellElement>.
 
 =head1 AUTHOR
 

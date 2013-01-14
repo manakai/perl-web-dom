@@ -49,7 +49,7 @@ HTML Standard
 
 =head1 SEE ALSO
 
-L<Web::DOM::HTMLElement>.
+L<Web::DOM::HTMLElement>, L<Web::DOM::HTMLTableCellElement>.
 
 =head1 AUTHOR
 

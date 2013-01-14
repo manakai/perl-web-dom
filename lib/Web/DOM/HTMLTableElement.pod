@@ -50,7 +50,8 @@ Remove the C<caption> element from the table, if any.  [HTML]
 
 =item $el->delete_row ($index)
 
-Return the table row (C<tr> element) with the specified index.  [HTML]
+Return the table row (C<tr> element) with the specified index in the
+table.  [HTML]
 
 =item $el->delete_tfoot
 

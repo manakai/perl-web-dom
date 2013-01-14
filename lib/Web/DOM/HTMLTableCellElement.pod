@@ -15,6 +15,15 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
+=item $index = $el->cell_index
+
+Return the index of the cell in the list of the cells anchored in the
+table row.  [HTML]
+
+Please note that the cell index might not be equal to the column index
+in the table to which the cell belongs when there are C<colspan>ed
+cells.
+
 =item $integer = $el->colspan
 
 =item $el->colspan ($integer)

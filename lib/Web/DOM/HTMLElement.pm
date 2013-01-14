@@ -870,21 +870,66 @@ _define_reflect_string valign => 'valign';
 package Web::DOM::HTMLTableSectionElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
+use Web::DOM::Node;
 use Web::DOM::Element;
-
-# XXX
 
 _define_reflect_string align => 'align';
 _define_reflect_string ch => 'char';
 _define_reflect_string ch_off => 'charoff';
 _define_reflect_string valign => 'valign';
 
+sub rows ($) {
+  my $self = shift;
+  return $$self->[0]->collection ('rows', $self, sub {
+    my $node = $_[0];
+    return grep {
+      $$node->[0]->{data}->[$_]->{node_type} == ELEMENT_NODE and
+      ${$$node->[0]->{data}->[$_]->{namespace_uri} || \''} eq HTML_NS and
+      ${$$node->[0]->{data}->[$_]->{local_name}} eq 'tr';
+    } @{$$node->[0]->{data}->[$$node->[1]]->{child_nodes} or []};
+  });
+} # rows
+
+sub insert_row ($;$) {
+  # WebIDL: long optional
+  my $index = unpack 'l', pack 'L', (defined $_[1] ? $_[1] : -1) % 2**32;
+  my $rows = $_[0]->rows;
+  my $row_count = $rows->length;
+
+  if ($index < -1 or $index > $row_count) {
+    _throw Web::DOM::Exception 'IndexSizeError',
+        'The specified row index is invalid';
+  } elsif ($index == -1 or $index == $row_count) {
+    my $tr = $_[0]->owner_document->create_element ('tr');
+    return $_[0]->append_child ($tr);
+  } else {
+    my $tr = $_[0]->owner_document->create_element ('tr');
+    my $after = $rows->[$index];
+    return $_[0]->insert_before ($tr, $after);
+  }
+} # insert_row
+
+sub delete_row ($$) {
+  # WebIDL: long
+  my $index = unpack 'l', pack 'L', $_[1] % 2**32;
+  my $rows = $_[0]->rows;
+
+  if ($index < 0 or $index >= @$rows) {
+    _throw Web::DOM::Exception 'IndexSizeError',
+        'The specified row index is invalid';
+  }
+
+  $_[0]->remove_child ($rows->[$index]);
+  return;
+} # delete_row
+
 package Web::DOM::HTMLTableRowElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
+use Web::DOM::Node;
 use Web::DOM::Element;
-
-# XXX
 
 _define_reflect_string align => 'align';
 _define_reflect_string_undef bgcolor => 'bgcolor';
@@ -892,15 +937,103 @@ _define_reflect_string ch => 'char';
 _define_reflect_string ch_off => 'charoff';
 _define_reflect_string valign => 'valign';
 
+sub row_index ($) {
+  my $parent = $_[0]->parent_node or return -1;
+  return -1 unless $parent->node_type == ELEMENT_NODE;
+  return -1 unless ($parent->namespace_uri || '') eq HTML_NS;
+  my $parent_ln = $parent->local_name;
+  if ($parent_ln eq 'tbody' or $parent_ln eq 'thead' or
+      $parent_ln eq 'tfoot') {
+    my $gp = $parent->parent_node or return -1;
+    return -1 unless $gp->node_type == ELEMENT_NODE;
+    return -1 unless $gp->manakai_element_type_match (HTML_NS, 'table');
+    my $i = 0;
+    for ($gp->rows->to_list) {
+      return $i if $_ eq $_[0];
+      $i++;
+    }
+  } elsif ($parent_ln eq 'table') {
+    my $i = 0;
+    for ($parent->rows->to_list) {
+      return $i if $_ eq $_[0];
+      $i++;
+    }
+  }
+  return -1;
+} # row_index
+
+sub section_row_index ($) {
+  my $parent = $_[0]->parent_node or return -1;
+  return -1 unless $parent->node_type == ELEMENT_NODE;
+  return -1 unless ($parent->namespace_uri || '') eq HTML_NS;
+  my $parent_ln = $parent->local_name;
+  if ($parent_ln eq 'tbody' or $parent_ln eq 'thead' or
+      $parent_ln eq 'tfoot' or $parent_ln eq 'table') {
+    my $i = 0;
+    for ($parent->rows->to_list) {
+      return $i if $_ eq $_[0];
+      $i++;
+    }
+  }
+  return -1;
+} # section_row_index
+
+sub cells ($) {
+  my $self = shift;
+  return $$self->[0]->collection ('cells', $self, sub {
+    my $node = $_[0];
+    return grep {
+      $$node->[0]->{data}->[$_]->{node_type} == ELEMENT_NODE and
+      ${$$node->[0]->{data}->[$_]->{namespace_uri} || \''} eq HTML_NS and
+      ${$$node->[0]->{data}->[$_]->{local_name}} =~ /\At[dh]\z/; # td/th
+    } @{$$node->[0]->{data}->[$$node->[1]]->{child_nodes} or []};
+  });
+} # cells
+
+sub insert_cell ($;$) {
+  # WebIDL: long optional
+  my $index = unpack 'l', pack 'L', (defined $_[1] ? $_[1] : -1) % 2**32;
+  my $cells = $_[0]->cells;
+  my $cell_count = $cells->length;
+
+  if ($index < -1 or $index > $cell_count) {
+    _throw Web::DOM::Exception 'IndexSizeError',
+        'The specified cell index is invalid';
+  } elsif ($index == -1 or $index == $cell_count) {
+    my $td = $_[0]->owner_document->create_element ('td');
+    return $_[0]->append_child ($td);
+  } else {
+    my $td = $_[0]->owner_document->create_element ('td');
+    my $after = $cells->[$index];
+    return $_[0]->insert_before ($td, $after);
+  }
+} # insert_cell
+
+sub delete_cell ($$) {
+  # WebIDL: long
+  my $index = unpack 'l', pack 'L', $_[1] % 2**32;
+  my $cells = $_[0]->cells;
+
+  if ($index < 0 or $index >= @$cells) {
+    _throw Web::DOM::Exception 'IndexSizeError',
+        'The specified cell index is invalid';
+  }
+
+  $_[0]->remove_child ($cells->[$index]);
+  return;
+} # delete_cell
+
 package Web::DOM::HTMLTableCellElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
+use Web::DOM::Node;
 use Web::DOM::Element;
 
 _define_reflect_unsigned_long colspan => 'colspan', sub { 1 };
 _define_reflect_unsigned_long rowspan => 'rowspan', sub { 1 };
 
-# XXX headers cell_index
+# XXX headers
 
 _define_reflect_string align => 'align';
 _define_reflect_string axis => 'axis';
@@ -911,6 +1044,18 @@ _define_reflect_boolean nowrap => 'nowrap';
 _define_reflect_string valign => 'valign';
 _define_reflect_string width => 'width';
 _define_reflect_string_undef bgcolor => 'bgcolor';
+
+sub cell_index ($) {
+  my $parent = $_[0]->parent_node or return -1;
+  return -1 unless $parent->node_type == ELEMENT_NODE;
+  return -1 unless $parent->manakai_element_type_match (HTML_NS, 'tr');
+  my $i = 0;
+  for ($parent->cells->to_list) {
+    return $i if $_ eq $_[0];
+    $i++;
+  }
+  return -1;
+} # cell_index
 
 package Web::DOM::HTMLTableDataCellElement;
 our $VERSION = '1.0';
