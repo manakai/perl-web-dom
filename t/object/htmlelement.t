@@ -1068,78 +1068,85 @@ for my $test (
       name => ['reflect enumerated attr', $test->{element}, $test->{attr}];
 }
 
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('dfn');
-  is $el->contextmenu, undef;
+for my $test (
+  {element => 'dfn', attr => 'contextmenu', target_element => 'menu'},
+  {element => 'button', attr => 'menu', target_element => 'menu'},
+) {
+  my $attr = $test->{attr};
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($test->{element});
+    is $el->$attr, undef;
 
-  my $el2 = $doc->create_element ('menu');
-  $el2->set_attribute (id => 'abc');
-  $doc->append_child ($el2);
-  my $el5 = $doc->create_element ('hoge');
-  $el5->set_attribute (id => 'abc');
-  $el2->append_child ($el5);
-  my $el3 = $doc->create_element ('menu');
-  $el3->set_attribute (id => 'abc');
-  $el2->append_child ($el3);
+    my $el2 = $doc->create_element ($test->{target_element});
+    $el2->set_attribute (id => 'abc');
+    $doc->append_child ($el2);
+    my $el5 = $doc->create_element ('hoge');
+    $el5->set_attribute (id => 'abc');
+    $el2->append_child ($el5);
+    my $el3 = $doc->create_element ($test->{target_element});
+    $el3->set_attribute (id => 'abc');
+    $el2->append_child ($el3);
 
-  $el->contextmenu ($el2);
-  is $el->contextmenu, $el2;
-  is $el->get_attribute ('contextmenu'), 'abc';
-  
-  $el->contextmenu ($el3);
-  is $el->contextmenu, undef;
-  is $el->get_attribute ('contextmenu'), '';
+    $el->$attr ($el2);
+    is $el->$attr, $el2;
+    is $el->get_attribute ($attr), 'abc';
+    
+    $el->$attr ($el3);
+    is $el->$attr, undef;
+    is $el->get_attribute ($attr), '';
 
-  $el->remove_attribute ('contextmenu');
-  my $el4 = $doc->create_element ('menu');
-  $el4->set_attribute (id => 'abc');
-  $el->contextmenu ($el4);
-  is $el->contextmenu, undef;
-  is $el->get_attribute ('contextmenu'), '';
+    $el->remove_attribute ($attr);
+    my $el4 = $doc->create_element ($test->{target_element});
+    $el4->set_attribute (id => 'abc');
+    $el->$attr ($el4);
+    is $el->$attr, undef;
+    is $el->get_attribute ($attr), '';
 
-  $el->remove_attribute ('contextmenu');
-  $el4->append_child ($el);
-  $el->contextmenu ($el4);
-  is $el->contextmenu, undef;
-  is $el->get_attribute ('contextmenu'), '';
+    $el->remove_attribute ($attr);
+    $el4->append_child ($el);
+    $el->$attr ($el4);
+    is $el->$attr, undef;
+    is $el->get_attribute ($attr), '';
 
-  $el->remove_attribute ('contextmenu');
-  $el2->id ('');
-  $el->contextmenu ($el2);
-  is $el->contextmenu, undef;
-  is $el->get_attribute ('contextmenu'), '';
+    $el->remove_attribute ($attr);
+    $el2->id ('');
+    $el->$attr ($el2);
+    is $el->$attr, undef;
+    is $el->get_attribute ($attr), '';
 
-  $el->set_attribute (contextmenu => $el5->id);
-  is $el->contextmenu, undef;
+    $el->set_attribute ($attr => $el5->id);
+    is $el->$attr, undef;
 
-  $el->remove_attribute ('contextmenu');
-  $el->contextmenu ($el3);
-  is $el->contextmenu, undef;
-  is $el->get_attribute ('contextmenu'), '';
+    $el->remove_attribute ($attr);
+    $el->$attr ($el3);
+    is $el->$attr, undef;
+    is $el->get_attribute ($attr), '';
 
-  $el->set_attribute (contextmenu => 'fuga');
-  is $el->contextmenu, undef;
+    $el->set_attribute ($attr => 'fuga');
+    is $el->$attr, undef;
 
-  done $c;
-} n => 15, name => 'reflect HTMLElement contextmenu';
+    done $c;
+  } n => 15, name => ['reflect HTMLElement', $test->{element}, $attr];
 
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('dfn');
-  $el->set_attribute (contextmenu => 'aa');
-  my $e = $doc->create_element ('foo');
-  dies_here_ok {
-    $el->contextmenu ($e);
-  };
-  isa_ok $@, 'Web::DOM::TypeError';
-  is $@->name, 'TypeError';
-  is $@->message, 'The argument is not a Web::DOM::HTMLMenuElement';
-  is $el->get_attribute ('contextmenu'), 'aa';
-  done $c;
-} n => 5, name => 'reflect HTMLElement contextmenu bad new value';
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($test->{element});
+    $el->set_attribute ($attr => 'aa');
+    my $e = $doc->create_element ('foo');
+    dies_here_ok {
+      $el->$attr ($e);
+    };
+    isa_ok $@, 'Web::DOM::TypeError';
+    is $@->name, 'TypeError';
+    is $@->message, 'The argument is not a Web::DOM::HTMLMenuElement';
+    is $el->get_attribute ($attr), 'aa';
+    done $c;
+  } n => 5, name => ['reflect HTMLElement', $test->{element},
+                     $attr, 'bad new value'];
+}
 
 for (
   ['not in document' => sub { }],
@@ -2270,6 +2277,278 @@ test {
   is $th->cell_index, 1;
   done $c;
 } n => 2, name => 'cell_index has tr parent';
+
+for my $control_name (qw(input button keygen meter output progress select
+                         textarea)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->inner_html (q{<hoge/>});
+    my $label = $doc->create_element ('label');
+    $label->html_for ('hofe');
+
+    my $el = $doc->create_element ($control_name);
+    $doc->document_element->append_child ($el);
+    $el->id ('hofe');
+    
+    is $label->control, $el;
+    done $c;
+  } n => 1, name => ['control', $control_name];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->inner_html (q{<hoge/>});
+    my $label = $doc->create_element ('label');
+    $label->html_for ('hofe');
+
+    my $el0 = $doc->create_element_ns (undef, $control_name);
+    $el0->set_attribute (id => 'hofe');
+    $doc->document_element->append_child ($el0);
+    my $el = $doc->create_element ($control_name);
+    $doc->document_element->append_child ($el);
+    $el->id ('hofe');
+    
+    is $label->control, undef;
+    done $c;
+  } n => 1, name => ['control not first', $control_name];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $label = $doc->create_element ('label');
+
+    my $el0 = $doc->create_element (uc $control_name);
+    my $el = $doc->create_element ($control_name);
+    $label->append_child ($el0);
+    $el0->append_child ($el);
+    
+    is $label->control, $el;
+    done $c;
+  } n => 1, name => ['control descendant', $control_name];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $label = $doc->create_element ('label');
+
+    my $el0 = $doc->create_element (uc $control_name);
+    my $el = $doc->create_element ($control_name);
+    my $el2 = $doc->create_element ($control_name);
+    $label->append_child ($el0);
+    $el0->append_child ($el);
+    $el0->append_child ($el2);
+    
+    is $label->control, $el;
+    done $c;
+  } n => 1, name => ['control descendant', $control_name];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $label = $doc->create_element ('label');
+    $label->html_for ('aa');
+
+    my $el0 = $doc->create_element (uc $control_name);
+    my $el = $doc->create_element ($control_name);
+    my $el2 = $doc->create_element ($control_name);
+    $label->append_child ($el0);
+    $el0->append_child ($el);
+    $el0->append_child ($el2);
+    $el2->id ('aa');
+    $doc->append_child ($label);
+    
+    is $label->control, $el2;
+    done $c;
+  } n => 1, name => ['control id descendant', $control_name];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $label = $doc->create_element ('label');
+    $label->html_for ('aa');
+
+    my $el0 = $doc->create_element (uc $control_name);
+    my $el = $doc->create_element ($control_name);
+    my $el2 = $doc->create_element ($control_name);
+    $label->append_child ($el0);
+    $el0->append_child ($el);
+    $el0->append_child ($el2);
+    $el2->id ('aa');
+    
+    is $label->control, undef;
+    done $c;
+  } n => 1, name => ['control id-not-in-doc descendant', $control_name];
+}
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->inner_html (q{<hoge/>});
+  my $label = $doc->create_element ('label');
+  $label->html_for ('hofe');
+
+  my $el0 = $doc->create_element ('input');
+  $el0->set_attribute (id => 'hofe');
+  $el0->type ('HiDDEn');
+  $doc->document_element->append_child ($el0);
+  my $el = $doc->create_element ('input');
+  $doc->document_element->append_child ($el);
+  $el->id ('hofe');
+  
+  is $label->control, undef;
+  done $c;
+} n => 1, name => ['control input[type=hidden]'];
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->inner_html (q{<hoge/>});
+  my $label = $doc->create_element ('label');
+
+  my $el0 = $doc->create_element ('input');
+  $el0->type ('HiDDEn');
+  $label->append_child ($el0);
+  
+  is $label->control, undef;
+  done $c;
+} n => 1, name => ['control descendant input[type=hidden]'];
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->inner_html (q{<hoge/>});
+  my $label = $doc->create_element ('label');
+
+  my $el0 = $doc->create_element ('input');
+  $el0->type ('HiDDEn');
+  $label->append_child ($el0);
+  my $el = $doc->create_element ('select');
+  $label->append_child ($el);
+  
+  is $label->control, $el;
+  done $c;
+} n => 1, name => ['control descendant input[type=hidden]'];
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->inner_html (q{<hoge/>});
+  my $label = $doc->create_element ('label');
+
+  my $el0 = $doc->create_element ('input');
+  $el0->type ('hidden');
+  $label->append_child ($el0);
+  my $el = $doc->create_element ('input');
+  $label->append_child ($el);
+  
+  is $label->control, $el;
+  done $c;
+} n => 1, name => ['control descendant input[type=hidden]'];
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $input = $doc->create_element ('input');
+  is $input->list, undef;
+  $input->set_attribute (list => 'hoge');
+  is $input->list, undef;
+  my $el = $doc->create_element ('datalist');
+  $el->id ('hoge');
+  $input->append_child ($el);
+  is $input->list, undef;
+  $doc->append_child ($el);
+  is $input->list, $el;
+  my $el2 = $doc->create_element_ns (undef, 'datalist');
+  $doc->replace_child ($el2, $el);
+  is $input->list, undef;
+  done $c;
+} n => 5, name => 'input.list';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $root = $doc->create_element ('datalist');
+  my $col1 = $root->options;
+  isa_ok $col1, 'Web::DOM::HTMLCollection';
+  is $col1->length, 0;
+  is $root->options, $col1;
+
+  my $el1 = $doc->create_element ('option');
+  $root->append_child ($el1);
+
+  is $root->options->length, 1;
+  is $col1->length, 1;
+  is $col1->[0], $el1;
+
+  my $el2 = $doc->create_element ('option');
+  $el1->append_child ($el2);
+
+  is $col1->length, 2;
+  is $col1->[1], $el2;
+
+  done $c;
+} n => 8, name => 'datalist.options';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('option');
+  is $el->text, '';
+  is $el->label, '';
+  is $el->value, '';
+  
+  $el->text ("hoge  fuga \x0D\x0C aa\x09\x0A");
+  is $el->text, "hoge fuga aa";
+  is $el->label, "hoge fuga aa";
+  is $el->value, "hoge fuga aa";
+  is $el->text_content, "hoge  fuga \x0D\x0C aa\x09\x0A";
+
+  $el->append_child ($doc->create_element ('foo'))->text_content ('0');
+  $el->manakai_append_text ("\x09");
+
+  is $el->text, "hoge fuga aa 0";
+  is $el->label, "hoge fuga aa 0";
+  is $el->value, "hoge fuga aa 0";
+  is $el->text_content, "hoge  fuga \x0D\x0C aa\x09\x0A0\x09";
+
+  $el->label (0);
+  is $el->text, "hoge fuga aa 0";
+  is $el->label, "0";
+  is $el->value, "hoge fuga aa 0";
+  is $el->text_content, "hoge  fuga \x0D\x0C aa\x09\x0A0\x09";
+
+  $el->value (100);
+  is $el->text, "hoge fuga aa 0";
+  is $el->label, "0";
+  is $el->value, "100";
+  is $el->text_content, "hoge  fuga \x0D\x0C aa\x09\x0A0\x09";
+
+  my $text = $el->last_child;
+  $el->text ('');
+  is $el->first_child, undef;
+  is $text->parent_node, undef;
+  is $el->text, "";
+  is $el->label, "0";
+  is $el->value, "100";
+  is $el->text_content, "";
+  is $el->get_attribute_ns (undef, 'label'), 0;
+  is $el->get_attribute_ns (undef, 'value'), 100;
+
+  done $c;
+} n => 27, name => 'option text label value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('dialog');
+  is $el->return_value, '';
+  $el->return_value (my $value = {});
+  is $el->return_value, ''.$value;
+  $el->return_value (undef);
+  is $el->return_value, '';
+  done $c;
+} n => 3, name => 'dialog.return_value';
 
 run_tests;
 

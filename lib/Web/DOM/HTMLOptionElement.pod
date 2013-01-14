@@ -29,6 +29,24 @@ Return or set whether the C<selected> attribute is specified or not.
 Return or set whether the C<disabled> attribute is specified or not.
 [HTML]
 
+=item $string = $el->label
+
+=item $el->label ($string)
+
+Return or set the label of the element.  [HTML]
+
+=item $string = $el->text
+
+=item $el->text ($string)
+
+Return or set the text content of the element.  [HTML]
+
+=item $string = $el->value
+
+=item $el->value ($string)
+
+Return or set the value of the element.  [HTML]
+
 =back
 
 =head1 SPECIFICATION

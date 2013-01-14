@@ -11,7 +11,7 @@ C<button> element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
@@ -53,6 +53,12 @@ not.  [HTML]
 =item $el->formtarget ($string)
 
 Return or set the C<formtarget> attribute.  [HTML]
+
+=item $el2 = $el->menu
+
+=item $el->menu ($el2)
+
+Return or set the element pointed by the C<menu> attribute.  [HTML]
 
 =item $string = $el->name
 

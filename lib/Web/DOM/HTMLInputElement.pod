@@ -91,6 +91,11 @@ Return or set the C<formtarget> attribute.  [HTML]
 
 Return or set the C<inputmode> attribute.  [HTML]
 
+=item $el2 = $el->list
+
+Return the C<datalist> element for the element (as specified by the
+C<list> content attribute), if any, or C<undef>.  [HTML]
+
 =item $string = $el->max
 
 =item $el->max ($string)

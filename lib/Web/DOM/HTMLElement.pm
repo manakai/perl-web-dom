@@ -339,10 +339,7 @@ _define_reflect_string rev => 'rev';
 _define_reflect_string shape => 'shape';
 
 sub text ($;$) {
-  if (@_ > 1) {
-    $_[0]->text_content ($_[1]);
-  }
-  return $_[0]->text_content;
+  return shift->text_content (@_);
 } # text
 
 package Web::DOM::HTMLDataElement;
@@ -1117,7 +1114,11 @@ _define_reflect_string name => 'name';
 _define_reflect_boolean novalidate => 'novalidate';
 _define_reflect_string target => 'target';
 
-# XXX action elements length getter submit reset check_validity
+# XXX action elements length getter
+
+## ------ Validation and Submission ------
+
+# XXX submit reset check_validity
 
 package Web::DOM::HTMLFieldSetElement;
 our $VERSION = '1.0';
@@ -1129,7 +1130,12 @@ _define_reflect_string name => 'name';
 
 sub type ($) { 'fieldset' }
 
-# XXX and more
+# XXX form elements
+
+## ------ Validation and Submission ------
+
+# XXX will_validate validity validation_message check_validity
+# set_custom_validity
 
 package Web::DOM::HTMLLegendElement;
 our $VERSION = '1.0';
@@ -1143,19 +1149,54 @@ _define_reflect_string align => 'align';
 package Web::DOM::HTMLLabelElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
 use Web::DOM::Element;
+
+# XXX form
 
 _define_reflect_string html_for => 'for';
 
-# XXX form control
+my $LabelableLocalNames = {
+  button => 1,
+  #input => 1,
+  keygen => 1,
+  meter => 1,
+  output => 1,
+  progress => 1,
+  select => 1,
+  textarea => 1,
+};
+
+sub control ($) {
+  my $for = $_[0]->get_attribute_ns (undef, 'for');
+  if (defined $for) {
+    my $control = $_[0]->owner_document->get_element_by_id ($for);
+    if (defined $control) {
+      my $ln = $control->local_name;
+      if ($LabelableLocalNames->{$ln} and
+          ($control->namespace_uri || '') eq HTML_NS) {
+        return $control;
+      } elsif ($ln eq 'input' and
+               ($control->namespace_uri || '') eq HTML_NS and
+               not $control->type eq 'hidden') {
+        return $control;
+      }
+    }
+    return undef;
+  } else {
+    # XXX input:not([type=hidden i])
+    my $s = join ',', 'input:not([type=hidden])', keys %$LabelableLocalNames;
+    return [grep { $_->local_name ne 'input' or $_->type ne 'hidden' } @{$_[0]->query_selector_all ($s, sub { HTML_NS })}]->[0]; # or undef
+  }
+} # control
 
 package Web::DOM::HTMLInputElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
 use Web::DOM::Element;
 
-# XXX autocomplete checked form files formaction height indeterminate
-# list src value* width ...
+# XXX formaction src
 
 _define_reflect_string accept => 'accept';
 _define_reflect_string alt => 'alt';
@@ -1235,12 +1276,33 @@ _define_reflect_string default_value => 'value';
 _define_reflect_string align => 'align';
 _define_reflect_string usemap => 'usemap';
 
+sub list ($) {
+  my $id = $_[0]->get_attribute_ns (undef, 'list');
+  return undef unless defined $id;
+  my $el = $_[0]->owner_document->get_element_by_id ($id) or return undef;
+  return $el if $el->manakai_element_type_match (HTML_NS, 'datalist');
+  return undef;
+} # list
+
+# XXX form labels
+
+## ------ Media ------
+
+# XXX height width
+
+## ------ Form processing ------
+
+# XXX autocomplete checked files indeterminate value* step*; form
+# validation API
+
+# XXX selection/range API
+
 package Web::DOM::HTMLButtonElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX form formaction menu and more...
+# XXX formaction
 
 _define_reflect_boolean autofocus => 'autofocus';
 _define_reflect_boolean disabled => 'disabled';
@@ -1260,6 +1322,7 @@ _define_reflect_enumerated formmethod => 'formmethod', {
 };
 _define_reflect_boolean formnovalidate => 'formnovalidate';
 _define_reflect_string formtarget => 'formtarget';
+_define_reflect_idref menu => 'menu', 'Web::DOM::HTMLMenuElement';
 _define_reflect_string name => 'name';
 _define_reflect_enumerated type => 'type', {
   submit => 'submit',
@@ -1269,6 +1332,8 @@ _define_reflect_enumerated type => 'type', {
   '#missing' => 'submit',
 };
 _define_reflect_string value => 'value';
+
+# XXX form labels; form validation API
 
 package Web::DOM::HTMLSelectElement;
 our $VERSION = '1.0';
@@ -1295,8 +1360,11 @@ sub type ($) {
 package Web::DOM::HTMLDataListElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
 
-# XXX 
+sub options ($) {
+  return ${$_[0]}->[0]->collection_by_el ($_[0], 'options', HTML_NS, 'option');
+} # options
 
 package Web::DOM::HTMLOptGroupElement;
 our $VERSION = '1.0';
@@ -1311,10 +1379,42 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX constructor form label selected value text index
+# XXX constructor form selected index
 
 _define_reflect_boolean disabled => 'disabled';
 _define_reflect_boolean default_selected => 'selected';
+
+sub text ($;$) {
+  if (@_ > 1) {
+    $_[0]->text_content ($_[1]);
+    return unless defined wantarray;
+  }
+  my $value = $_[0]->text_content;
+  $value =~ s/[\x09\x0A\x0C\x0D\x20]+/ /g;
+  $value =~ s/^ //;
+  $value =~ s/ $//;
+  return $value;
+} # text
+
+sub label ($;$) {
+  if (@_ > 1) {
+    $_[0]->set_attribute_ns (undef, label => $_[1]);
+    return unless defined wantarray;
+  }
+  my $value = $_[0]->get_attribute_ns (undef, 'label');
+  return $value if defined $value;
+  return $_[0]->text;
+} # label
+
+sub value ($;$) {
+  if (@_ > 1) {
+    $_[0]->set_attribute_ns (undef, value => $_[1]);
+    return unless defined wantarray;
+  }
+  my $value = $_[0]->get_attribute_ns (undef, 'value');
+  return $value if defined $value;
+  return $_[0]->text;
+} # value
 
 package Web::DOM::HTMLTextAreaElement;
 our $VERSION = '1.0';
@@ -1362,7 +1462,7 @@ sub default_value ($;$) {
   return $_[0]->text_content;
 } # default_value
 
-# XXX value text_length validation labels selection
+# XXX value text_length; validation API; labels; selection API
 
 package Web::DOM::HTMLKeygenElement;
 our $VERSION = '1.0';
@@ -1378,7 +1478,7 @@ _define_reflect_string name => 'name';
 
 sub type ($) { 'keygen' }
 
-# XXX validity labels
+# XXX validitation API; labels
 
 package Web::DOM::HTMLOutputElement;
 our $VERSION = '1.0';
@@ -1391,19 +1491,19 @@ _define_reflect_string name => 'name';
 
 sub type ($) { 'output' }
 
-# XXX default_value value validity labels
+# XXX default_value value labels; validation API
 
 package Web::DOM::HTMLProgressElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 
-# XXX 
+# XXX  value max position labels
 
 package Web::DOM::HTMLMeterElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 
-# XXX 
+# XXX value min max low high optimum labels
 
 package Web::DOM::HTMLDetailsElement;
 our $VERSION = '1.0';
@@ -1448,7 +1548,15 @@ use Web::DOM::Element;
 
 _define_reflect_boolean open => 'open';
 
-# XXX return_value show* close
+sub return_value ($;$) {
+  if (@_ > 1) {
+    ${$_[0]}->[2]->{return_value} = ''.$_[1];
+  }
+  return defined ${$_[0]}->[2]->{return_value}
+      ? ${$_[0]}->[2]->{return_value} : '';
+} # return_value
+
+# XXX show* close
 
 package Web::DOM::HTMLAppletElement;
 our $VERSION = '1.0';
@@ -1548,7 +1656,7 @@ package Web::DOM::HTMLTemplateElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 
-# XXX 
+# XXX content
 
 1;
 

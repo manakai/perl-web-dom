@@ -133,6 +133,7 @@ sub add_data ($$) {
 ##   parent_node                    node_id   Parent node
 ##   prefix                         \string   Namespace prefix
 ##   public_id                      \string   Public ID
+##   return_value                   string    Return value
 ##   serialize_as_cdata             boolean   CDATA section?
 ##   system_id                      \string   System ID
 ##   target                         \string   Target
@@ -347,6 +348,8 @@ sub node ($$) {
 ##   - {anchors}                  - $node->anchors
 ##   - {tbodies}                  - $node->tbodies
 ##   - {rows}                     - $node->rows
+##   - {cells}                    - $node->cells
+##   - {options}                  - $node->options
 ##   - {"by_class_name$;$cls"}    - $node->get_elements_by_class_name ($cls)
 ##   - {"by_tag_name$;$ln"}       - $node->get_elements_by_tag_name ($ln)
 ##   - {"by_tag_name_ns$;$n$;$l"} - $node->get_elements_by_tag_name_ns ($n, $l)
