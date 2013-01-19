@@ -194,7 +194,7 @@ test {
   is $nl->item (0+"-inf"), undef;
   is $nl->item (0+"nan"), undef;
   is $nl->item (+0**1), undef;
-  is $nl->item (-0**1), undef;
+  is $nl->item (0/"-inf"), undef;
   is $nl->item (-1), undef;
   is $nl->item (-3), undef;
 
@@ -205,7 +205,7 @@ test {
   is scalar $nl->[0+"-inf"], undef;
   is scalar $nl->[0+"nan"], undef;
   is $nl->[+0**1], undef;
-  is $nl->[-0**1], undef;
+  is $nl->[0/"-inf"], undef;
   is scalar $nl->[-1], undef;
   is scalar $nl->[-3], undef;
 
@@ -231,7 +231,7 @@ test {
   is $nl->item (0+"-inf"), undef;
   is $nl->item (0+"nan"), undef;
   is $nl->item (+0**1), $el;
-  is $nl->item (-0**1), undef;
+  is $nl->item (0/"-inf"), undef;
   is $nl->item (0.52), undef;
   is $nl->item (-0.52), undef;
   is $nl->item (1.42), undef;
@@ -246,7 +246,7 @@ test {
   is scalar $nl->[0+"-inf"], $el;
   is scalar $nl->[0+"nan"], $el;
   is $nl->[+0**1], $el;
-  is $nl->[-0**1], $el;
+  is $nl->[0/"-inf"], $el;
   is $nl->[0.542], $el;
   is $nl->[1.444], undef;
   is scalar $nl->[-1], $el;
