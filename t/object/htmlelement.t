@@ -2625,6 +2625,20 @@ test {
   done $c;
 } n => 3, name => 'dialog.return_value';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('xmp');
+  my $ds = $el->dataset;
+  isa_ok $ds, 'Web::DOM::StringMap';
+  is $el->dataset, $ds;
+
+  my $el2 = $doc->create_element ('xmp');
+  isnt  $el2->dataset, $ds;
+
+  done $c;
+} n => 3, name => 'dataset';
+
 run_tests;
 
 =head1 LICENSE

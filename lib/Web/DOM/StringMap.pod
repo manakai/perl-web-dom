@@ -1,0 +1,71 @@
+=head1 NAME
+
+Web::DOM::StringMap - The DOM |DOMStringMap| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::StringMap> class implements the DOM C<DOMStringMap>
+interface.
+
+The C<DOMStringMap> object is used by the C<dataset> method of the
+HTML elements.
+
+=head1 METHODS
+
+The object supports Perl standard operations for hash references,
+e.g. C<< keys %$map >>.  [DOMPERL]
+
+=over 4
+
+=item $value = $map->{$key}
+
+Return the value of the attribute whose name is C<data-$key> (where
+C<$key>'s C<_> characters are replaced by C<->), if any, or C<undef>.
+[HTML] [DOMPERL]
+
+=item $map->{$key} = $value
+
+Set the value of the attribute whose name is C<data-$key> (where
+C<$key>'s C<_> characters are replaced by C<->).  Please note that
+C<$key> cannot contain the C<-> character (it must be replaced by
+C<_>).  [HTML] [DOMPERL]
+
+=item delete $map->{$key}
+
+Delete the attribute whose name is C<data-$key> (where C<$key>'s C<_>
+characters are replaced by C<->), if any.  [HTML] [DOMPERL]
+
+=back
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item HTML
+
+HTML Living Standard
+<http://www.whatwg.org/specs/web-apps/current-work/>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

@@ -63,11 +63,8 @@ sub new ($) {
     next_tree_id => 0,
     # tree_id
 
-    ## Collections
-    # cols
-
-    ## Token lists
-    # tokens
+    ## Lists
+    # cols tokens strmap
 
     ## Other objects
     # impl
@@ -510,6 +507,17 @@ sub children_changed ($$$) {
     }
   }
 } # children_changed
+
+sub strmap ($$) {
+  my ($self, $el) = @_;
+  return $self->{strmap}->[$$el->[1]] if defined $self->{strmap}->[$$el->[1]];
+  require Web::DOM::StringMap;
+  my $map = bless \[], 'Web::DOM::StringMap';
+  tie my %hash, 'Web::DOM::StringMap::Hash', $el;
+  $$map->[0] = \%hash;
+  weaken ($self->{strmap}->[$$el->[1]] = $map);
+  return $map;
+} # strmap
 
 sub impl ($) {
   my $self = shift;

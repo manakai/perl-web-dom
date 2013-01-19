@@ -284,8 +284,6 @@ the very initial phase of the development include:
 
 =item baseURI and related methods, as well as URL-reflecting methods [DOM] [HTML] [MANAKAI]
 
-=item DOMStringMap [HTML]
-
 =back
 
 Following features will be (re)implemented in due course:

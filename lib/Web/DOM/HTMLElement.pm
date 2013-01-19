@@ -102,7 +102,11 @@ sub contenteditable ($;$) {
 _define_reflect_idref contextmenu => 'contextmenu',
     'Web::DOM::HTMLMenuElement';
 
-# XXX dataset properties itemvalue command* style
+sub dataset ($) {
+  return ${$_[0]}->[0]->strmap ($_[0]);
+} # dataset
+
+# XXX properties itemvalue command* style
 
 ## ------ User interaction ------
 

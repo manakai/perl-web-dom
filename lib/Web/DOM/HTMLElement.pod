@@ -33,6 +33,11 @@ Return or set the C<contenteditable> attribute.  [HTML]
 Return or set the element pointed by the C<contextmenu> attribute.
 [HTML]
 
+=item $map = $el->dataset
+
+Return the L<Web::DOM::StringMap> object represeting the C<data-*>
+attributes.  [HTML]
+
 =item $string = $el->dir
 
 =item $el->dir ($string)
