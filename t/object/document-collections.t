@@ -354,6 +354,38 @@ for my $name ('', 'aaa', 'abc d') {
   } n => 12, name => ['get_elements_by_name', $name];
 }
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $col = $doc->all;
+  isa_ok $col, 'Web::DOM::HTMLAllCollection';
+  is $col->length, 0;
+  is $doc->all, $col;
+  done $c;
+} n => 3, name => 'all empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  $doc->inner_html (q{<p>hoge<p>fiuga});
+  my $col = $doc->all;
+  isa_ok $col, 'Web::DOM::HTMLAllCollection';
+  is $col->length, 5;
+  is $doc->all, $col;
+  is $col->[0]->local_name, 'html';
+  is $col->[1]->local_name, 'head';
+  is $col->[2]->local_name, 'body';
+  is $col->[3]->local_name, 'p';
+  is $col->[4]->local_name, 'p';
+  $col->[4]->inner_html (q{ho<span>aaa</span>});
+  is $col->length, 6;
+  is $col->[3]->local_name, 'p';
+  is $col->[4]->local_name, 'p';
+  is $col->[5]->local_name, 'span';
+  done $c;
+} n => 12, name => 'all not empty';
+
 run_tests;
 
 =head1 LICENSE

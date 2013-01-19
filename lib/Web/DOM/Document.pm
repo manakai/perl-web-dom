@@ -483,7 +483,7 @@ sub anchors ($) {
 sub get_elements_by_name ($$) {
   my $self = $_[0];
   my $name = ''.$_[1];
-  return $$self->[0]->collection ("by_name$;$name", $self, sub {
+  return $$self->[0]->collection (['by_name', $name], $self, sub {
     my $node = $_[0];
     my $data = $$node->[0]->{data};
     my @node_id = @{$data->[$$node->[1]]->{child_nodes} or []};
@@ -505,7 +505,24 @@ sub get_elements_by_name ($$) {
   });
 } # get_elements_by_name
 
-# XXX all commands get_items css_element_map
+sub all ($) {
+  my $self = $_[0];
+  return $$self->[0]->collection (['all'], $self, sub {
+    my $node = $_[0];
+    my $data = $$node->[0]->{data};
+    my @node_id = @{$data->[$$node->[1]]->{child_nodes} or []};
+    my @id;
+    while (@node_id) {
+      my $id = shift @node_id;
+      next unless $data->[$id]->{node_type} == ELEMENT_NODE;
+      unshift @node_id, @{$data->[$id]->{child_nodes} or []};
+      push @id, $id;
+    }
+    return @id;
+  });
+} # all
+
+# XXX commands get_items css_element_map
 
 # XXX getter
 

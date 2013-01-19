@@ -328,7 +328,7 @@ sub node ($$) {
 ##   0 - The root node
 ##   1 - Filter
 ##   2 - List of the nodes in the collection
-##   3 - Collection key
+##   3 - Collection keys
 ##   4 - Hash reference for %{} operation
 ##
 ## $self->{cols}->[$root_node_id]->
@@ -354,6 +354,7 @@ sub node ($$) {
 ##   - {"by_tag_name$;$ln"}       - $node->get_elements_by_tag_name ($ln)
 ##   - {"by_tag_name_ns$;$n$;$l"} - $node->get_elements_by_tag_name_ns ($n, $l)
 ##   - {"by_name$;$name"}         - $node->get_elements_by_name ($name)
+##   - {"all$;$name$;..."}        - $node->all->{$name}->...
 
 my $CollectionClass = {
   child_nodes => 'Web::DOM::NodeList',
@@ -363,17 +364,24 @@ my $CollectionClass = {
   general_entities => 'Web::DOM::NamedNodeMap',
   notations => 'Web::DOM::NamedNodeMap',
   by_name => 'Web::DOM::NodeList',
+  all => 'Web::DOM::HTMLAllCollection',
 }; # $CollectionClass
 
 sub collection ($$$$) {
-  my ($self, $key, $root_node, $filter) = @_;
+  my ($self, $keys, $root_node, $filter) = @_;
+  my $key = ref $keys ? (join $;, map {
+    defined $_ ? do {
+      s/($;|\x00)/\x00$1/g;
+      $_;
+    } : '';
+  } @$keys) : $keys;
   my $id = $$root_node->[1];
   return $self->{cols}->[$id]->{$key}
-      if $self->{cols}->[$id]->{$key};
-  my $class = $CollectionClass->{[split /$;/, $key]->[0]}
+      if defined $self->{cols}->[$id]->{$key};
+  my $class = $CollectionClass->{ref $keys ? $keys->[0] : $key}
       || 'Web::DOM::HTMLCollection';
   eval qq{ require $class } or die $@;
-  my $nl = bless \[$root_node, $filter, undef, $key], $class;
+  my $nl = bless \[$root_node, $filter, undef, $keys], $class;
   weaken ($self->{cols}->[$id]->{$key} = $nl);
   return $nl;
 } # collection
@@ -494,7 +502,7 @@ sub children_changed ($$$) {
       my $id = shift @id;
       next unless defined $id;
       for my $key (keys %{$cols->[$id] or {}}) {
-        next unless $cols->[$id]->{$key};
+        next unless defined $cols->[$id]->{$key};
         delete ${$cols->[$id]->{$key}}->[2];
         delete ${$cols->[$id]->{$key}}->[4];
       }

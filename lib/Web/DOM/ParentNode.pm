@@ -13,7 +13,7 @@ use Web::DOM::Exception;
 sub get_elements_by_tag_name ($$) {
   my $self = $_[0];
   my $ln = ''.$_[1];
-  return $$self->[0]->collection ('by_tag_name'. $; . $ln, $self, sub {
+  return $$self->[0]->collection (['by_tag_name', $ln], $self, sub {
     my $node = $_[0];
     my $ln2 = $ln;
     my $is_html = $$self->[0]->{data}->[0]->{is_html};
@@ -44,13 +44,7 @@ sub get_elements_by_tag_name_ns ($$$) {
   # 1. 
   undef $ns if $ns eq '';
 
-  my $key = join $;, map {
-    defined $_ ? do {
-      s/($;|\x00)/\x00$1/g;
-      $_;
-    } : '';
-  } $ns, $ln;
-  return $$self->[0]->collection ('by_tag_name_ns'. $; . $key, $self, sub {
+  return $$self->[0]->collection (['by_tag_name_ns', $ns, $ln], $self, sub {
     my $node = $_[0];
     my $data = $$node->[0]->{data};
     my @node_id = @{$data->[$$node->[1]]->{child_nodes} or []};
@@ -84,7 +78,7 @@ sub get_elements_by_class_name ($$) {
   }
 
   # 3.
-  return $$self->[0]->collection ('by_class_name'. $; . $cns, $self, sub {
+  return $$self->[0]->collection (['by_class_name', $cns], $self, sub {
     my $node = $_[0];
     my $is_quirks = (${$_[0]}->[0]->{data}->[0]->{compat_mode} || '') eq 'quirks';
     my %class = $is_quirks ? (map { my $v = $_; $v =~ tr/A-Z/a-z/; $v => 1; } keys %$classes) : %$classes;

@@ -286,8 +286,6 @@ the very initial phase of the development include:
 
 =item DOMStringMap [HTML]
 
-=item HTMLAllCollection [HTML]
-
 =back
 
 Following features will be (re)implemented in due course:

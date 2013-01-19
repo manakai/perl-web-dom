@@ -306,7 +306,7 @@ XML document.  [DOM3CORE]
 
 =back
 
-Additionally, the following obsolete methods are available:
+Additionally, the following obsolete methods are available: C<all>,
 C<anchors>, C<applets>, and C<clear>.  [HTML]
 
 =head1 SPECIFICATIONS
