@@ -231,7 +231,11 @@ test {
   is $nl->item (0+"-inf"), undef;
   is $nl->item (0+"nan"), undef;
   is $nl->item (+0**1), $el;
-  is $nl->item (0/"-inf"), undef;
+  if ((0/"-inf") eq '-0') {
+    is $nl->item (0/"-inf"), undef;
+  } else {
+    is $nl->item (0/"-inf"), $el;
+  }
   is $nl->item (0.52), undef;
   is $nl->item (-0.52), undef;
   is $nl->item (1.42), undef;
