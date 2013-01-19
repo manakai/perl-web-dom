@@ -441,7 +441,8 @@ sub set_attribute_ns ($$$$) {
                       owner => $$node->[1]};
           my $attr_id = $$node->[0]->add_data ($data);
           push @{$$node->[2]->{attributes} ||= []}, $attr_id;
-          $$node->[2]->{attrs}->{$nsurl}->{$ln} = $attr_id;
+          $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln}
+              = $attr_id;
           $$node->[0]->connect ($attr_id => $$node->[1]);
         } else {
           push @{$$node->[2]->{attributes} ||= []},

@@ -23,6 +23,9 @@ use overload
 package Web::DOM::StringMap::Hash;
 use Web::DOM::Exception;
 push our @CARP_NOT, qw(Web::DOM::Exception);
+use Char::Class::XML qw(
+  InXMLNameChar InXMLNameStartChar
+);
 
 sub TIEHASH ($$) {
   return bless [$_[1]], $_[0]
@@ -40,7 +43,16 @@ sub STORE ($$$) {
   _throw Web::DOM::Exception 'SyntaxError',
       'Key cannot contain the hyphen character' if $key =~ /-/;
   $key =~ tr/_/-/;
-  return $_[0]->[0]->set_attribute_ns (undef, 'data-' . $key => $_[2]);
+  unless ("data-$key" =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    my $value = ''.$_[2];
+    _throw Web::DOM::Exception 'SyntaxError',
+        'The attribute name is not an XML Name';
+  }
+  my $doc = $_[0]->[0]->owner_document;
+  my $strict = $doc->strict_error_checking;
+  $doc->strict_error_checking (0);
+  $_[0]->[0]->set_attribute_ns (undef, [undef, 'data-' . $key] => $_[2]);
+  $doc->strict_error_checking ($strict);
 } # STORE
 
 sub DELETE ($$) {

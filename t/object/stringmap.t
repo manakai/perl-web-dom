@@ -182,6 +182,28 @@ test {
   done $c;
 } n => 13, name => 'comparison';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('aa');
+  my $ds = $el->dataset;
+  $ds->{'xml:lang'} = '&aa';
+  is $ds->{'xml:lang'}, '&aa';
+  is $el->get_attribute_ns (undef, 'data-xml:lang'), '&aa';
+  dies_here_ok {
+    $ds->{"aa\x{FFFF}"} = 12;
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The attribute name is not an XML Name';
+  is $el->attributes->length, 1;
+  ok exists $ds->{'xml:lang'};
+  delete $ds->{'xml:lang'};
+  is $el->attributes->length, 0;
+  ok $doc->strict_error_checking;
+  done $c;
+} n => 10, name => 'name validity';
+
 run_tests;
 
 =head1 LICENSE
