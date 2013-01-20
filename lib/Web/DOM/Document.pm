@@ -429,6 +429,7 @@ sub body ($;$) {
   # The body element
   my $html = $self->manakai_html or return undef;
   for ($html->child_nodes->to_list) {
+    next unless $_->node_type == ELEMENT_NODE;
     if ($_->manakai_element_type_match (HTML_NS, 'body') or
         $_->manakai_element_type_match (HTML_NS, 'frameset')) {
       return $_;

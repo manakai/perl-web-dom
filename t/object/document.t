@@ -486,6 +486,19 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('html');
+  $doc->append_child ($el);
+  my $text = $doc->create_text_node ('aa');
+  $el->append_child ($text);
+  my $body = $doc->create_element ('body');
+  $el->append_child ($body);
+  is $doc->body, $body;
+  done $c;
+} n => 1, name => 'body after text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $html = $doc->append_child ($doc->create_element_ns
                           ('http://www.w3.org/1999/xhtml', 'html'));
   my $head = $html->append_child ($doc->create_element_ns (undef, 'head'));
