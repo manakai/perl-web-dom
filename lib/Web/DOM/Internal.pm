@@ -29,6 +29,12 @@ sub import ($;@) {
   }
 } # import
 
+push @EXPORT, qw(_resolve_url);
+sub _resolve_url ($$) {
+  require Web::URL::Canonicalize;
+  return Web::URL::Canonicalize::url_to_canon_url ($_[0], $_[1]);
+} # _resolve_url
+
 ## Internal data structure for DOM tree.
 ##
 ## This module is for internal use only.  Applications should not use

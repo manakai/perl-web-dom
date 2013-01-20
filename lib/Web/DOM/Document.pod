@@ -248,6 +248,12 @@ Return or set whether the document is an HTML document or not.
 Return or set whether the document is an C<iframe> C<srcdoc> document
 or not.  [MANAKAI]
 
+=item $doc->manakai_set_url ($string)
+
+Set the document's address.  [MANAKAI]
+
+See also L<Web::DOM/DEPENDENCY>.
+
 =item $col = $doc->links
 
 Return the L<Web::DOM::HTMLCollection> object containing the C<a> or
@@ -275,7 +281,8 @@ Return or set the title of the document.  [HTML] [SVG]
 
 =item $string = $doc->document_uri
 
-Return the URL of the document.  [DOM]
+Return the URL of the document (or the document's address).  [DOM]
+[HTML]
 
 =item $string = $doc->xml_encoding
 
@@ -335,17 +342,17 @@ SVG
 =item DOMDTDEF
 
 DOM Document Type Definitions
-<http://suika.fam.cx/www/markup/xml/domdtdef/domdtdef>.
+<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
 =back
 

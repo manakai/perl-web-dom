@@ -142,10 +142,26 @@ sub manakai_has_bom ($;$) {
 } # manakai_has_bom
 
 sub url ($) {
-  return ${$_[0]}->[2]->{url} || 'about:blank';
+  return defined ${$_[0]}->[2]->{url}
+      ? ${$_[0]}->[2]->{url} : 'about:blank';
 } # url
 
 *document_uri = \&url;
+
+sub manakai_set_url ($$) {
+  # 1.
+  my $url = _resolve_url ''.$_[1], 'about:blank';
+
+  # 2.
+  if (not defined $url) {
+    _throw Web::DOM::Exception 'SyntaxError',
+        'Cannot resolve the specified URL';
+  }
+
+  # 3.
+  ${$_[0]}->[2]->{url} = $url;
+  return;
+} # manakai_set_url
 
 # XXX location
 

@@ -44,6 +44,28 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  $doc->manakai_set_url ("http://HOGE.test/%41\x{4300}");
+  is $doc->url, 'http://hoge.test/A%E4%8C%80';
+  is $doc->document_uri, $doc->url;
+  done $c;
+} n => 2, name => 'manakai_set_url';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  dies_here_ok {
+    $doc->manakai_set_url ('../foo');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'Cannot resolve the specified URL';
+  is $doc->url, 'about:blank';
+  done $c;
+} n => 5, name => 'manakai_set_url not resolvable';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   $doc->dom_config->{manakai_strict_document_children} = 0;
 
   is $doc->text_content, '';

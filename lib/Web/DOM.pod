@@ -174,12 +174,12 @@ HTML Standard <http://www.whatwg.org/specs/web-apps/current-work/>.
 =item DOMDTDEF
 
 DOM Document Type Definitions
-<http://suika.fam.cx/www/markup/xml/domdtdef/domdtdef>.
+<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =item MANAKAI
 
@@ -207,6 +207,12 @@ C<DOMParser>, and C<XMLSerializer>.
 Following features require the L<Web::CSS::Selectors::API> module in
 the perl-web-css package <https://github.com/manakai/perl-web-css>:
 C<query_selector> and C<query_selector_all>.
+
+Features performing URL-related operations require the perl-web-url
+package <https://github.com/manakai/perl-web-url>, which depends on
+the perl-web-encodings package
+<https://github.com/manakai/perl-web-encodings>.  Such features
+include: C<manakai_set_url>.
 
 =head1 DEVELOPMENT
 

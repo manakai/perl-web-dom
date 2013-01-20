@@ -10,3 +10,9 @@
 [submodule "t_deps/modules/web-css"]
 	path = t_deps/modules/web-css
 	url = git://github.com/manakai/perl-web-css
+[submodule "t_deps/modules/web-encodings"]
+	path = t_deps/modules/web-encodings
+	url = git://github.com/manakai/perl-web-encodings
+[submodule "t_deps/modules/web-url"]
+	path = t_deps/modules/web-url
+	url = git://github.com/manakai/perl-web-url
