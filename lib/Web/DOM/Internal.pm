@@ -121,8 +121,9 @@ sub add_data ($$) {
 ##   is_srcdoc                      boolean   An iframe srcdoc document?
 ##   is_XMLDocument                 boolean   An XMLDocument?
 ##   local_name                     \string   Local name
-##   manakai_base_uri               string    [base URI]
 ##   manakai_charset                string    Content-Type charset=""
+##   manakai_entity_base_uri        \string   Entity base URL
+##   manakai_entity_uri             \string   Entity URL
 ##   manakai_has_bom                boolean   Has BOM?
 ##   name                           \string   Name
 ##   namespace_uri                  \string   Namespace URL

@@ -202,6 +202,7 @@ class.  Most HTML elements have more specific subclasses.  See
 L<Web::DOM::HTMLElement> for details.
 
 In addition, the obsolete C<manakai_base_uri> method is available.
+[DOMDTDEF]
 
 =head1 SPECIFICATIONS
 
@@ -229,6 +230,11 @@ HTML Standard
 
 Document Object Model (DOM) Level 3 Core Specification
 <http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/DOM3-Core.html#core-ID-745549614>.
+
+=item DOMDTDEF
+
+DOM Document Type Definitions
+<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item DOMPERL
 

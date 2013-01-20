@@ -29,7 +29,11 @@ sub system_id ($) {
   return ${${$_[0]}->[2]->{system_id}};
 } # system_id
 
-# XXX declaration_base_uri, manakai_declaration_base_uri
+sub declaration_base_uri ($;$) {
+  return $_[0]->base_uri;
+} # declaration_base_uri
+
+*manakai_declaration_base_uri = \&declaration_base_uri;
 
 sub element_types ($) {
   return ${$_[0]}->[0]->collection ('element_types', $_[0], sub {

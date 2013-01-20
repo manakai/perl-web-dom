@@ -165,9 +165,27 @@ sub manakai_set_url ($$) {
 
 # XXX location
 
-# XXX manakai_entity_base_uri
-
 # XXX domain
+
+sub manakai_entity_base_uri ($;$) {
+  if (@_ > 1) {
+    if (not defined $_[1]) {
+      # 1.
+      delete ${$_[0]}->[2]->{manakai_entity_base_uri};
+    } else {
+      # 2.
+      ${$_[0]}->[2]->{manakai_entity_base_uri}
+          = Web::DOM::Internal->text (_resolve_url ''.$_[1], $_[0]->url);
+    }
+  }
+
+  # 1.
+  return ${${$_[0]}->[2]->{manakai_entity_base_uri}}
+      if ${$_[0]}->[2]->{manakai_entity_base_uri};
+
+  # 2.
+  return $_[0]->url;
+} # manakai_entity_base_uri
 
 # XXX referrer cookie lastModified
 

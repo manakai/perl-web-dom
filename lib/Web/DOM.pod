@@ -212,7 +212,9 @@ Features performing URL-related operations require the perl-web-url
 package <https://github.com/manakai/perl-web-url>, which depends on
 the perl-web-encodings package
 <https://github.com/manakai/perl-web-encodings>.  Such features
-include: C<manakai_set_url>.
+include: C<base_uri>, C<manakai_set_url>, C<manakai_entity_uri>,
+C<manakai_entity_base_uri>, C<declaration_base_uri>, and
+C<manakai_declaration_base_uri>.
 
 =head1 DEVELOPMENT
 

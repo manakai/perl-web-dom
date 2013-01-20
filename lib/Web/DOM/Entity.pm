@@ -26,11 +26,76 @@ sub system_id ($) {
   return ${${$_[0]}->[2]->{system_id}};
 } # system_id
 
-# XXX manakai_declaration_base_uri, declaration_base_uri
+sub manakai_entity_uri ($;$) {
+  if (@_ > 1) {
+    if (not defined $_[1]) {
+      # 1.
+      delete ${$_[0]}->[2]->{manakai_entity_uri};
+    } else {
+      # 2.
+      ${$_[0]}->[2]->{manakai_entity_uri}
+          = Web::DOM::Internal->text (_resolve_url ''.$_[1],
+                                          $_[0]->declaration_base_uri);
+    }
+  }
 
-# XXX manakai_entity_base_uri
+  # 1.
+  return ${${$_[0]}->[2]->{manakai_entity_uri}}
+      if ${$_[0]}->[2]->{manakai_entity_uri};
 
-# XXX manakai_entity_uri
+  # 2.
+  return _resolve_url ${${$_[0]}->[2]->{system_id}},
+      $_[0]->declaration_base_uri if length ${${$_[0]}->[2]->{system_id}};
+
+  # 3.
+  return undef;
+} # manakai_entity_uri
+
+sub manakai_entity_base_uri ($;$) {
+  if (@_ > 1) {
+    if (not defined $_[1]) {
+      # 1.
+      delete ${$_[0]}->[2]->{manakai_entity_base_uri};
+    } else {
+      # 2.
+      my $base = $_[0]->manakai_entity_uri;
+      ${$_[0]}->[2]->{manakai_entity_base_uri}
+          = Web::DOM::Internal->text
+                (_resolve_url ''.$_[1],
+                     defined $base ? $base : $_[0]->base_uri);
+    }
+  }
+
+  # 1.
+  return ${${$_[0]}->[2]->{manakai_entity_base_uri}}
+      if ${$_[0]}->[2]->{manakai_entity_base_uri};
+
+  # 2.
+  my $base = $_[0]->manakai_entity_uri;
+  return defined $base ? $base : $_[0]->base_uri;
+} # manakai_entity_base_uri
+
+sub declaration_base_uri ($;$) {
+  if (@_ > 1) {
+    if (not defined $_[1]) {
+      # 1.
+      delete ${$_[0]}->[2]->{declaration_base_uri};
+    } else {
+      # 2.
+      ${$_[0]}->[2]->{declaration_base_uri}
+          = Web::DOM::Internal->text (_resolve_url ''.$_[1], $_[0]->base_uri);
+    }
+  }
+  
+  # 1.
+  return ${${$_[0]}->[2]->{declaration_base_uri}}
+      if ${$_[0]}->[2]->{declaration_base_uri};
+
+  # 2.
+  return $_[0]->base_uri;
+} # declaration_base_uri
+
+*manakai_declaration_base_uri = \&declaration_base_uri;
 
 sub input_encoding ($) {
   if (@_ > 1) {

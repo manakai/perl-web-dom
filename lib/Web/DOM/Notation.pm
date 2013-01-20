@@ -26,7 +26,27 @@ sub system_id ($) {
   return ${${$_[0]}->[2]->{system_id}};
 } # system_id
 
-# XXX manakai_declaration_base_uri
+sub declaration_base_uri ($;$) {
+  if (@_ > 1) {
+    if (not defined $_[1]) {
+      # 1.
+      delete ${$_[0]}->[2]->{declaration_base_uri};
+    } else {
+      # 2.
+      ${$_[0]}->[2]->{declaration_base_uri}
+          = Web::DOM::Internal->text (_resolve_url ''.$_[1], $_[0]->base_uri);
+    }
+  }
+  
+  # 1.
+  return ${${$_[0]}->[2]->{declaration_base_uri}}
+      if ${$_[0]}->[2]->{declaration_base_uri};
+
+  # 2.
+  return $_[0]->base_uri;
+} # declaration_base_uri
+
+*manakai_declaration_base_uri = \&declaration_base_uri;
 
 sub owner_document_type_definition ($) {
   if (my $id = ${$_[0]}->[2]->{owner}) {
@@ -40,7 +60,7 @@ sub owner_document_type_definition ($) {
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

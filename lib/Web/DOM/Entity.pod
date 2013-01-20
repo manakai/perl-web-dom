@@ -5,6 +5,7 @@ Web::DOM::Entity - The DOM |Entity| object
 =head1 DESCRIPTION
 
 The C<Web::DOM::Entity> class implements the DOM C<Entity> interface.
+It represents a general entity.
 
 =head1 METHODS
 
@@ -12,6 +13,35 @@ In addition to the methods of the L<Web::DOM::Node> class, following
 methods are available:
 
 =over 4
+
+=item $string = $ent->declaration_base_uri
+
+=item $string = $ent->manakai_declaration_base_uri
+
+=item $ent->declaration_base_uri ($string)
+
+=item $ent->manakai_declaration_base_uri ($string)
+
+Return or set the base URL of the entity declaration.  [DOMDTDEF]
+
+See also L<Web::DOM/DEPENDENCY>.
+
+=item $string = $ent->manakai_entity_base_uri
+
+=item $ent->manakai_entity_base_uri ($string)
+
+Return or set the base URL of the entity (not of the entity
+declaration).  [DOMDTDEF]
+
+See also L<Web::DOM/DEPENDENCY>.
+
+=item $string = $ent->manakai_entity_uri
+
+=item $ent->manakai_entity_uri ($string)
+
+Return or set the URL of the entity.  [DOMDTDEF]
+
+See also L<Web::DOM/DEPENDENCY>.
 
 =item false = $ent->has_replacement_tree
 
@@ -86,12 +116,12 @@ Document Object Model (DOM) Level 3 Core Specification
 =item DOMDTDEF
 
 DOM Document Type Definitions
-<http://suika.fam.cx/www/markup/xml/domdtdef/domdtdef>.
+<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
 =back
 
@@ -105,7 +135,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

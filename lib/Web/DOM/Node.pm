@@ -124,7 +124,68 @@ sub manakai_expanded_uri ($) {
   }
 } # manakai_expanded_uri
 
-# XXX baseURI
+sub base_uri ($) {
+  my $self = $_[0];
+  my $nt = $self->node_type;
+  if ($nt == DOCUMENT_NODE) {
+    # 1. document base URL
+    
+    # 1. fallback base URL
+    my $fallback_base_url = do {
+      # 1.
+      if ($self->manakai_is_srcdoc) {
+        # XXX
+      }
+
+      # 2.
+      my $url = $self->url;
+      if ($url eq 'about:blank' and 'XXX') {
+        # XXX
+      }
+
+      # 3.
+      $url;
+    };
+
+    # 2.
+    my $base = [grep { $_->has_attribute_ns (undef, 'href') } $self->get_elements_by_tag_name_ns (HTML_NS, 'base')->to_list]->[0];
+    if (defined $base) {
+      my $url = $base->get_attribute_ns (undef, 'href');
+      
+      # 3.
+      my $result = _resolve_url $url, $fallback_base_url;
+
+      # 4.
+      return defined $result ? $result : $fallback_base_url;
+    } else {
+      return $fallback_base_url;
+    }
+  } elsif ($nt == ATTRIBUTE_NODE) {
+    if (($self->namespace_uri || '') eq XML_NS and
+        $self->local_name eq 'base') {
+      # 2.
+      my $n = $self->owner_element;
+      $n = defined $n ? $n->parent_node : undef;
+      return $n->base_uri if defined $n;
+    } else {
+      # 3.
+      my $n = $self->owner_element;
+      return $n->base_uri if defined $n;
+    }
+  } elsif ($nt == ELEMENT_NODE and
+           my $attr = $self->get_attribute_node_ns (XML_NS, 'base')) {
+    # 4.
+    my $url = _resolve_url $attr->value, $attr->base_uri;
+    return $url if defined $url;
+  }
+  
+  # 5.
+  my $n = $self->parent_node;
+  return $n->base_uri if defined $n;
+
+  # 6.
+  return $self->owner_document->base_uri;
+} # base_uri
 
 sub owner_document ($) {
   return ${$_[0]}->[0]->node (0);

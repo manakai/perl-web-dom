@@ -23,6 +23,7 @@ Return the target of the processing instruction.
 =back
 
 In addition, the obsolete C<manakai_base_uri> method is available.
+[DOMDTDEF]
 
 =head1 SPECIFICATIONS
 
@@ -32,6 +33,11 @@ In addition, the obsolete C<manakai_base_uri> method is available.
 
 DOM Living Standard
 <http://dom.spec.whatwg.org/#interface-processinginstruction>.
+
+=item DOMDTDEF
+
+DOM Document Type Definitions
+<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item MANAKAI
 

@@ -53,6 +53,21 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  is $doc->manakai_entity_base_uri, 'about:blank';
+
+  $doc->manakai_set_url ('http://hoge');
+  is $doc->manakai_entity_base_uri, 'http://hoge/';
+
+  $doc->manakai_entity_base_uri ('HTTP://foo.TEST');
+  is $doc->manakai_entity_base_uri, 'http://foo.test/';
+  is $doc->url, 'http://hoge/';
+
+  done $c;
+} n => 4, name => 'manakai_entity_base_uri';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   dies_here_ok {
     $doc->manakai_set_url ('../foo');
   };

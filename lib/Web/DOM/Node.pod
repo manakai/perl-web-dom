@@ -22,6 +22,12 @@ Append the specified node to the list of child nodes.  [DOM]
 
 Append the string to the C<text_content> of the node.  [MANAKAI]
 
+=item $string = $node->base_uri
+
+Return the base URL of the node.  [DOM] [HTML] [DOMDTDEF]
+
+See also L<Web::DOM/DEPENDENCY>.
+
 =item $node_list = $node->child_nodes
 
 Return the live list, i.e. L<Web::DOM::NodeList>, of the child nodes
@@ -247,6 +253,11 @@ DOM Living Standard <http://dom.spec.whatwg.org/#interface-document>.
 
 DOM Standard <view-source:http://dom.spec.whatwg.org/>.
 
+=item HTML
+
+HTML Living Standard
+<http://www.whatwg.org/specs/web-apps/current-work/>.
+
 =item DOM3CORE
 
 Document Object Model (DOM) Level 3 Core Specification
@@ -260,12 +271,12 @@ Document Object Model XPath
 =item DOMDTDEF
 
 DOM Document Type Definition Module
-<http://suika.fam.cx/www/markup/xml/domdtdef/domdtdef-work>.
+<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef-work>.
 
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
 
 =back
 

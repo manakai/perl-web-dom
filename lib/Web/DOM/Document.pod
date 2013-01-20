@@ -184,6 +184,15 @@ Return the L<Web::DOM::Configuration> object for the document.
 Return the L<Web::DOM::HTMLCollection> object containing the C<embed>
 elements in the document.  [HTML]
 
+=item $string = $doc->manakai_entity_base_uri
+
+=item $doc->manakai_entity_base_uri ($string)
+
+Return or set the base URL of the document entity (not of the
+document).  [DOMDTDEF]
+
+See also L<Web::DOM/DEPENDENCY>.
+
 =item $col = $doc->forms
 
 Return the L<Web::DOM::HTMLCollection> object containing the C<form>

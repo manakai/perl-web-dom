@@ -5,7 +5,7 @@ Web::DOM::DocumentType - The DOM |DocumentType| object
 =head1 DESCRIPTION
 
 The C<Web::DOM::DocumentType> class implements the DOM C<DocumentType>
-interface.
+interface.  It represents a document type.
 
 =head1 METHODS
 
@@ -13,6 +13,14 @@ In addition to the methods of classes L<Web::DOM::Node> and
 L<Web::DOM::ChildNode>, following methods are available:
 
 =over 4
+
+=item $string = $ent->declaration_base_uri
+
+=item $string = $ent->manakai_declaration_base_uri
+
+Return the base URL of the document type declaration.  [DOMDTDEF]
+
+See also L<Web::DOM/DEPENDENCY>.
 
 =item $col = $dt->element_types
 
@@ -111,17 +119,17 @@ DOM Living Standard
 =item DOMDTDEF
 
 DOM Document Type Definitions
-<http://suika.fam.cx/www/markup/xml/domdtdef/domdtdef>.
+<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
 
 =back
 
@@ -135,7 +143,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
