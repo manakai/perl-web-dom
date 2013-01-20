@@ -9,5 +9,5 @@ notifications:
     - wakaba@suikawiki.org
   irc:
     channels:
-      - "suika.fam.cx#mechanize"
+      - "suika.suikawiki.org#mechanize"
     use_notice: true
