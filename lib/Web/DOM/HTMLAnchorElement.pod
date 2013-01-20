@@ -11,7 +11,7 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, following methods are available:
 
 =over 4
 
@@ -21,11 +21,23 @@ and L<Web::DOM::HTMLElement>, the following method is available:
 
 Return or set the C<download> attribute.  [HTML]
 
+=item $string = $el->href
+
+=item $el->href ($string)
+
+Return or set the C<href> attribute.  [HTML]
+
 =item $string = $el->hreflang
 
 =item $el->hreflang ($string)
 
 Return or set the C<hreflang> attribute.  [HTML]
+
+=item $string = $el->ping
+
+=item $el->ping ($string)
+
+Return or set the C<ping> attribute.  [HTML]
 
 =item $string = $el->rel
 

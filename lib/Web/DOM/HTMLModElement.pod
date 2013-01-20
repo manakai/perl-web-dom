@@ -11,9 +11,15 @@ C<del> elements.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, following methods are available:
 
 =over 4
+
+=item $string = $el->cite
+
+=item $el->cite ($string)
+
+Return or set the C<cite> attribute.  [HTML]
 
 =item $string = $el->datetime
 

@@ -14,8 +14,8 @@ The interface, as well as the C<applet> element, is obsolete.
 
 In addition to the methods available for classes L<Web::DOM::Element>
 and L<Web::DOM::HTMLElement>, the following obsolete methods are
-available: C<align>, C<alt>, C<archive>, C<height>, C<hspace>,
-C<name>, C<vspace>, and C<width>.  [HTML]
+available: C<align>, C<alt>, C<archive>, C<codebase>, C<height>,
+C<hspace>, C<name>, C<object>, C<vspace>, and C<width>.  [HTML]
 
 =head1 SPECIFICATION
 

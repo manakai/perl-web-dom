@@ -15,7 +15,11 @@ and L<Web::DOM::HTMLElement>, the following method is available:
 
 =over 4
 
-XXX
+=item $string = $el->cite
+
+=item $el->cite ($string)
+
+Return or set the C<cite> attribute.  [HTML]
 
 =back
 

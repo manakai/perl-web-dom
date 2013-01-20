@@ -11,7 +11,7 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
@@ -20,6 +20,12 @@ and L<Web::DOM::HTMLElement>, the following method is available:
 =item $el->accept_charset ($string)
 
 Return or set the C<accept-charset> attribute.  [HTML]
+
+=item $string = $el->action
+
+=item $el->action ($string)
+
+Return or set the C<action> attribute.  [HTML]
 
 =item $string = $el->autocomplete
 

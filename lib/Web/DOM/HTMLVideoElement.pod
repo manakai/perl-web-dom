@@ -12,7 +12,7 @@ element.
 
 In addition to the methods available for classes L<Web::DOM::Element>,
 L<Web::DOM::HTMLElement>, and L<Web::DOM::HTMLMediaElement>, the
-following method is available:
+following methods are available:
 
 =over 4
 
@@ -21,6 +21,12 @@ following method is available:
 =item $el->height ($integer)
 
 Return or set the C<height> attribute.  [HTML]
+
+=item $string = $el->poster
+
+=item $el->poster ($string)
+
+Return or set the C<poster> attribute.  [HTML]
 
 =item $integer = $el->width
 

@@ -146,9 +146,43 @@ sub text ($;$) {
 package Web::DOM::HTMLBaseElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
 use Web::DOM::Element;
 
-# XXX href
+sub href ($;$) {
+  if (@_ > 1) {
+    $_[0]->set_attribute_ns (undef, href => $_[1]);
+  }
+
+  # 1., 3.
+  my $url = $_[0]->get_attribute_ns (undef, 'href');
+  return $_[0]->owner_document->base_uri if not defined $url;
+
+  # 2. fallback base URL
+  my $fallback_base_url = do {
+    # 1.
+    my $doc = $_[0]->owner_document;
+    if ($doc->manakai_is_srcdoc) {
+      # XXX
+    }
+
+    # 2.
+    my $url = $doc->url;
+    if ($url eq 'about:blank' and 'XXX') {
+      # XXX
+    }
+
+    # 3.
+    $url;
+  };
+
+  # 4.-5.
+  $url = _resolve_url $url, $fallback_base_url;
+  return $url if defined $url;
+
+  # 6.
+  return '';
+} # href
 
 _define_reflect_string target => 'target';
 
@@ -158,8 +192,7 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 # XXX LinkStyle
 use Web::DOM::Element;
 
-# XXX href disabled
-
+_define_reflect_url href => 'href';
 _define_reflect_string rel => 'rel';
 _define_reflect_string media => 'media';
 _define_reflect_string hreflang => 'hreflang';
@@ -179,6 +212,8 @@ sub rel_list ($) {
         if @$new or $self->has_attribute_ns (undef, 'rel');
   }, 'rel');
 } # rel_list
+
+# XXX disabled
 
 package Web::DOM::HTMLMetaElement;
 our $VERSION = '1.0';
@@ -209,12 +244,13 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Node;
 use Web::DOM::Element;
 
-# XXX src async
-
+_define_reflect_url src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string charset => 'charset';
 _define_reflect_string crossorigin => 'crossorigin';
 _define_reflect_boolean defer => 'defer';
+
+# XXX async
 
 sub text ($;$) {
   if (@_ > 1) {
@@ -277,8 +313,9 @@ _define_reflect_long width => 'width', sub { 0 };
 package Web::DOM::HTMLQuoteElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
 
-# XXX cite
+_define_reflect_url cite => 'cite';
 
 package Web::DOM::HTMLOListElement;
 our $VERSION = '1.0';
@@ -339,13 +376,15 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX href ping URLUtils toString
-
 _define_reflect_string target => 'target';
 _define_reflect_string download => 'download';
 _define_reflect_string rel => 'rel';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
+_define_reflect_url href => 'href';
+_define_reflect_urls ping => 'ping';
+
+# XXX URLUtils toString
 
 _define_reflect_string coords => 'coords';
 _define_reflect_string charset => 'charset';
@@ -396,8 +435,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX cite
-
+_define_reflect_url cite => 'cite';
 _define_reflect_string datetime => 'datetime';
 
 package Web::DOM::HTMLImageElement;
@@ -405,9 +443,10 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX constructor src
+# XXX constructor
 
 _define_reflect_string alt => 'alt';
+_define_reflect_url src => 'src';
 _define_reflect_string srcset => 'srcset';
 _define_reflect_string crossorigin => 'crossorigin';
 _define_reflect_string usemap => 'usemap';
@@ -415,9 +454,8 @@ _define_reflect_boolean ismap => 'ismap';
 
 # XXX width height natural_width natural_height complete
 
-# XXX longdesc
-
 _define_reflect_string align => 'align';
+_define_reflect_url longdesc => 'longdesc';
 _define_reflect_string name => 'name';
 _define_reflect_string_undef border => 'border';
 _define_reflect_unsigned_long hspace => 'hspace', sub { 0 };
@@ -428,20 +466,20 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX src content_document content_window
+# XXX content_document content_window
 
 _define_reflect_string srcdoc => 'srcdoc';
 _define_reflect_string name => 'name';
+_define_reflect_url src => 'src';
 _define_reflect_boolean seamless => 'seamless';
 _define_reflect_boolean allowfullscreen => 'allowfullscreen';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
 _define_reflect_settable_token_list sandbox => 'sandbox';
 
-# XXX longdesc
-
 _define_reflect_string align => 'align';
 _define_reflect_string frameborder => 'frameborder';
+_define_reflect_url longdesc => 'longdesc';
 _define_reflect_string scrolling => 'scrolling';
 _define_reflect_string_undef marginwidth => 'marginwidth';
 _define_reflect_string_undef marginheight => 'marginheight';
@@ -454,7 +492,7 @@ use Web::DOM::Element;
 
 # XXX legacycaller
 
-_define_reflect_string src => 'src';
+_define_reflect_url src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
@@ -471,7 +509,7 @@ use Web::DOM::Element;
 # XXX legacycaller form content_document content_window will_validate
 # validity validation_message check_validity set_custom_validity
 
-_define_reflect_string data => 'data';
+_define_reflect_url data => 'data';
 _define_reflect_string type => 'type';
 _define_reflect_boolean typemustmatch => 'typemustmatch';
 _define_reflect_string name => 'name';
@@ -488,8 +526,7 @@ _define_reflect_unsigned_long hspace => 'hspace', sub { 0 };
 _define_reflect_string standby => 'standby';
 _define_reflect_unsigned_long vspace => 'vspace', sub { 0 };
 _define_reflect_string codetype => 'codetype';
-
-# XXX codebase
+_define_reflect_url codebase => 'codebase';
 
 package Web::DOM::HTMLParamElement;
 our $VERSION = '1.0';
@@ -512,6 +549,7 @@ _define_reflect_boolean autoplay => 'autoplay';
 _define_reflect_boolean loop => 'loop';
 _define_reflect_boolean controls => 'controls';
 _define_reflect_boolean default_muted => 'muted';
+_define_reflect_url src => 'src';
 
 # XXX and more
 
@@ -522,8 +560,9 @@ use Web::DOM::Element;
 
 _define_reflect_unsigned_long width => 'width', sub { 0 };
 _define_reflect_unsigned_long height => 'height', sub { 0 };
+_define_reflect_url poster => 'poster';
 
-# XXX video_width video_height poster
+# XXX video_width video_height
 
 package Web::DOM::HTMLAudioElement;
 our $VERSION = '1.0';
@@ -536,8 +575,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX src
-
+_define_reflect_url src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string media => 'media';
 
@@ -546,8 +584,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX src
-
+_define_reflect_url src => 'src';
 _define_reflect_enumerated kind => 'kind', {
   'subtitles' => 'subtitles',
   'captions' => 'captions',
@@ -593,8 +630,6 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX href ping URLUtils toString
-
 _define_reflect_string alt => 'alt';
 _define_reflect_string coords => 'coords';
 _define_reflect_string shape => 'shape';
@@ -603,6 +638,10 @@ _define_reflect_string download => 'download';
 _define_reflect_string rel => 'rel';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
+_define_reflect_url href => 'href';
+_define_reflect_urls ping => 'ping';
+
+# XXX URLUtils toString
 
 _define_reflect_boolean nohref => 'nohref';
 
@@ -623,8 +662,6 @@ use Web::DOM::Node;
 use Web::DOM::Element;
 
 _define_reflect_boolean sortable => 'sortable';
-
-# XXX more...
 
 _define_reflect_string align => 'align';
 _define_reflect_string border => 'border';
@@ -877,6 +914,8 @@ sub delete_row ($$) {
   $row->parent_node->remove_child ($row);
   return;
 } # delete_row
+
+# XXX stop_sorting
 
 package Web::DOM::HTMLTableCaptionElement;
 our $VERSION = '1.0';
@@ -1146,8 +1185,9 @@ _define_reflect_enumerated method => 'method', {
 _define_reflect_string name => 'name';
 _define_reflect_boolean novalidate => 'novalidate';
 _define_reflect_string target => 'target';
+_define_reflect_url action => 'action', sub { $_[0]->owner_document->url };
 
-# XXX action elements length getter
+# XXX elements length getter
 
 ## ------ Validation and Submission ------
 
@@ -1229,14 +1269,14 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Internal;
 use Web::DOM::Element;
 
-# XXX formaction src
-
 _define_reflect_string accept => 'accept';
 _define_reflect_string alt => 'alt';
 _define_reflect_boolean autofocus => 'autofocus';
 _define_reflect_boolean default_checked => 'checked';
 _define_reflect_string dirname => 'dirname';
 _define_reflect_boolean disabled => 'disabled';
+_define_reflect_url formaction => 'formaction',
+    sub { $_[0]->owner_document->url };
 _define_reflect_enumerated formenctype => 'formenctype', {
   'application/x-www-form-urlencoded' => 'application/x-www-form-urlencoded',
   'multipart/form-data' => 'multipart/form-data',
@@ -1278,6 +1318,7 @@ _define_reflect_boolean readonly => 'readonly';
 _define_reflect_boolean required => 'required';
 _define_reflect_unsigned_long size => 'size', sub { 0 };
 _define_reflect_string step => 'step';
+_define_reflect_url src => 'src';
 _define_reflect_enumerated type => 'type', {
   hidden => 'hidden',
   text => 'text',
@@ -1335,10 +1376,10 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX formaction
-
 _define_reflect_boolean autofocus => 'autofocus';
 _define_reflect_boolean disabled => 'disabled';
+_define_reflect_url formaction => 'formaction',
+    sub { $_[0]->owner_document->url };
 _define_reflect_enumerated formenctype => 'formenctype', {
   'application/x-www-form-urlencoded' => 'application/x-www-form-urlencoded',
   'multipart/form-data' => 'multipart/form-data',
@@ -1561,7 +1602,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX icon command
+# XXX command
 
 _define_reflect_enumerated type => 'type', {
   'command' => 'command',
@@ -1574,6 +1615,7 @@ _define_reflect_string radiogroup => 'radiogroup';
 _define_reflect_boolean disabled => 'disabled';
 _define_reflect_boolean checked => 'checked';
 _define_reflect_boolean default => 'default';
+_define_reflect_url icon => 'icon';
 
 package Web::DOM::HTMLDialogElement;
 our $VERSION = '1.0';
@@ -1597,14 +1639,14 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX codebase object
-
 _define_reflect_string align => 'align';
 _define_reflect_string alt => 'alt';
 _define_reflect_string archive => 'archive';
 _define_reflect_string code => 'code';
+_define_reflect_url codebase => 'codebase';
 _define_reflect_string height => 'height';
 _define_reflect_string name => 'name';
+_define_reflect_url object => 'object';
 _define_reflect_string width => 'width';
 _define_reflect_unsigned_long hspace => 'hspace', sub { 0 };
 _define_reflect_unsigned_long vspace => 'vspace', sub { 0 };
@@ -1652,14 +1694,16 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX src longdesc content*
-
 _define_reflect_string name => 'name';
 _define_reflect_string scrolling => 'scrolling';
 _define_reflect_string frameborder => 'frameborder';
 _define_reflect_boolean noresize => 'noresize';
 _define_reflect_string_undef marginheight => 'marginheight';
 _define_reflect_string_undef marginwidth => 'marginwidth';
+_define_reflect_url src => 'src';
+_define_reflect_url longdesc => 'longdesc';
+
+# XXX content*
 
 package Web::DOM::HTMLBaseFontElement;
 our $VERSION = '1.0';

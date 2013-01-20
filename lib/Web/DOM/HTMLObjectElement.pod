@@ -61,8 +61,8 @@ Return or set the C<width> attribute.  [HTML]
 =back
 
 Additionally, the following obsolete methods are available: C<align>,
-C<archive>, C<border>, C<code>, C<codetype>, C<declare>, C<hspace>,
-C<standby>, and C<vspace>.  [HTML]
+C<archive>, C<border>, C<code>, C<codebase>, C<codetype>, C<declare>,
+C<hspace>, C<standby>, and C<vspace>.  [HTML]
 
 =head1 SPECIFICATION
 

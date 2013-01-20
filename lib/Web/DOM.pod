@@ -213,8 +213,10 @@ package <https://github.com/manakai/perl-web-url>, which depends on
 the perl-web-encodings package
 <https://github.com/manakai/perl-web-encodings>.  Such features
 include: C<base_uri>, C<manakai_set_url>, C<manakai_entity_uri>,
-C<manakai_entity_base_uri>, C<declaration_base_uri>, and
-C<manakai_declaration_base_uri>.
+C<manakai_entity_base_uri>, C<declaration_base_uri>,
+C<manakai_declaration_base_uri>, C<action>, C<cite>, C<codebase>,
+C<data>, C<formaction>, C<href>, C<longdesc>, C<object>, C<ping>,
+C<poster>, and C<src>.
 
 =head1 DEVELOPMENT
 
@@ -285,16 +287,8 @@ defined in the manakai DOM Extensions specification [MANAKAI].
 The initial milestone of the project is reimplementing the subset of
 DOM supported by the original manakai's DOM implementation
 <https://github.com/wakaba/manakai/tree/master/lib/Message/DOM>,
-except for obsolete features.  Features that should be implemented in
-the very initial phase of the development include:
-
-=over 4
-
-=item baseURI and related methods, as well as URL-reflecting methods [DOM] [HTML] [MANAKAI]
-
-=back
-
-Following features will be (re)implemented in due course:
+except for obsolete features.  Following features will be
+(re)implemented in due course:
 
 =over 4
 

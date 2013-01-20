@@ -11,7 +11,7 @@ C<source> element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following method is available:
+and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
@@ -20,6 +20,12 @@ and L<Web::DOM::HTMLElement>, the following method is available:
 =item $el->media ($string)
 
 Return or set the C<media> attribute.  [HTML]
+
+=item $string = $el->src
+
+=item $el->src ($string)
+
+Return or set the C<src> attribute.  [HTML]
 
 =item $string = $el->type
 

@@ -14,8 +14,9 @@ The interface, as well as the C<frame> element, is obsolete.
 
 In addition to the methods available for classes L<Web::DOM::Element>
 and L<Web::DOM::HTMLElement>, the following obsolete methods are
-available: C<frameborder>, C<marginheight>, C<marginwidth>, C<name>,
-C<noresize>, C<scrolling>, and C<scrolling>.  [HTML]
+available: C<frameborder>, C<longdesc>, C<marginheight>,
+C<marginwidth>, C<name>, C<noresize>, C<scrolling>, and C<src>.
+[HTML]
 
 =back
 

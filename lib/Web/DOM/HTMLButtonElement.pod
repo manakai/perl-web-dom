@@ -29,6 +29,12 @@ Return or set whether the C<autofocus> attribute is specified or not.
 Return or set whether the C<disabled> attribute is specified or not.
 [HTML]
 
+=item $string = $el->formaction
+
+=item $el->formaction ($string)
+
+Return or set the C<formaction> attribute.  [HTML]
+
 =item $string = $el->formenctype
 
 =item $el->formenctype ($string)

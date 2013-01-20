@@ -60,11 +60,9 @@ for my $test (
   ['iframe', 'srcdoc'],
   ['iframe', 'width'],
   ['iframe', 'height'],
-  ['embed', 'src'],
   ['embed', 'type'],
   ['embed', 'width'],
   ['embed', 'height'],
-  ['object', 'data'],
   ['object', 'type'],
   ['object', 'name'],
   ['object', 'usemap'],
@@ -273,6 +271,91 @@ for my $test (
     is $el->$attr, 124;
     done $c;
   } n => 9, name => ['string reflect attributes', @$test];
+}
+
+for my $test (
+  ['link', 'href'],
+  ['script', 'src'],
+  ['blockquote', 'cite'],
+  ['q', 'cite'],
+  ['a', 'href'],
+  ['area', 'href'],
+  ['ins', 'cite'],
+  ['del', 'cite'],
+  ['img', 'src'],
+  ['img', 'longdesc'],
+  ['iframe', 'src'],
+  ['iframe', 'longdesc'],
+  ['frame', 'src'],
+  ['frame', 'longdesc'],
+  ['embed', 'src'],
+  ['object', 'data'],
+  ['object', 'codebase'],
+  ['audio', 'src'],
+  ['video', 'src'],
+  ['video', 'poster'],
+  ['source', 'src'],
+  ['track', 'src'],
+  ['form', 'action', 1],
+  ['input', 'src'],
+  ['input', 'formaction', 1],
+  ['button', 'formaction', 1],
+  ['menuitem', 'icon'],
+  ['applet', 'object'],
+  ['applet', 'codebase'],
+) {
+  my $attr = $test->[1];
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_set_url ('http://foo/bar/');
+    my $el = $doc->create_element ($test->[0]);
+    is $el->$attr, $test->[2] ? 'http://foo/bar/' : '';
+    $el->$attr ('hoge');
+    is $el->$attr, 'http://foo/bar/hoge';
+    is $el->get_attribute ($attr), 'hoge';
+    $el->$attr ('  http://ABC/ ');
+    is $el->$attr, 'http://abc/';
+    is $el->get_attribute ($attr), '  http://ABC/ ';
+    $el->$attr ('http://fo:a/');
+    is $el->$attr, '';
+    is $el->get_attribute ($attr), 'http://fo:a/';
+    $el->$attr ('');
+    is $el->$attr, 'http://foo/bar/';
+    is $el->get_attribute ($attr), '';
+    done $c;
+  } n => 9, name => ['reflect url', $test->[0], $test->[1]];
+}
+
+for my $test (
+  ['a', 'ping'],
+  ['area', 'ping'],
+) {
+  my $attr = $test->[1];
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_set_url ('http://foo/bar/');
+    my $el = $doc->create_element ($test->[0]);
+    is $el->$attr, '';
+    $el->$attr ('hoge');
+    is $el->$attr, 'http://foo/bar/hoge';
+    is $el->get_attribute ($attr), 'hoge';
+    $el->$attr ('  http://ABC/ ');
+    is $el->$attr, 'http://abc/';
+    is $el->get_attribute ($attr), '  http://ABC/ ';
+    $el->$attr ('http://fo:a/');
+    is $el->$attr, '';
+    is $el->get_attribute ($attr), 'http://fo:a/';
+    $el->$attr ("http://foo http://BAR/abc hoge http://foo:bar ab \x09");
+    is $el->$attr, 'http://foo/ http://bar/abc http://foo/bar/hoge http://foo/bar/ab';
+    is $el->get_attribute ($attr),
+        "http://foo http://BAR/abc hoge http://foo:bar ab \x09";
+    $el->$attr ('');
+    is $el->$attr, '';
+    is $el->get_attribute ($attr), '';
+    done $c;
+  } n => 11, name => ['reflect urls', $test->[0], $test->[1]];
 }
 
 for my $attr (qw(itemscope hidden)) {
@@ -2638,6 +2721,58 @@ test {
 
   done $c;
 } n => 3, name => 'dataset';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_set_url ('http://foo');
+  my $base = $doc->create_element ('base');
+  is $base->href, 'http://foo/';
+  done $c;
+} n => 1, name => 'base.href no href';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_set_url ('http://foo');
+  my $base = $doc->create_element ('base');
+  $base->set_attribute (href => 'http://ABC');
+  is $base->href, 'http://abc/';
+  done $c;
+} n => 1, name => 'base.href href';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_set_url ('http://foo');
+  my $base = $doc->create_element ('base');
+  $base->set_attribute (href => ' ba/./r  ');
+  is $base->href, 'http://foo/ba/r';
+  done $c;
+} n => 1, name => 'base.href href';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_set_url ('http://foo');
+  my $base = $doc->create_element ('base');
+  $base->set_attribute (href => ' http://ho:fe/ ');
+  is $base->href, '';
+  done $c;
+} n => 1, name => 'base.href href bad url';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('base');
+  $el->href ('hoge');
+  is $el->get_attribute_ns (undef, 'href'), 'hoge';
+  $el->href ('http://foo');
+  is $el->get_attribute_ns (undef, 'href'), 'http://foo';
+  $el->href (undef);
+  is $el->get_attribute_ns (undef, 'href'), '';
+  done $c;
+} n => 3, name => 'base.href setter';
 
 run_tests;
 

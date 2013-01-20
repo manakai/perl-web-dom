@@ -21,6 +21,12 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 Return or set the C<height> attribute.  [HTML]
 
+=item $string = $el->src
+
+=item $el->src ($string)
+
+Return or set the C<src> attribute.  [HTML]
+
 =item $string = $el->type
 
 =item $el->type ($string)

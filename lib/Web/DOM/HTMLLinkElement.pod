@@ -21,6 +21,12 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 Return or set the C<crossorigin> attribute.  [HTML]
 
+=item $string = $el->href
+
+=item $el->href ($string)
+
+Return or set the C<href> attribute.  [HTML]
+
 =item $string = $el->hreflang
 
 =item $el->hreflang ($string)

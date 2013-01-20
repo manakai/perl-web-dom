@@ -34,6 +34,12 @@ Return or set the C<crossorigin> attribute.  [HTML]
 Return or set whether the C<ismap> attribute is specified or not.
 [HTML]
 
+=item $string = $el->src
+
+=item $el->src ($string)
+
+Return or set the C<src> attribute.  [HTML]
+
 =item $string = $el->srcset
 
 =item $el->srcset ($string)
@@ -49,7 +55,7 @@ Return or set the C<usemap> attribute.  [HTML]
 =back
 
 Additionally, the following obsolete methods are available: C<align>,
-C<border>, C<hspace>, C<name>, and C<vspace>.  [HTML]
+C<border>, C<hspace>, C<longdesc>, C<name>, and C<vspace>.  [HTML]
 
 =head1 SPECIFICATION
 
