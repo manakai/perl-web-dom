@@ -958,14 +958,7 @@ sub class_list ($) {
 } # class_list
 
 sub manakai_base_uri ($;$) {
-  if (@_ > 1) {
-    if (defined $_[1]) {
-      ${$_[0]}->[2]->{manakai_base_uri} = ''.$_[1];
-    } else {
-      delete ${$_[0]}->[2]->{manakai_base_uri}
-    }
-  }
-  return ${$_[0]}->[2]->{manakai_base_uri};
+  return undef;
 } # manakai_base_uri
 
 sub outer_html ($;$) {

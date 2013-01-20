@@ -65,10 +65,10 @@ test {
   is $pi->manakai_base_uri, undef;
 
   $pi->manakai_base_uri ('http://foo/');
-  is $pi->manakai_base_uri, 'http://foo/';
+  is $pi->manakai_base_uri, undef;
 
   $pi->manakai_base_uri ('0');
-  is $pi->manakai_base_uri, '0';
+  is $pi->manakai_base_uri, undef;
 
   $pi->manakai_base_uri (undef);
   is $pi->manakai_base_uri, undef;
@@ -80,7 +80,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -12,21 +12,14 @@ sub target ($) {
 } # target
 
 sub manakai_base_uri ($;$) {
-  if (@_ > 1) {
-    if (defined $_[1]) {
-      ${$_[0]}->[2]->{manakai_base_uri} = ''.$_[1];
-    } else {
-      delete ${$_[0]}->[2]->{manakai_base_uri}
-    }
-  }
-  return ${$_[0]}->[2]->{manakai_base_uri};
+  return undef;
 } # manakai_base_uri
 
 1;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

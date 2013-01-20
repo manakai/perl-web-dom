@@ -487,10 +487,10 @@ test {
   is $el->manakai_base_uri, undef;
 
   $el->manakai_base_uri ('http://foo/');
-  is $el->manakai_base_uri, 'http://foo/';
+  is $el->manakai_base_uri, undef;
 
   $el->manakai_base_uri ('0');
-  is $el->manakai_base_uri, '0';
+  is $el->manakai_base_uri, undef;
 
   $el->manakai_base_uri (undef);
   is $el->manakai_base_uri, undef;
