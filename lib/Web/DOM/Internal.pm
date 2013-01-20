@@ -301,10 +301,11 @@ for (
       = "Web::DOM::$_->[1]";
   $ClassToModule->{"Web::DOM::$_->[1]"} = "Web::DOM::HTMLElement";
 }
+my $ModuleLoaded = {};
 
 sub node ($$) {
   my ($self, $id) = @_;
-  return $self->{nodes}->[$id] if $self->{nodes}->[$id];
+  return $self->{nodes}->[$id] if defined $self->{nodes}->[$id];
 
   my $data = $self->{data}->[$id];
   my $class;
@@ -321,7 +322,9 @@ sub node ($$) {
     $class = $NodeClassByNodeType->{$nt};
   }
   my $module = $ClassToModule->{$class} || $class;
-  eval qq{ require $module } or die $@;
+  if (not $ModuleLoaded->{$module}++) {
+    eval qq{ require $module } or die $@;
+  }
   my $node = bless \[$self, $id, $data], $class;
   weaken ($self->{nodes}->[$id] = $node);
   return $node;
@@ -384,7 +387,9 @@ sub collection ($$$$) {
       if defined $self->{cols}->[$id]->{$key};
   my $class = $CollectionClass->{ref $keys ? $keys->[0] : $key}
       || 'Web::DOM::HTMLCollection';
-  eval qq{ require $class } or die $@;
+  if (not $ModuleLoaded->{$class}++) {
+    eval qq{ require $class } or die $@;
+  }
   my $nl = bless \[$root_node, $filter, undef, $keys], $class;
   weaken ($self->{cols}->[$id]->{$key} = $nl);
   return $nl;
@@ -479,7 +484,9 @@ sub tokens ($$$$$) {
   };
 
   my $class = $TokenListClass->{$key} || 'Web::DOM::SettableTokenList';
-  eval qq{ require $class } or die $@;
+  if (not $ModuleLoaded->{$class}++) {
+    eval qq{ require $class } or die $@;
+  }
   my $nl = bless \@array, $class;
   weaken ($self->{tokens}->[$id]->{$key} = $nl);
 
@@ -677,9 +684,11 @@ sub adopt ($$) {
 # "0" can't be freed until the nodes within the document has been
 # freed?
 sub gc ($$) {
+  return if @{$_[0]->{data} or []} > 20 and 0.95 > rand 1;
   my ($self, $id) = @_;
   delete $self->{nodes}->[$id];
   my $tree_id = $self->{tree_id}->[$id];
+  return if $tree_id == 0;
   my @id = grep { defined $self->{tree_id}->[$_] and 
                   $self->{tree_id}->[$_] == $tree_id } 0..$#{$self->{tree_id}};
   for (@id) {
