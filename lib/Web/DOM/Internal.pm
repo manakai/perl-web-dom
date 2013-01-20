@@ -684,7 +684,7 @@ sub adopt ($$) {
 # "0" can't be freed until the nodes within the document has been
 # freed?
 sub gc ($$) {
-  return if @{$_[0]->{data} or []} > 20 and 0.95 > rand 1;
+  return if @{$_[0]->{data} or []} > 100 and 0.95 > rand 1;
   my ($self, $id) = @_;
   delete $self->{nodes}->[$id];
   my $tree_id = $self->{tree_id}->[$id];
