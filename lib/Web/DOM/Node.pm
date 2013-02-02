@@ -1515,7 +1515,61 @@ sub is_default_namespace ($$) {
   }
 } # is_default_namespace
 
-# XXX manakai_get_child_namespace_uri
+sub manakai_get_child_namespace_uri ($) {
+  my $self = $_[0];
+  if ($$self->[0]->{data}->[0]->{is_html}) {
+    my $tag_name = defined $_[1] ? $_[1] : '';
+    $tag_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
+
+    require Web::HTML::ParserData;
+    my $ns = $self->namespace_uri;
+    my $ln = $self->local_name;
+    if (not defined $ln or not defined $ns) {
+      #
+    } elsif ($ns eq SVG_NS) {
+      if ($Web::HTML::ParserData::SVGHTMLIntegrationPoints->{$ln}) {
+        #
+      } else {
+        return $ns;
+      }
+    } elsif ($ns eq MML_NS) {
+      if ($Web::HTML::ParserData::MathMLTextIntegrationPoints->{$ln}) {
+        return MML_NS if $tag_name eq 'mglyph' or $tag_name eq 'malignmark';
+      } elsif ($ln eq 'annotation-xml') {
+        return SVG_NS if $tag_name eq 'svg';
+        my $encoding = $self->get_attribute_ns (undef, 'encoding') || '';
+        $encoding =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
+        unless ($encoding eq 'text/html' or $encoding eq 'application/xhtml+xml') {
+          return $ns;
+        }
+      } elsif ($Web::HTML::ParserData::MathMLHTMLIntegrationPoints->{$ln}) {
+        #
+      } else {
+        return $ns;
+      }
+    } # $ns
+
+    if ($tag_name eq 'svg') {
+      return SVG_NS;
+    } elsif ($tag_name eq 'math') {
+      return MML_NS;
+    } else {
+      return HTML_NS;
+    }
+  } else {
+    my $prefix = defined $_[1] ? ''.$_[1] : undef;
+    if (defined $_[1] and $prefix =~ /:/) {
+      $prefix =~ s/:.*//gs;
+      if ($prefix eq '') {
+        return undef;
+      } else {
+        return $self->lookup_namespace_uri ($prefix);
+      }
+    } else {
+      return $self->lookup_namespace_uri (undef);
+    }
+  }
+} # manakai_get_child_namespace_uri
 
 sub is_supported ($$;$) {
   return 1;

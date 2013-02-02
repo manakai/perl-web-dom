@@ -60,6 +60,21 @@ namespace URL followed by the local name.  [MANAKAI]
 Return the first child node of the node.  If there is no child,
 C<undef> is returned.  [DOM]
 
+=item $url = $node->manakai_get_child_namespace_uri ($name)
+
+Return the namespace URL which would be used if the serialized
+representation of the node contains a start tag whose tag name is
+equal to the argument.  [MANAKAI]
+
+For example:
+
+  $doc = an HTML document;
+  $el = $doc->create_element ('div');
+  is $el->manakai_get_child_namespace_uri ('p'),
+     'http://www.w3.org/1999/xhtml';
+  is $el->manakai_get_child_namespace_uri ('svg'),
+     'http://www.w3.org/2000/svg';
+
 =item $data = $node->get_user_data ($key)
 
 Return the user data associated to the node with the specified key, if
