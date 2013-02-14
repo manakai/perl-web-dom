@@ -941,7 +941,7 @@ for my $test (
    invalid_values => [[''], ['0'], [undef]]},
   {element => 'form',
    attr => 'enctype',
-   default => '',
+   default => 'application/x-www-form-urlencoded',
    invalid_default => 'application/x-www-form-urlencoded',
    valid_values => [
      ['application/x-www-form-URLEncoded' =>
@@ -953,7 +953,7 @@ for my $test (
   {element => 'form',
    attr => 'encode',
    content_attr => 'enctype',
-   default => '',
+   default => 'application/x-www-form-urlencoded',
    invalid_default => 'application/x-www-form-urlencoded',
    valid_values => [
      ['application/x-www-form-URLEncoded' =>
@@ -964,7 +964,7 @@ for my $test (
    invalid_values => [[''], ['0'], [undef]]},
   {element => 'form',
    attr => 'method',
-   default => '',
+   default => 'get',
    invalid_default => 'get',
    valid_values => [
      ['get' => 'get'],

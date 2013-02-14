@@ -1166,21 +1166,21 @@ _define_reflect_enumerated enctype => 'enctype', {
   'multipart/form-data' => 'multipart/form-data',
   'text/plain' => 'text/plain',
   '#invalid' => 'application/x-www-form-urlencoded',
-  # #missing
+  '#missing' => 'application/x-www-form-urlencoded',
 };
 _define_reflect_enumerated encode => 'enctype', {
   'application/x-www-form-urlencoded' => 'application/x-www-form-urlencoded',
   'multipart/form-data' => 'multipart/form-data',
   'text/plain' => 'text/plain',
   '#invalid' => 'application/x-www-form-urlencoded',
-  # #missing
+  '#missing' => 'application/x-www-form-urlencoded',
 };
 _define_reflect_enumerated method => 'method', {
   get => 'get',
   post => 'post',
   dialog => 'dialog',
   '#invalid' => 'get',
-  # #missing
+  '#missing' => 'get',
 };
 _define_reflect_string name => 'name';
 _define_reflect_boolean novalidate => 'novalidate';
