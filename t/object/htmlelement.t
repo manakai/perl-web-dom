@@ -2698,6 +2698,30 @@ test {
 
 test {
   my $c = shift;
+
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('option');
+  $el->append_child ($doc->create_text_node ('hoge'));
+  $el->append_child ($doc->create_element ('script'))
+     ->append_child ($doc->create_text_node ('abc'));
+  $el->append_child ($doc->create_text_node ('fuga'));
+  is $el->text, 'hogefuga';
+  is $el->label, 'hogefuga';
+  is $el->value, 'hogefuga';
+
+  my $el2 = $el->append_child ($doc->create_element_ns (undef, 'script'));
+  $el2->append_child ($doc->create_text_node ('xyz'));
+  $el2->append_child ($doc->create_element_ns ('http://www.w3.org/2000/svg', 'script'))
+      ->append_child ($doc->create_text_node ('xyza'));
+  is $el->text, 'hogefugaxyz';
+  is $el->label, 'hogefugaxyz';
+  is $el->value, 'hogefugaxyz';
+  
+  done $c;
+} n => 6, name => 'option text label value script';
+
+test {
+  my $c = shift;
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ('dialog');
   is $el->return_value, '';

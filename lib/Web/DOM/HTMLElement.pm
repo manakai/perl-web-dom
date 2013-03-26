@@ -1451,6 +1451,8 @@ _define_reflect_string label => 'label';
 package Web::DOM::HTMLOptionElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
+use Web::DOM::Node;
 use Web::DOM::Element;
 
 # XXX constructor form selected index
@@ -1463,7 +1465,23 @@ sub text ($;$) {
     $_[0]->text_content ($_[1]);
     return unless defined wantarray;
   }
-  my $value = $_[0]->text_content;
+  my @text;
+  my @node = $_[0]->child_nodes->to_list;
+  while (@node) {
+    my $node = shift @node;
+    if ($node->node_type == TEXT_NODE) {
+      push @text, $node;
+    } elsif ($node->node_type == ELEMENT_NODE and
+             $node->local_name eq 'script') {
+      my $ns = $node->namespace_uri || '';
+      unless ($ns eq HTML_NS or $ns eq SVG_NS) {
+        unshift @node, $node->child_nodes->to_list;
+      }
+    } else {
+      unshift @node, $node->child_nodes->to_list;
+    }
+  }
+  my $value = join '', map { $_->data } @text;
   $value =~ s/[\x09\x0A\x0C\x0D\x20]+/ /g;
   $value =~ s/^ //;
   $value =~ s/ $//;
