@@ -204,10 +204,12 @@ L<Web::DOM::HTMLAppletElement>,
 L<Web::DOM::HTMLMarqueeElement>,
 L<Web::DOM::HTMLFrameSetElement>,
 L<Web::DOM::HTMLFrameElement>,
-L<Web::DOM::HTMLBaseFontElement>,
 L<Web::DOM::HTMLDirectoryElement>,
 L<Web::DOM::HTMLFontElement>,
 L<Web::DOM::HTMLTemplateElement>.
+
+The L<Web::DOM::HTMLBaseFontElement> class is no longer available, as
+it is now dropped from the HTML Standard.
 
 =head1 SPECIFICATION
 

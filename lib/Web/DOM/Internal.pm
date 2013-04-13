@@ -281,7 +281,7 @@ for (
   ['marquee' => 'HTMLMarqueeElement'],
   ['frameset' => 'HTMLFrameSetElement'],
   ['frame' => 'HTMLFrameElement'],
-  ['basefont' => 'HTMLBaseFontElement'],
+  ['basefont' => 'HTMLElement'],
   ['dir' => 'HTMLDirectoryElement'],
   ['font' => 'HTMLFontElement'],
   ['listing' => 'HTMLElement'],

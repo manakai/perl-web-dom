@@ -1723,15 +1723,6 @@ _define_reflect_url longdesc => 'longdesc';
 
 # XXX content*
 
-package Web::DOM::HTMLBaseFontElement;
-our $VERSION = '1.0';
-push our @ISA, qw(Web::DOM::HTMLElement);
-use Web::DOM::Element;
-
-_define_reflect_string color => 'color';
-_define_reflect_string face => 'face';
-_define_reflect_long size => 'size', sub { 0 };
-
 package Web::DOM::HTMLDirectoryElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);

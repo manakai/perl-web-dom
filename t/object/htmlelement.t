@@ -140,8 +140,6 @@ for my $test (
   ['a', 'name'],
   ['a', 'rev'],
   ['a', 'shape'],
-  ['basefont', 'color'],
-  ['basefont', 'face'],
   ['body', 'text'],
   ['body', 'link'],
   ['body', 'alink'],
@@ -510,7 +508,6 @@ for my $test (
 
 for my $test (
   ['li', 'value', 0],
-  ['basefont', 'size', 0],
   ['pre', 'width', 0],
   ['ol', 'start', 1],
 ) {
