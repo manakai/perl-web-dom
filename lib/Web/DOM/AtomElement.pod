@@ -1,0 +1,69 @@
+=head1 NAME
+
+Web::DOM::AtomElement - The DOM |AtomElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomElement> class implements the DOM C<AtomElement>
+interface.  The class is used by any element in the Atom namespace and
+related namespaces.
+
+=head1 METHODS
+
+In addition to the methods available for the L<Web::DOM::Element>
+class, following methods are available:
+
+=over 4
+
+=item $string = $el->xmlbase
+
+=item $el->xmlbase ($string)
+
+Return or set the C<xml:base> attribute.  [ATOMDOM]
+
+=item $string = $el->xmllang
+
+=item $el->xmllang ($string)
+
+Return or set the C<xml:lang> attribute.  [ATOMDOM]
+
+=back
+
+Most Atom elements have their own subclasses.  For example, any Atom
+C<link> element uses the L<Web::DOM::AtomLinkElement> class, while any
+HTML C<author> element uses the L<Web::DOM::AtomAuthorElement> class.
+There are following subclasses:
+
+L<Web::DOM::AtomIdElement>,
+L<Web::DOM::AtomIconElement>,
+L<Web::DOM::AtomNameElement>,
+L<Web::DOM::AtomUriElement>,
+L<Web::DOM::AtomEmailElement>,
+L<Web::DOM::AtomLogoElement>.
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Element>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

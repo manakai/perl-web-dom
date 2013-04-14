@@ -40,6 +40,11 @@ sub content_type ($) {
   return ${$_[0]}->[2]->{content_type} || 'application/xml';
 } # content_type
 
+# internal
+sub _set_content_type ($$) {
+  ${$_[0]}->[2]->{content_type} = $_[1];
+} # _set_content_type
+
 sub manakai_is_html ($;$) {
   my $self = $_[0];
   if (@_ > 1) {
@@ -312,6 +317,12 @@ sub manakai_html ($) {
   return undef;
 } # manakai_html
 
+sub atom_feed_element ($) {
+  my $el = $_[0]->document_element or return undef;
+  return $el if $el->manakai_element_type_match (ATOM_NS, 'feed');
+  return undef;
+} # atom_feed_element
+
 sub head ($) {
   my $html = $_[0]->manakai_html or return undef;
   for ($html->child_nodes->to_list) {
@@ -414,11 +425,12 @@ sub body ($;$) {
       # 3.
       $body->parent_node->replace_child ($_[1], $body);
     } else {
-      # 4.
       my $de = $self->document_element;
       if (defined $de) {
+        # 5.
         $de->append_child ($_[1]);
       } else {
+        # 4.
         _throw Web::DOM::Exception 'HierarchyRequestError',
             'There is no root element';
       }

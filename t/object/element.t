@@ -278,6 +278,13 @@ for my $test (
   [[HTML_NS, "\x{500}"], ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
   [[HTML_NS, [undef, 'html:p']],
    ['Element', 'HTMLElement', 'HTMLUnknownElement'], []],
+  [[ATOM_NS, 'hoge'], ['Element', 'AtomElement'], ['AtomLinkElement']],
+  [[ATOM_NS, 'id'], ['Element', 'AtomElement', 'AtomIdElement'], []],
+  [[ATOM_NS, 'icon'], ['Element', 'AtomElement', 'AtomIconElement'], []],
+  [[ATOM_NS, 'name'], ['Element', 'AtomElement', 'AtomNameElement'], []],
+  [[ATOM_NS, 'uri'], ['Element', 'AtomElement', 'AtomUriElement'], []],
+  [[ATOM_NS, 'email'], ['Element', 'AtomElement', 'AtomEmailElement'], []],
+  [[ATOM_NS, 'logo'], ['Element', 'AtomElement', 'AtomLogoElement'], []],
 ) {
   test {
     my $c = shift;

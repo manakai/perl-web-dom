@@ -12,12 +12,14 @@ sub text ($$) {
   return defined $_[1] ? $Text->{$_[1]} ||= \(''.$_[1]) : undef;
 } # text
 
-push @EXPORT, qw(HTML_NS SVG_NS MML_NS XML_NS XMLNS_NS);
+push @EXPORT, qw(HTML_NS SVG_NS MML_NS XML_NS XMLNS_NS ATOM_NS ATOM_THREAD_NS);
 sub HTML_NS () { q<http://www.w3.org/1999/xhtml> }
 sub SVG_NS () { q<http://www.w3.org/2000/svg> }
 sub MML_NS () { q<http://www.w3.org/1998/Math/MathML> }
 sub XML_NS () { q<http://www.w3.org/XML/1998/namespace> }
 sub XMLNS_NS () { q<http://www.w3.org/2000/xmlns/> }
+sub ATOM_NS () { q<http://www.w3.org/2005/Atom> }
+sub ATOM_THREAD_NS () { q<http://purl.org/syndication/thread/1.0> }
 
 sub import ($;@) {
   my $from_class = shift;
@@ -302,6 +304,20 @@ for (
       = "Web::DOM::$_->[1]";
   $ClassToModule->{"Web::DOM::$_->[1]"} = "Web::DOM::HTMLElement";
 }
+for (
+  ['*', 'AtomElement'],
+  ['id', 'AtomIdElement'],
+  ['icon', 'AtomIconElement'],
+  ['name', 'AtomNameElement'],
+  ['uri', 'AtomUriElement'],
+  ['email', 'AtomEmailElement'],
+  ['logo', 'AtomLogoElement'],
+) {
+  $ElementClass->{Web::DOM::Internal::ATOM_NS}->{$_->[0]}
+      = "Web::DOM::$_->[1]";
+  $ClassToModule->{"Web::DOM::$_->[1]"} = "Web::DOM::AtomElement";
+}
+
 my $ModuleLoaded = {};
 
 sub node ($$) {

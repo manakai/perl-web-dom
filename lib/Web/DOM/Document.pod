@@ -30,6 +30,11 @@ of the specified node and its descendant nodes to the document.  [DOM]
 Return or set the [all declarations processed] property value of the
 document.  [MANAKAI]
 
+=item $el = $doc->atom_feed_element
+
+Return the document element, if it is the C<atom:feed> element.
+[ATOMDOM]
+
 =item $el = $doc->body
 
 =item $doc->body ($el)
@@ -352,6 +357,10 @@ SVG
 
 DOM Document Type Definitions
 <http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
 
 =item DOMPERL
 

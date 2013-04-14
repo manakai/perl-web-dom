@@ -558,6 +558,58 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  is $doc->atom_feed_element, undef;
+  done $c;
+} n => 1, name => 'atom_feed_element empty document';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('html');
+  $doc->append_child ($el);
+  is $doc->atom_feed_element, undef;
+  done $c;
+} n => 1, name => 'atom_feed_element bad root element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2005/Atom', 'hoge');
+  $doc->append_child ($el);
+  is $doc->atom_feed_element, undef;
+  done $c;
+} n => 1, name => 'atom_feed_element different local name';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2005/Atom/', 'feeed');
+  $doc->append_child ($el);
+  is $doc->atom_feed_element, undef;
+  done $c;
+} n => 1, name => 'atom_feed_element different namespace url';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2005/Atom', 'feed');
+  $doc->append_child ($el);
+  is $doc->atom_feed_element, $el;
+  done $c;
+} n => 1, name => 'atom_feed_element found';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns ('http://www.w3.org/2005/Atom', 'a:feed');
+  $doc->append_child ($el);
+  is $doc->atom_feed_element, $el;
+  done $c;
+} n => 1, name => 'atom_feed_element found, prefixed';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $el1 = $doc->create_element ('html');
   $doc->append_child ($el1);
   my $el2 = $doc->create_element ('head');

@@ -199,7 +199,8 @@ without case folding.  [MANAKAI]
 
 Any HTML element uses L<Web::DOM::HTMLElement>, a subclass of this
 class.  Most HTML elements have more specific subclasses.  See
-L<Web::DOM::HTMLElement> for details.
+L<Web::DOM::HTMLElement> for details.  Likewise, Atom elements use
+L<Web::DOM::AtomElement>.
 
 In addition, the obsolete C<manakai_base_uri> method is available.
 [DOMDTDEF]
