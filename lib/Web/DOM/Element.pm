@@ -1136,6 +1136,81 @@ sub insert_adjacent_html ($$$) {
   return;
 } # insert_adjacent_html
 
+push @EXPORT, qw(_define_reflect_child_string);
+sub _define_reflect_child_string ($$$) {
+  my ($perl_name, $nsurl, $ln) = @_;
+  my $class = caller;
+  eval sprintf q{
+    sub %s::%s ($;$) {
+      my $self = $_[0];
+
+      my $el;
+      for ($self->child_nodes->to_list) {
+        if ($_->node_type == ELEMENT_NODE and
+            $_->local_name eq '%s' and
+            ($_->namespace_uri || '') eq '%s') {
+          $el = $_;
+          last;
+        }
+      }
+
+      if (@_ > 1) {
+        if ($el) {
+          $el->text_content ($_[1]);
+        } else {
+          $el = $self->owner_document->create_element_ns ('%s', '%s');
+          $el->text_content ($_[1]);
+          $self->append_child ($el);
+        }
+        return unless defined wantarray;
+      }
+
+      return $el ? $el->text_content : '';
+    }
+    1;
+  }, $class, $perl_name, $ln, $nsurl, $nsurl, $ln or die $@;
+} # _define_reflect_child_string
+
+push @EXPORT, qw(_define_reflect_child_url);
+sub _define_reflect_child_url ($$$) {
+  my ($perl_name, $nsurl, $ln) = @_;
+  my $class = caller;
+  eval sprintf q{
+    sub %s::%s ($;$) {
+      my $self = $_[0];
+
+      my $el;
+      for ($self->child_nodes->to_list) {
+        if ($_->node_type == ELEMENT_NODE and
+            $_->local_name eq '%s' and
+            ($_->namespace_uri || '') eq '%s') {
+          $el = $_;
+          last;
+        }
+      }
+
+      if (@_ > 1) {
+        if ($el) {
+          $el->text_content ($_[1]);
+        } else {
+          $el = $self->owner_document->create_element_ns ('%s', '%s');
+          $el->text_content ($_[1]);
+          $self->append_child ($el);
+        }
+        return unless defined wantarray;
+      }
+
+      if ($el) {
+        my $v = _resolve_url $el->text_content, $el->base_uri;
+        return defined $v ? $v : '';
+      } else {
+        return '';
+      }
+    }
+    1;
+  }, $class, $perl_name, $ln, $nsurl, $nsurl, $ln or die $@;
+} # _define_reflect_child_url
+
 # XXX scripting enabled flag consideration...
 
 1;

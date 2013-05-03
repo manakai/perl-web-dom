@@ -316,6 +316,8 @@ for (
   ['subtitle', 'AtomSubtitleElement'],
   ['summary', 'AtomSummaryElement'],
   ['title', 'AtomTitleElement'],
+  ['author', 'AtomAuthorElement'],
+  ['contributor', 'AtomContributorElement'],
 ) {
   $ElementClass->{Web::DOM::Internal::ATOM_NS}->{$_->[0]}
       = "Web::DOM::$_->[1]";

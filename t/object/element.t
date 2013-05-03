@@ -285,10 +285,18 @@ for my $test (
   [[ATOM_NS, 'uri'], ['Element', 'AtomElement', 'AtomUriElement'], []],
   [[ATOM_NS, 'email'], ['Element', 'AtomElement', 'AtomEmailElement'], []],
   [[ATOM_NS, 'logo'], ['Element', 'AtomElement', 'AtomLogoElement'], []],
-  [[ATOM_NS, 'rights'], ['Element', 'AtomElement', 'AtomRightsElement'], []],
-  [[ATOM_NS, 'subtitle'], ['Element', 'AtomElement', 'AtomSubtitleElement'], []],
-  [[ATOM_NS, 'summary'], ['Element', 'AtomElement', 'AtomSummaryElement'], []],
-  [[ATOM_NS, 'title'], ['Element', 'AtomElement', 'AtomTitleElement'], []],
+  [[ATOM_NS, 'rights'], ['Element', 'AtomElement', 'AtomTextConstruct',
+                         'AtomRightsElement'], []],
+  [[ATOM_NS, 'subtitle'], ['Element', 'AtomElement', 'AtomTextConstruct',
+                           'AtomSubtitleElement'], []],
+  [[ATOM_NS, 'summary'], ['Element', 'AtomElement', 'AtomTextConstruct',
+                          'AtomSummaryElement'], []],
+  [[ATOM_NS, 'title'], ['Element', 'AtomElement', 'AtomTextConstruct',
+                        'AtomTitleElement'], []],
+  [[ATOM_NS, 'author'], ['Element', 'AtomElement', 'AtomPersonConstruct',
+                         'AtomAuthorElement'], []],
+  [[ATOM_NS, 'contributor'], ['Element', 'AtomElement', 'AtomPersonConstruct',
+                              'AtomContributorElement'], []],
 ) {
   test {
     my $c = shift;

@@ -1,0 +1,76 @@
+=head1 NAME
+
+Web::DOM::AtomPersonConstruct - The DOM |AtomPersonConstruct| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomPersonConstruct> class implements the DOM
+C<AtomPersonConstruct> interface.  The class is used by several Atom
+elements.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::AtomElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->name
+
+=item $el->name ($string)
+
+Return or set the value of the C<atom:name> child element.  [ATOMDOM]
+
+=item $el2 = $el->name_element
+
+Return the C<atom:name> element child, if any.  [ATOMDOM]
+
+If the C<manakai-create-child-element> configuration parameter is set
+to true and there is no C<atom:name> element child, a new element is
+created and returned.  Otherwise, no element is created and C<undef>
+is returned.
+
+=item $string = $el->email
+
+=item $el->email ($string)
+
+Return or set the value of the C<atom:email> child element.  [ATOMDOM]
+
+=item $url = $el->uri
+
+=item $el->uri ($url)
+
+Return or set the value of the C<atom:uri> child element.  [ATOMDOM]
+
+=back
+
+There are subclasses for specific elements:
+L<Web::DOM::AtomAuthorElement> and
+L<Web::DOM::AtomContributorElement>.
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

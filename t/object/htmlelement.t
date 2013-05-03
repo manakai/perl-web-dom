@@ -6,6 +6,7 @@ use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->str
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
+use Web::DOM::Internal;
 use Web::DOM::Document;
 
 for my $attr (qw(title lang itemid accesskey)) {
@@ -321,8 +322,10 @@ for my $test (
     $el->$attr ('');
     is $el->$attr, 'http://foo/bar/';
     is $el->get_attribute ($attr), '';
+    $el->set_attribute_ns (XML_NS, 'base' => 'ftp://hoge');
+    is $el->$attr, 'ftp://hoge/';
     done $c;
-  } n => 9, name => ['reflect url', $test->[0], $test->[1]];
+  } n => 10, name => ['reflect url', $test->[0], $test->[1]];
 }
 
 for my $test (
