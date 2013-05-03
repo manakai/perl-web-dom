@@ -39,13 +39,14 @@ L<Web::DOM::AtomIconElement>,
 L<Web::DOM::AtomNameElement>,
 L<Web::DOM::AtomUriElement>,
 L<Web::DOM::AtomEmailElement>,
-L<Web::DOM::AtomLogoElement>.
+L<Web::DOM::AtomLogoElement>,
+L<Web::DOM::AtomTextConstruct>.
 
 =head1 SPECIFICATION
 
 =over 4
 
-=item ATOM
+=item ATOMDOM
 
 Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
 

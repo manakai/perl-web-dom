@@ -686,9 +686,10 @@ sub _attribute_is ($$$%) {
 } # _attribute_is
 
 push @EXPORT, qw(_define_reflect_string);
-sub _define_reflect_string ($$) {
-  my ($perl_name, $content_name) = @_;
+sub _define_reflect_string ($$;$) {
+  my ($perl_name, $content_name, $default) = @_;
   my $class = caller;
+  $default = '' if not defined $default;
   eval sprintf q{
     sub %s::%s ($;$) {
       if (@_ > 1) {
@@ -697,7 +698,7 @@ sub _define_reflect_string ($$) {
       }
 
       my $v = $_[0]->get_attribute_ns (undef, '%s');
-      return defined $v ? $v : ''; # or default
+      return defined $v ? $v : $default;
     }
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;

@@ -1,0 +1,41 @@
+=head1 NAME
+
+Web::DOM::AtomNameElement - The DOM |AtomNameElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomNameElement> class implements the DOM
+C<AtomNameElement> interface.  The class is used by the Atom C<name>
+element.
+
+=head1 METHODS
+
+The methods for classes L<Web::DOM::Element> and
+L<Web::DOM::AtomElement> are available.
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

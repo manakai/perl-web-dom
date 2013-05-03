@@ -1,0 +1,42 @@
+=head1 NAME
+
+Web::DOM::AtomRightsElement - The DOM |AtomRightsElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomRightsElement> class implements the DOM
+C<AtomRightsElement> interface.  The class is used by the Atom
+C<rights> element.
+
+=head1 METHODS
+
+The methods for classes L<Web::DOM::Element>,
+L<Web::DOM::AtomElement>, and L<Web::DOM::AtomTextConstruct> are
+available.
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>, L<Web::DOM::AtomTextConstruct>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

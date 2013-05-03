@@ -19,17 +19,64 @@ sub xmllang ($;$) {
 } # xmllang
 
 package Web::DOM::AtomIdElement;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomElement);
 package Web::DOM::AtomIconElement;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomElement);
 package Web::DOM::AtomNameElement;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomElement);
 package Web::DOM::AtomUriElement;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomElement);
 package Web::DOM::AtomEmailElement;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomElement);
 package Web::DOM::AtomLogoElement;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomElement);
+
+package Web::DOM::AtomTextConstruct;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Internal;
+use Web::DOM::Element;
+
+_define_reflect_string type => 'type', 'text';
+
+sub container ($) {
+  my $self = $_[0];
+  my $type = $self->get_attribute_ns (undef, 'type');
+  if (defined $type and $type eq 'xhtml') {
+    for ($self->children->to_list) {
+      if ($_->local_name eq 'div' and ($_->namespace_uri || '') eq HTML_NS) {
+        return $_;
+      }
+    }
+    if (${$_[0]}->[0]->{config}->{manakai_create_child_element}) {
+      my $el = $self->owner_document->create_element ('div');
+      return $self->append_child ($el);
+    } else {
+      return undef;
+    }
+  } else {
+    return $self;
+  }
+} # container
+
+package Web::DOM::AtomRightsElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomTextConstruct);
+package Web::DOM::AtomSubtitleElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomTextConstruct);
+package Web::DOM::AtomSummaryElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomTextConstruct);
+package Web::DOM::AtomTitleElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomTextConstruct);
 
 1;
 

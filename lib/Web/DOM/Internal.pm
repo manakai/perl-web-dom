@@ -312,6 +312,10 @@ for (
   ['uri', 'AtomUriElement'],
   ['email', 'AtomEmailElement'],
   ['logo', 'AtomLogoElement'],
+  ['rights', 'AtomRightsElement'],
+  ['subtitle', 'AtomSubtitleElement'],
+  ['summary', 'AtomSummaryElement'],
+  ['title', 'AtomTitleElement'],
 ) {
   $ElementClass->{Web::DOM::Internal::ATOM_NS}->{$_->[0]}
       = "Web::DOM::$_->[1]";
