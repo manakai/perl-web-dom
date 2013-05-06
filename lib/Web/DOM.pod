@@ -241,7 +241,7 @@ of the modules.
 
 The modules require Perl 5.8 or later.
 
-The only dependency is the perl-charclass package
+The only fatal dependency is the perl-charclass package
 <https://github.com/wakaba/perl-charclass>, which is the submodule of
 the Git repository.
 
@@ -303,7 +303,8 @@ setter, DOM3 configuration parameters, configuration parameters for
 DOM3 spec compatible DTD-based node operations, DOM3 DOMError,
 DOMErrorHandler, UserDataHandler, DOMLocator, isId and family,
 internalSubset, TypeInfo and schemaTypeInfo, DOM3 LS, namespaces for
-DOM3 events, DocumentType->implementation,
+DOM3 events, EventException, MutationEvent, MutationNameEvent,
+DocumentEvent->canDispatch, DocumentType->implementation,
 Document->createXHTMLDocument, URIReference, InternetMediaType,
 SerialWalker.  HTMLElement->irrelevant, HTMLAnchorElement->media,
 HTMLAreaElement->media, HTMLCommandElement, HTMLDataGridElement,
@@ -348,8 +349,6 @@ except for obsolete features.  Following features will be
 
 prepend, append, before, after, replace, remove
 
-=item DOM Events [DOM]
-
 =item DOM Ranges
 
 DOM Ranges interfaces and methods [DOM]; Ranges support in DOM Core
@@ -370,6 +369,8 @@ Window.prototype.manakaiGetComputedStyle, Window.prototype.setDocument
 =item Atom DOM [ATOMDOM]
 
 =item WebVTT DOM [HTML]
+
+=item UIEvent, MouseEvent, KeyboardEvent, TextEvent
 
 =back
 

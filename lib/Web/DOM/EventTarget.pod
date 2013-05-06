@@ -1,0 +1,85 @@
+=head1 NAME
+
+Web::DOM::EventTarget - The DOM |EventTarget| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::EventTarget> class implements the DOM C<EventTarget>
+interface.  The C<EventTarget> object does not exist by itself, it is
+used as superclass of other classes, such as C<Web::DOM::Node>.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $et->add_event_listener ($type, $code, $is_capture)
+
+Register a callback function as event listener for the event target.
+The first argument identifies the type of the event to listen,
+e.g. C<click> or C<resize>.  The second argument is a code reference,
+which is invoked when an event is dispatched.  The optional third
+argument specifies whether the code listens the capturing phase (true)
+or the bubbling phase (false, default).  [DOM] [DOMPERL]
+
+When an event of the specified type is dispatched, the code of the
+second argument is invoked with two arguments: I<$self> and I<$event>.
+The second argument, I<$event>, is the event object in question.  The
+first argument, I<$self>, is equal to the context object (I<$et>) or
+the current target object C<< $event->current_target >>.
+
+Please be aware to not create circular reference to the event target
+object through the callback.  The reference to the callback is holded
+by the event target object until it is explicitly unregistered.  The
+event target object can be accessed as the first argument in the
+callback, as mentioned above.
+
+=item $boolean = $et->dispatch_event ($event)
+
+Dispatch the specified event object at the event target object.  The
+method returns whether the event's default action has not been
+cancelled.  [DOM]
+
+Note that the event is dispatched synchronously, such that any event
+listener callback is invoked synchronously.
+
+=item $et->remove_event_listener ($type, $code, $is_capture)
+
+Unregister a callback function as event listener, if it is registered.
+[DOM]
+
+=back
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOM
+
+DOM Living Standard
+<http://dom.spec.whatwg.org/#interface-eventtarget>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Event>, L<Web::DOM::Node>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

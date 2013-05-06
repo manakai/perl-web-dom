@@ -39,7 +39,7 @@ test {
   is $ev->CAPTURING_PHASE, 1;
   is $ev->AT_TARGET, 2;
   is $ev->BUBBLING_PHASE, 3;
-  ok not $ev->{stop_propagation};
+  ok not $ev->manakai_propagation_stopped;
   ok not $ev->{stop_immediate_propagation};
   ok not $ev->bubbles;
   ok not $ev->cancelable;
@@ -47,7 +47,7 @@ test {
   ok not $ev->is_trusted;
   is $ev->timestamp, time;
   ok $ev->{initialized};
-  ok not $ev->{dispatch};
+  ok not $ev->manakai_dispatched;
   done $c;
 } n => 18, name => 'constructor with no args';
 
@@ -64,7 +64,7 @@ test {
   is $ev->CAPTURING_PHASE, 1;
   is $ev->AT_TARGET, 2;
   is $ev->BUBBLING_PHASE, 3;
-  ok not $ev->{stop_propagation};
+  ok not $ev->manakai_propagation_stopped;
   ok not $ev->{stop_immediate_propagation};
   ok not $ev->bubbles;
   ok not $ev->cancelable;
@@ -72,7 +72,7 @@ test {
   ok not $ev->is_trusted;
   is $ev->timestamp, time;
   ok $ev->{initialized};
-  ok not $ev->{dispatch};
+  ok not $ev->manakai_dispatched;
   done $c;
 } n => 18, name => 'constructor with type';
 
@@ -89,7 +89,7 @@ test {
   is $ev->CAPTURING_PHASE, 1;
   is $ev->AT_TARGET, 2;
   is $ev->BUBBLING_PHASE, 3;
-  ok not $ev->{stop_propagation};
+  ok not $ev->manakai_propagation_stopped;
   ok not $ev->{stop_immediate_propagation};
   ok not $ev->bubbles;
   ok not $ev->cancelable;
@@ -97,7 +97,7 @@ test {
   ok not $ev->is_trusted;
   is $ev->timestamp, time;
   ok $ev->{initialized};
-  ok not $ev->{dispatch};
+  ok not $ev->manakai_dispatched;
   done $c;
 } n => 18, name => 'constructor with type and empty dict';
 
@@ -116,7 +116,7 @@ test {
   is $ev->CAPTURING_PHASE, 1;
   is $ev->AT_TARGET, 2;
   is $ev->BUBBLING_PHASE, 3;
-  ok not $ev->{stop_propagation};
+  ok not $ev->manakai_propagation_stopped;
   ok not $ev->{stop_immediate_propagation};
   ok $ev->bubbles;
   isnt $ev->bubbles, 'ab c';
@@ -125,7 +125,7 @@ test {
   ok not $ev->is_trusted;
   is $ev->timestamp, time;
   ok $ev->{initialized};
-  ok not $ev->{dispatch};
+  ok not $ev->manakai_dispatched;
   done $c;
 } n => 19, name => 'constructor with type and non empty dict';
 
@@ -143,14 +143,14 @@ test {
   my $c = shift;
   my $ev = new Web::DOM::Event '';
   $ev->stop_propagation;
-  ok $ev->{stop_propagation};
-  ok not $ev->{stop_immediate_propagation};
+  ok $ev->manakai_propagation_stopped;
+  ok not $ev->manakai_immediate_propagation_stopped;
   $ev->stop_propagation;
-  ok $ev->{stop_propagation};
-  ok not $ev->{stop_immediate_propagation};
+  ok $ev->manakai_propagation_stopped;
+  ok not $ev->manakai_immediate_propagation_stopped;
   $ev->stop_immediate_propagation;
-  ok $ev->{stop_propagation};
-  ok $ev->{stop_immediate_propagation};
+  ok $ev->manakai_propagation_stopped;
+  ok $ev->manakai_immediate_propagation_stopped;
   done $c;
 } n => 6, name => 'stop_propagation';
 
@@ -158,14 +158,14 @@ test {
   my $c = shift;
   my $ev = new Web::DOM::Event '';
   $ev->stop_immediate_propagation;
-  ok $ev->{stop_propagation};
-  ok $ev->{stop_immediate_propagation};
+  ok $ev->manakai_propagation_stopped;
+  ok $ev->manakai_immediate_propagation_stopped;
   $ev->stop_immediate_propagation;
-  ok $ev->{stop_propagation};
-  ok $ev->{stop_immediate_propagation};
+  ok $ev->manakai_propagation_stopped;
+  ok $ev->manakai_immediate_propagation_stopped;
   $ev->stop_propagation;
-  ok $ev->{stop_propagation};
-  ok $ev->{stop_immediate_propagation};
+  ok $ev->manakai_propagation_stopped;
+  ok $ev->manakai_immediate_propagation_stopped;
   done $c;
 } n => 6, name => 'stop_immediate_propagation';
 
@@ -194,8 +194,8 @@ test {
   my $ev = new Web::DOM::Event 'h';
   $ev->init_event ('abc');
   is $ev->type, 'abc';
-  ok not $ev->{stop_propagation};
-  ok not $ev->{stop_immediate_propagation};
+  ok not $ev->manakai_propagation_stopped;
+  ok not $ev->manakai_immediate_propagation_stopped;
   ok not $ev->default_prevented;
   ok not $ev->is_trusted;
   is $ev->target, undef;
@@ -212,8 +212,8 @@ test {
   $ev->stop_immediate_propagation;
   $ev->init_event ('abc');
   is $ev->type, 'abc';
-  ok not $ev->{stop_propagation};
-  ok not $ev->{stop_immediate_propagation};
+  ok not $ev->manakai_propagation_stopped;
+  ok not $ev->manakai_immediate_propagation_stopped;
   ok not $ev->default_prevented;
   ok not $ev->is_trusted;
   is $ev->target, undef;
@@ -230,8 +230,8 @@ test {
   $ev->stop_immediate_propagation;
   $ev->init_event ('abc', 1, 0);
   is $ev->type, 'abc';
-  ok not $ev->{stop_propagation};
-  ok not $ev->{stop_immediate_propagation};
+  ok not $ev->manakai_propagation_stopped;
+  ok not $ev->manakai_immediate_propagation_stopped;
   ok not $ev->default_prevented;
   ok not $ev->is_trusted;
   is $ev->target, undef;
@@ -248,8 +248,8 @@ test {
   $ev->stop_immediate_propagation;
   $ev->init_event ('abc', 0, 1);
   is $ev->type, 'abc';
-  ok not $ev->{stop_propagation};
-  ok not $ev->{stop_immediate_propagation};
+  ok not $ev->manakai_propagation_stopped;
+  ok not $ev->manakai_immediate_propagation_stopped;
   ok not $ev->default_prevented;
   ok not $ev->is_trusted;
   is $ev->target, undef;
@@ -267,8 +267,8 @@ test {
   $ev->stop_immediate_propagation;
   $ev->init_event ('def');
   is $ev->type, 'def';
-  ok not $ev->{stop_propagation};
-  ok not $ev->{stop_immediate_propagation};
+  ok not $ev->manakai_propagation_stopped;
+  ok not $ev->manakai_immediate_propagation_stopped;
   ok not $ev->default_prevented;
   ok not $ev->is_trusted;
   is $ev->target, undef;
@@ -278,8 +278,7 @@ test {
 } n => 8, name => 'constructor then init_event';
 
 ## init_event after create_event tests found in document-events.t.
-
-# XXX init_event after dispatch
+## init_event after dispatch tests found in eventtarget.t.
 
 run_tests;
 

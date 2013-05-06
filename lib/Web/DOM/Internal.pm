@@ -119,6 +119,7 @@ sub add_data ($$) {
 ##   default_type                   integer   Default type
 ##   element_types                  {node_id} Element types
 ##   encoding                       string    Character encoding
+##   event_listeners                {}[]      Event listener callbacks
 ##   general_entities               {node_id} General entities
 ##   is_html                        boolean   An HTML document?
 ##   is_srcdoc                      boolean   An iframe srcdoc document?

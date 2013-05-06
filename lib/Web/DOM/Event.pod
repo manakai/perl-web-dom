@@ -35,6 +35,10 @@ Return whether the event is cancelable or not.  [DOM]
 
 Return the current target object of the event.  [DOM]
 
+=item $boolean = $ev->manakai_dispatched
+
+Return whether the event is currently dispatched or not.  [MANAKAI]
+
 =item $boolean = $ev->default_prevented
 
 Return whether the default action has been prevented or not.  [DOM]
@@ -43,6 +47,12 @@ Return whether the default action has been prevented or not.  [DOM]
 
 Return the numerical constant value representing the current stage of
 the event propagation.  See the L</"CONSTANTS"> section.  [DOM]
+
+=item $boolean = $ev->manakai_immediate_propagation_stopped
+
+Return whether the C<stop_propagation> or
+C<stop_immediate_propagation> method has been invoked or not.
+[MANAKAI]
 
 =item $ev->init_event ($type, $bubbles, $cancelable)
 
@@ -59,6 +69,11 @@ Return whether the event is trusted, i.e. fired by the browser or not.
 =item $ev->prevent_default
 
 Prevent any execution of the default action of the event.  [DOM]
+
+=item $boolean = $ev->manakai_propagation_stopped
+
+Return whether the C<stop_propagation> method has been invoked or not.
+[MANAKAI]
 
 =item $ev->stop_immediate_propagation
 
@@ -103,6 +118,11 @@ C<Event> interface, containing: L<Web::DOM::CustomEvent>.
 =item DOM
 
 DOM Living Standard <http://dom.spec.whatwg.org/#interface-event>.
+
+=item MANAKAI
+
+manakai DOM Extensions
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
 =item DOMPERL
 

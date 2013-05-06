@@ -6,6 +6,8 @@ our $VERSION = '1.0';
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
 use Web::DOM::Internal;
+use Web::DOM::EventTarget;
+push our @ISA, qw(Web::DOM::EventTarget);
 use Carp;
 our @CARP_NOT = qw(Web::DOM::Exception Web::DOM::TypeError);
 use Char::Class::XML qw(
@@ -342,6 +344,7 @@ sub _pre_insert ($$;$$) {
             'The child is an inclusive ancestors of the parent';
       }
       $id = $$parent->[0]->{data}->[$id]->{parent_node};
+      # XXX host
     }
   }
   

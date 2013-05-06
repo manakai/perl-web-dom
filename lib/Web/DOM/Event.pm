@@ -50,14 +50,20 @@ sub CAPTURING_PHASE () { 1 }
 sub AT_TARGET () { 2 }
 sub BUBBLING_PHASE () { 3 }
 sub event_phase ($) { $_[0]->{event_phase} || 0 }
+sub manakai_dispatched ($) { $_[0]->{dispatch} }
 
 sub stop_propagation ($) { $_[0]->{stop_propagation} = 1; undef }
+sub manakai_propagation_stopped ($) { $_[0]->{stop_propagation} }
 
 sub stop_immediate_propagation ($) {
   $_[0]->{stop_propagation} = 1;
   $_[0]->{stop_immediate_propagation} = 1;
   return undef;
 } # stop_immediate_propagation
+
+sub manakai_immediate_propagation_stopped ($) {
+  return $_[0]->{stop_immediate_propagation};
+} # manakai_immediate_propagation_stopped
 
 sub bubbles ($) { $_[0]->{bubbles} }
 sub cancelable ($) { $_[0]->{cancelable} }
