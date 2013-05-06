@@ -138,6 +138,13 @@ Create a new element type definition
 Throw a "NotSupportedError" exception.  The C<EntityReference>
 interface is obsolete.  [MANAKAI]
 
+=item $ev = $doc->create_event ($interface)
+
+Create an event object.  The argument specifies the kind of the
+object, e.g. C<Event>, C<CustomEvent>, or C<MouseEvent>.  [DOM]
+
+Use L<Web::DOM::Event>'s (or its subclass'es) C<new> method instead.
+
 =item $ent = $doc->create_general_entity ($name)
 
 Create a general entity (L<Web::DOM::Entity>) with the specified name.

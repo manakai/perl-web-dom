@@ -1,0 +1,60 @@
+=head1 NAME
+
+Web::DOM::CustomEvent - The DOM |CustomEvent| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CustomEvent> class implements the DOM C<CustomEvent>
+interface.
+
+=head1 METHODS
+
+In addition to the methods of the L<Web::DOM::Event> class, following
+methods are available:
+
+=over 4
+
+=item $value = $ev->detail
+
+Return the additional data specified for the event.  [DOM]
+
+=back
+
+The C<new> method of the L<Web::DOM::CustomEvent> class accepts the
+C<detail> name/value pair in its second arguments, in addition to the
+name/value pairs for L<Web::DOM::Event> objects in general.
+
+  use Web::DOM::CustomEvent;
+  $ev = new Web::DOM::CustomEvent 'myevent', {detail => 12, bubbles => 1};
+
+Any value can be specified as the C<detail> value, but please be aware
+not to create circular reference to the event object through the
+C<detail> vlaue.
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item DOM
+
+DOM Living Standard
+<http://dom.spec.whatwg.org/#interface-customevent>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::EventTarget>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

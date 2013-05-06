@@ -1039,7 +1039,25 @@ sub adopt_node ($$) {
   return $node;
 } # adopt_node
 
-# XXX createEvent
+sub create_event ($$) {
+  my $str = ''.$_[1];
+  $str =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
+  my $if = {
+    customevent => 'CustomEvent',
+    event => 'Event',
+    events => 'Event',
+    htmlevents => 'Event',
+    mouseevent => 'MouseEvent',
+    mouseevents => 'MouseEvent',
+    uievent => 'UIEvent',
+    uievents => 'UIEvent',
+  }->{$str}
+      or _throw Web::DOM::Exception 'NotSupportedError',
+          'Unknown event interface';
+  
+  require Web::DOM::Event;
+  return "Web::DOM::$if"->_new;
+} # create_event
 
 # XXX createRange
 

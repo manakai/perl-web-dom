@@ -1,0 +1,129 @@
+=head1 NAME
+
+Web::DOM::Event - The DOM |Event| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::Event> class implements the DOM C<Event> interface.
+It represents a DOM event.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $ev = new Web::DOM::Event $type, {cancelable => $bool, bubbles => $bool}
+
+Create and initialize a new event object.  The first required argument
+identifies the event type, e.g. C<click> or C<readystatechange>.  The
+second argument, which can be omitted, specifies event properties as a
+hash reference.  [DOM] [DOMPERL]
+
+Subclasses of the L<Web::DOM::Event> class do also provide the C<new>
+constructor method, e.g. C<< Web::DOM::MouseEvent->new >>.
+
+=item $boolean = $ev->bubbles
+
+Return whether the event bubbles or not.  [DOM]
+
+=item $boolean = $ev->cancelable
+
+Return whether the event is cancelable or not.  [DOM]
+
+=item $object = $ev->current_target
+
+Return the current target object of the event.  [DOM]
+
+=item $boolean = $ev->default_prevented
+
+Return whether the default action has been prevented or not.  [DOM]
+
+=item $const = $ev->event_phase
+
+Return the numerical constant value representing the current stage of
+the event propagation.  See the L</"CONSTANTS"> section.  [DOM]
+
+=item $ev->init_event ($type, $bubbles, $cancelable)
+
+Initialize the event.  [DOM]
+
+Use the C<new> method instead.  This method does not have to be
+invoked for event objects created by the C<new> method.
+
+=item $boolean = $ev->is_trusted
+
+Return whether the event is trusted, i.e. fired by the browser or not.
+[DOM]
+
+=item $ev->prevent_default
+
+Prevent any execution of the default action of the event.  [DOM]
+
+=item $ev->stop_immediate_propagation
+
+Stop the propagation of the event immediately.  [DOM]
+
+=item $ev->stop_propagation
+
+Stop the propagation of the event.  [DOM]
+
+=item $object = $ev->target
+
+Return the event target object to which the event has been dispatched.
+[DOM]
+
+=item $time = $ev->timestamp
+
+Return the timestamp (seconds from the Unix epoch) at which the event
+has been created.  [DOM]
+
+=item $string = $ev->type
+
+Return the event type.  [DOM]
+
+=back
+
+=head1 CONSTANTS
+
+Constants are exported from the L<Web::DOM::Event> module by default.
+Following constants are used by the C<event_phase> method:
+
+  NONE, CAPTURING_PHASE, AT_TARGET, BUBBLING_PHASE
+
+=head1 SUBCLASSES
+
+There are subclasses of the class, representing subinterfaces of the
+C<Event> interface, containing: L<Web::DOM::CustomEvent>.
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOM
+
+DOM Living Standard <http://dom.spec.whatwg.org/#interface-event>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::EventTarget>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

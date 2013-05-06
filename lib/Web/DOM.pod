@@ -78,6 +78,10 @@ The C<HTMLCollection> interface.
 
 The C<DOMParser> interface.
 
+=item L<Web::DOM::Event> and its subclasses
+
+The C<Event> interface and its subinterfaces.
+
 =back
 
 =head1 DOM MAPPING
@@ -143,6 +147,48 @@ Following classes have the constructor (i.e. the C<new> method):
 =item L<Web::DOM::XMLSerializer>
 
 =back
+
+=head1 NOTE ON PRIVATE METHODS
+
+Some classes contain private methods and variables.  Applications must
+not invoke or use them.  As a general rule methods with name starting
+by C<_> is private, although there might be exceptions.  Anything
+EXCEPT for followings are private and should not be used:
+
+=over 4
+
+=item DOM APIs as documented in relevant pod documentation
+
+For example, C<Web::DOM::Node::child_nodes>,
+C<Web::DOM::Implementation::create_document>, C<Web::DOM::Event::new>,
+and C<Web::DOM::Node::ELEMENT_NODE> are explicitly mentioned in their
+pod section.
+
+=item Perl standard operations
+
+For example, C<can> and C<isa> methods of any object, C<""> and C<0+>
+operation of any object, C<$Web::DOM::Document::VERSION> variable,
+C<use Web::DOM::Node> operation (which implicitly invokes the
+C<Web::DOM::Node::import> method).
+
+Applications can also rely on C<isa> method with class name derived
+from DOM interface name whose definition does not contain
+C<[NoInterfaceObject]>.  For example, C<< $object->isa
+('Web::DOM::Node') >> does (and will) work as intended, while C<<
+$object->isa ('Web::DOM::CanvasPathMethod') >> (defined with
+C<[NoInterfaceObject]>) or C<< $object->isa ('Web::DOM::StringArray')
+>> (not derived from a DOM interface name) might not.  However, it is
+not considered a good practice to compare objects by its class name in
+sophiscated object-oriented programs.
+
+=back
+
+Public APIs are not intended to be changed backward incompatibly in
+later stage of the development of these modules unless it is really
+necessary for some significant reasons (e.g. security concerns, or to
+resolve spec compatibility issues).  Anything else could be changed,
+including package/file mapping of classes which do not provide
+constructors or constants.
 
 =head1 SPECIFICATIONS
 
