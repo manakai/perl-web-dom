@@ -29,9 +29,6 @@ sub _stringify ($) {
       $_[0]->message, defined $fn ? $fn : '(unknown)', $_[0]->line_number;
 } # _stringify
 
-## XXX Should this class also be used to implement the DOM |DOMError|
-## interface, or separate class should be used?
-
 1;
 
 =head1 LICENSE

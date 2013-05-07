@@ -1,0 +1,54 @@
+=head1 NAME
+
+Web::DOM::DOMError - The DOM |DOMError| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::DOMError> class implements the DOM C<DOMError>
+interface.
+
+=head1 METHODS
+
+The C<Web::DOM::DOMError> class defines following method:
+
+=over 4
+
+=item $error = new Web::DOM::DOMError $name
+
+Create a new DOM error object with the specified name.  [DOM]
+
+=item $string = $error->name
+
+Return the name of the error.  [DOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item DOM
+
+DOM Living Standard <http://dom.spec.whatwg.org/#interface-domerror>.
+
+=back
+
+=head1 SEE ALSO
+
+Classes L<Web::DOM::Error> and L<Web::DOM::Exception> are irrelevant
+to this class.  Also, DOM3's C<DOMError> interface is different from
+the current DOM Standard's C<DOMError> interface, which is implemented
+by this class.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

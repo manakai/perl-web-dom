@@ -82,6 +82,10 @@ The C<DOMParser> interface.
 
 The C<Event> interface and its subinterfaces.
 
+=item L<Web::DOM::DOMError>
+
+The C<DOMError> interface.
+
 =back
 
 =head1 DOM MAPPING
