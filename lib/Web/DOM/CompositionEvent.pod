@@ -1,0 +1,63 @@
+=head1 NAME
+
+Web::DOM::CompositionEvent - The DOM |CompositionEvent| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CompositionEvent> class implements the DOM
+C<CompositionEvent> interface.
+
+=head1 METHODS
+
+In addition to the methods of the L<Web::DOM::Event> and
+L<Web::DOM::UIEvent> classes, following methods are available:
+
+=over 4
+
+=item $string = $ev->data
+
+Return the composited value for the event.  [DOM3EVENTS]
+
+=item $string = $ev->locale
+
+Return the composition locale.  [DOM3EVENTS]
+
+=back
+
+The C<new> method of the L<Web::DOM::RelatedEvent> class accepts the
+C<data> and C<locale> name/value pairs in its second arguments, in
+addition to the name/value pairs for L<Web::DOM::Event> and
+L<Web::DOM::UIEvent> objects.  [UIEVENTS]
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOM3EVENTS
+
+DOM Level 3 Events
+<http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-uievents>.
+
+=item UIEVENTS
+
+UI Events
+<https://dvcs.w3.org/hg/d4e/raw-file/tip/source_respec.htm#constructor-uievent>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Event>, L<Web::DOM::UIEvent>, L<Web::DOM::KeyboardEvent>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

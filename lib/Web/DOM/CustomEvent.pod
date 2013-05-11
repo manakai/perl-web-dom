@@ -20,6 +20,8 @@ Return the additional data specified for the event.  [DOM]
 
 =back
 
+In addition, it also supports C<init_custom_event> method.  [DOM]
+
 The C<new> method of the L<Web::DOM::CustomEvent> class accepts the
 C<detail> name/value pair in its second arguments, in addition to the
 name/value pairs for L<Web::DOM::Event> objects in general.
@@ -29,7 +31,7 @@ name/value pairs for L<Web::DOM::Event> objects in general.
 
 Any value can be specified as the C<detail> value, but please be aware
 not to create circular reference to the event object through the
-C<detail> vlaue.
+C<detail> value.
 
 =head1 SPECIFICATION
 

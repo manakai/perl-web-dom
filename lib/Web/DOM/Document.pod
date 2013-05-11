@@ -9,8 +9,9 @@ interface, which represents the document (either HTML or XML).
 
 =head1 METHODS
 
-In addition to the methods of classes L<Web::DOM::Node> and
-L<Web::DOM::ParentNode>, following methods are available:
+In addition to the methods of classes L<Web::DOM::EventTarget>,
+L<Web::DOM::Node> and L<Web::DOM::ParentNode>, following methods are
+available:
 
 =over 4
 

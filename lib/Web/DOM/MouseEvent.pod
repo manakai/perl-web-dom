@@ -1,0 +1,141 @@
+=head1 NAME
+
+Web::DOM::MouseEvent - The DOM |MouseEvent| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::MouseEvent> class implements the DOM C<MouseEvent>
+interface.
+
+=head1 METHODS
+
+In addition to the methods of the L<Web::DOM::Event> and
+L<Web::DOM::UIEvent> classes, following methods are available:
+
+=over 4
+
+=item $boolean = $ev->alt_key
+
+=item $boolean = $ev->alt_graph_key
+
+=item $boolean = $ev->ctrl_key
+
+=item $boolean = $ev->meta_key
+
+=item $boolean = $ev->shift_key
+
+=item $boolean = $ev->get_modifier_state ($key_name)
+
+Return whether the modifier key is pressed or not.  [DOM3EVENTS]
+[MANAKAI]
+
+=item $status = $ev->button
+
+Return the mouse button which has changed the status.  [DOM3EVENTS]
+
+=item $status = $ev->buttons
+
+Return the current status of the mouse buttons.  [DOM3EVENTS]
+
+=item $int = $ev->client_x
+
+=item $int = $ev->client_y
+
+=item $int = $ev->x
+
+=item $int = $ev->y
+
+Return the coordinate of the position in the viewport.  [CSSOMVIEW]
+
+=item $int = $ev->offset_x
+
+=item $int = $ev->offset_y
+
+Return the coordinate of the position in the padding box of the
+target.  [CSSOMVIEW]
+
+=item $int = $ev->page_x
+
+=item $int = $ev->page_y
+
+Return the coordinate of the position in the initial containing block.
+[CSSOMVIEW]
+
+=item $string = $ev->region
+
+Return the hit region.  [HTML]
+
+=item $object = $ev->related_target
+
+Return the additional object specified for the event.  [DOM3EVENTS]
+
+=item $int = $ev->screen_x
+
+=item $int = $ev->screen_y
+
+Return the coordinate of the position in the screen.  [CSSOMVIEW]
+
+=back
+
+In addition, deprecated C<init_mouse_event> method is supported.
+[DOM3EVENTS]
+
+The C<new> method of the L<Web::DOM::RelatedEvent> class accepts the
+C<screen_x>, C<screen_y>, C<client_x>, C<client_y>, C<ctrl_key>,
+C<shift_key>, C<alt_key>, C<meta_key>, C<button>, C<buttons>,
+C<related_target>, and C<region> name/value pairs in its second
+arguments, in addition to the name/value pairs for L<Web::DOM::Event>
+and L<Web::DOM::UIEvent> objects.  [UIEVENTS] [HTML]
+
+=head1 SUBCLASSES
+
+There is a subclass of the class, representing the subinterface of the
+C<Event> interface: L<Web::DOM::WheelEvent>.
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOM3EVENTS
+
+DOM Level 3 Events
+<http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-uievents>.
+
+=item UIEVENTS
+
+UI Events
+<https://dvcs.w3.org/hg/d4e/raw-file/tip/source_respec.htm#constructor-uievent>.
+
+=item CSSOMVIEW
+
+CSSOM View
+<http://dev.w3.org/csswg/cssom-view/#extensions-to-the-mouseevent-interface>.
+
+=item HTML
+
+HTML Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#dom-mouseevent-region>.
+
+=item MANAKAI
+
+manakai DOM Extensions
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Event>, L<Web::DOM::UIEvent>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

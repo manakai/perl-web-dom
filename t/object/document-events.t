@@ -22,6 +22,7 @@ test {
 
 for my $if (
   undef, 'HogeEvent', 'Document', 'CustomEvents', 'CloseEvent', 'HTMLEvent',
+  'MutationEvent', 'Mutationevents', 'MutationNameEvent', 'TextEvent',
 ) {
   test {
     my $c = shift;
@@ -46,6 +47,10 @@ for my $test (
   [mouseevents => 'Web::DOM::MouseEvent'],
   [uiEvent => 'Web::DOM::UIEvent'],
   [UiEvents => 'Web::DOM::UIEvent'],
+
+  [FocusEvent => 'Web::DOM::FocusEvent'],
+  [Keyboardevent => 'Web::DOM::KeyboardEvent'],
+  [CompositionEvent => 'Web::DOM::CompositionEvent'],
 ) {
   test {
     my $c = shift;

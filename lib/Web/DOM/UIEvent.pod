@@ -1,0 +1,73 @@
+=head1 NAME
+
+Web::DOM::UIEvent - The DOM |UIEvent| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::UIEvent> class implements the DOM C<UIEvent>
+interface.
+
+=head1 METHODS
+
+In addition to the methods of the L<Web::DOM::Event> class, following
+methods are available:
+
+=over 4
+
+=item $value = $ev->detail
+
+Return the additional data specified for the event.  [DOM3EVENTS]
+
+=item $window = $ev->view
+
+Return the window object associated with the event.  [DOM3EVENTS]
+
+=back
+
+In addition, it also supports deprecated C<init_ui_event> method.
+[DOM3EVENTS]
+
+The C<new> method of the L<Web::DOM::UIEvent> class accepts the
+C<detail> and C<view> name/value pairs in its second arguments, in
+addition to the name/value pairs for L<Web::DOM::Event> objects in
+general.  [UIEVENTS]
+
+=head1 SUBCLASSES
+
+There are subclasses of the class, representing subinterfaces of the
+C<Event> interface, containing: L<Web::DOM::FocusEvent>,
+L<Web::DOM::MouseEvent>, L<Web::DOM::KeyboardEvent>, and
+L<Web::DOM::CompositionEvent>.
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOM3EVENTS
+
+DOM Level 3 Events
+<http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-uievents>.
+
+=item UIEVENTS
+
+UI Events
+<https://dvcs.w3.org/hg/d4e/raw-file/tip/source_respec.htm#constructor-uievent>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Event>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

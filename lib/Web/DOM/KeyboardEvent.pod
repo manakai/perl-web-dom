@@ -1,0 +1,118 @@
+=head1 NAME
+
+Web::DOM::KeyboardEvent - The DOM |KeyboardEvent| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::KeyboardEvent> class implements the DOM C<KeyboardEvent>
+interface.
+
+=head1 METHODS
+
+In addition to the methods of the L<Web::DOM::Event> and
+L<Web::DOM::UIEvent> classes, following methods are available:
+
+=over 4
+
+=item $boolean = $ev->alt_key
+
+=item $boolean = $ev->alt_graph_key
+
+=item $boolean = $ev->ctrl_key
+
+=item $boolean = $ev->meta_key
+
+=item $boolean = $ev->shift_key
+
+=item $boolean = $ev->get_modifier_state ($key_name)
+
+Return whether the modifier key is pressed or not.  [DOM3EVENTS]
+[MANAKAI]
+
+=item $string = $ev->char
+
+=item $int = $ev->char_code
+
+=item $string = $ev->code
+
+=item $string = $ev->key
+
+=item $int = $ev->key_code
+
+=item $int = $ev->which
+
+Return the value representing the key or the input string in several
+different ways.  [DOM3EVENTS] [UIEVENTS]
+
+=item $string = $ev->locale
+
+Return the keyboard locale.  [DOM3EVENTS]
+
+=item $int = $ev->location
+
+Return the location of the key.  [DOM3EVENTS]
+
+=item $boolean = $ev->repeat
+
+Return whether the key has been pressed or not.  [DOM3EVENTS]
+
+=back
+
+In addition, deprecated C<init_keyboard_event> method is supported.
+[DOM3EVENTS]
+
+The C<new> method of the L<Web::DOM::RelatedEvent> class accepts the
+C<char>, C<key>, C<code>, C<location>, C<ctrl_key>, C<shift_key>,
+C<alt_key>, C<meta_key>, C<repeat>, C<locale>, C<char_code>,
+C<key_code>, and C<which> name/value pairs in its second arguments, in
+addition to the name/value pairs for L<Web::DOM::Event> and
+L<Web::DOM::UIEvent> objects in general.  [DOM3EVENTS] [UIEVENTS]
+
+=head1 CONSTANTS
+
+Constants are exported from the L<Web::DOM::KeyboardEvent> module by
+default.  Following constants are used by the C<location> method
+[DOM3EVENTS]:
+
+  DOM_KEY_LOCATION_STANDARD DOM_KEY_LOCATION_LEFT
+  DOM_KEY_LOCATION_RIGHT DOM_KEY_LOCATION_NUMPAD
+  DOM_KEY_LOCATION_MOBILE DOM_KEY_LOCATION_JOYSTICK
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOM3EVENTS
+
+DOM Level 3 Events
+<http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html#events-uievents>.
+
+=item UIEVENTS
+
+UI Events
+<https://dvcs.w3.org/hg/d4e/raw-file/tip/source_respec.htm#constructor-uievent>.
+
+=item MANAKAI
+
+manakai DOM Extensions
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Event>, L<Web::DOM::UIEvent>,
+L<Web::DOM::CompositionEvent>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

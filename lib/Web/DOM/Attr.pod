@@ -8,8 +8,8 @@ The C<Web::DOM::Attr> class implements the DOM C<Attr> interface.
 
 =head1 METHODS
 
-The methods of the L<Web::DOM::Node> class are available, as well as
-following methods:
+The methods of classes L<Web::DOM::EventTarget> and L<Web::DOM::Node>
+are available, as well as following methods:
 
 =over 4
 

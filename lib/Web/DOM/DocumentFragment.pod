@@ -9,8 +9,8 @@ C<DocumentFragment> interface.
 
 =head1 METHODS
 
-The methods of classes L<Web::DOM::Node> and L<Web::DOM::ParentNode>
-are available.
+The methods of classes L<Web::DOM::EventTarget>, L<Web::DOM::Node>,
+and L<Web::DOM::ParentNode> are available.
 
 =head1 SPECIFICATION
 

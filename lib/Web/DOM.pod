@@ -308,8 +308,9 @@ DOM3 spec compatible DTD-based node operations, DOM3 DOMError,
 DOMErrorHandler, UserDataHandler, DOMLocator, isId and family,
 internalSubset, TypeInfo and schemaTypeInfo, DOM3 LS, namespaces for
 DOM3 events, EventException, MutationEvent, MutationNameEvent,
-DocumentEvent->canDispatch, DocumentType->implementation,
+TextEvent, DocumentEvent->canDispatch, DocumentType->implementation,
 Document->createXHTMLDocument, URIReference, InternetMediaType,
+MANAKAI_FILTER_OPAQUE, Document->manakaiCreateSerialWalker,
 SerialWalker.  HTMLElement->irrelevant, HTMLAnchorElement->media,
 HTMLAreaElement->media, HTMLCommandElement, HTMLDataGridElement,
 HTMLEventSourceElement, HTMLIsIndexElement, HTMLLegendElement->form,
@@ -373,8 +374,6 @@ Window.prototype.manakaiGetComputedStyle, Window.prototype.setDocument
 =item Atom DOM [ATOMDOM]
 
 =item WebVTT DOM [HTML]
-
-=item UIEvent, MouseEvent, KeyboardEvent, TextEvent
 
 =back
 

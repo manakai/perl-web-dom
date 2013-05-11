@@ -10,9 +10,9 @@ instruction.
 
 =head1 METHODS
 
-In addition to the methods of classes L<Web::DOM::Node>,
-L<Web::DOM::CharacterData>, and L<Web::DOM::ChildNode>, the following
-method is available:
+In addition to the methods of classes L<Web::DOM::EventTarget>,
+L<Web::DOM::Node>, L<Web::DOM::CharacterData>, and
+L<Web::DOM::ChildNode>, the following method is available:
 
 =over 4
 

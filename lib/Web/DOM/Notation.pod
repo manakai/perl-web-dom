@@ -8,8 +8,8 @@ The C<Web::DOM::Notation> class implements the DOM C<Notation> interface.
 
 =head1 METHODS
 
-In addition to the methods of the L<Web::DOM::Node> class, following
-methods are available:
+In addition to the methods of classes L<Web::DOM::EventTarget> and
+L<Web::DOM::Node>, following methods are available:
 
 =over 4
 

@@ -9,9 +9,9 @@ interface.  It represents an element in the document.
 
 =head1 METHODS
 
-In addition to the methods of classes L<Web::DOM::Node>,
-L<Web::DOM::ParentNode>, and L<Web::DOM::ChildNode>, following methods
-are available:
+In addition to the methods of classes L<Web::DOM::EventTarget>,
+L<Web::DOM::Node>, L<Web::DOM::ParentNode>, and
+L<Web::DOM::ChildNode>, following methods are available:
 
 =over 4
 

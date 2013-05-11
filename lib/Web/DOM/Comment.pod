@@ -9,8 +9,8 @@ interface.
 
 =head1 METHODS
 
-The methods of classes L<Web::DOM::Node>, L<Web::DOM::CharacterData>,
-and L<Web::DOM::ChildNode> are available.
+The methods of classes L<Web::DOM::EventTarget>, L<Web::DOM::Node>,
+L<Web::DOM::CharacterData>, and L<Web::DOM::ChildNode> are available.
 
 =head1 SPECIFICATION
 

@@ -54,13 +54,6 @@ Return whether the C<stop_propagation> or
 C<stop_immediate_propagation> method has been invoked or not.
 [MANAKAI]
 
-=item $ev->init_event ($type, $bubbles, $cancelable)
-
-Initialize the event.  [DOM]
-
-Use the C<new> method instead.  This method does not have to be
-invoked for event objects created by the C<new> method.
-
 =item $boolean = $ev->is_trusted
 
 Return whether the event is trusted, i.e. fired by the browser or not.
@@ -99,17 +92,20 @@ Return the event type.  [DOM]
 
 =back
 
+In addition, it also supports C<init_event> method.  [DOM]
+
 =head1 CONSTANTS
 
 Constants are exported from the L<Web::DOM::Event> module by default.
-Following constants are used by the C<event_phase> method:
+Following constants are used by the C<event_phase> method [DOM]:
 
   NONE, CAPTURING_PHASE, AT_TARGET, BUBBLING_PHASE
 
 =head1 SUBCLASSES
 
 There are subclasses of the class, representing subinterfaces of the
-C<Event> interface, containing: L<Web::DOM::CustomEvent>.
+C<Event> interface, containing: L<Web::DOM::CustomEvent> and
+K<Web::DOM::UIEvent>.
 
 =head1 SPECIFICATIONS
 
