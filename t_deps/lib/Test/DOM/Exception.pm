@@ -6,6 +6,23 @@ use Test::More;
 
 our @EXPORT;
 
+push @EXPORT, qw(dies_ok);
+## Derived from
+## <https://github.com/wakaba/perl-test-moremore/blob/master/lib/Test/MoreMore.pm>.
+sub dies_ok (&;$) {
+  local $Test::Builder::Level = $Test::Builder::Level + 1;
+  my ($code, $name) = @_;
+  #local $@ = undef;
+  eval {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    $code->();
+    ok 0, $name;
+    1;
+  } or do {
+    ok 1, $name || do { my $v = $@; $v =~ s/\n$//; $v };
+  };
+} # dies_ok
+
 push @EXPORT, qw(dies_here_ok);
 ## Derived from
 ## <https://github.com/wakaba/perl-test-moremore/blob/master/lib/Test/MoreMore.pm>.

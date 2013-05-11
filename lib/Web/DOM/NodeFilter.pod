@@ -1,0 +1,58 @@
+=head1 NAME
+
+Web::DOM::NodeFilter - DOM |NodeFilter| constants
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::NodeFilter> module exports constants defined in the
+DOM C<NodeFilter> interface.
+
+In the DOM Perl binding, node filter objects are represented as Perl
+code references.  Therefore the C<Web::DOM::NodeFilter> module cannot
+be instantiated as object.  The module only defines several constants.
+
+=head1 CONSTANTS
+
+Constants are exported from the L<Web::DOM::NodeFilter> module by
+default.
+
+Following constants are used as return value of the node filter
+callbacks [DOM]:
+
+  FILTER_ACCEPT FILTER_REJECT FILTER_SKIP
+
+Following constants are used as bitmasks for the C<what_to_show> value
+of the L<Web::DOM::NodeIterator> and L<Web::DOM::TreeWalker> objects
+[DOM]:
+
+  SHOW_ALL SHOW_ELEMENT SHOW_ATTRIBUTE SHOW_TEXT SHOW_CDATA_SECTION
+  SHOW_ENTITY_REFERENCE SHOW_ENTITY SHOW_PROCESSING_INSTRUCTION
+  SHOW_COMMENT SHOW_DOCUMENT SHOW_DOCUMENT_TYPE SHOW_DOCUMENT_FRAGMENT
+  SHOW_NOTATION
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item DOM
+
+DOM Standard <http://dom.spec.whatwg.org/#interface-nodefilter>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::NodeIterator>, L<Web::DOM::TreeWalker>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

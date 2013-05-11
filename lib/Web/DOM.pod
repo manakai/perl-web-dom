@@ -78,14 +78,6 @@ The C<HTMLCollection> interface.
 
 The C<DOMParser> interface.
 
-=item L<Web::DOM::Event> and its subclasses
-
-The C<Event> interface and its subinterfaces.
-
-=item L<Web::DOM::DOMError>
-
-The C<DOMError> interface.
-
 =back
 
 =head1 DOM MAPPING
@@ -144,11 +136,42 @@ Following classes have the constructor (i.e. the C<new> method):
 
 =item L<Web::DOM::Document>
 
+=item L<Web::DOM::DOMError>
+
+=item L<Web::DOM::Event> and its subclasses
+
 =item L<Web::DOM::Implementation>
 
 =item L<Web::DOM::Parser>
 
 =item L<Web::DOM::XMLSerializer>
+
+=back
+
+=head1 CONSTANTS
+
+Following modules export constants (by loading them using the C<use>
+statement):
+
+=over 4
+
+=item L<Web::DOM::Attr>
+
+=item L<Web::DOM::AttributeDefinition>
+
+=item L<Web::DOM::Event>
+
+=item L<Web::DOM::Exception>
+
+=item L<Web::DOM::HTMLTrackElement>
+
+=item L<Web::DOM::KeyboardEvent>
+
+=item L<Web::DOM::Node>
+
+=item L<Web::DOM::NodeFilter>
+
+=item L<Web::DOM::WheelEvent>
 
 =back
 
@@ -344,6 +367,27 @@ except for obsolete features.  Following features will be
 
 =over 4
 
+=item Window [HTML]
+
+=item CSSOM
+
+=item manakai CSSOM/Window extensions
+
+Element.prototype.manakaiComputedStyle,
+Window.prototype.manakaiGetComputedStyle, Window.prototype.setDocument
+
+=item Atom DOM [ATOMDOM]
+
+=item WebVTT DOM [HTML]
+
+=back
+
+More features not supported by previous versions of manakai DOM
+implementation are expected to be implemented as well, including but
+not limited to:
+
+=over 4
+
 =item HTMLFormControlsCollection, HTMLOptionsCollection [HTML]
 
 =item Mutation observers [DOM]
@@ -360,20 +404,7 @@ DOM Ranges interfaces and methods [DOM]; Ranges support in DOM Core
 methods and attributes [DOM]; Range.prototype.createContextualFragment
 [DOMPARSING].
 
-=item DOM Traversal [DOM]
-
-=item Window [HTML]
-
-=item CSSOM
-
-=item manakai CSSOM/Window extensions
-
-Element.prototype.manakaiComputedStyle,
-Window.prototype.manakaiGetComputedStyle, Window.prototype.setDocument
-
-=item Atom DOM [ATOMDOM]
-
-=item WebVTT DOM [HTML]
+=item NodeIterator [DOM]
 
 =back
 

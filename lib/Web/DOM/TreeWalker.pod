@@ -1,0 +1,90 @@
+=head1 NAME
+
+Web::DOM::TreeWalker - The DOM |TreeWalker| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::TreeWalker> class implements the DOM C<TreeWalker>
+interface.
+
+The C<TreeWalker> object can be created by the C<create_tree_walker>
+method of the L<Web::DOM::Document> object.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $node = $tw->current_node
+
+Return the current node of the tree walker.  [DOM]
+
+=item $code = $tw->filter
+
+Return the node filter code.  [DOM]
+
+=item $node = $tw->first_child
+
+Move to the first child node.  [DOM]
+
+=item $node = $tw->last_child
+
+Move to the last child node.  [DOM]
+
+=item $node = $tw->next_node
+
+Move to the next node in document order.  [DOM]
+
+=item $node = $tw->next_sibling
+
+Move to the next sibling node.  [DOM]
+
+=item $node = $tw->parent_node
+
+Move to the parent node.  [DOM]
+
+=item $node = $tw->previous_node
+
+Move to the previous node in document order.  [DOM]
+
+=item $node = $tw->previous_sibling
+
+Move to the previous sibling node.  [DOM]
+
+=item $node = $tw->root
+
+Return the root node of the tree walker.  [DOM]
+
+=item $int = $tw->what_to_show
+
+Return the bit vector representing the node type filter.  [DOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item DOM
+
+DOM Living Standard <http://dom.spec.whatwg.org/#interface-comment>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Node>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

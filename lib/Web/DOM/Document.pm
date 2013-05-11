@@ -1069,7 +1069,24 @@ sub create_event ($$) {
 
 # XXX createNodeIterator
 
-# XXX createTreeWalker
+sub create_tree_walker ($;$$$) {
+  # WebIDL
+  _throw Web::DOM::TypeError 'The first argument is not a Node'
+      unless UNIVERSAL::isa ($_[1], 'Web::DOM::Node');
+  my $wts = defined $_[2]
+      ? unpack 'L', pack 'L', $_[2] % 2**32 # WebIDL unsigned long
+      : 0xFFFFFFFF;
+  _throw Web::DOM::TypeError 'The third argument is not a code reference'
+      if defined $_[3] and not ref $_[3] eq 'CODE';
+
+  require Web::DOM::TreeWalker;
+  return bless {
+    root => $_[1],
+    current_node => $_[1],
+    what_to_show => $wts,
+    filter => $_[3],
+  }, 'Web::DOM::TreeWalker';
+} # create_tree_walker
 
 ## ------ Markup interaction ------
 

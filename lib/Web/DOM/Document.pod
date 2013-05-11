@@ -163,6 +163,19 @@ Create a notatioon (L<Web::DOM::Notation>) with the specified name.
 Create a new text node (L<Web::DOM::Text>) with the given character
 string.  [DOM]
 
+=item $tw = $doc->create_tree_walker ($root, $what_to_show, $filter)
+
+Create a new tree walker (L<Web::DOM::TreeWalker>).  [DOM]
+
+The first argument is required, specifying the root node of the tree
+walker.  Second and third arguments are optional, representing bit
+vector of node types and code reference, both used to filter candidate
+nodes.  For the bit vector, see L<Web::DOM::TypeWalker/"CONSTANTS">.
+The code reference would be invoked with an argument (C<$_[1]>) which
+is the node in question.  The code is expected to return whether the
+node is accepted, rejected, or skipped, using one of constants from
+L<Web::DOM::TypeWalker/"CONSTANTS">.
+
 =item $pi = $doc->create_processing_instruction ($target, $data)
 
 Create a new processing instruction node
