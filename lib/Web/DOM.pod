@@ -404,8 +404,6 @@ DOM Ranges interfaces and methods [DOM]; Ranges support in DOM Core
 methods and attributes [DOM]; Range.prototype.createContextualFragment
 [DOMPARSING].
 
-=item NodeIterator [DOM]
-
 =back
 
 In addition, source codes of the modules include many "XXX" markers,

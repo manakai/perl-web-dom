@@ -578,7 +578,8 @@ sub children_changed ($$$) {
     my $id = shift @id;
     next unless defined $id;
     for my $key (@key ? @key : keys %{$cols->[$id] or {}}) {
-      my $col = $cols->[$id]->{$key} or next;
+      my $col = $cols->[$id]->{$key};
+      next unless defined $col; # HTMLAllCollection is false!
       my $old = $key eq 'iterator' ? [@$col] : undef;
 
       delete $$col->[2];
