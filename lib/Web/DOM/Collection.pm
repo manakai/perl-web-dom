@@ -57,6 +57,7 @@ sub as_list ($) {
   return $_[0]->to_a;
 } # as_list
 
+# XXX Should the result of this method cached?
 sub to_list ($) {
   my $node = ${$_[0]}->[0];
   my $int = $$node->[0];

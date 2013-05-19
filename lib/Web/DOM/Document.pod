@@ -151,6 +151,19 @@ Use L<Web::DOM::Event>'s (or its subclass'es) C<new> method instead.
 Create a general entity (L<Web::DOM::Entity>) with the specified name.
 [DOMDTDEF]
 
+=item $ni = $doc->create_node_iterator ($root, $what_to_show, $filter)
+
+Create a new node iterator (L<Web::DOM::NodeIterator>).  [DOM]
+
+The first argument is required, specifying the root node of the
+iterator.  Second and third arguments are optional, representing bit
+vector of node types and code reference, both used to filter candidate
+nodes.  For the bit vector, see L<Web::DOM::TypeWalker/"CONSTANTS">.
+The code reference would be invoked with an argument (C<$_[1]>) which
+is the node in question.  The code is expected to return whether the
+node is accepted or not, using one of constants from
+L<Web::DOM::TypeWalker/"CONSTANTS">.
+
 =item $notation = $doc->create_notation ($name)
 
 Create a notatioon (L<Web::DOM::Notation>) with the specified name.

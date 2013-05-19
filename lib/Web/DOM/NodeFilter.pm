@@ -3,6 +3,9 @@ use strict;
 use warnings;
 our $VERSION = '1.0';
 use Web::DOM::Internal;
+use Web::DOM::Exception;
+
+our @CARP_NOT = qw(Web::DOM::Exception);
 
 our @EXPORT;
 *import = \&Web::DOM::Internal::import;
@@ -30,5 +33,37 @@ sub SHOW_DOCUMENT_TYPE () { 0x200 }
 sub SHOW_DOCUMENT_FRAGMENT () { 0x400 }
 sub SHOW_NOTATION () { 0x800 }
 
+## Invoked by Web::DOM::NodeIterator and Web::DOM::TreeWalker.
+sub _filter ($$) {
+  # 1.
+  _throw Web::DOM::Exception 'InvalidStateError', 'Traversaler is active'
+      if $_[0]->{active};
+
+  # 2.
+  my $n = $_[1]->node_type - 1;
+
+  # 3.
+  return FILTER_SKIP unless $_[0]->{what_to_show} & (1 << $n);
+
+  # 4.
+  return FILTER_ACCEPT unless $_[0]->{filter};
+
+  # 5., 7.
+  local $_[0]->{active} = 1;
+
+  # 6., 8.-9.
+  my $value = $_[0]->{filter}->(undef, $_[1]); # rethrow any exception
+      ## Argument to the filter is not explicitly defined in the spec...
+  return unpack 'S', pack 'S', $value % 2**16;
+} # _filter
+
 1;
 
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

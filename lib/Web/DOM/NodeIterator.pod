@@ -1,0 +1,84 @@
+=head1 NAME
+
+Web::DOM::NodeIterator - The DOM |NodeIterator| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::NodeIterator> class implements the DOM C<NodeIterator>
+interface.
+
+The C<NodeIterator> object can be created by the
+C<create_node_iterator> method of the L<Web::DOM::Document> object.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $code = $ni->filter
+
+Return the node filter code.  [DOM]
+
+=item $node = $ni->next_node
+
+Move to the next node in document order.  [DOM]
+
+=item $boolean = $ni->pointer_before_reference_node
+
+Return the pointer is anchored before or after the reference node.
+[DOM]
+
+=item $node = $ni->previous_node
+
+Move to the previous node in document order.  [DOM]
+
+=item $node = $ni->reference_node
+
+Return the current reference node of the iterator.  [DOM]
+
+=item $node = $ni->root
+
+Return the root node of the iterator.  [DOM]
+
+=item $int = $ni->what_to_show
+
+Return the bit vector representing the node type filter.  [DOM]
+
+=back
+
+In addition, it also supports the obsolete C<expand_entity_references>
+method [DOM2TRAVERSAL] and the C<detach> method [DOM].
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOM
+
+DOM Living Standard
+<http://dom.spec.whatwg.org/#interface-nodeiterator>.
+
+=item DOM2TRAVERSAL
+
+DOM Level2 Traversal
+<http://www.w3.org/TR/DOM-Level-2-Traversal-Range/traversal.html>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::NodeFilter>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

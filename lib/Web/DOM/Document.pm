@@ -1067,7 +1067,19 @@ sub create_event ($$) {
 
 # XXX createRange
 
-# XXX createNodeIterator
+sub create_node_iterator ($;$$$) {
+  # WebIDL
+  _throw Web::DOM::TypeError 'The first argument is not a Node'
+      unless UNIVERSAL::isa ($_[1], 'Web::DOM::Node');
+  my $wts = defined $_[2]
+      ? unpack 'L', pack 'L', $_[2] % 2**32 # WebIDL unsigned long
+      : 0xFFFFFFFF;
+  _throw Web::DOM::TypeError 'The third argument is not a code reference'
+      if defined $_[3] and not ref $_[3] eq 'CODE';
+  # $_[4] (expand entity references) is obsolete
+
+  return ${$_[0]}->[0]->iterator ($_[1], $wts, $_[3]);
+} # create_node_iterator
 
 sub create_tree_walker ($;$$$) {
   # WebIDL
@@ -1078,6 +1090,7 @@ sub create_tree_walker ($;$$$) {
       : 0xFFFFFFFF;
   _throw Web::DOM::TypeError 'The third argument is not a code reference'
       if defined $_[3] and not ref $_[3] eq 'CODE';
+  # $_[4] (expand entity references) is obsolete
 
   require Web::DOM::TreeWalker;
   return bless {

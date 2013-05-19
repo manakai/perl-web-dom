@@ -1072,7 +1072,7 @@ test {
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'InvalidStateError';
-  is $@->message, 'TreeWalker is active';
+  is $@->message, 'Traversaler is active';
   is $tw->current_node, $el1;
   done $c;
   undef $tw;
@@ -1094,7 +1094,7 @@ test {
     };
     isa_ok $@, 'Web::DOM::Exception';
     is $@->name, 'InvalidStateError';
-    is $@->message, 'TreeWalker is active';
+    is $@->message, 'Traversaler is active';
     return 1;
   });
   is $tw->next_node, $el2;

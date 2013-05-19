@@ -1595,6 +1595,23 @@ sub set_user_data ($$;$$) {
   return;
 } # set_user_data
 
+## "iterator collection" used to implement Web::DOM::NodeIterator.
+sub _iterator ($) {
+  my $self = shift;
+  return $$self->[0]->collection ('iterator', $self, sub {
+    my $node = $_[0];
+    my $data = $$node->[0]->{data};
+    my @node_id = @{$data->[$$node->[1]]->{child_nodes} or []};
+    my @id;
+    while (@node_id) {
+      my $id = shift @node_id;
+      unshift @node_id, @{$data->[$id]->{child_nodes} or []};
+      push @id, $id;
+    }
+    return ($$node->[1], @id);
+  });
+} # _iterator
+
 sub DESTROY ($) {
   my $self = shift;
   $$self->[0]->gc ($$self->[1]);

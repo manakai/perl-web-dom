@@ -62,19 +62,28 @@ Return the bit vector representing the node type filter.  [DOM]
 
 =back
 
-=head1 SPECIFICATION
+In addition, it also supports the obsolete C<expand_entity_references>
+method [DOM2TRAVERSAL].
+
+=head1 SPECIFICATIONS
 
 =over 4
 
 =item DOM
 
-DOM Living Standard <http://dom.spec.whatwg.org/#interface-comment>.
+DOM Living Standard
+<http://dom.spec.whatwg.org/#interface-treewalker>.
+
+=item DOM2TRAVERSAL
+
+DOM Level2 Traversal
+<http://www.w3.org/TR/DOM-Level-2-Traversal-Range/traversal.html>.
 
 =back
 
 =head1 SEE ALSO
 
-L<Web::DOM::Node>.
+L<Web::DOM::NodeFilter>.
 
 =head1 AUTHOR
 
@@ -82,7 +91,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

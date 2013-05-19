@@ -21,6 +21,9 @@ callbacks [DOM]:
 
   FILTER_ACCEPT FILTER_REJECT FILTER_SKIP
 
+(For the purpose of L<Web::DOM::NodeIterator>, C<FILTER_REJECT> and
+C<FILTER_SKIP> is equivalent.)
+
 Following constants are used as bitmasks for the C<what_to_show> value
 of the L<Web::DOM::NodeIterator> and L<Web::DOM::TreeWalker> objects
 [DOM]:

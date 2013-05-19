@@ -12,6 +12,43 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   dies_here_ok {
+    $doc->create_node_iterator;
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->message, 'The first argument is not a Node';
+  done $c;
+} n => 3, name => 'craete_node_iterator root is not a Node';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  ok $doc->can ('create_node_iterator'), 'Document->create_tw can';
+
+  my $el = $doc->create_element ('e');
+  my $tw = $doc->create_node_iterator ($el);
+
+  ok $tw->isa ('Web::DOM::NodeIterator'), 'create_tw [1] if';
+  is $tw->what_to_show, 0xFFFFFFFF, 'create_tw [1] what_to_show';
+  is $tw->filter, undef, 'create_tw [1] filter';
+  ok not ($tw->expand_entity_references), 'create_tw [1] xent';
+  is $tw->reference_node, $el, 'create_tw [1] current_node';
+  is $tw->root, $el, 'create_tw [1] root';
+  ok $tw->pointer_before_reference_node;
+  done $c;
+} n => 8, name => 'create_node_iterator and attributes';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $tw = $doc->create_node_iterator ($doc, 0);
+  is $tw->what_to_show, 0;
+  done $c;
+} n => 1, name => 'create_node_iterator what_to_show = 0';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  dies_here_ok {
     $doc->create_tree_walker;
   };
   isa_ok $@, 'Web::DOM::TypeError';
