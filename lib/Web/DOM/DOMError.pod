@@ -13,9 +13,13 @@ The C<Web::DOM::DOMError> class defines following method:
 
 =over 4
 
-=item $error = new Web::DOM::DOMError $name
+=item $error = new Web::DOM::DOMError $name, $message
 
 Create a new DOM error object with the specified name.  [DOM]
+
+=item $string = $error->message
+
+Return the implementation-dependent error message.  [DOM]
 
 =item $string = $error->name
 

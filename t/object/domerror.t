@@ -13,16 +13,27 @@ test {
   my $error = new Web::DOM::DOMError;
   isa_ok $error, 'Web::DOM::DOMError';
   is $error->name, '';
+  is $error->message, '';
   done $c;
-} n => 2, name => 'constructor without name';
+} n => 3, name => 'constructor without name';
 
 test {
   my $c = shift;
   my $error = new Web::DOM::DOMError 'hoge';
   isa_ok $error, 'Web::DOM::DOMError';
   is $error->name, 'hoge';
+  is $error->message, '';
   done $c;
-} n => 2, name => 'constructor with name';
+} n => 3, name => 'constructor with name';
+
+test {
+  my $c = shift;
+  my $error = new Web::DOM::DOMError 'hoge', 'aa v';
+  isa_ok $error, 'Web::DOM::DOMError';
+  is $error->name, 'hoge';
+  is $error->message, 'aa v';
+  done $c;
+} n => 3, name => 'constructor with name and message';
 
 run_tests;
 
