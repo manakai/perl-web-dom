@@ -291,6 +291,9 @@ C<manakai_declaration_base_uri>, C<action>, C<cite>, C<codebase>,
 C<data>, C<formaction>, C<href>, C<longdesc>, C<object>, C<ping>,
 C<poster>, and C<src>.
 
+Following features require the XXX module: C<value> of
+L<Web::DOM::AtomDateConstruct>.
+
 =head1 DEVELOPMENT
 
 Latest version of the modules is available from the GitHub repository:

@@ -320,6 +320,8 @@ for (
   ['title', 'AtomTitleElement'],
   ['author', 'AtomAuthorElement'],
   ['contributor', 'AtomContributorElement'],
+  ['published', 'AtomPublishedElement'],
+  ['updated', 'AtomUpdatedElement'],
 ) {
   $ElementClass->{Web::DOM::Internal::ATOM_NS}->{$_->[0]}
       = "Web::DOM::$_->[1]";

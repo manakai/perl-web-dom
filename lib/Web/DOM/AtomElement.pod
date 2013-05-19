@@ -41,7 +41,8 @@ L<Web::DOM::AtomUriElement>,
 L<Web::DOM::AtomEmailElement>,
 L<Web::DOM::AtomLogoElement>,
 L<Web::DOM::AtomTextConstruct>,
-L<Web::DOM::AtomPersonConstruct>.
+L<Web::DOM::AtomPersonConstruct>,
+L<Web::DOM::AtomDateConstruct>.
 
 =head1 SPECIFICATION
 

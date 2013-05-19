@@ -5,6 +5,7 @@ use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', 
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
 use Test::X1;
 use Test::More;
+use Test::DOM::Exception;
 use Web::DOM::Document;
 use Web::DOM::Internal;
 
@@ -255,6 +256,118 @@ for (
     done $c;
   } n => 4, name => ['child element reflect', $el_name, $cel_name];
 } # $el_name, $cel_name
+
+for my $test (
+  ['published'],
+  ['updated'],
+) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element_ns (ATOM_NS, $test->[0]);
+    is $el->value, 0;
+
+    $el->value (155);
+    is $el->value, 155;
+    is $el->text_content, '1970-01-01T00:02:35Z';
+    is $el->child_nodes->length, 1;
+
+    for (
+      [-62135596800, '0001-01-01T00:00:00Z'],
+      [-61785086115, '0012-02-09T20:04:45Z'],
+      [-59323550115, '0090-02-09T20:04:45Z'],
+      [-30228177315, '1012-02-09T20:04:45Z'],
+      [-4982615715, '1812-02-09T20:04:45Z'],
+      [-154324515, '1965-02-09T20:04:45Z'],
+      [-124515, '1969-12-30T13:24:45Z'],
+      [0, '1970-01-01T00:00:00Z'],
+      [515123455, '1986-04-29T01:50:55Z'],
+      [15252151635, '2453-04-27T12:47:15Z'],
+      [133485926399, '6199-12-31T23:59:59Z'],
+      [193444156799, '8099-12-31T23:59:59Z'],
+      [253402300799, '9999-12-31T23:59:59Z'],
+      [884541340799, '29999-12-31T23:59:59Z'],
+    ) {
+      $el->value ($_->[0]);
+      is $el->value, $_->[0], "$_->[0] roundtrip";
+      is $el->text_content, $_->[2] || $_->[1], "$_->[0] -> date";
+      is $el->child_nodes->length, 1;
+
+      $el->inner_html ("<p>$_->[1]</p>");
+      is $el->value, $_->[0], "$_->[1] -> value";
+
+      #use DateTime;
+      #my $dt = DateTime->from_epoch (epoch => $_->[0]);
+      #is $dt->ymd('-') . 'T' . $dt->hms(':') . 'Z', $_->[1];
+    }
+
+    for (
+      '',
+      'abc',
+      '2013-05-01 00:12:44Z',
+      '2013-05-01t00:12:44Z',
+      '-2013-05-01T00:12:44Z',
+      '2013-05-01T00:12:44',
+      ' 2013-05-01T00:12:44  ',
+    ) {
+      $el->text_content ($_);
+      is $el->value, 0;
+    }
+
+    $el->text_content ('hoge');
+    for (
+      -12415 + -62135596800,
+      -1 + -62135596800,
+      -0.001 + -62135596800,
+    ) {
+      $el->value ($_);
+      is $el->text_content, 'hoge';
+    }
+
+    $el->value (1430272255.912);
+    is $el->value, 1430272255.912;
+    is $el->text_content, '2015-04-29T01:50:55.912Z';
+
+    $el->text_content ('2015-04-29T01:50:55.0001Z');
+    is $el->value, 1430272255.0001;
+    $el->value (1430272255.0001);
+    is $el->text_content, '2015-04-29T01:50:55.0001Z';
+
+    $el->text_content ('2015-04-29T01:50:55.9015Z');
+    is $el->value, 1430272255.9015;
+    $el->value (1430272255.9015);
+    is $el->text_content, '2015-04-29T01:50:55.9015Z';
+
+    $el->text_content ('1015-04-29T01:50:55.000Z');
+    is $el->value, -30126722945, '55.000Z';
+    $el->text_content ('1015-04-29T01:50:55.0001Z');
+    is $el->value, -30126722944.9999;
+    $el->value (-30126722944.9999);
+    is $el->text_content, '1015-04-29T01:50:55.000099Z';
+
+    done $c;
+  } n => 4 + 14*4 + 7 + 3 + 9, name => ['AtomDateConstruct.value', @$test];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element_ns (ATOM_NS, $test->[0]);
+
+    for my $value (0+"nan", 0+"inf", 0-"inf") {
+      dies_here_ok {
+        $el->value ($value);
+      };
+      isa_ok $@, 'Web::DOM::TypeError';
+      is $@->message, 'The value is out of range';
+      
+      is $el->text_content, '';
+      is $el->first_child, undef;
+    }
+
+    done $c;
+  } n => 5 * 3, name => ['AtomDateConstruct.value', @$test, 'webidl domperl'];
+    
+} # $test
 
 run_tests;
 

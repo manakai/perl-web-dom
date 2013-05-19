@@ -1,0 +1,65 @@
+=head1 NAME
+
+Web::DOM::AtomDateConstruct - The DOM |AtomDateConstruct| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomDateConstruct> class implements the DOM
+C<AtomDateConstruct> interface.  The class is used by several Atom
+elements.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::AtomElement>, the following method is available:
+
+=over 4
+
+=item $number = $el->value
+
+=item $el->value ($number)
+
+Return or set the date-time value of the element content.  The
+date-time value is represented as C<time_t> real number (i.e. seconds
+from the Unix epoch) [ATOMDOM] [DOMPERL]
+
+=back
+
+There are subclasses for specific elements:
+L<Web::DOM::AtomPublishedElement> and L<Web::DOM::AtomUpdatedElement>.
+
+=head1 DEPENDENCY
+
+XXX
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
