@@ -1,0 +1,50 @@
+=head1 NAME
+
+Web::DOM::AtomFeedElement - The DOM |AtomFeedElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomFeedElement> class implements the DOM
+C<AtomFeedElement> interface.  The class is used by the Atom C<feed>
+element.
+
+=head1 METHODS
+
+In addition to the methods for classes L<Web::DOM::Element> and
+L<Web::DOM::AtomElement>, following methods are available:
+
+=over 4
+
+=item $col = $el->author_elements
+
+Return a L<Web::DOM::HTMLCollection> containing the C<atom:author>
+element childs.  [ATOMDOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

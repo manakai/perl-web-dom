@@ -301,6 +301,7 @@ for my $test (
                           'AtomUpdatedElement'], []],
   [[ATOM_NS, 'published'], ['Element', 'AtomElement', 'AtomDateConstruct',
                             'AtomPublishedElement'], []],
+  [[ATOM_NS, 'feed'], ['Element', 'AtomElement', 'AtomFeedElement'], []],
 ) {
   test {
     my $c = shift;

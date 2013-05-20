@@ -366,8 +366,48 @@ for my $test (
 
     done $c;
   } n => 5 * 3, name => ['AtomDateConstruct.value', @$test, 'webidl domperl'];
-    
 } # $test
+
+for my $test (
+  {parent => 'feed', child => 'author', method => 'author_elements'},
+) {
+  my $method = $test->{method};
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element_ns (ATOM_NS, $test->{parent});
+    my $list = $el->$method;
+    isa_ok $list, 'Web::DOM::HTMLCollection';
+    is $el->$method, $list;
+    is $list->length, 0;
+
+    my $el1 = $doc->create_element_ns (ATOM_NS, $test->{child});
+    $el->append_child ($el1);
+    
+    is $list->length, 1;
+    is $list->[0], $el1;
+
+    my $el2 = $doc->create_element_ns (undef, $test->{child});
+    $el->append_child ($el2);
+    $el->append_child ($doc->create_text_node ('hoge'));
+    my $el3 = $doc->create_element_ns (ATOM_NS, $test->{child});
+    $el->append_child ($el3);
+    my $el4 = $doc->create_element_ns (ATOM_NS, 'hoge');
+    my $el5 = $doc->create_element_ns (ATOM_NS, $test->{child});
+    $el4->append_child ($el5);
+    $el->append_child ($el4);
+
+    is $list->length, 2;
+    is $list->[1], $el3;
+
+    $el->remove_child ($el1);
+
+    is $list->length, 1;
+    is $list->[0], $el3;
+
+    done $c;
+  } n => 9, name => ['htmlcollection', $test->{parent}, $test->{method}];
+}
 
 run_tests;
 

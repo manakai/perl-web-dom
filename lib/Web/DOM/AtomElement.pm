@@ -275,6 +275,26 @@ package Web::DOM::AtomUpdatedElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomDateConstruct);
 
+package Web::DOM::AtomFeedElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Internal;
+use Web::DOM::Node;
+
+sub author_elements ($) {
+  my $self = shift;
+  return $$self->[0]->collection ('author_elements', $self, sub {
+    my $node = $_[0];
+    return grep {
+      $$node->[0]->{data}->[$_]->{node_type} == ELEMENT_NODE and
+      ${$$node->[0]->{data}->[$_]->{namespace_uri} || \''} eq ATOM_NS and
+      ${$$node->[0]->{data}->[$_]->{local_name}} eq 'author';
+    } @{$$node->[0]->{data}->[$$node->[1]]->{child_nodes} or []};
+  });
+} # author_elements
+
+# XXX
+
 1;
 
 =head1 LICENSE
