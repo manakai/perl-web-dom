@@ -50,6 +50,11 @@ to true and there is no C<atom:generator> element child, a new element
 is created and returned.  Otherwise, no element is created and
 C<undef> is returned.
 
+=item $el2 = $el->get_entry_element_by_id ($id)
+
+Return the C<atom:entry> child element whose C<atom:id> is equal to
+the argument.  [ATOMDOM]
+
 =item $url = $el->icon
 
 =item $el->icon ($url)

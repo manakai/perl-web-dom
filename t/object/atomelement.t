@@ -422,6 +422,38 @@ for my $test (
   } n => 9, name => ['htmlcollection', $test->{parent}, $test->{method}];
 }
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'feed');
+  is $el->get_entry_element_by_id (''), undef;
+  is $el->get_entry_element_by_id ('hoge'), undef;
+  is $el->get_entry_element_by_id ('fuga abc'), undef;
+  done $c;
+} n => 3, name => 'get_entry_element_by_id empty element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'feed');
+  my $entry0 = $doc->create_element_ns (undef, 'entry');
+  my $id0 = $doc->create_element_ns (ATOM_NS, 'id');
+  $id0->text_content ('fuga fuga');
+  $entry0->append_child ($id0);
+  my $entry1 = $doc->create_element_ns (ATOM_NS, 'entry');
+  $entry1->atom_id ('fuga fuga');
+  my $entry2 = $doc->create_element_ns (ATOM_NS, 'entry');
+  $entry2->atom_id ('fuga fuga');
+  is $el->get_entry_element_by_id ('fuga fuga'), undef;
+  $el->append_child ($entry1);
+  $el->append_child ($entry2);
+  is $el->get_entry_element_by_id ('fuga fuga'), $entry1;
+  $entry1->atom_id ('abc');
+  is $el->get_entry_element_by_id ('fuga fuga'), $entry2;
+  is $el->get_entry_element_by_id ('abc'), $entry1;
+  done $c;
+} n => 4, name => 'get_entry_element_by_id non empty element';
+
 run_tests;
 
 =head1 LICENSE

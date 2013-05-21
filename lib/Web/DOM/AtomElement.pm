@@ -335,9 +335,30 @@ Web::DOM::AtomElement::_define_atom_child_element_list
 Web::DOM::AtomElement::_define_atom_child_element_list
     entry_elements => 'entry';
 
-# XXX get_entry_element_by_id
+sub get_entry_element_by_id {
+  my $id = ''.$_[1];
+  return undef unless length $id;
+
+  for (@{$_[0]->entry_elements}) {
+    if ($_->atom_id eq $id) {
+      return $_;
+    }
+  }
+
+  return undef;
+} # get_entry_element_by_id
 
 # XXX add_new_entry
+
+package Web::DOM::AtomEntryElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Internal;
+use Web::DOM::Element;
+
+_define_reflect_child_string atom_id => ATOM_NS, 'id';
+
+# XXX
 
 1;
 
