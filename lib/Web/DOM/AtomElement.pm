@@ -5,6 +5,46 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::Element);
 use Web::DOM::Element;
 use Web::DOM::Internal;
+use Web::DOM::Node;
+
+sub _define_atom_child_element ($$) {
+  eval sprintf q{
+    sub %s ($) {
+      my $self = $_[0];
+      for ($self->child_nodes->to_list) {
+        if ($_->node_type == ELEMENT_NODE and
+            $_->local_name eq '%s' and
+            ($_->namespace_uri || '') eq ATOM_NS) {
+          return $_;
+        }
+      }
+      if (${$_[0]}->[0]->{config}->{manakai_create_child_element}) {
+        my $el = $self->owner_document->create_element_ns (ATOM_NS, '%s');
+        return $self->append_child ($el);
+      } else {
+        return undef;
+      }
+    }
+    1;
+  }, $_[0], $_[1], $_[1] or die $@;
+} # _define_atom_child_element
+
+sub _define_atom_child_element_list ($$) {
+  eval sprintf q{
+    sub %s ($) {
+      my $self = shift;
+      return $$self->[0]->collection ('%s', $self, sub {
+        my $node = $_[0];
+        return grep {
+          $$node->[0]->{data}->[$_]->{node_type} == ELEMENT_NODE and
+          ${$$node->[0]->{data}->[$_]->{namespace_uri} || \''} eq ATOM_NS and
+          ${$$node->[0]->{data}->[$_]->{local_name}} eq '%s';
+        } @{$$node->[0]->{data}->[$$node->[1]]->{child_nodes} or []};
+      });
+    }
+    1;
+  }, $_[0], $_[0], $_[1] or die $@;
+} # _define_atom_child_element_list
 
 sub xmlbase ($;$) {
   $_[0]->set_attribute_ns (XML_NS, ['xml', 'base'] => $_[1]) if @_ > 1;
@@ -91,23 +131,7 @@ _define_reflect_child_string name => ATOM_NS, 'name';
 _define_reflect_child_url uri => ATOM_NS, 'uri';
 _define_reflect_child_string email => ATOM_NS, 'email';
 
-use Web::DOM::Node;
-sub name_element ($) {
-  my $self = $_[0];
-  for ($self->child_nodes->to_list) {
-    if ($_->node_type == ELEMENT_NODE and
-        $_->local_name eq 'name' and
-        ($_->namespace_uri || '') eq ATOM_NS) {
-      return $_;
-    }
-  }
-  if (${$_[0]}->[0]->{config}->{manakai_create_child_element}) {
-    my $el = $self->owner_document->create_element_ns (ATOM_NS, 'name');
-    return $self->append_child ($el);
-  } else {
-    return undef;
-  }
-} # name_element
+Web::DOM::AtomElement::_define_atom_child_element name_element => 'name';
 
 package Web::DOM::AtomAuthorElement;
 our $VERSION = '1.0';
@@ -279,21 +303,41 @@ package Web::DOM::AtomFeedElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomElement);
 use Web::DOM::Internal;
-use Web::DOM::Node;
+use Web::DOM::Element;
 
-sub author_elements ($) {
-  my $self = shift;
-  return $$self->[0]->collection ('author_elements', $self, sub {
-    my $node = $_[0];
-    return grep {
-      $$node->[0]->{data}->[$_]->{node_type} == ELEMENT_NODE and
-      ${$$node->[0]->{data}->[$_]->{namespace_uri} || \''} eq ATOM_NS and
-      ${$$node->[0]->{data}->[$_]->{local_name}} eq 'author';
-    } @{$$node->[0]->{data}->[$$node->[1]]->{child_nodes} or []};
-  });
-} # author_elements
+_define_reflect_child_string atom_id => ATOM_NS, 'id';
 
-# XXX
+_define_reflect_child_url icon => ATOM_NS, 'icon';
+_define_reflect_child_url logo => ATOM_NS, 'logo';
+
+Web::DOM::AtomElement::_define_atom_child_element
+    generator_element => 'generator';
+Web::DOM::AtomElement::_define_atom_child_element
+    subtitle_element => 'subtitle';
+Web::DOM::AtomElement::_define_atom_child_element
+    title_element => 'title';
+Web::DOM::AtomElement::_define_atom_child_element
+    updated_element => 'updated';
+
+# XXX These four methods should insert the element before any
+# atom:entry child
+
+Web::DOM::AtomElement::_define_atom_child_element_list
+    author_elements => 'author';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    category_elements => 'category';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    contributor_elements => 'contributor';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    link_elements => 'link';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    rights_elements => 'rights';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    entry_elements => 'entry';
+
+# XXX get_entry_element_by_id
+
+# XXX add_new_entry
 
 1;
 

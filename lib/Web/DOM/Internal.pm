@@ -368,29 +368,35 @@ sub node ($$) {
 ##
 ## $self->{cols}->[$root_node_id]->
 ## 
+##   - {anchors}                  - $doc->anchors
+##   - {attributes}               - $el->attributes
+##   - {attribute_definitions}    - $et->attribute_definitions
+##   - {author_elements}          - $el->author_elements
+##   - {category_elements}        - $el->category_elements
+##   - {cells}                    - $el->cells
 ##   - {child_nodes}              - $node->child_nodes
-##   - {attributes}               - $node->attributes
-##   - {attribute_definitions}    - $node->attribute_definitions
-##   - {element_types}            - $node->element_types
-##   - {general_entities}         - $node->general_entities
-##   - {iterator}                 - $node->_iterator (Web::DOM::NodeIterator)
-##   - {notations}                - $node->notations
 ##   - {children}                 - $node->children
-##   - {images}                   - $node->images
-##   - {embeds}                   - $node->embeds
-##   - {forms}                    - $node->forms
-##   - {scripts}                  - $node->scripts
-##   - {links}                    - $node->links
-##   - {anchors}                  - $node->anchors
-##   - {tbodies}                  - $node->tbodies
-##   - {rows}                     - $node->rows
-##   - {cells}                    - $node->cells
-##   - {options}                  - $node->options
+##   - {contributor_elements}     - $el->contributor_elements
+##   - {element_types}            - $dt->element_types
+##   - {embeds}                   - $doc->embeds
+##   - {entry_elements}           - $el->entry_elements
+##   - {forms}                    - $doc->forms
+##   - {general_entities}         - $dt->general_entities
+##   - {images}                   - $doc->images
+##   - {iterator}                 - $node->_iterator (Web::DOM::NodeIterator)
+##   - {link_elements}            - $el->link_elements
+##   - {links}                    - $doc->links
+##   - {notations}                - $dt->notations
+##   - {options}                  - $el->options
+##   - {rights_elements}          - $el->rights_elements
+##   - {rows}                     - $el->rows
+##   - {scripts}                  - $doc->scripts
+##   - {tbodies}                  - $table->tbodies
 ##   - {"by_class_name$;$cls"}    - $node->get_elements_by_class_name ($cls)
 ##   - {"by_tag_name$;$ln"}       - $node->get_elements_by_tag_name ($ln)
 ##   - {"by_tag_name_ns$;$n$;$l"} - $node->get_elements_by_tag_name_ns ($n, $l)
-##   - {"by_name$;$name"}         - $node->get_elements_by_name ($name)
-##   - {"all$;$name$;..."}        - $node->all->{$name}->...
+##   - {"by_name$;$name"}         - $doc->get_elements_by_name ($name)
+##   - {"all$;$name$;..."}        - $doc->all->{$name}->...
 
 my $CollectionClass = {
   child_nodes => 'Web::DOM::NodeList',

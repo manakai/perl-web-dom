@@ -133,15 +133,17 @@ for (
   ['author', 'email'],
   ['contributor', 'name'],
   ['contributor', 'email'],
+  ['feed', 'id', 'atom_id'],
 ) {
-  my ($el_name, $cel_name) = @$_;
+  my ($el_name, $cel_name, $method_name) = @$_;
+  $method_name ||= $cel_name;
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     my $el = $doc->create_element_ns (ATOM_NS, $el_name);
-    is $el->$cel_name, '';
-    $el->$cel_name ('hoge');
-    is $el->$cel_name, 'hoge';
+    is $el->$method_name, '';
+    $el->$method_name ('hoge');
+    is $el->$method_name, 'hoge';
     is $el->child_nodes->length, 1;
     is $el->child_nodes->[0]->node_type, 1;
     is $el->child_nodes->[0]->namespace_uri, ATOM_NS;
@@ -149,9 +151,9 @@ for (
     is $el->child_nodes->[0]->child_nodes->length, 1;
     is $el->child_nodes->[0]->child_nodes->[0]->node_type, 3;
     is $el->child_nodes->[0]->text_content, 'hoge';
-    $el->$cel_name ('fuga');
+    $el->$method_name ('fuga');
     is $el->child_nodes->[0]->text_content, 'fuga';
-    $el->$cel_name ('');
+    $el->$method_name ('');
     is $el->child_nodes->[0]->child_nodes->length, 0;
     done $c;
   } n => 11, name => ['string setter', $el_name, $cel_name];
@@ -166,8 +168,8 @@ for (
     $el3->inner_html ('<p>fuga</p>abc<!---->d');
     $el->append_child ($el2);
     $el->append_child ($el3);
-    is $el->$cel_name, 'fugaabcd';
-    $el->$cel_name ('abc<&');
+    is $el->$method_name, 'fugaabcd';
+    $el->$method_name ('abc<&');
     is $el3->inner_html, 'abc&lt;&amp;';
     done $c;
   } n => 2, name => ['string setter / existing elements',
@@ -176,6 +178,8 @@ for (
 
 for (
   ['author', 'uri'],
+  ['feed', 'icon'],
+  ['feed', 'logo'],
 ) {
   my ($el_name, $cel_name) = @$_;
   test {
@@ -223,6 +227,10 @@ for (
 for (
   ['author', 'name'],
   ['contributor', 'name'],
+  ['feed', 'generator'],
+  ['feed', 'subtitle'],
+  ['feed', 'title'],
+  ['feed', 'updated'],
 ) {
   my ($el_name, $cel_name) = @$_;
   my $method_name = $cel_name . '_element';
@@ -370,6 +378,11 @@ for my $test (
 
 for my $test (
   {parent => 'feed', child => 'author', method => 'author_elements'},
+  {parent => 'feed', child => 'category', method => 'category_elements'},
+  {parent => 'feed', child => 'contributor', method => 'contributor_elements'},
+  {parent => 'feed', child => 'rights', method => 'rights_elements'},
+  {parent => 'feed', child => 'link', method => 'link_elements'},
+  {parent => 'feed', child => 'entry', method => 'entry_elements'},
 ) {
   my $method = $test->{method};
   test {

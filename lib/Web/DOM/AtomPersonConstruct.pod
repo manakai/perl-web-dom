@@ -15,6 +15,12 @@ and L<Web::DOM::AtomElement>, the following method is available:
 
 =over 4
 
+=item $string = $el->email
+
+=item $el->email ($string)
+
+Return or set the value of the C<atom:email> child element.  [ATOMDOM]
+
 =item $string = $el->name
 
 =item $el->name ($string)
@@ -30,17 +36,13 @@ to true and there is no C<atom:name> element child, a new element is
 created and returned.  Otherwise, no element is created and C<undef>
 is returned.
 
-=item $string = $el->email
-
-=item $el->email ($string)
-
-Return or set the value of the C<atom:email> child element.  [ATOMDOM]
-
 =item $url = $el->uri
 
 =item $el->uri ($url)
 
-Return or set the value of the C<atom:uri> child element.  [ATOMDOM]
+Return or set the value of the C<atom:uri> child element.  The method
+returns the resoloved absolute URL if the value is a relative URL.
+[ATOMDOM]
 
 =back
 
