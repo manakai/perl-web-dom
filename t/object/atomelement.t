@@ -41,6 +41,11 @@ for my $test (
   ['subtitle', 'type', undef, 'text'],
   ['summary', 'type', undef, 'text'],
   ['title', 'type', undef, 'text'],
+  ['content', 'type', undef, 'text'],
+  ['category', 'term', undef, ''],
+  ['category', 'label', undef, ''],
+  ['generator', 'version', undef, ''],
+  ['link', 'type', undef, ''],
 ) {
   my $attr = $test->[1];
   test {
@@ -67,7 +72,73 @@ for my $test (
   } n => 9, name => ['string reflect attributes', @$test];
 }
 
-for my $el_name (qw(rights subtitle summary title)) {
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'link');
+  is $el->rel, '';
+
+  $el->rel ('hoge');
+  is $el->rel, 'http://www.iana.org/assignments/relation/hoge';
+  is $el->get_attribute_ns (undef, 'rel'), 'hoge';
+
+  $el->rel ('');
+  is $el->rel, 'http://www.iana.org/assignments/relation/';
+  is $el->get_attribute_ns (undef, 'rel'), '';
+
+  $el->rel ('http://www.iana.org/assignments/relation/');
+  is $el->rel, 'http://www.iana.org/assignments/relation/';
+  is $el->get_attribute_ns (undef, 'rel'),
+      'http://www.iana.org/assignments/relation/';
+
+  $el->rel ('http://hoge/');
+  is $el->rel, 'http://hoge/';
+  is $el->get_attribute_ns (undef, 'rel'), 'http://hoge/';
+
+  $el->rel ('hogeF');
+  is $el->rel, 'http://www.iana.org/assignments/relation/hogeF';
+  is $el->get_attribute_ns (undef, 'rel'), 'hogeF';
+
+  $el->rel ('http://www.iana.org/assignments/relation/hoge');
+  is $el->rel, 'http://www.iana.org/assignments/relation/hoge';
+  is $el->get_attribute_ns (undef, 'rel'), 'hoge';
+
+  $el->rel ("http://www.iana.org/assignments/relation/hoge\x0A");
+  is $el->rel, "http://www.iana.org/assignments/relation/hoge\x0A";
+  is $el->get_attribute_ns (undef, 'rel'), "hoge\x0A";
+
+  $el->rel ('ho/ge?');
+  is $el->rel, 'http://www.iana.org/assignments/relation/ho/ge?';
+  is $el->get_attribute ('rel'), 'ho/ge?';
+
+  $el->set_attribute (rel => 'http://www.iana.org/assignments/relation/hoge');
+  is $el->rel, 'http://www.iana.org/assignments/relation/hoge';
+
+  $el->rel ('http://www.iana.org/assignments/relation/ho:ge');
+  is $el->rel, 'http://www.iana.org/assignments/relation/ho:ge';
+  is $el->get_attribute ('rel'), 'http://www.iana.org/assignments/relation/ho:ge';
+
+  done $c;
+} n => 20, name => 'link.rel';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'link');
+
+  $el->rel ('replies');
+  is $el->type, 'application/atom+xml';
+
+  $el->set_attribute (rel => 'http://www.iana.org/assignments/relation/replies');
+  is $el->type, 'application/atom+xml';
+
+  $el->rel ('Replies');
+  is $el->type, '';
+
+  done $c;
+} n => 3, name => 'link.type rel=replies';
+
+for my $el_name (qw(rights subtitle summary title content)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
@@ -127,6 +198,37 @@ for my $el_name (qw(rights subtitle summary title)) {
     done $c;
   } n => 4, name => [$el_name, 'textconstruct.container', 'xhtml', 'create'];
 } # $el_name
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'content');
+  $el->set_attribute (src => '');
+  is $el->container, undef;
+  done $c;
+} n => 1, name => 'container src';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'content');
+  my $div = $doc->create_element ('div');
+  $el->append_child ($div);
+  $el->set_attribute (type => 'xhtml');
+  $el->set_attribute (src => '');
+  is $el->container, $div;
+  done $c;
+} n => 1, name => 'container src';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'content');
+  $el->set_attribute (type => 'xhtml');
+  $el->set_attribute (src => '');
+  is $el->container, undef;
+  done $c;
+} n => 1, name => 'container src';
 
 for (
   ['author', 'name'],
@@ -226,6 +328,36 @@ for (
     done $c;
   } n => 3, name => ['url setter / existing elements',
                      $el_name, $cel_name];
+} # $el_name, $cel_name
+
+for (
+  ['content', 'src'],
+  ['category', 'scheme'],
+  ['generator', 'uri'],
+  ['link', 'href'],
+) {
+  my ($el_name, $cel_name) = @$_;
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element_ns (ATOM_NS, $el_name);
+    is $el->$cel_name, '';
+    $el->$cel_name ('http://hoge/');
+    is $el->$cel_name, 'http://hoge/';
+    is $el->attributes->length, 1;
+    is $el->attributes->[0]->node_type, 2;
+    is $el->attributes->[0]->namespace_uri, undef;
+    is $el->attributes->[0]->local_name, $cel_name;
+    is $el->attributes->[0]->value, 'http://hoge/';
+    $el->$cel_name ('fuga');
+    is $el->attributes->[0]->value, 'fuga';
+    is $el->$cel_name, '';
+    $el->$cel_name ('');
+    is $el->attributes->[0]->value, '';
+    $el->set_attribute_ns (XML_NS, 'xml:base' => 'hoge:');
+    is $el->$cel_name, 'hoge:';
+    done $c;
+  } n => 11, name => ['url attr setter', $el_name, $cel_name];
 } # $el_name, $cel_name
 
 for (
@@ -391,6 +523,124 @@ for my $test (
 
     done $c;
   } n => 5 * 3, name => ['AtomDateConstruct.value', @$test, 'webidl domperl'];
+} # $test
+
+for my $test (
+  {el => 'link', 'prefix' => 'thr', name => 'updated', ns => ATOM_THREAD_NS,
+   method => 'thread_updated'},
+) {
+  my $method = $test->{method};
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element_ns (ATOM_NS, $test->{el});
+    is $el->$method, 0;
+
+    $el->$method (155);
+    is $el->$method, 155;
+    is $el->get_attribute_ns ($test->{ns}, $test->{name}),
+        '1970-01-01T00:02:35Z';
+    is $el->attributes->length, 1;
+
+    for (
+      [-62135596800, '0001-01-01T00:00:00Z'],
+      [-61785086115, '0012-02-09T20:04:45Z'],
+      [-59323550115, '0090-02-09T20:04:45Z'],
+      [-30228177315, '1012-02-09T20:04:45Z'],
+      [-4982615715, '1812-02-09T20:04:45Z'],
+      [-154324515, '1965-02-09T20:04:45Z'],
+      [-124515, '1969-12-30T13:24:45Z'],
+      [0, '1970-01-01T00:00:00Z'],
+      [515123455, '1986-04-29T01:50:55Z'],
+      [15252151635, '2453-04-27T12:47:15Z'],
+      [133485926399, '6199-12-31T23:59:59Z'],
+      [193444156799, '8099-12-31T23:59:59Z'],
+      [253402300799, '9999-12-31T23:59:59Z'],
+      [884541340799, '29999-12-31T23:59:59Z'],
+    ) {
+      $el->$method ($_->[0]);
+      is $el->$method, $_->[0], "$_->[0] roundtrip";
+      is $el->get_attribute_ns ($test->{ns}, $test->{name}),
+          $_->[2] || $_->[1], "$_->[0] -> date";
+      is $el->attributes->length, 1;
+
+      $el->set_attribute_ns ($test->{ns}, ['hoge', $test->{name}] => $_->[1]);
+      is $el->$method, $_->[0], "$_->[1] -> $method";
+    }
+
+    for (
+      '',
+      'abc',
+      '2013-05-01 00:12:44Z',
+      '2013-05-01t00:12:44Z',
+      '-2013-05-01T00:12:44Z',
+      '2013-05-01T00:12:44',
+      ' 2013-05-01T00:12:44  ',
+    ) {
+      $el->set_attribute_ns ($test->{ns}, [undef, $test->{name}] => $_);
+      is $el->$method, 0;
+    }
+
+    $el->set_attribute_ns ($test->{ns}, [undef, $test->{name}] => 'hoge');
+    for (
+      -12415 + -62135596800,
+      -1 + -62135596800,
+      -0.001 + -62135596800,
+    ) {
+      $el->$method ($_);
+      is $el->get_attribute_ns ($test->{ns}, $test->{name}), 'hoge';
+    }
+
+    $el->$method (1430272255.912);
+    is $el->$method, 1430272255.912;
+    is $el->get_attribute_ns ($test->{ns}, $test->{name}),
+        '2015-04-29T01:50:55.912Z';
+
+    $el->set_attribute_ns
+        ($test->{ns}, [undef, $test->{name}] => '2015-04-29T01:50:55.0001Z');
+    is $el->$method, 1430272255.0001;
+    $el->$method (1430272255.0001);
+    is $el->get_attribute_ns ($test->{ns}, $test->{name}),
+        '2015-04-29T01:50:55.0001Z';
+
+    $el->set_attribute_ns
+        ($test->{ns}, [undef, $test->{name}] => '2015-04-29T01:50:55.9015Z');
+    is $el->$method, 1430272255.9015;
+    $el->$method (1430272255.9015);
+    is $el->get_attribute_ns ($test->{ns}, $test->{name}),
+        '2015-04-29T01:50:55.9015Z';
+
+    $el->set_attribute_ns
+        ($test->{ns}, [undef, $test->{name}] => '1015-04-29T01:50:55.000Z');
+    is $el->$method, -30126722945, '55.000Z';
+    $el->set_attribute_ns
+        ($test->{ns}, [undef, $test->{name}] => '1015-04-29T01:50:55.0001Z');
+    is $el->$method, -30126722944.9999;
+    $el->$method (-30126722944.9999);
+    is $el->get_attribute_ns ($test->{ns}, $test->{name}),
+        '1015-04-29T01:50:55.000099Z';
+
+    done $c;
+  } n => 4 + 14*4 + 7 + 3 + 9, name => ['datetime', $method, %$test];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element_ns (ATOM_NS, $test->{el});
+
+    for my $value (0+"nan", 0+"inf", 0-"inf") {
+      dies_here_ok {
+        $el->$method ($value);
+      };
+      isa_ok $@, 'Web::DOM::TypeError';
+      is $@->message, 'The value is out of range';
+      
+      is $el->get_attribute_ns ($test->{ns}, $test->{name}), undef;
+      is $el->attributes->[0], undef;
+    }
+
+    done $c;
+  } n => 5 * 3, name => ['datetime', $method, %$test, 'webidl domperl'];
 } # $test
 
 for my $test (
@@ -707,6 +957,63 @@ test {
   is $el2->child_nodes->length, 1;
   done $c;
 } n => 5, name => 'entry_rights_element create element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'link');
+
+  is $el->thread_count, 0;
+
+  $el->thread_count (125);
+  is $el->thread_count, 125;
+  is $el->get_attribute_ns (ATOM_THREAD_NS, 'count'), '125';
+
+  $el->thread_count (0);
+  is $el->thread_count, 0;
+  is $el->get_attribute_ns (ATOM_THREAD_NS, 'count'), '0';
+
+  $el->thread_count (-125 + 2**32);
+  is $el->thread_count, 0;
+  is $el->get_attribute_ns (ATOM_THREAD_NS, 'count'), '4294967171';
+  is $el->attributes->[0]->prefix, 'thr';
+
+  $el->thread_count (2**31 - 1);
+  is $el->thread_count, 2147483647;
+  is $el->get_attribute_ns (ATOM_THREAD_NS, 'count'), '2147483647';
+  is $el->attributes->[0]->prefix, 'thr';
+
+  $el->attributes->[0]->prefix, 'thread';
+  $el->thread_count (1242.41);
+  is $el->thread_count, 1242;
+  is $el->get_attribute_ns (ATOM_THREAD_NS, 'count'), '1242';
+  is $el->attributes->[0]->prefix, 'thr';
+
+  $el->set_attribute_ns (ATOM_THREAD_NS, 'count' => 'abc');
+  is $el->thread_count, 0;
+
+  $el->set_attribute_ns (ATOM_THREAD_NS, 'count' => '+120.13abc');
+  is $el->thread_count, 120;
+
+  $el->set_attribute_ns (ATOM_THREAD_NS, 'count' => '-5000');
+  is $el->thread_count, 0;
+
+  done $c;
+} n => 17, name => 'link.thread_count';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'link');
+  $el->thread_updated (124);
+  is $el->attributes->[0]->prefix, 'thr';
+
+  $el->attributes->[0]->prefix ('thread');
+  $el->thread_updated (171);
+  is $el->attributes->[0]->prefix, 'thread';
+
+  done $c;
+} n => 2, name => 'link.thread_updated namespace prefix';
 
 run_tests;
 

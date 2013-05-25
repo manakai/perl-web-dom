@@ -45,7 +45,11 @@ L<Web::DOM::AtomPersonConstruct>,
 L<Web::DOM::AtomDateConstruct>,
 L<Web::DOM::AtomFeedElement>,
 L<Web::DOM::AtomEntryElement>,
-L<Web::DOM::AtomSourceElement>.
+L<Web::DOM::AtomSourceElement>,
+L<Web::DOM::AtomContentElement>,
+L<Web::DOM::AtomCategoryElement>,
+L<Web::DOM::AtomGeneratorElement>,
+L<Web::DOM::AtomLinkElement>.
 
 =head1 SPECIFICATION
 

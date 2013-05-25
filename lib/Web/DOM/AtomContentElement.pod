@@ -1,0 +1,69 @@
+=head1 NAME
+
+Web::DOM::AtomContentElement - The DOM |AtomContentElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomContentElement> class implements the DOM
+C<AtomContentElement> interface.  The class is used by the Atom
+C<content> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::AtomElement>, the following method is available:
+
+=over 4
+
+=item $el2 = $el->container
+
+Return the container element for the text value.  If the C<type>
+attribute value is C<xhtml>, it returns the HTML C<div> element child.
+Otherwise, if the element has the C<src> attribute, is return
+C<undef>.  Otherwise, it returns the element itself.  [ATOMDOM]
+
+If the C<manakai-create-child-element> configuration parameter is set
+to true, the HTML C<div> element child is created by the method and
+then returned when it does not exist.  Otherwise, no element is
+created and C<undef> is returned.
+
+=item $string = $el->src
+
+=item $el->src ($string)
+
+Return or set the C<src> attribute.  [ATOMDOM]
+
+=item $string = $el->type
+
+=item $el->type ($string)
+
+Return or set the C<type> attribute.  [ATOMDOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

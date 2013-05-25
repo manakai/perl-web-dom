@@ -21,7 +21,7 @@ and L<Web::DOM::AtomElement>, the following method is available:
 
 Return or set the date-time value of the element content.  The
 date-time value is represented as C<time_t> real number (i.e. seconds
-from the Unix epoch) [ATOMDOM] [DOMPERL]
+from the Unix epoch).  [ATOMDOM] [DOMPERL]
 
 =back
 
@@ -32,7 +32,7 @@ L<Web::DOM::AtomPublishedElement> and L<Web::DOM::AtomUpdatedElement>.
 
 XXX
 
-=head1 SPECIFICATION
+=head1 SPECIFICATIONS
 
 =over 4
 

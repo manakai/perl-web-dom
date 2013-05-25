@@ -325,6 +325,10 @@ for (
   ['feed', 'AtomFeedElement'],
   ['entry', 'AtomEntryElement'],
   ['source', 'AtomSourceElement'],
+  ['content', 'AtomContentElement'],
+  ['category', 'AtomCategoryElement'],
+  ['generator', 'AtomGeneratorElement'],
+  ['link', 'AtomLinkElement'],
 ) {
   $ElementClass->{Web::DOM::Internal::ATOM_NS}->{$_->[0]}
       = "Web::DOM::$_->[1]";

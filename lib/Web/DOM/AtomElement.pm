@@ -476,6 +476,131 @@ Web::DOM::AtomElement::_define_atom_child_element
 Web::DOM::AtomElement::_define_atom_child_element
     updated_element => 'updated';
 
+package Web::DOM::AtomContentElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Internal;
+use Web::DOM::Node;
+use Web::DOM::Element;
+
+_define_reflect_string type => 'type', 'text';
+_define_reflect_url src => 'src';
+
+sub container ($) {
+  my $self = $_[0];
+  my $type = $self->get_attribute_ns (undef, 'type');
+  if (defined $type and $type eq 'xhtml') {
+    for ($self->child_nodes->to_list) {
+      if ($_->node_type == ELEMENT_NODE and
+          $_->local_name eq 'div' and
+          ($_->namespace_uri || '') eq HTML_NS) {
+        return $_;
+      }
+    }
+    if (${$_[0]}->[0]->{config}->{manakai_create_child_element}) {
+      my $el = $self->owner_document->create_element ('div');
+      return $self->append_child ($el);
+    } else {
+      return undef;
+    }
+  } elsif ($_[0]->has_attribute_ns (undef, 'src')) {
+    return undef;
+  } else {
+    return $self;
+  }
+} # container
+
+package Web::DOM::AtomCategoryElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Element;
+
+_define_reflect_string term => 'term';
+_define_reflect_string label => 'label';
+_define_reflect_url scheme => 'scheme';
+
+package Web::DOM::AtomGeneratorElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Element;
+
+_define_reflect_string version => 'version';
+_define_reflect_url uri => 'uri';
+
+package Web::DOM::AtomLinkElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Internal;
+use Web::DOM::Element;
+
+_define_reflect_url href => 'href';
+_define_reflect_string hreflang => 'hreflang';
+_define_reflect_string title => 'title';
+_define_reflect_string length => 'length';
+
+sub rel ($;$) {
+  if (@_ > 1) {
+    my $value = ''.$_[1];
+    if ($value =~ m{\Ahttp://www.iana.org/assignments/relation/([^:\#/?]+)\z}) {
+      $_[0]->set_attribute_ns (undef, rel => $1);
+    } else {
+      $_[0]->set_attribute_ns (undef, rel => $value);
+    }
+  }
+
+  my $value = $_[0]->get_attribute_ns (undef, 'rel');
+  return '' unless defined $value;
+  return $value if $value =~ /:/;
+  return q<http://www.iana.org/assignments/relation/> . $value;
+} # rel
+
+sub type ($;$) {
+  if (@_ > 1) {
+    $_[0]->set_attribute_ns (undef, type => $_[1]);
+    return unless defined wantarray;
+  }
+
+  my $type = $_[0]->get_attribute_ns (undef, 'type');
+  return $type if defined $type;
+  if ($_[0]->rel eq q<http://www.iana.org/assignments/relation/replies>) {
+    return q<application/atom+xml>;
+  } else {
+    return '';
+  }
+} # type
+
+sub thread_count ($;$) {
+  if (@_ > 1) {
+    # WebIDL: unsigned long
+    $_[0]->set_attribute_ns
+        (ATOM_THREAD_NS, 'thr:count', unpack 'L', pack 'L', $_[1] % 2**32);
+    return unless defined wantarray;
+  }
+
+  my $v = $_[0]->get_attribute_ns (ATOM_THREAD_NS, 'count');
+  if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
+    my $v = $1;
+    return 0+$v if 0 <= $v and $v <= 2**31-1;
+  }
+  return 0;
+} # thread_count
+
+push our @CARP_NOT, qw(Web::DOM::AtomUpdatedElement);
+sub thread_updated ($;$) {
+  my $el = $_[0]->owner_document->create_element_ns (ATOM_NS, 'updated');
+  if (@_ > 1) {
+    $el->value ($_[1]);
+    $_[0]->set_attribute_ns
+        (ATOM_THREAD_NS, 'thr:updated' => $el->text_content)
+        if $el->first_child;
+    return unless defined wantarray;
+  }
+
+  my $value = $_[0]->get_attribute_ns (ATOM_THREAD_NS, 'updated');
+  $el->text_content (defined $value ? $value : '');
+  return $el->value;
+} # thread_updated
+
 1;
 
 =head1 LICENSE

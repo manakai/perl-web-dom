@@ -1,0 +1,116 @@
+=head1 NAME
+
+Web::DOM::AtomLinkElement - The DOM |AtomLinkElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomLinkElement> class implements the DOM
+C<AtomLinkElement> interface.  The class is used by the Atom C<link>
+element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::AtomElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->href
+
+=item $el->href ($string)
+
+Return or set the C<href> attribute.  [ATOMDOM]
+
+=item $string = $el->hreflang
+
+=item $el->hreflang ($string)
+
+Return or set the C<hreflang> attribute.  [ATOMDOM]
+
+=item $string = $el->length
+
+=item $el->length ($string)
+
+Return or set the C<length> attribute.  [ATOMDOM]
+
+=item $string = $el->rel
+
+=item $el->rel ($string)
+
+Return or set the C<rel> attribute.  The getter expands the link
+relation type with no C<:> character by prepending
+C<http://www.iana.org/assignments/relation/>.  The setter removes any
+preceding C<http://www.iana.org/assignments/relation/> substring from
+the new value.  [ATOMDOM]
+
+Therefore, the C<rel> attribute value of an C<atom:link> element whose
+C<rel> content attribute value is C<self> is
+C<http://www.iana.org/assignments/relation/self>.  The Atom
+specification defines that the C<rel> attribute values
+C<http://www.iana.org/assignments/relation/self> and C<self> are
+equivalent.
+
+=item $string = $el->title
+
+=item $el->title ($string)
+
+Return or set the C<title> attribute.  [ATOMDOM]
+
+=item $string = $el->thread_count
+
+=item $el->thread_count ($string)
+
+Return or set the C<thr:count> attribute.  [ATOMDOM]
+
+=item $number = $el->thread_updated
+
+=item $el->thread_updated ($number)
+
+Return or set the date-time value of the C<thr:updated> attribute.
+The date-time value is represented as C<time_t> real number
+(i.e. seconds from the Unix epoch).  [ATOMDOM] [DOMPERL]
+
+=item $string = $el->type
+
+=item $el->type ($string)
+
+Return or set the C<type> attribute.  [ATOMDOM]
+
+=back
+
+=head1 DEPENDENCY
+
+XXX
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

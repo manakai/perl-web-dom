@@ -1,0 +1,57 @@
+=head1 NAME
+
+Web::DOM::AtomGeneratorElement - The DOM |AtomGeneratorElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomGeneratorElement> class implements the DOM
+C<AtomGeneratorElement> interface.  The class is used by the Atom
+C<generator> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::AtomElement>, the following method is available:
+
+=over 4
+
+=item $string = $el->uri
+
+=item $el->uri ($string)
+
+Return or set the C<uri> attribute.  [ATOMDOM]
+
+=item $string = $el->version
+
+=item $el->version ($string)
+
+Return or set the C<version> attribute.  [ATOMDOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
