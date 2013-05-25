@@ -1,11 +1,13 @@
 use strict;
 use warnings;
+no warnings 'utf8';
 use Path::Class;
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
+use Web::DOM::Internal;
 use Web::DOM::Document;
 
 test {
@@ -666,6 +668,128 @@ test {
 
   done $c;
 } n => 41, name => 'create_html_document with arg';
+
+test {
+  my $c = shift;
+  my $impl = new Web::DOM::Implementation;
+  my $doc = $impl->create_atom_feed_document ('hoge');
+
+  isa_ok $doc, 'Web::DOM::Document';
+  ok not $doc->isa ('Web::DOM::XMLDocument');
+
+  is $doc->url, 'about:blank';
+  is $doc->content_type, 'application/atom+xml';
+  is $doc->character_set, 'utf-8';
+  ok not $doc->manakai_is_html;
+  is $doc->compat_mode, 'CSS1Compat';
+  is $doc->manakai_compat_mode, 'no quirks';
+
+  my $feed = $doc->first_child;
+  is $feed->namespace_uri, ATOM_NS;
+  is $feed->local_name, 'feed';
+
+  is $feed->atom_id, 'hoge';
+  is $feed->title_element->text_content, '';
+  is $feed->xmllang, '';
+  is $feed->attributes->length, 1;
+  is $feed->child_nodes->length, 3;
+  is $feed->child_nodes->[0]->local_name, 'id';
+  is $feed->child_nodes->[1]->local_name, 'title';
+  is $feed->child_nodes->[2]->local_name, 'updated';
+  done $c;
+} n => 18, name => 'create_atom_feed_document id only';
+
+test {
+  my $c = shift;
+  my $impl = new Web::DOM::Implementation;
+  my $doc = $impl->create_atom_feed_document ('hoge', 'aa', 'bb');
+
+  isa_ok $doc, 'Web::DOM::Document';
+  ok not $doc->isa ('Web::DOM::XMLDocument');
+
+  is $doc->url, 'about:blank';
+  is $doc->content_type, 'application/atom+xml';
+  is $doc->character_set, 'utf-8';
+  ok not $doc->manakai_is_html;
+  is $doc->compat_mode, 'CSS1Compat';
+  is $doc->manakai_compat_mode, 'no quirks';
+
+  my $feed = $doc->first_child;
+  is $feed->namespace_uri, ATOM_NS;
+  is $feed->local_name, 'feed';
+
+  is $feed->atom_id, 'hoge';
+  is $feed->title_element->text_content, 'aa';
+  is $feed->xmllang, 'bb';
+  is $feed->attributes->[0]->prefix, 'xml';
+  is $feed->attributes->length, 1;
+  is $feed->child_nodes->length, 3;
+  is $feed->child_nodes->[0]->local_name, 'id';
+  is $feed->child_nodes->[1]->local_name, 'title';
+  is $feed->child_nodes->[2]->local_name, 'updated';
+  done $c;
+} n => 19, name => 'create_atom_feed_document id title lang';
+
+test {
+  my $c = shift;
+  my $impl = new Web::DOM::Implementation;
+  my $doc = $impl->create_atom_entry_document ('hoge');
+
+  isa_ok $doc, 'Web::DOM::Document';
+  ok not $doc->isa ('Web::DOM::XMLDocument');
+
+  is $doc->url, 'about:blank';
+  is $doc->content_type, 'application/atom+xml';
+  is $doc->character_set, 'utf-8';
+  ok not $doc->manakai_is_html;
+  is $doc->compat_mode, 'CSS1Compat';
+  is $doc->manakai_compat_mode, 'no quirks';
+
+  my $entry = $doc->first_child;
+  is $entry->namespace_uri, ATOM_NS;
+  is $entry->local_name, 'entry';
+
+  is $entry->atom_id, 'hoge';
+  is $entry->title_element->text_content, '';
+  is $entry->xmllang, '';
+  is $entry->attributes->length, 1;
+  is $entry->child_nodes->length, 3;
+  is $entry->child_nodes->[0]->local_name, 'id';
+  is $entry->child_nodes->[1]->local_name, 'title';
+  is $entry->child_nodes->[2]->local_name, 'updated';
+  done $c;
+} n => 18, name => 'create_atom_entry_document id only';
+
+test {
+  my $c = shift;
+  my $impl = new Web::DOM::Implementation;
+  my $doc = $impl->create_atom_entry_document ('hoge', 'aa', 'bb');
+
+  isa_ok $doc, 'Web::DOM::Document';
+  ok not $doc->isa ('Web::DOM::XMLDocument');
+
+  is $doc->url, 'about:blank';
+  is $doc->content_type, 'application/atom+xml';
+  is $doc->character_set, 'utf-8';
+  ok not $doc->manakai_is_html;
+  is $doc->compat_mode, 'CSS1Compat';
+  is $doc->manakai_compat_mode, 'no quirks';
+
+  my $entry = $doc->first_child;
+  is $entry->namespace_uri, ATOM_NS;
+  is $entry->local_name, 'entry';
+
+  is $entry->atom_id, 'hoge';
+  is $entry->title_element->text_content, 'aa';
+  is $entry->xmllang, 'bb';
+  is $entry->attributes->[0]->prefix, 'xml';
+  is $entry->attributes->length, 1;
+  is $entry->child_nodes->length, 3;
+  is $entry->child_nodes->[0]->local_name, 'id';
+  is $entry->child_nodes->[1]->local_name, 'title';
+  is $entry->child_nodes->[2]->local_name, 'updated';
+  done $c;
+} n => 19, name => 'create_atom_entry_document id title lang';
 
 for my $feature (
   '',

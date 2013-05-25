@@ -117,6 +117,80 @@ sub create_html_document ($;$) {
   return $doc;
 } # create_html_document
 
+sub create_atom_feed_document ($$;$$) {
+  # 1.
+  require Web::DOM::Document;
+  my $doc = Web::DOM::Document->new;
+  
+  # 2.
+  $doc->_set_content_type ('application/atom+xml');
+
+  # 3.
+  my $feed = $doc->create_element_ns (ATOM_NS, 'feed');
+
+  # 5.
+  my $id = $doc->create_element_ns (ATOM_NS, 'id');
+  $id->text_content ($_[1]);
+  $feed->append_child ($id);
+
+  # 6.
+  my $title = $doc->create_element_ns (ATOM_NS, 'title');
+  $title->text_content (defined $_[2] ? $_[2] : '');
+  $feed->append_child ($title);
+
+  # 4.
+  $feed->set_attribute_ns
+      (XML_NS, ['xml', 'lang'] => defined $_[3] ? $_[3] : '');
+
+  # 7.
+  my $updated = $doc->create_element_ns (ATOM_NS, 'updated');
+  $updated->value (time);
+  $feed->append_child ($updated);
+
+  # 8.
+  $doc->append_child ($feed);
+
+  # 9.
+  return $doc;
+} # create_atom_feed_document
+
+sub create_atom_entry_document ($$;$$) {
+  # 1.
+  require Web::DOM::Document;
+  my $doc = Web::DOM::Document->new;
+  
+  # 2.
+  $doc->_set_content_type ('application/atom+xml');
+
+  # 3.
+  my $entry = $doc->create_element_ns (ATOM_NS, 'entry');
+
+  # 5.
+  my $id = $doc->create_element_ns (ATOM_NS, 'id');
+  $id->text_content ($_[1]);
+  $entry->append_child ($id);
+
+  # 6.
+  my $title = $doc->create_element_ns (ATOM_NS, 'title');
+  $title->text_content (defined $_[2] ? $_[2] : '');
+  $entry->append_child ($title);
+
+  # 4.
+  $entry->set_attribute_ns
+      (XML_NS, ['xml', 'lang'] => defined $_[3] ? $_[3] : '');
+
+  # 7.
+  my $updated = $doc->create_element_ns (ATOM_NS, 'updated');
+  $updated->value (time);
+  $entry->append_child ($updated);
+
+  # 8.
+  $doc->append_child ($entry);
+
+  # 9.
+  return $doc;
+} # create_atom_entry_document
+
 sub create_document_type ($$;$$) {
   my $self = $_[0];
   my $qname = ''.$_[1];
@@ -175,7 +249,7 @@ sub has_feature ($$;$) {
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

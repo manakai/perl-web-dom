@@ -24,6 +24,18 @@ newer applications.  Now that the L<Web::DOM::Document> class has the
 constructor, the constructor method of the L<Web::DOM::Implementation>
 class is useless. [DOMPERL]
 
+=item $doc = $impl->create_atom_entry_document ($id, $title, $lang)
+
+Create a new L<Web::DOM::Document> whose document element is an
+C<atom:entry> element, using the specified C<atom:id>, C<atom:title>,
+and C<xml:lang> values.  [ATOMDOM]
+
+=item $doc = $impl->create_atom_feed_document ($id, $title, $lang)
+
+Create a new L<Web::DOM::Document> whose document element is an
+C<atom:feed> element, using the specified C<atom:id>, C<atom:title>,
+and C<xml:lang> values.  [ATOMDOM]
+
 =item $doc = $impl->create_document ($nsurl, $qname, $doctype)
 
 =item $doc = $impl->create_document ($nsurl, [$prefix, $local_name], $doctype)
@@ -78,6 +90,10 @@ manakai's DOM Perl Binding
 SVG - Feature Strings
 <https://svgwg.org/svg2-draft/single-page.html#chapter-feature>,
 <https://svgwg.org/svg2-draft/single-page.html#svgdom-FeatureStrings>.
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
 
 =back
 

@@ -778,13 +778,14 @@ test {
   is $entry->atom_id, 'hoge';
   is $entry->title_element->text_content, 'aa';
   is $entry->xmllang, 'bb';
+  is $entry->attributes->[0]->prefix, 'xml';
   is $entry->attributes->length, 1;
   is $entry->child_nodes->length, 3;
   is $entry->child_nodes->[0]->local_name, 'id';
   is $entry->child_nodes->[1]->local_name, 'title';
   is $entry->child_nodes->[2]->local_name, 'updated';
   done $c;
-} n => 12, name => 'add_new_entry id title lang';
+} n => 13, name => 'add_new_entry id title lang';
 
 test {
   my $c = shift;
