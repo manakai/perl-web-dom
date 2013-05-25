@@ -456,6 +456,25 @@ use Web::DOM::Element;
 
 Web::DOM::AtomElement::_define_atom_child_element_list
     author_elements => 'author';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    category_elements => 'category';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    contributor_elements => 'contributor';
+Web::DOM::AtomElement::_define_atom_child_element
+    generator_element => 'generator';
+_define_reflect_child_string atom_id => ATOM_NS, 'id';
+_define_reflect_child_url icon => ATOM_NS, 'icon';
+_define_reflect_child_url logo => ATOM_NS, 'logo';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    link_elements => 'link';
+Web::DOM::AtomElement::_define_atom_child_element
+    rights_element => 'rights';
+Web::DOM::AtomElement::_define_atom_child_element
+    subtitle_element => 'subtitle';
+Web::DOM::AtomElement::_define_atom_child_element
+    title_element => 'title';
+Web::DOM::AtomElement::_define_atom_child_element
+    updated_element => 'updated';
 
 1;
 

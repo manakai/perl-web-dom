@@ -135,6 +135,7 @@ for (
   ['contributor', 'email'],
   ['feed', 'id', 'atom_id'],
   ['entry', 'id', 'atom_id'],
+  ['source', 'id', 'atom_id'],
 ) {
   my ($el_name, $cel_name, $method_name) = @$_;
   $method_name ||= $cel_name;
@@ -181,6 +182,8 @@ for (
   ['author', 'uri'],
   ['feed', 'icon'],
   ['feed', 'logo'],
+  ['source', 'icon'],
+  ['source', 'logo'],
 ) {
   my ($el_name, $cel_name) = @$_;
   test {
@@ -240,6 +243,11 @@ for (
   ['entry', 'summary'],
   ['entry', 'title'],
   ['entry', 'updated'],
+  ['source', 'generator'],
+  ['source', 'rights'],
+  ['source', 'subtitle'],
+  ['source', 'title'],
+  ['source', 'updated'],
 ) {
   my ($el_name, $cel_name) = @$_;
   my $method_name = $cel_name . '_element';
@@ -399,6 +407,10 @@ for my $test (
   {parent => 'entry', child => 'in-reply-to', ns => ATOM_THREAD_NS,
    method => 'thread_in_reply_to_elements'},
   {parent => 'source', child => 'author', method => 'author_elements'},
+  {parent => 'source', child => 'category', method => 'category_elements'},
+  {parent => 'source', child => 'contributor',
+   method => 'contributor_elements'},
+  {parent => 'source', child => 'link', method => 'link_elements'},
 ) {
   my $method = $test->{method};
   test {
