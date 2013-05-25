@@ -1,0 +1,69 @@
+=head1 NAME
+
+Web::DOM::AtomThreadInReplyToElement - The DOM |AtomThreadInReplyToElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomThreadInReplyToElement> class implements the DOM
+C<AtomThreadInReplyToElement> interface.  The class is used by the
+Atom Threading extension's C<in-reply-to> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::AtomElement>, following methods are available:
+
+=over 4
+
+=item $string = $el->href
+
+=item $el->href ($string)
+
+Return or set the C<href> attribute.  [ATOMDOM]
+
+=item $string = $el->ref
+
+=item $el->ref ($string)
+
+Return or set the C<ref> attribute.  [ATOMDOM]
+
+=item $string = $el->source
+
+=item $el->source ($string)
+
+Return or set the C<source> attribute.  [ATOMDOM]
+
+=item $string = $el->type
+
+=item $el->type ($string)
+
+Return or set the C<type> attribute.  [ATOMDOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

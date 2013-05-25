@@ -310,6 +310,11 @@ for my $test (
   [[ATOM_NS, 'generator'], ['Element', 'AtomElement',
                             'AtomGeneratorElement'], []],
   [[ATOM_NS, 'link'], ['Element', 'AtomElement', 'AtomLinkElement'], []],
+  [[ATOM_THREAD_NS, 'hoge'], ['Element', 'AtomElement'], []],
+  [[ATOM_THREAD_NS, 'in-reply-to'], ['Element', 'AtomElement',
+                                     'AtomThreadInReplyToElement'], []],
+  [[ATOM_THREAD_NS, 'total'], ['Element', 'AtomElement',
+                               'AtomThreadTotalElement'], []],
 ) {
   test {
     my $c = shift;

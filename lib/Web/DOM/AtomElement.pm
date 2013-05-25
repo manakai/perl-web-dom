@@ -601,6 +601,35 @@ sub thread_updated ($;$) {
   return $el->value;
 } # thread_updated
 
+package Web::DOM::AtomThreadInReplyToElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Element;
+
+_define_reflect_url href => 'href';
+_define_reflect_url ref => 'ref';
+_define_reflect_url source => 'source';
+_define_reflect_string type => 'type';
+
+package Web::DOM::AtomThreadTotalElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+
+sub value ($;$) {
+  if (@_ > 1) {
+    # WebIDL: unsigned long
+    $_[0]->text_content (unpack 'L', pack 'L', $_[1] % 2**32);
+    return unless defined wantarray;
+  }
+
+  my $v = $_[0]->text_content;
+  if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
+    my $v = $1;
+    return 0+$v if 0 <= $v and $v <= 2**31-1;
+  }
+  return 0;
+} # value
+
 1;
 
 =head1 LICENSE

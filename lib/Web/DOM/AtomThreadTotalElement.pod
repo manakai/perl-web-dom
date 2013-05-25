@@ -1,0 +1,51 @@
+=head1 NAME
+
+Web::DOM::AtomThreadTotalElement - The DOM |AtomThreadTotalElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::AtomThreadTotalElement> class implements the DOM
+C<AtomThreadTotalElement> interface.  The class is used by the Atom
+Threading extension's C<total> element.
+
+=head1 METHODS
+
+In addition to the methods available for classes L<Web::DOM::Element>
+and L<Web::DOM::AtomElement>, the following method is available:
+
+=over 4
+
+=item $number = $el->value
+
+=item $el->value ($number)
+
+Return or set the numeral value of the element content.  [ATOMDOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item ATOMDOM
+
+Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::AtomElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

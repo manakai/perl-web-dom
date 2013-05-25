@@ -46,12 +46,13 @@ for my $test (
   ['category', 'label', undef, ''],
   ['generator', 'version', undef, ''],
   ['link', 'type', undef, ''],
+  ['in-reply-to', 'type', undef, '', ATOM_THREAD_NS],
 ) {
   my $attr = $test->[1];
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element_ns (ATOM_NS, $test->[0]);
+    my $el = $doc->create_element_ns ($test->[4] || ATOM_NS, $test->[0]);
     is $el->$attr, $test->[3];
     $el->$attr ('hoge ');
     is $el->$attr, 'hoge ';
@@ -335,12 +336,15 @@ for (
   ['category', 'scheme'],
   ['generator', 'uri'],
   ['link', 'href'],
+  ['in-reply-to', 'href', ATOM_THREAD_NS],
+  ['in-reply-to', 'ref', ATOM_THREAD_NS],
+  ['in-reply-to', 'source', ATOM_THREAD_NS],
 ) {
-  my ($el_name, $cel_name) = @$_;
+  my ($el_name, $cel_name, $ns) = @$_;
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element_ns (ATOM_NS, $el_name);
+    my $el = $doc->create_element_ns ($ns || ATOM_NS, $el_name);
     is $el->$cel_name, '';
     $el->$cel_name ('http://hoge/');
     is $el->$cel_name, 'http://hoge/';
@@ -1014,6 +1018,51 @@ test {
 
   done $c;
 } n => 2, name => 'link.thread_updated namespace prefix';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_THREAD_NS, 'total');
+
+  is $el->value, 0;
+
+  $el->value (125);
+  is $el->value, 125;
+  is $el->text_content, '125';
+
+  $el->value (0);
+  is $el->value, 0;
+  is $el->text_content, '0';
+
+  $el->value (-125 + 2**32);
+  is $el->value, 0;
+  is $el->text_content, '4294967171';
+
+  $el->value (2**31 - 1);
+  is $el->value, 2147483647;
+  is $el->text_content, '2147483647';
+
+  $el->value (1242.41);
+  is $el->value, 1242;
+  is $el->text_content, '1242';
+
+  $el->text_content ('abc');
+  is $el->value, 0;
+
+  $el->text_content ('+120.13abc');
+  is $el->value, 120;
+
+  $el->text_content ('-5000');
+  is $el->value, 0;
+  
+  $el->text_content ('');
+  $el->append_child ($doc->create_element ('hoge'))
+      ->append_child ($doc->create_text_node ('134'));
+  $el->append_child ($doc->create_text_node ('5'));
+  is $el->value, 1345;
+
+  done $c;
+} n => 15, name => 'total.value';
 
 run_tests;
 

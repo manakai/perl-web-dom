@@ -49,7 +49,9 @@ L<Web::DOM::AtomSourceElement>,
 L<Web::DOM::AtomContentElement>,
 L<Web::DOM::AtomCategoryElement>,
 L<Web::DOM::AtomGeneratorElement>,
-L<Web::DOM::AtomLinkElement>.
+L<Web::DOM::AtomLinkElement>,
+L<Web::DOM::AtomThreadInReplyToElement>, and
+L<Web::DOM::AtomThreadTotalElement>.
 
 =head1 SPECIFICATION
 

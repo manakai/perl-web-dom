@@ -334,6 +334,15 @@ for (
       = "Web::DOM::$_->[1]";
   $ClassToModule->{"Web::DOM::$_->[1]"} = "Web::DOM::AtomElement";
 }
+for (
+  ['*', 'AtomElement'],
+  ['in-reply-to', 'AtomThreadInReplyToElement'],
+  ['total', 'AtomThreadTotalElement'],
+) {
+  $ElementClass->{Web::DOM::Internal::ATOM_THREAD_NS}->{$_->[0]}
+      = "Web::DOM::$_->[1]";
+  $ClassToModule->{"Web::DOM::$_->[1]"} = "Web::DOM::AtomElement";
+}
 
 my $ModuleLoaded = {};
 

@@ -11,7 +11,7 @@ element.
 =head1 METHODS
 
 In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::AtomElement>, the following method is available:
+and L<Web::DOM::AtomElement>, following methods are available:
 
 =over 4
 
@@ -82,7 +82,7 @@ Return or set the C<type> attribute.  [ATOMDOM]
 
 XXX
 
-=head1 SPECIFICATION
+=head1 SPECIFICATIONS
 
 =over 4
 
