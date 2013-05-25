@@ -9,7 +9,7 @@ use Web::DOM::Node;
 
 sub _define_atom_child_element ($$) {
   eval sprintf q{
-    sub %s ($) {
+    sub %s::%s ($) {
       my $self = $_[0];
       for ($self->child_nodes->to_list) {
         if ($_->node_type == ELEMENT_NODE and
@@ -20,18 +20,22 @@ sub _define_atom_child_element ($$) {
       }
       if (${$_[0]}->[0]->{config}->{manakai_create_child_element}) {
         my $el = $self->owner_document->create_element_ns (ATOM_NS, '%s');
-        return $self->append_child ($el);
+        if ($self->local_name eq 'feed') {
+          return $self->insert_before ($el, $self->entry_elements->[0]);
+        } else {
+          return $self->append_child ($el);
+        }
       } else {
         return undef;
       }
     }
     1;
-  }, $_[0], $_[1], $_[1] or die $@;
+  }, scalar caller, $_[0], $_[1], $_[1] or die $@;
 } # _define_atom_child_element
 
 sub _define_atom_child_element_list ($$;$) {
   eval sprintf q{
-    sub %s ($) {
+    sub %s::%s ($) {
       my $self = shift;
       return $$self->[0]->collection ('%s', $self, sub {
         my $node = $_[0];
@@ -43,7 +47,7 @@ sub _define_atom_child_element_list ($$;$) {
       });
     }
     1;
-  }, $_[0], $_[0], $_[2] || ATOM_NS, $_[1] or die $@;
+  }, scalar caller, $_[0], $_[0], $_[2] || ATOM_NS, $_[1] or die $@;
 } # _define_atom_child_element_list
 
 sub xmlbase ($;$) {
@@ -232,7 +236,7 @@ sub parse_global_date_and_time_string ($$) {
               + ( $year / 400 )
               + ( ( ( $month * 306 ) + 5 ) / 10 )
             )
-            - $Epoc;
+            - ($Epoc || 0);
         }
     );
   }
@@ -318,10 +322,8 @@ Web::DOM::AtomElement::_define_atom_child_element
     title_element => 'title';
 Web::DOM::AtomElement::_define_atom_child_element
     updated_element => 'updated';
-
-# XXX These four methods should insert the element before any
-# atom:entry child
-
+Web::DOM::AtomElement::_define_atom_child_element
+    rights_element => 'rights';
 Web::DOM::AtomElement::_define_atom_child_element_list
     author_elements => 'author';
 Web::DOM::AtomElement::_define_atom_child_element_list
@@ -330,8 +332,6 @@ Web::DOM::AtomElement::_define_atom_child_element_list
     contributor_elements => 'contributor';
 Web::DOM::AtomElement::_define_atom_child_element_list
     link_elements => 'link';
-Web::DOM::AtomElement::_define_atom_child_element
-    rights_elements => 'rights';
 Web::DOM::AtomElement::_define_atom_child_element_list
     entry_elements => 'entry';
 

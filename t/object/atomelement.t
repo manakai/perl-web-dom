@@ -416,6 +416,28 @@ for (
     is $el->$method_name, $el2;
     done $c;
   } n => 4, name => ['child element reflect', $el_name, $cel_name];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->dom_config->{manakai_create_child_element} = 1;
+    my $el = $doc->create_element_ns (ATOM_NS, $el_name);
+    my $el3 = $doc->create_element_ns (ATOM_NS, 'entry');
+    $el->append_child ($el3);
+    my $el2 = $el->$method_name;
+    isa_ok $el2, 'Web::DOM::Element';
+    is $el2->namespace_uri, ATOM_NS;
+    is $el2->local_name, $cel_name;
+    is $el->$method_name, $el2;
+    if ($el_name eq 'feed') {
+      is $el2->previous_sibling, undef;
+      is $el3->previous_sibling, $el2;
+    } else {
+      is $el2->previous_sibling, $el3;
+      is $el3->previous_sibling, undef;
+    }
+    done $c;
+  } n => 6, name => ['child element reflect, after', $el_name, $cel_name];
 } # $el_name, $cel_name
 
 for my $test (
@@ -988,11 +1010,11 @@ test {
   is $el->get_attribute_ns (ATOM_THREAD_NS, 'count'), '2147483647';
   is $el->attributes->[0]->prefix, 'thr';
 
-  $el->attributes->[0]->prefix, 'thread';
+  $el->attributes->[0]->prefix ('thread');
   $el->thread_count (1242.41);
   is $el->thread_count, 1242;
   is $el->get_attribute_ns (ATOM_THREAD_NS, 'count'), '1242';
-  is $el->attributes->[0]->prefix, 'thr';
+  is $el->attributes->[0]->prefix, 'thread';
 
   $el->set_attribute_ns (ATOM_THREAD_NS, 'count' => 'abc');
   is $el->thread_count, 0;
