@@ -29,7 +29,7 @@ sub _define_atom_child_element ($$) {
   }, $_[0], $_[1], $_[1] or die $@;
 } # _define_atom_child_element
 
-sub _define_atom_child_element_list ($$) {
+sub _define_atom_child_element_list ($$;$) {
   eval sprintf q{
     sub %s ($) {
       my $self = shift;
@@ -37,13 +37,13 @@ sub _define_atom_child_element_list ($$) {
         my $node = $_[0];
         return grep {
           $$node->[0]->{data}->[$_]->{node_type} == ELEMENT_NODE and
-          ${$$node->[0]->{data}->[$_]->{namespace_uri} || \''} eq ATOM_NS and
+          ${$$node->[0]->{data}->[$_]->{namespace_uri} || \''} eq '%s' and
           ${$$node->[0]->{data}->[$_]->{local_name}} eq '%s';
         } @{$$node->[0]->{data}->[$$node->[1]]->{child_nodes} or []};
       });
     }
     1;
-  }, $_[0], $_[0], $_[1] or die $@;
+  }, $_[0], $_[0], $_[2] || ATOM_NS, $_[1] or die $@;
 } # _define_atom_child_element_list
 
 sub xmlbase ($;$) {
@@ -330,7 +330,7 @@ Web::DOM::AtomElement::_define_atom_child_element_list
     contributor_elements => 'contributor';
 Web::DOM::AtomElement::_define_atom_child_element_list
     link_elements => 'link';
-Web::DOM::AtomElement::_define_atom_child_element_list
+Web::DOM::AtomElement::_define_atom_child_element
     rights_elements => 'rights';
 Web::DOM::AtomElement::_define_atom_child_element_list
     entry_elements => 'entry';
@@ -348,7 +348,34 @@ sub get_entry_element_by_id {
   return undef;
 } # get_entry_element_by_id
 
-# XXX add_new_entry
+sub add_new_entry ($$;$$) {
+  my $doc = $_[0]->owner_document;
+
+  # 1.
+  my $entry = $doc->create_element_ns (ATOM_NS, 'entry');
+
+  # 3.
+  my $id = $doc->create_element_ns (ATOM_NS, 'id');
+  $id->text_content ($_[1]);
+  $entry->append_child ($id);
+
+  # 4.
+  my $title = $doc->create_element_ns (ATOM_NS, 'title');
+  $title->text_content (defined $_[2] ? $_[2] : '');
+  $entry->append_child ($title);
+
+  # 2.
+  $entry->set_attribute_ns
+      (XML_NS, ['xml', 'lang'] => defined $_[3] ? $_[3] : '');
+
+  # 5.
+  my $updated = $doc->create_element_ns (ATOM_NS, 'updated');
+  $updated->value (time);
+  $entry->append_child ($updated);
+
+  # 6.-7.
+  return $_[0]->append_child ($entry);
+} # add_new_entry
 
 package Web::DOM::AtomEntryElement;
 our $VERSION = '1.0';
@@ -356,9 +383,79 @@ push our @ISA, qw(Web::DOM::AtomElement);
 use Web::DOM::Internal;
 use Web::DOM::Element;
 
+Web::DOM::AtomElement::_define_atom_child_element_list
+    author_elements => 'author';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    category_elements => 'category';
+Web::DOM::AtomElement::_define_atom_child_element
+    content_element => 'content';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    contributor_elements => 'contributor';
 _define_reflect_child_string atom_id => ATOM_NS, 'id';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    link_elements => 'link';
+Web::DOM::AtomElement::_define_atom_child_element
+    published_element => 'published';
+Web::DOM::AtomElement::_define_atom_child_element
+    rights_element => 'rights';
+Web::DOM::AtomElement::_define_atom_child_element
+    source_element => 'source';
+Web::DOM::AtomElement::_define_atom_child_element
+    summary_element => 'summary';
+Web::DOM::AtomElement::_define_atom_child_element
+    title_element => 'title';
+Web::DOM::AtomElement::_define_atom_child_element
+    updated_element => 'updated';
+Web::DOM::AtomElement::_define_atom_child_element_list
+    thread_in_reply_to_elements => 'in-reply-to', ATOM_THREAD_NS;
 
-# XXX
+sub entry_author_elements ($) {
+  # 1.
+  my $list = $_[0]->author_elements;
+  return $list if @$list;
+
+  # 2.
+  my $source = $_[0]->source_element;
+  if ($source) {
+    return $source->author_elements;
+  }
+
+  # 3.
+  my $parent = $_[0]->parent_node;
+  if ($parent and $parent->manakai_element_type_match (ATOM_NS, 'feed')) {
+    return $parent->author_elements;
+  }
+
+  # 4.
+  return $list;
+} # entry_author_elements
+
+sub entry_rights_element ($) {
+  # 1.
+  for (@{$_[0]->children}) {
+    return $_ if $_->manakai_element_type_match (ATOM_NS, 'rights');
+  }
+
+  # 2.
+  my $parent = $_[0]->parent_node;
+  if ($parent and $parent->manakai_element_type_match (ATOM_NS, 'feed')) {
+    for (@{$parent->children}) {
+      return $_ if $_->manakai_element_type_match (ATOM_NS, 'rights');
+    }
+  }
+
+  # 3.
+  return $_[0]->rights_element; # or undef
+} # entry_rights_element
+
+package Web::DOM::AtomSourceElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Internal;
+use Web::DOM::Element;
+
+Web::DOM::AtomElement::_define_atom_child_element_list
+    author_elements => 'author';
 
 1;
 

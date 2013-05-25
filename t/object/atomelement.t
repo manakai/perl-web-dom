@@ -134,6 +134,7 @@ for (
   ['contributor', 'name'],
   ['contributor', 'email'],
   ['feed', 'id', 'atom_id'],
+  ['entry', 'id', 'atom_id'],
 ) {
   my ($el_name, $cel_name, $method_name) = @$_;
   $method_name ||= $cel_name;
@@ -231,6 +232,14 @@ for (
   ['feed', 'subtitle'],
   ['feed', 'title'],
   ['feed', 'updated'],
+  ['feed', 'rights'],
+  ['entry', 'content'],
+  ['entry', 'published'],
+  ['entry', 'rights'],
+  ['entry', 'source'],
+  ['entry', 'summary'],
+  ['entry', 'title'],
+  ['entry', 'updated'],
 ) {
   my ($el_name, $cel_name) = @$_;
   my $method_name = $cel_name . '_element';
@@ -380,9 +389,16 @@ for my $test (
   {parent => 'feed', child => 'author', method => 'author_elements'},
   {parent => 'feed', child => 'category', method => 'category_elements'},
   {parent => 'feed', child => 'contributor', method => 'contributor_elements'},
-  {parent => 'feed', child => 'rights', method => 'rights_elements'},
   {parent => 'feed', child => 'link', method => 'link_elements'},
   {parent => 'feed', child => 'entry', method => 'entry_elements'},
+  {parent => 'entry', child => 'author', method => 'author_elements'},
+  {parent => 'entry', child => 'category', method => 'category_elements'},
+  {parent => 'entry', child => 'contributor',
+   method => 'contributor_elements'},
+  {parent => 'entry', child => 'link', method => 'link_elements'},
+  {parent => 'entry', child => 'in-reply-to', ns => ATOM_THREAD_NS,
+   method => 'thread_in_reply_to_elements'},
+  {parent => 'source', child => 'author', method => 'author_elements'},
 ) {
   my $method = $test->{method};
   test {
@@ -394,7 +410,8 @@ for my $test (
     is $el->$method, $list;
     is $list->length, 0;
 
-    my $el1 = $doc->create_element_ns (ATOM_NS, $test->{child});
+    my $el1 = $doc->create_element_ns
+        ($test->{ns} || ATOM_NS, $test->{child});
     $el->append_child ($el1);
     
     is $list->length, 1;
@@ -403,10 +420,13 @@ for my $test (
     my $el2 = $doc->create_element_ns (undef, $test->{child});
     $el->append_child ($el2);
     $el->append_child ($doc->create_text_node ('hoge'));
-    my $el3 = $doc->create_element_ns (ATOM_NS, $test->{child});
+    my $el3 = $doc->create_element_ns
+        ($test->{ns} || ATOM_NS, $test->{child});
     $el->append_child ($el3);
-    my $el4 = $doc->create_element_ns (ATOM_NS, 'hoge');
-    my $el5 = $doc->create_element_ns (ATOM_NS, $test->{child});
+    my $el4 = $doc->create_element_ns
+        ($test->{ns} || ATOM_NS, 'hoge');
+    my $el5 = $doc->create_element_ns
+        ($test->{ns} || ATOM_NS, $test->{child});
     $el4->append_child ($el5);
     $el->append_child ($el4);
 
@@ -453,6 +473,228 @@ test {
   is $el->get_entry_element_by_id ('abc'), $entry1;
   done $c;
 } n => 4, name => 'get_entry_element_by_id non empty element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'feed');
+  
+  my $entry = $el->add_new_entry ('hoge');
+  is $el->first_child, $entry;
+  is $el->last_child, $entry;
+
+  is $entry->namespace_uri, ATOM_NS;
+  is $entry->local_name, 'entry';
+
+  is $entry->atom_id, 'hoge';
+  is $entry->title_element->text_content, '';
+  is $entry->xmllang, '';
+  is $entry->attributes->length, 1;
+  is $entry->child_nodes->length, 3;
+  is $entry->child_nodes->[0]->local_name, 'id';
+  is $entry->child_nodes->[1]->local_name, 'title';
+  is $entry->child_nodes->[2]->local_name, 'updated';
+  done $c;
+} n => 12, name => 'add_new_entry id only';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'feed');
+  
+  my $entry = $el->add_new_entry ('hoge', 'aa', 'bb', 'cc');
+  is $el->first_child, $entry;
+  is $el->last_child, $entry;
+
+  is $entry->namespace_uri, ATOM_NS;
+  is $entry->local_name, 'entry';
+
+  is $entry->atom_id, 'hoge';
+  is $entry->title_element->text_content, 'aa';
+  is $entry->xmllang, 'bb';
+  is $entry->attributes->length, 1;
+  is $entry->child_nodes->length, 3;
+  is $entry->child_nodes->[0]->local_name, 'id';
+  is $entry->child_nodes->[1]->local_name, 'title';
+  is $entry->child_nodes->[2]->local_name, 'updated';
+  done $c;
+} n => 12, name => 'add_new_entry id title lang';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $list = $el->entry_author_elements;
+  is $list, $el->author_elements;
+  isa_ok $list, 'Web::DOM::HTMLCollection';
+  done $c;
+} n => 2, name => 'entry_author_elements empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el2 = $doc->create_element_ns (ATOM_NS, 'author');
+  $el->append_child ($el2);
+  my $list = $el->entry_author_elements;
+  is $list, $el->author_elements;
+  isa_ok $list, 'Web::DOM::HTMLCollection';
+  done $c;
+} n => 2, name => 'entry_author_elements has author';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el2 = $doc->create_element_ns (ATOM_NS, 'author');
+  $el->append_child ($el2);
+  my $el3 = $doc->create_element_ns (ATOM_NS, 'source');
+  my $el4 = $doc->create_element_ns (ATOM_NS, 'author');
+  $el3->append_child ($el4);
+  $el->append_child ($el3);
+  my $list = $el->entry_author_elements;
+  is $list, $el->author_elements;
+  isa_ok $list, 'Web::DOM::HTMLCollection';
+  done $c;
+} n => 2, name => 'entry_author_elements has author, source > author';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el2 = $doc->create_element_ns (undef, 'author');
+  $el->append_child ($el2);
+  my $el3 = $doc->create_element_ns (ATOM_NS, 'source');
+  my $el4 = $doc->create_element_ns (ATOM_NS, 'author');
+  $el3->append_child ($el4);
+  $el->append_child ($el3);
+  my $list = $el->entry_author_elements;
+  is $list, $el3->author_elements;
+  isa_ok $list, 'Web::DOM::HTMLCollection';
+  done $c;
+} n => 2, name => 'entry_author_elements has source > author';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el3 = $doc->create_element_ns (ATOM_NS, 'source');
+  $el->append_child ($el3);
+  my $list = $el->entry_author_elements;
+  is $list, $el3->author_elements;
+  isa_ok $list, 'Web::DOM::HTMLCollection';
+  done $c;
+} n => 2, name => 'entry_author_elements has source';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el3 = $doc->create_element_ns (ATOM_NS, 'source');
+  $el->append_child ($el3);
+  my $el4 = $doc->create_element_ns (ATOM_NS, 'feed');
+  $el4->append_child ($el);
+  my $list = $el->entry_author_elements;
+  is $list, $el3->author_elements;
+  isa_ok $list, 'Web::DOM::HTMLCollection';
+  done $c;
+} n => 2, name => 'entry_author_elements has feed, source';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el4 = $doc->create_element_ns (ATOM_NS, 'feed');
+  $el4->append_child ($el);
+  my $list = $el->entry_author_elements;
+  is $list, $el4->author_elements;
+  isa_ok $list, 'Web::DOM::HTMLCollection';
+  done $c;
+} n => 2, name => 'entry_author_elements has feed parent';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el2 = $doc->create_element_ns (ATOM_NS, 'author');
+  $el->append_child ($el2);
+  my $el4 = $doc->create_element_ns (ATOM_NS, 'feed');
+  $el4->append_child ($el);
+  my $list = $el->entry_author_elements;
+  is $list, $el->author_elements;
+  isa_ok $list, 'Web::DOM::HTMLCollection';
+  done $c;
+} n => 2, name => 'entry_author_elements has feed parent, author';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  is $el->entry_rights_element, undef;
+  done $c;
+} n => 1, name => 'entry_rights_element empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el2 = $doc->create_element_ns (ATOM_NS, 'rights');
+  $el->append_child ($el2);
+  is $el->entry_rights_element, $el2;
+  done $c;
+} n => 1, name => 'entry_rights_element has rights';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el2 = $doc->create_element_ns (ATOM_NS, 'rights');
+  my $el3 = $doc->create_element_ns (ATOM_NS, 'rights');
+  $el->append_child ($el2);
+  $el->append_child ($el3);
+  is $el->entry_rights_element, $el2;
+  done $c;
+} n => 1, name => 'entry_rights_element has multiple rights';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el2 = $doc->create_element_ns (undef, 'rights');
+  my $el3 = $doc->create_element_ns (ATOM_NS, 'rights');
+  $el->append_child ($el2);
+  $el->append_child ($el3);
+  is $el->entry_rights_element, $el3;
+  done $c;
+} n => 1, name => 'entry_rights_element has a rights';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el2 = $doc->create_element_ns (ATOM_NS, 'feed');
+  my $el3 = $doc->create_element_ns (ATOM_NS, 'rights');
+  $el2->append_child ($el);
+  $el2->append_child ($el3);
+  is $el->entry_rights_element, $el3;
+  done $c;
+} n => 1, name => 'entry_rights_element has feed rights';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (ATOM_NS, 'entry');
+  my $el2 = $doc->create_element_ns (ATOM_NS, 'feed');
+  $el2->append_child ($el);
+  $doc->dom_config->{manakai_create_child_element} = 1;
+  my $node = $el->entry_rights_element;
+  is $node, $el->first_child;
+  is $node->namespace_uri, ATOM_NS;
+  is $node->local_name, 'rights';
+  is $node->parent_node, $el;
+  is $el2->child_nodes->length, 1;
+  done $c;
+} n => 5, name => 'entry_rights_element create element';
 
 run_tests;
 

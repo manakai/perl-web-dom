@@ -1,11 +1,11 @@
 =head1 NAME
 
-Web::DOM::AtomFeedElement - The DOM |AtomFeedElement| object
+Web::DOM::AtomEntryElement - The DOM |AtomEntryElement| object
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::AtomFeedElement> class implements the DOM
-C<AtomFeedElement> interface.  The class is used by the Atom C<feed>
+The C<Web::DOM::AtomEntryElement> class implements the DOM
+C<AtomEntryElement> interface.  The class is used by the Atom C<entry>
 element.
 
 =head1 METHODS
@@ -14,11 +14,6 @@ In addition to the methods for classes L<Web::DOM::Element> and
 L<Web::DOM::AtomElement>, following methods are available:
 
 =over 4
-
-=item $entry = $el->add_new_entry ($id, $title, $lang)
-
-Create a new entry element with specified C<atom:id>, C<atom:title>,
-and C<xml:lang> values and return the element.  [ATOMDOM]
 
 =item $string = $el->atom_id
 
@@ -36,50 +31,39 @@ element childs.  [ATOMDOM]
 Return a L<Web::DOM::HTMLCollection> containing the C<atom:category>
 element childs.  [ATOMDOM]
 
+=item $el2 = $el->content_element
+
+Return the C<atom:content> element child, if any.  [ATOMDOM]
+
+If the C<manakai-create-child-element> configuration parameter is set
+to true and there is no C<atom:content> element child, a new element
+is created and returned.  Otherwise, no element is created and
+C<undef> is returned.
+
 =item $col = $el->contributor_elements
 
 Return a L<Web::DOM::HTMLCollection> containing the
 C<atom:contributor> element childs.  [ATOMDOM]
 
-=item $col = $el->entry_elements
+=item $col = $el->entry_author_elements
 
-Return a L<Web::DOM::HTMLCollection> containing the C<atom:entry>
-element childs.  [ATOMDOM]
+Return a L<Web::DOM::HTMLCollection> containing the C<atom:author>
+elements applied to this element.  [ATOMDOM]
 
-=item $el2 = $el->generator_element
+=item $el2 = $el->entry_rights_element
 
-Return the C<atom:generator> element child, if any.  [ATOMDOM]
+Return the C<atom:rights> element applied to this element, if any.
+[ATOMDOM]
 
 If the C<manakai-create-child-element> configuration parameter is set
-to true and there is no C<atom:generator> element child, a new element
-is created and returned.  Otherwise, no element is created and
-C<undef> is returned.
-
-=item $el2 = $el->get_entry_element_by_id ($id)
-
-Return the C<atom:entry> child element whose C<atom:id> is equal to
-the argument.  [ATOMDOM]
-
-=item $url = $el->icon
-
-=item $el->icon ($url)
-
-Return or set the value of the C<atom:icon> child element.  The method
-returns the resoloved absolute URL if the value is a relative URL.
-[ATOMDOM]
+to true and there is no C<atom:rights> element applied to this
+element, a new element child is created and returned.  Otherwise, no
+element is created and C<undef> is returned.
 
 =item $col = $el->link_elements
 
 Return a L<Web::DOM::HTMLCollection> containing the C<atom:link>
 element childs.  [ATOMDOM]
-
-=item $url = $el->logo
-
-=item $el->logo ($url)
-
-Return or set the value of the C<atom:logo> child element.  The method
-returns the resoloved absolute URL if the value is a relative URL.
-[ATOMDOM]
 
 =item $el2 = $el->rights_element
 
@@ -90,14 +74,28 @@ to true and there is no C<atom:rights> element child, a new element is
 created and returned.  Otherwise, no element is created and C<undef>
 is returned.
 
-=item $el2 = $el->subtitle_element
+=item $el2 = $el->source_element
 
-Return the C<atom:subtitle> element child, if any.  [ATOMDOM]
+Return the C<atom:source> element child, if any.  [ATOMDOM]
 
 If the C<manakai-create-child-element> configuration parameter is set
-to true and there is no C<atom:subtitle> element child, a new element
+to true and there is no C<atom:source> element child, a new element is
+created and returned.  Otherwise, no element is created and C<undef>
+is returned.
+
+=item $el2 = $el->summary_element
+
+Return the C<atom:summary> element child, if any.  [ATOMDOM]
+
+If the C<manakai-create-child-element> configuration parameter is set
+to true and there is no C<atom:summary> element child, a new element
 is created and returned.  Otherwise, no element is created and
 C<undef> is returned.
+
+=item $col = $el->thread_in_reply_to_elements
+
+Return a L<Web::DOM::HTMLCollection> containing the C<thr:in-reply-to>
+element childs.  [ATOMDOM]
 
 =item $el2 = $el->title_element
 

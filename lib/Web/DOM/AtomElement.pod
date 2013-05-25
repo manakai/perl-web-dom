@@ -42,7 +42,10 @@ L<Web::DOM::AtomEmailElement>,
 L<Web::DOM::AtomLogoElement>,
 L<Web::DOM::AtomTextConstruct>,
 L<Web::DOM::AtomPersonConstruct>,
-L<Web::DOM::AtomDateConstruct>.
+L<Web::DOM::AtomDateConstruct>,
+L<Web::DOM::AtomFeedElement>,
+L<Web::DOM::AtomEntryElement>,
+L<Web::DOM::AtomSourceElement>.
 
 =head1 SPECIFICATION
 

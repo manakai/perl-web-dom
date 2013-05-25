@@ -303,6 +303,7 @@ for my $test (
                             'AtomPublishedElement'], []],
   [[ATOM_NS, 'feed'], ['Element', 'AtomElement', 'AtomFeedElement'], []],
   [[ATOM_NS, 'entry'], ['Element', 'AtomElement', 'AtomEntryElement'], []],
+  [[ATOM_NS, 'source'], ['Element', 'AtomElement', 'AtomSourceElement'], []],
 ) {
   test {
     my $c = shift;
