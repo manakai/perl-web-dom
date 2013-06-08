@@ -283,6 +283,7 @@ for my $test (
   ['del', 'cite'],
   ['img', 'src'],
   ['img', 'longdesc'],
+  ['img', 'lowsrc'],
   ['iframe', 'src'],
   ['iframe', 'longdesc'],
   ['frame', 'src'],

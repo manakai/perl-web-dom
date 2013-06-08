@@ -456,6 +456,7 @@ _define_reflect_boolean ismap => 'ismap';
 
 _define_reflect_string align => 'align';
 _define_reflect_url longdesc => 'longdesc';
+_define_reflect_url lowsrc => 'lowsrc';
 _define_reflect_string name => 'name';
 _define_reflect_string_undef border => 'border';
 _define_reflect_unsigned_long hspace => 'hspace', sub { 0 };
