@@ -1609,9 +1609,34 @@ _define_reflect_boolean open => 'open';
 package Web::DOM::HTMLMenuElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Internal;
+use Web::DOM::Node;
 use Web::DOM::Element;
 
-_define_reflect_string type => 'type';
+_define_reflect_enumerated _type => 'type', {
+  popup => 'popup',
+  toolbar => 'toolbar',
+};
+sub type ($;$) {
+  if (@_ > 1) {
+    $_[0]->_type ($_[1]);
+    return unless defined wantarray;
+  }
+  my $type = $_[0]->_type;
+  if ($type eq '') {
+    my $parent = $_[0]->parent_node;
+    if ($parent and
+	$parent->node_type == ELEMENT_NODE and
+        $parent->manakai_element_type_match (HTML_NS, 'menu')) {
+      return $parent->type;
+    } else {
+      return 'toolbar';
+    }
+  } else {
+    return $type;
+  }
+} # type
+
 _define_reflect_string label => 'label';
 
 _define_reflect_boolean compact => 'compact';
