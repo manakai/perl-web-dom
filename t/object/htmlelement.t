@@ -34,7 +34,6 @@ for my $test (
   ['link', 'media'],
   ['link', 'hreflang'],
   ['link', 'type'],
-  ['link', 'crossorigin'],
   ['meta', 'name'],
   ['meta', 'content'],
   ['meta', 'http_equiv', 'http-equiv'],
@@ -42,7 +41,6 @@ for my $test (
   ['style', 'media'],
   ['script', 'charset'],
   ['script', 'type'],
-  ['script', 'crossorigin'],
   ['ol', 'type'],
   ['a', 'target'],
   ['a', 'type'],
@@ -55,7 +53,6 @@ for my $test (
   ['del', 'datetime'],
   ['img', 'alt'],
   ['img', 'srcset'],
-  ['img', 'crossorigin'],
   ['img', 'usemap'],
   ['iframe', 'name'],
   ['iframe', 'srcdoc'],
@@ -75,8 +72,6 @@ for my $test (
   ['source', 'media'],
   ['track', 'srclang'],
   ['track', 'label'],
-  ['video', 'crossorigin'],
-  ['audio', 'crossorigin'],
   ['map', 'name'],
   ['area', 'alt'],
   ['area', 'coords'],
@@ -116,7 +111,6 @@ for my $test (
   ['keygen', 'name'],
   ['output', 'name'],
   ['menu', 'label'],
-  ['menu', 'type'],
   ['menuitem', 'label'],
   ['menuitem', 'radiogroup'],
   ['applet', 'align'],
@@ -283,6 +277,7 @@ for my $test (
   ['del', 'cite'],
   ['img', 'src'],
   ['img', 'longdesc'],
+  ['img', 'lowsrc'],
   ['iframe', 'src'],
   ['iframe', 'longdesc'],
   ['frame', 'src'],
@@ -1123,6 +1118,59 @@ for my $test (
      [dOWN => 'down'],
    ],
    invalid_values => [[''], ['0'], [undef], ['default']]},
+  {element => 'menu',
+   attr => 'type',
+   default => 'toolbar',
+   valid_values => [
+     [toolbar => 'toolbar'],
+     [popUp => 'popup'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['menu']]},
+  {element => 'link',
+   attr => 'crossorigin',
+   default => '',
+   valid_values => [
+     ['' => ''],
+     [anonymoUs => 'anonymous'],
+     ['USE-credentials' => 'use-credentials'],
+   ],
+   invalid_values => [['0'], [undef], ['menu']]},
+  {element => 'script',
+   attr => 'crossorigin',
+   default => '',
+   valid_values => [
+     ['' => ''],
+     [anonymoUs => 'anonymous'],
+     ['USE-credentials' => 'use-credentials'],
+   ],
+   invalid_values => [['0'], [undef], ['menu']]},
+  {element => 'img',
+   attr => 'crossorigin',
+   default => '',
+   valid_values => [
+     ['' => ''],
+     [anonymoUs => 'anonymous'],
+     ['USE-credentials' => 'use-credentials'],
+   ],
+   invalid_values => [['0'], [undef], ['menu']]},
+  {element => 'video',
+   attr => 'crossorigin',
+   default => '',
+   valid_values => [
+     ['' => ''],
+     [anonymoUs => 'anonymous'],
+     ['USE-credentials' => 'use-credentials'],
+   ],
+   invalid_values => [['0'], [undef], ['menu']]},
+  {element => 'audio',
+   attr => 'crossorigin',
+   default => '',
+   valid_values => [
+     ['' => ''],
+     [anonymoUs => 'anonymous'],
+     ['USE-credentials' => 'use-credentials'],
+   ],
+   invalid_values => [['0'], [undef], ['menu']]},
 ) {
   my $attr = $test->{attr};
   test {
@@ -1150,6 +1198,65 @@ for my $test (
       (@{$test->{valid_values}} + @{$test->{invalid_values}} + 1)*2,
       name => ['reflect enumerated attr', $test->{element}, $test->{attr}];
 }
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('menu');
+  my $el2 = $doc->create_element ('menu');
+  $el1->append_child ($el2);
+  is $el2->type, 'toolbar';
+  $el1->type ('popup');
+  is $el2->type, 'popup';
+  $el1->set_attribute (type => 'hoge');
+  is $el2->type, 'toolbar';
+  $el1->set_attribute (type => 'Toolbar');
+  is $el2->type, 'toolbar';
+  $el2->set_attribute (type => '');
+  is $el2->type, 'toolbar';
+  $el2->set_attribute (type => 'popup');
+  is $el2->type, 'popup';
+  done $c;
+} n => 6, name => 'menu.type parent is menu'; 
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('menu');
+  my $el2 = $doc->create_element_ns (undef, 'menu');
+  my $el3 = $doc->create_element ('menu');
+  $el1->append_child ($el2);
+  $el2->append_child ($el3);
+  is $el3->type, 'toolbar';
+  $el1->type ('popup');
+  is $el3->type, 'toolbar';
+  $el1->set_attribute (type => 'hoge');
+  is $el3->type, 'toolbar';
+  $el1->set_attribute (type => 'Toolbar');
+  is $el3->type, 'toolbar';
+  $el2->set_attribute (type => '');
+  is $el3->type, 'toolbar';
+  $el2->set_attribute (type => 'popup');
+  is $el3->type, 'toolbar';
+  $el3->set_attribute (type => 'popup');
+  is $el3->type, 'popup';
+  done $c;
+} n => 7, name => 'menu.type parent is not menu'; 
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('menu');
+  $doc->append_child ($el);
+  is $el->type, 'toolbar';
+  $el->type ('hoge');
+  is $el->get_attribute ('type'), 'hoge';
+  is $el->type, 'toolbar';
+  $el->type ('Popup');
+  is $el->get_attribute ('type'), 'Popup';
+  is $el->type, 'popup';
+  done $c;
+} n => 5, name => 'menu.type parent is document';
 
 for my $test (
   {element => 'a', attr => 'rel', method => 'rel_list'},

@@ -1612,6 +1612,8 @@ sub _iterator ($) {
   });
 } # _iterator
 
+# XXX manakai_language manakai_html_language
+
 sub DESTROY ($) {
   my $self = shift;
   $$self->[0]->gc ($$self->[1]);

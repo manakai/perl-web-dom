@@ -4,9 +4,13 @@ all:
 
 ## ------ Setup ------
 
+GIT = git
 WGET = wget
 
-deps: pmbp-install
+deps: git-submodules pmbp-install
+
+git-submodules:
+	$(GIT) submodule update --init
 
 local/bin/pmbp.pl:
 	mkdir -p local/bin
