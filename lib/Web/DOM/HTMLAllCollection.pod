@@ -23,7 +23,7 @@ following methods are available:
 =item $node = $col->item ($index)
 
 Return the node in the collection, specified by its index.  [DOM]
-[HTML] [HTMLCOLLECTION] [DOMPERL]
+[HTML] [DOMPERL]
 
 Use of the C<item> method is discouraged as it doesn't support
 Perl-ish ways to access items, such as negative indexing, while C<<
@@ -40,7 +40,7 @@ $col->[-1] >> works as intended.
 Return the node whose ID or the C<name> attribute is equal to the
 argument, if any, or C<undef>.  If there are multiple elements with
 same ID or C<name>, another L<Web::DOM::HTMLCollection> containing
-them is returned instead.  [DOM] [HTML] [HTMLCOLLECTION] [DOMPERL]
+them is returned instead.  [DOM] [HTML] [DOMPERL]
 
 =back
 
@@ -66,11 +66,6 @@ DOM Living Standard
 
 HTML Living Standard
 <http://www.whatwg.org/specs/web-apps/current-work/#htmlallcollection>.
-
-=item HTMLCOLLECTION
-
-HTML Living Standard
-<http://html5.org/tools/web-apps-tracker?from=6326&to=6327>.
 
 =item DOMPERL
 
