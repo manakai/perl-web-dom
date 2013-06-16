@@ -197,7 +197,12 @@ _define_reflect_string rel => 'rel';
 _define_reflect_string media => 'media';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
-_define_reflect_string crossorigin => 'crossorigin';
+_define_reflect_enumerated crossorigin => 'crossorigin', {
+  '' => '', # anonymous
+  anonymous => 'anonymous',
+  'use-credentials' => 'use-credentials',
+  # #missing => no cors
+};
 _define_reflect_settable_token_list sizes => 'sizes';
 
 _define_reflect_string charset => 'charset';
@@ -247,7 +252,12 @@ use Web::DOM::Element;
 _define_reflect_url src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string charset => 'charset';
-_define_reflect_string crossorigin => 'crossorigin';
+_define_reflect_enumerated crossorigin => 'crossorigin', {
+  '' => '', # anonymous
+  anonymous => 'anonymous',
+  'use-credentials' => 'use-credentials',
+  # #missing => no cors
+};
 _define_reflect_boolean defer => 'defer';
 
 # XXX async
@@ -448,7 +458,12 @@ use Web::DOM::Element;
 _define_reflect_string alt => 'alt';
 _define_reflect_url src => 'src';
 _define_reflect_string srcset => 'srcset';
-_define_reflect_string crossorigin => 'crossorigin';
+_define_reflect_enumerated crossorigin => 'crossorigin', {
+  '' => '', # anonymous
+  anonymous => 'anonymous',
+  'use-credentials' => 'use-credentials',
+  # #missing => no cors
+};
 _define_reflect_string usemap => 'usemap';
 _define_reflect_boolean ismap => 'ismap';
 
@@ -545,7 +560,12 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-_define_reflect_string crossorigin => 'crossorigin';
+_define_reflect_enumerated crossorigin => 'crossorigin', {
+  '' => '', # anonymous
+  anonymous => 'anonymous',
+  'use-credentials' => 'use-credentials',
+  # #missing => no cors
+};
 _define_reflect_boolean autoplay => 'autoplay';
 _define_reflect_boolean loop => 'loop';
 _define_reflect_boolean controls => 'controls';
