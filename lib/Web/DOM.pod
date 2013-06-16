@@ -379,9 +379,7 @@ except for obsolete features.  Following features will be
 Element.prototype.manakaiComputedStyle,
 Window.prototype.manakaiGetComputedStyle, Window.prototype.setDocument
 
-=item Atom DOM [ATOMDOM]
-
-=item WebVTT DOM [HTML]
+=item WebVTT DOM [HTML] [WEBVTT]
 
 =back
 
