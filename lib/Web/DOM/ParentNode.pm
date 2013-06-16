@@ -114,12 +114,13 @@ sub query_selector ($$;$) {
   my $api = Web::CSS::Selectors::API->new;
   $api->is_html (${$_[0]}->[0]->{data}->[0]->{is_html});
   $api->root_node ($_[0]);
-  $api->set_selectors (''.$_[1], $_[2]);
+  $api->set_selectors (''.$_[1], $_[2], nsresolver => 1);
   # XXX DOM Perl Binding for coderef
   if (not defined $api->selectors) {
-    if ($api->selectors_has_ns_error) {
+    my $prefix = $api->selectors_has_ns_error;
+    if (defined $prefix) {
       _throw Web::DOM::Exception 'NamespaceError',
-          'The specified selectors has unresolvable namespace prefix';
+          'The specified selectors has unresolvable namespace prefix |' . $prefix . '|';
     } else {
       _throw Web::DOM::Exception 'SyntaxError',
           'The specified selectors has syntax error';
@@ -137,9 +138,10 @@ sub query_selector_all ($$;$) {
   $api->set_selectors (''.$_[1], $_[2]);
   # XXX DOM Perl Binding for coderef
   if (not defined $api->selectors) {
-    if ($api->selectors_has_ns_error) {
+    my $prefix = $api->selectors_has_ns_error;
+    if (defined $prefix) {
       _throw Web::DOM::Exception 'NamespaceError',
-          'The specified selectors has unresolvable namespace prefix';
+          'The specified selectors has unresolvable namespace prefix |' . $prefix . '|';
     } else {
       _throw Web::DOM::Exception 'SyntaxError',
           'The specified selectors has syntax error';
