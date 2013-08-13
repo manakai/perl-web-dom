@@ -1166,13 +1166,13 @@ test {
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'NamespaceError';
-  is $@->message, 'The specified selectors has unresolvable namespace prefix';
+  is $@->message, 'The specified selectors has unresolvable namespace prefix |fuga|';
   dies_here_ok {
     $el->query_selector_all ('fuga|hoge');
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'NamespaceError';
-  is $@->message, 'The specified selectors has unresolvable namespace prefix';
+  is $@->message, 'The specified selectors has unresolvable namespace prefix |fuga|';
   done $c;
 } n => 8, name => 'query_selector, query_selector_all namespace error';
 
@@ -1228,7 +1228,7 @@ test {
   is $el->query_selector ('ss', $resolver), $el2;
   is $el->query_selector ('ss', sub { 'http://hoge/' }), undef;
   is $el->query_selector ('ss', sub { '' }), undef; # XXX
-  is $el->query_selector ('ss', sub { undef }), $el2; # XXX
+  is $el->query_selector ('ss', sub { undef }), undef; # XXX
   is $el->query_selector_all ('ss', $resolver)->length, 2;
   is $el->query_selector_all ('ss', sub { 'http://foo/' })->length, 0;
   is $el->query_selector_all ('ss', sub { '' })->length, 0; # XXX
@@ -1236,7 +1236,33 @@ test {
   done $c;
 } n => 8, name => 'query_selector, query_selector_all ns resolver default';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  dies_here_ok {
+    $doc->query_selector ('\30|abc');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'NamespaceError';
+  is $@->message, 'The specified selectors has unresolvable namespace prefix |0|';
+  done $c;
+} n => 4, name => 'query_selector ns 0';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  dies_here_ok {
+    $doc->query_selector_all ('\000030|abc');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'NamespaceError';
+  is $@->message, 'The specified selectors has unresolvable namespace prefix |0|';
+  done $c;
+} n => 4, name => 'query_selector_all ns 0';
+
 # XXX exceptions in nsresolver
+
+# XXX nsresolver perl binding
 
 test {
   my $c = shift;

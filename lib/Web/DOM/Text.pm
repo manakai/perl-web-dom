@@ -7,6 +7,8 @@ push our @ISA, qw(Web::DOM::CharacterData);
 use Web::DOM::Node;
 use Web::DOM::Exception;
 
+# XXX Constructor
+
 sub node_name ($) {
   return '#text';
 } # node_name

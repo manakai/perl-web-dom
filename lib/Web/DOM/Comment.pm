@@ -5,6 +5,8 @@ our $VERSION = '1.0';
 use Web::DOM::CharacterData;
 push our @ISA, qw(Web::DOM::CharacterData);
 
+# XXX constructor
+
 sub node_name ($) {
   return '#comment';
 } # node_name

@@ -6,6 +6,10 @@ use Web::DOM::Node;
 use Web::DOM::ParentNode;
 push our @ISA, qw(Web::DOM::ParentNode Web::DOM::Node);
 
+# XXX constructor
+
+# XXX ancestor
+
 sub node_name ($) {
   return '#document-fragment';
 } # node_name
