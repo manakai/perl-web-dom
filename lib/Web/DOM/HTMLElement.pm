@@ -15,6 +15,7 @@ _define_reflect_string itemid => 'itemid';
 _define_reflect_string accesskey => 'accesskey';
 _define_reflect_boolean itemscope => 'itemscope';
 _define_reflect_boolean hidden => 'hidden';
+_define_reflect_boolean inert => 'inert';
 _define_reflect_settable_token_list dropzone => 'dropzone';
 _define_reflect_settable_token_list itemtype => 'itemtype';
 _define_reflect_settable_token_list itemprop => 'itemprop';
