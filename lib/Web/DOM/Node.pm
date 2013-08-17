@@ -131,6 +131,7 @@ sub base_uri ($) {
   my $nt = $self->node_type;
   if ($nt == DOCUMENT_NODE) {
     # 1. document base URL
+    # XXX <http://html5.org/tools/web-apps-tracker?from=7961&to=7962> is not applied yet
     
     # 1. fallback base URL
     my $fallback_base_url = do {
@@ -1615,8 +1616,7 @@ sub _iterator ($) {
 # XXX manakai_language manakai_html_language
 
 sub DESTROY ($) {
-  my $self = shift;
-  $$self->[0]->gc ($$self->[1]);
+  ${$_[0]}->[0]->gc (${$_[0]}->[1]);
 } # DESTROY
 
 1;

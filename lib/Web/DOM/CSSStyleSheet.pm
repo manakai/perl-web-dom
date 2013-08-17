@@ -1,10 +1,14 @@
 package Web::DOM::CSSStyleSheet;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::StyleSheet;
 push our @ISA, qw(Web::DOM::StyleSheet);
 use Web::DOM::CSSRule;
+
+sub type ($) {
+  return 'text/css';
+} # type
 
 sub owner_rule ($) {
   return ${$_[0]}->[0]->rule (${$_[0]}->[2]->{owner_rule}); # or undef

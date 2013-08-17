@@ -1,7 +1,7 @@
 package Web::DOM::CSSRule;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Internal;
 
 our @EXPORT;
@@ -33,7 +33,7 @@ sub parent_style_sheet ($) {
 } # parent_style_sheet
 
 sub DESTROY ($) {
-  ${$_[0]}->[0]->destroy_rule (${$_[0]}->[1]);
+  ${$_[0]}->[0]->gc (${$_[0]}->[1]);
 } # DESTROY
 
 package Web::DOM::CSSUnknownRule;

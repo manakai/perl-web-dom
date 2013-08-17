@@ -1,0 +1,38 @@
+=head1 NAME
+
+Web::DOM::StyleSheet - The DOM |StyleSheet| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::StyleSheet> class implements the DOM C<StyleSheet>
+interface.  It represents a style sheet.
+
+The C<Web::DOM::StyleSheet> class is not used standalone.  See the
+subclass, L<Web::DOM::CSSStyleSheet>.
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item CSSOM
+
+CSS Object Model (CSSOM) <http://dev.w3.org/csswg/cssom/>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::CSSStyleSheet>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

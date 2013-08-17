@@ -4,14 +4,17 @@ use warnings;
 no warnings 'utf8';
 use Carp;
 
+## Web::DOM internal data structure and core utilities
+
 our @EXPORT;
 
+## "Interned" string
 my $Text = {};
-
 sub text ($$) {
   return defined $_[1] ? $Text->{$_[1]} ||= \(''.$_[1]) : undef;
 } # text
 
+## Namespace URLs
 push @EXPORT, qw(HTML_NS SVG_NS MML_NS XML_NS XMLNS_NS ATOM_NS ATOM_THREAD_NS);
 sub HTML_NS () { q<http://www.w3.org/1999/xhtml> }
 sub SVG_NS () { q<http://www.w3.org/2000/svg> }
@@ -81,19 +84,39 @@ sub new ($) {
   }, $_[0];
 } # new
 
-## Various characteristics of the node is put into the "data" hash
+## Various characteristics of the node are put into the "data" hash
 ## reference for the node.
+##
+## For the purpose of the internal, two separete types of concepts are
+## treated as "nodes": DOM |Node| and CSSOM |StyleSheet| or |CSSRule|.
+## The "data" hash reference for the DOM |Node| contains |node_type|
+## value representing the node type.  The "data" hash reference for
+## the CSSOM object contains |rule_type| value representing the rule
+## type (or the "style sheet" type).
+##
+## A tree can contain both DOM |Node| and CSSOM objects.  For example,
+## an HTML |style| element |Node| might have a reference to a CSSOM
+## |StyleSheet| in the "sheet" field (corresponding to the |sheet|
+## attribute), which is considered as a parent-child link similar to
+## the |childNodes| attribute of DOM |Node|s, and the |StyleSheet|
+## would have a reference to the |Node| in the "owner" field
+## (corresponding to the |ownerNode| attribute), which isconsidered as
+## a child-parent link similar to the |parentNode| attribute of DOM
+## |Node|s.
 
 sub add_data ($$) {
   my $self = shift;
   my $id = $self->{next_node_id}++;
   $self->{data}->[$id] = $_[0];
   $self->{tree_id}->[$id] = $self->{next_tree_id}++;
+  ## The |import_parsed_ss| method can also add |data| to the
+  ## internal.
   return $id;
 } # add_data
 
-## The |Node| object exposed to the application is a blessed reference
-## to the array reference, which consists of following members:
+## The |Node| / |StyleSheet| / |CSSRule| object exposed to the
+## application is a blessed reference to the array reference, which
+## consists of following members:
 ##
 ##   0 - The object store object
 ##   1 - The node ID
@@ -104,6 +127,7 @@ sub add_data ($$) {
 
 ## Node data
 ##
+## |Node|
 ##   all_declarations_processed     boolean   [all declarations processed]
 ##   allowed_tokens                 [string]  Allowed tokens
 ##   attributes                     [attr]    Attributes by index
@@ -143,6 +167,7 @@ sub add_data ($$) {
 ##   public_id                      \string   Public ID
 ##   return_value                   string    Return value
 ##   serialize_as_cdata             boolean   CDATA section?
+##   sheet                          node_id   Style sheet
 ##   system_id                      \string   System ID
 ##   target                         \string   Target
 ##   url                            string    Document URL
@@ -151,6 +176,14 @@ sub add_data ($$) {
 ##   xml_encoding                   string    XML encoding=""
 ##   xml_standalone                 boolean   XML standalone=""
 ##   xml_version                    string    XML version
+##
+## |StyleSheet| / |CSSRule|
+##   rule_type, rule_ids, parent_id, selectors,
+##   prop_keys, prop_values, prop_importants, encoding,
+##   href, mqs, prefix, nsurl       - See |Web::CSS::Parser|
+##   owner                          node_id   Owner |Node| or |@import|
+##   owner_sheet                    node_id   Owner style sheet
+##   sheet                          node_id   Style sheet (for |@import|)
 
 my $NodeClassByNodeType = {
   2 => 'Web::DOM::Attr',
@@ -344,6 +377,17 @@ for (
   $ClassToModule->{"Web::DOM::$_->[1]"} = "Web::DOM::AtomElement";
 }
 
+my $RuleClassByRuleType = {
+  #sheet => 'Web::DOM::CSSStyleSheet',
+  style => 'Web::DOM::CSSStyleRule',
+  charset => 'Web::DOM::CSSCharsetRule',
+  import => 'Web::DOM::CSSImportRule',
+  media => 'Web::DOM::CSSMediaRule',
+  font_face => 'Web::DOM::CSSFontFaceRule',
+  page => 'Web::DOM::CSSPageRule',
+  namespace => 'Web::DOM::CSSNamespaceRule',
+};
+
 my $ModuleLoaded = {};
 
 sub node ($$) {
@@ -352,19 +396,29 @@ sub node ($$) {
 
   my $data = $self->{data}->[$id];
   my $class;
-  my $nt = $data->{node_type};
-  if ($nt == 1) {
-    my $ns = $data->{namespace_uri} || \'';
-    $class = $ElementClass->{$$ns}->{${$data->{local_name}}} ||
-        $ElementClass->{$$ns}->{'*'} ||
-        'Web::DOM::Element';
-  } elsif ($nt == 9) {
-    $class = $data->{is_XMLDocument}
-        ? 'Web::DOM::XMLDocument' : 'Web::DOM::Document';
+  my $module;
+  if (defined (my $nt = $data->{node_type})) {
+    if ($nt == 1) {
+      my $ns = $data->{namespace_uri} || \'';
+      $class = $ElementClass->{$$ns}->{${$data->{local_name}}} ||
+          $ElementClass->{$$ns}->{'*'} ||
+          'Web::DOM::Element';
+    } elsif ($nt == 9) {
+      $class = $data->{is_XMLDocument}
+          ? 'Web::DOM::XMLDocument' : 'Web::DOM::Document';
+    } else {
+      $class = $NodeClassByNodeType->{$nt};
+    }
+    $module = $ClassToModule->{$class} || $class;
   } else {
-    $class = $NodeClassByNodeType->{$nt};
+    if ($data->{rule_type} eq 'sheet') {
+      $class = $module = 'Web::DOM::CSSStyleSheet';
+    } else {
+      $class = $RuleClassByRuleType->{$data->{rule_type}} ||
+          'Web::DOM::CSSUnknownRule';
+      $module = 'Web::DOM::CSSRule';
+    }
   }
-  my $module = $ClassToModule->{$class} || $class;
   if (not $ModuleLoaded->{$module}++) {
     eval qq{ require $module } or die $@;
   }
@@ -630,6 +684,7 @@ sub children_changed ($$$) {
   }
 } # children_changed
 
+## DOMStringMap
 sub strmap ($$) {
   my ($self, $el) = @_;
   return $self->{strmap}->[$$el->[1]] if defined $self->{strmap}->[$$el->[1]];
@@ -641,6 +696,7 @@ sub strmap ($$) {
   return $map;
 } # strmap
 
+## DOMImplementation
 sub impl ($) {
   my $self = shift;
   return $self->{impl} || do {
@@ -651,6 +707,7 @@ sub impl ($) {
   };
 } # impl
 
+## DOMConfiguration
 sub config ($) {
   my $self = shift;
   return $self->{config_obj} || do {
@@ -671,6 +728,37 @@ sub config_hashref ($) {
   };
 } # config_hashref
 
+sub import_parsed_ss ($$) {
+  my ($self, $ss) = @_;
+  ## $ss - Parsed style sheet data structure (See Web::CSS::Parser)
+  ## (This method is destructive and some data in $ss is used as
+  ## part of the internal.)
+
+  my $id_delta = $self->{next_node_id};
+  my $tree_id = $self->{next_tree_id}++;
+
+  ## $ss->{rules}->[0] is always the style sheet construct
+  for my $rule (@{$ss->{rules}}) {
+    my $id = $id_delta + delete $rule->{id};
+    $rule->{parent_id} += $id_delta if defined $rule->{parent_id};
+    @{$rule->{rule_ids}} = map { $_ + $id_delta } @{$rule->{rule_ids}}
+        if $rule->{rule_ids};
+    $rule->{owner_sheet} = $id_delta + 0 if $id != $id_delta;
+    $self->{data}->[$id] = $rule;
+    $self->{tree_id}->[$id] = $tree_id;
+  }
+
+  ## $ss->{base_urlref} is ignored
+
+  $self->{next_node_id} += @{$ss->{rules}};
+  $self->{rc}->[$id_delta + 0] += @{$ss->{rules}} - 1; # |owner_sheet|
+
+  return $id_delta + 0;
+
+  ## This method is invoked by
+  ## |Web::CSS::Parser::process_style_element|.
+} # import_parsed_ss
+
 sub connect ($$$) {
   my ($self, $id => $parent_id) = @_;
   my @id = ($id);
@@ -678,14 +766,17 @@ sub connect ($$$) {
   while (@id) {
     my $id = shift @id;
     $self->{tree_id}->[$id] = $tree_id;
-    push @id, grep { not ref $_ } @{$self->{data}->[$id]->{attributes} or []};
+    my $data = $self->{data}->[$id];
+    push @id, grep { not ref $_ } @{$data->{attributes} or []};
     push @id,
-        @{$self->{data}->[$id]->{child_nodes} or []},
+        @{$data->{child_nodes} or []},
+        @{$data->{rule_ids} or []},
         grep { defined $_ } 
-        values %{$self->{data}->[$id]->{element_types} or {}},
-        values %{$self->{data}->[$id]->{general_entities} or {}},
-        values %{$self->{data}->[$id]->{notations} or {}},
-        values %{$self->{data}->[$id]->{attribute_definitions} or {}};
+        values %{$data->{element_types} or {}},
+        values %{$data->{general_entities} or {}},
+        values %{$data->{notations} or {}},
+        values %{$data->{attribute_definitions} or {}},
+        $data->{sheet};
   }
 } # connect
 
@@ -696,14 +787,25 @@ sub disconnect ($$) {
   while (@id) {
     my $id = shift @id;
     $self->{tree_id}->[$id] = $tree_id;
-    push @id, grep { not ref $_ } @{$self->{data}->[$id]->{attributes} or []};
+    my $data = $self->{data}->[$id];
+    push @id, grep { not ref $_ } @{$data->{attributes} or []};
     push @id,
-        @{$self->{data}->[$id]->{child_nodes} or []},
+        @{$data->{child_nodes} or []},
+        @{$data->{rule_ids} or []},
         grep { defined $_ } 
-        values %{$self->{data}->[$id]->{element_types} or {}},
-        values %{$self->{data}->[$id]->{general_entities} or {}},
-        values %{$self->{data}->[$id]->{notations} or {}},
-        values %{$self->{data}->[$id]->{attribute_definitions} or {}};
+        values %{$data->{element_types} or {}},
+        values %{$data->{general_entities} or {}},
+        values %{$data->{notations} or {}},
+        values %{$data->{attribute_definitions} or {}},
+        $data->{sheet};
+
+    ## If the disconnected node is a CSS rule and contained in a style
+    ## sheet, decrement the reference count for the sheet.  (The
+    ## reference itself should be removed by the invokee after the
+    ## invocation of this method.)
+    if (defined $data->{owner_sheet}) {
+      $self->{rc}->[$data->{owner_sheet}]--;
+    }
   }
 } # disconnect
 
@@ -737,11 +839,13 @@ sub adopt ($$) {
     push @old_id, grep { not ref $_ } @{$data->{attributes} or []};
     push @old_id,
         @{$data->{child_nodes} or []},
+        @{$data->{rule_ids} or []},
         grep { defined $_ } 
         values %{$data->{element_types} or {}},
         values %{$data->{general_entities} or {}},
         values %{$data->{notations} or {}},
-        values %{$data->{attribute_definitions} or {}};
+        values %{$data->{attribute_definitions} or {}},
+        $data->{sheet};
 
     if (my $node = delete $old_int->{nodes}->[$old_id]) {
       weaken ($new_int->{nodes}->[$new_id] = $node);
@@ -778,6 +882,8 @@ sub adopt ($$) {
     }
     @{$data->{child_nodes}} = map { $id_map{$_} } @{$data->{child_nodes}}
         if $data->{child_nodes};
+    @{$data->{rule_ids}} = map { $id_map{$_} } @{$data->{rule_ids}}
+        if $data->{rule_ids};
     for my $key (qw(element_types general_entities notations
                     attribute_definitions)) {
       for (keys %{$data->{$key} or {}}) {
@@ -786,25 +892,32 @@ sub adopt ($$) {
         }
       }
     }
-    for (qw(parent_node owner)) {
+    for (qw(sheet
+            parent_node owner
+            owner_sheet)) {
       $data->{$_} = $id_map{$data->{$_}} if defined $data->{$_};
     }
   }
 } # adopt
 
-# XXX should we drop the "rc" concept and hard code that the node ID
-# "0" can't be freed until the nodes within the document has been
-# freed?
 sub gc ($$) {
   return if @{$_[0]->{data} or []} > 100 and 0.95 > rand 1;
   my ($self, $id) = @_;
+
+  my $osid = $self->{data}->[$id]->{owner_sheet};
+  if (defined $osid) {
+    ## |rc| is used to not free style sheet until all rules
+    ## referencing it are freed.
+    $self->{rc}->[$osid]--;
+  }
+
   delete $self->{nodes}->[$id];
   my $tree_id = $self->{tree_id}->[$id];
   return if $tree_id == 0;
   my @id = grep { defined $self->{tree_id}->[$_] and 
                   $self->{tree_id}->[$_] == $tree_id } 0..$#{$self->{tree_id}};
   for (@id) {
-    return if $self->{nodes}->[$_] or $self->{rc}->[$_];
+    return if $self->{nodes}->[$_] or ($self->{rc}->[$_] or 0) > 0;
   }
   for (@id) {
     delete $self->{data}->[$_];

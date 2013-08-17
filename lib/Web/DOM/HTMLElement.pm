@@ -233,16 +233,30 @@ _define_reflect_string http_equiv => 'http-equiv';
 _define_reflect_string scheme => 'scheme';
 
 package Web::DOM::HTMLStyleElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
-# XXX LinkStyle
 use Web::DOM::Element;
-
-# XXX disabled
 
 _define_reflect_string type => 'type';
 _define_reflect_string media => 'media';
 _define_reflect_boolean scoped => 'scoped';
+
+## The |LinkStyle| interface [NoInterfaceObject]
+## Test: linkstyle.t
+sub sheet ($) {
+  my $sheet_id = ${$_[0]}->[2]->{sheet};
+  return defined $sheet_id ? ${$_[0]}->[0]->node ($sheet_id) : undef;
+} # sheet
+
+## Test: cssstylesheet.t
+sub disabled ($;$) {
+  my $sheet = $_[0]->sheet;
+  if (defined $sheet) {
+    return $sheet->disabled (@_ > 1 ? ($_[1]) : ());
+  } else {
+    return 0;
+  }
+} # disabled
 
 package Web::DOM::HTMLScriptElement;
 our $VERSION = '1.0';

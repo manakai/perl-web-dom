@@ -1,0 +1,76 @@
+=head1 NAME
+
+Web::DOM::CSSStyleSheet - The DOM |CSSStyleSheet| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CSSStyleSheet> class implements the DOM
+C<CSSStyleSheet> interface.  It represents a CSS style sheet.
+
+=head1 METHODS
+
+=over 4
+
+=item $boolean = $ss->disabled
+
+=item $ss->disabled ($boolean)
+
+Return or set the disable flag of the style sheet.  [CSSOM]
+
+=item $string = $ss->href
+
+If the owner is a C<style> element, return C<undef>.  [CSSOM] [HTML]
+
+=item $node = $ss->owner_node
+
+Return the owner node of the style sheet, if any.  [CSSOM]
+
+=item $node = $ss->parent_style_sheet
+
+Return the parent style sheet of the style sheet, if any.  [CSSOM]
+
+=item $string = $ss->title
+
+Return the title of the alternative style sheet set, if any.  [CSSOM]
+[HTML]
+
+=item $string = $ss->type
+
+Return the MIME type of the style sheet, i.e. C<text/css>.  [CSSOM]
+
+=back
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item CSSOM
+
+CSS Object Model (CSSOM) <http://dev.w3.org/csswg/cssom/>.
+
+=item HTML
+
+HTML Living Standard
+<http://www.whatwg.org/specs/web-apps/current-work/#styling>.
+
+When a CSS style sheet is created from an HTML C<style> element, the
+owner node of the style sheet MUST be set to the element.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::CSSRule>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
