@@ -1,0 +1,79 @@
+=head1 NAME
+
+Web::DOM::CSSRuleList - The DOM |CSSRuleList| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CSSRuleList> class implements the DOM C<CSSRuleList>
+interface.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $rule = $rule_list->[$index]
+
+=item $rule = $rule_list->item ($index)
+
+Return the rule in the list, specified by its index.  [CSSOM]
+[DOMPERL]
+
+Use of the C<item> method is discouraged as it doesn't support
+Perl-ish ways to access items, such as negative indexing, while C<<
+$rule_list->[-1] >> works as intended.
+
+=item $number = @$rule_list
+
+=item $number = $rule_list->length
+
+Return the number of the rules in the list.  [CSSOM] [DOMPERL]
+
+=item $arrayref = $rule_list->to_a
+
+Return the new static array reference containing the rules in the
+list.  [DOMPERL]
+
+=item ($rule1, $rule2, ...) = $rule_list->to_list
+
+=item ($rule1, $rule2, ...) = @$rule_list
+
+Return the list of the rules contained in the list.  [DOMPERL]
+
+=back
+
+The object supports Perl standard read-only operations for array
+references, e.g. C<< exists $rule_list->[4] >>.  [DOMPERL]
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item CSSOM
+
+CSSOM <http://dev.w3.org/csswg/cssom/#cssrulelist>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding#anchor-86>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::CSSRule>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

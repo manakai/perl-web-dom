@@ -130,6 +130,35 @@ test {
   done $c;
 } n => 4, name => '<style> disabled, no sheet';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+
+  my $list = $css->css_rules;
+  isa_ok $list, 'Web::DOM::CSSRuleList';
+  is $list->length, 0;
+
+  is $css->css_rules, $list;
+
+  done $c;
+} n => 3, name => 'css_rules empty';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}@media{}';
+
+  my $list = $css->css_rules;
+  isa_ok $list, 'Web::DOM::CSSRuleList';
+  is $list->length, 2;
+
+  is $css->css_rules, $list;
+
+  is $css->css_rules->[0]->type, 1;
+  is $css->css_rules->[1]->type, 4;
+
+  done $c;
+} n => 5, name => 'css_rules not empty';
+
 run_tests;
 
 =head1 LICENSE

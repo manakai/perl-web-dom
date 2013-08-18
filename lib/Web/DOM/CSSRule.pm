@@ -1,7 +1,7 @@
 package Web::DOM::CSSRule;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Internal;
 
 our @EXPORT;
@@ -19,7 +19,7 @@ sub PAGE_RULE () { 6 }
 sub NAMESPACE_RULE () { 10 }
 
 sub type ($) {
-  return ${$_[0]}->[2]->{type};
+  die "Not implemented";
 } # type
 
 # XXX css_text
@@ -37,10 +37,16 @@ sub DESTROY ($) {
 } # DESTROY
 
 package Web::DOM::CSSUnknownRule;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
 
+sub type ($) { Web::DOM::CSSRule::UNKNOWN_RULE }
+
 package Web::DOM::CSSStyleRule;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
+
+sub type ($) { Web::DOM::CSSRule::STYLE_RULE }
 
 # XXX selector_text
 
@@ -49,7 +55,10 @@ sub style ($) {
 } # style
 
 package Web::DOM::CSSCharsetRule;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
+
+sub type ($) { Web::DOM::CSSRule::CHARSET_RULE }
 
 sub encoding ($;$) {
   # XXX setter behavior not defined in spec (this is chrome behavior)
@@ -60,7 +69,10 @@ sub encoding ($;$) {
 } # encoding
 
 package Web::DOM::CSSImportRule;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
+
+sub type ($) { Web::DOM::CSSRule::IMPORT_RULE }
 
 sub href ($) {
   return ${$_[0]}->[2]->{href};
@@ -73,7 +85,10 @@ sub style_sheet ($) {
 } # style_sheet
 
 package Web::DOM::CSSMediaRule;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
+
+sub type ($) { Web::DOM::CSSRule::MEDIA_RULE }
 
 # XXX media
 
@@ -84,14 +99,20 @@ push our @ISA, qw(Web::DOM::CSSRule);
 # XXX delete_rule
 
 package Web::DOM::CSSFontFaceRule;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
+
+sub type ($) { Web::DOM::CSSRule::FONT_FACE_RULE }
 
 sub style ($) {
   return ${$_[0]}->[0]->style (${$_[0]}->[1]);
 } # style
 
 package Web::DOM::CSSPageRule;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
+
+sub type ($) { Web::DOM::CSSRule::PAGE_RULE }
 
 # XXX selector_text
 
@@ -100,7 +121,10 @@ sub style ($) {
 } # style
 
 package Web::DOM::CSSNamespaceRule;
+our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
+
+sub type ($) { Web::DOM::CSSRule::NAMESPACE_RULE }
 
 sub namespace_uri ($) {
   return ${${$_[0]}->[2]->{namespace_uri}};

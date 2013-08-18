@@ -11,6 +11,11 @@ C<CSSStyleSheet> interface.  It represents a CSS style sheet.
 
 =over 4
 
+=item $list = $ss->css_rules
+
+Return the L<Web::DOM::CSSRuleList> object containing the CSS rules in
+the style sheet.  [CSSOM]
+
 =item $boolean = $ss->disabled
 
 =item $ss->disabled ($boolean)
@@ -24,6 +29,10 @@ If the owner is a C<style> element, return C<undef>.  [CSSOM] [HTML]
 =item $node = $ss->owner_node
 
 Return the owner node of the style sheet, if any.  [CSSOM]
+
+=item $rule = $ss->owner_rule
+
+Return the owner CSS rule of the style sheet, if any.  [CSSOM]
 
 =item $node = $ss->parent_style_sheet
 

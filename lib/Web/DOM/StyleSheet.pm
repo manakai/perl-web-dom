@@ -27,7 +27,8 @@ sub manakai_input_encoding ($) {
 
 sub owner_node ($) {
   my $id = ${$_[0]}->[2]->{owner};
-  return defined $id ? ${$_[0]}->[0]->node ($id) : undef;
+  return defined $id && defined ${$_[0]}->[0]->{data}->[$id]->{node_type} # XXXtest
+      ? ${$_[0]}->[0]->node ($id) : undef;
 } # owner_node
 
 sub parent_style_sheet ($) {

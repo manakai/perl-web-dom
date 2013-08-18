@@ -4,6 +4,10 @@ use warnings;
 our $VERSION = '1.0';
 use Carp;
 
+## Collection - superclass of |Web::DOM::NodeList|,
+## |Web::DOM::NamedNodeMap|, |Web::DOM::HTMLCollection|, and
+## |Web::DOM::CSSRuleList|.
+
 use overload
     '@{}' => sub {
       return ${$_[0]}->[2] ||= do {
@@ -68,7 +72,7 @@ sub to_list ($) {
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

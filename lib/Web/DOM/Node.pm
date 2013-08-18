@@ -224,7 +224,7 @@ sub child_nodes ($) {
   my $node = $_[0];
   return $$node->[0]->collection ('child_nodes', $node, sub {
     my $node = $_[0];
-    return @{$$node->[0]->{data}->[$$node->[1]]->{child_nodes} or []};
+    return @{$$node->[2]->{child_nodes} or []};
   });
 } # child_nodes
 

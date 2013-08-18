@@ -446,6 +446,7 @@ sub node ($$) {
 ##   - {child_nodes}              - $node->child_nodes
 ##   - {children}                 - $node->children
 ##   - {contributor_elements}     - $el->contributor_elements
+##   - {css_rules}                - $css->css_rules
 ##   - {element_types}            - $dt->element_types
 ##   - {embeds}                   - $doc->embeds
 ##   - {entry_elements}           - $el->entry_elements
@@ -476,6 +477,7 @@ my $CollectionClass = {
   notations => 'Web::DOM::NamedNodeMap',
   by_name => 'Web::DOM::NodeList',
   all => 'Web::DOM::HTMLAllCollection',
+  css_rules => 'Web::DOM::CSSRuleList',
 }; # $CollectionClass
 
 sub collection ($$$$) {
@@ -646,7 +648,7 @@ sub tokens ($$$$$) {
 sub children_changed ($$$) {
   my $cols = $_[0]->{cols};
   my @key = qw(child_nodes children attributes element_types general_entities
-               notations attribute_definitions iterator);
+               notations attribute_definitions iterator css_rules);
   if ($_[2] == 1 or $_[2] == 2) { # old child is ELEMENT_NODE or ATTRIBUTE_NODE
     @key = ();
   }

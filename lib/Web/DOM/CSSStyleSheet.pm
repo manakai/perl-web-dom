@@ -1,7 +1,7 @@
 package Web::DOM::CSSStyleSheet;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::StyleSheet;
 push our @ISA, qw(Web::DOM::StyleSheet);
 use Web::DOM::CSSRule;
@@ -10,11 +10,23 @@ sub type ($) {
   return 'text/css';
 } # type
 
+# XXXtest
 sub owner_rule ($) {
-  return ${$_[0]}->[0]->rule (${$_[0]}->[2]->{owner_rule}); # or undef
+  my $id = ${$_[0]}->[2]->{owner};
+  return defined $id && defined ${$_[0]}->{data}->[$id]->{rule_type}
+      ? ${$_[0]}->[0]->node ($id) : undef;
 } # owner_rule
 
-# XXX css_rules
+sub css_rules ($) {
+  my $self = $_[0];
+
+  # XXX origin check
+
+  return $$self->[0]->collection ('css_rules', $self, sub {
+    my $node = $_[0];
+    return @{$$node->[2]->{rule_ids} or []};
+  });
+} # css_rules
 
 # XXX insert_rule
 
@@ -22,6 +34,7 @@ sub owner_rule ($) {
 
 # XXX css_text
 
+# XXXtest
 sub manakai_is_default_namespace ($$) {
   my $uri = ''.$_[1];
   for my $rule (@{$_[0]->css_rules}) {
@@ -33,6 +46,7 @@ sub manakai_is_default_namespace ($$) {
   return 0;
 } # manakai_is_default_namespace
 
+# XXXtest
 sub manakai_lookup_namespace_prefix ($$) {
   return undef unless defined $_[1];
   my $uri = ''.$_[1];
@@ -47,6 +61,7 @@ sub manakai_lookup_namespace_prefix ($$) {
   return undef;
 } # manakai_lookup_namespace_prefix
 
+# XXXtest
 sub manakai_lookup_namespace_uri ($$) {
   my $prefix = defined $_[1] ? ''.$_[1] : '';
   for my $rule (@{$_[0]->css_rules}) {
