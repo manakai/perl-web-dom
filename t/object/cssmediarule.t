@@ -10,50 +10,46 @@ use Test::DOM::CSS;
 
 test {
   my $c = shift;
-  my $css = from_style_el 'p{}';
+  my $css = from_style_el '@media {}';
   my $rule = $css->css_rules->[0];
-  isa_ok $rule, 'Web::DOM::CSSStyleRule';
-  is $rule->type, 1;
+  is $rule->type, 4;
   is $rule->parent_rule, undef;
   is $rule->parent_style_sheet, $css;
   done $c;
-} n => 4, name => 'type, parent';
+} n => 3, name => 'basic';
 
 test {
   my $c = shift;
-  my $css = from_style_el 'p {}';
+  my $css = from_style_el '@media {}';
   my $rule = $css->css_rules->[0];
 
-  my $style = $rule->style;
-  isa_ok $style, 'Web::DOM::CSSStyleDeclaration';
-  is $style->parent_rule, $rule;
+  my $list = $rule->css_rules;
+  isa_ok $list, 'Web::DOM::CSSRuleList';
+  is $list->length, 0;
 
-  is $rule->style, $style;
-
-  undef $rule;
-  undef $css;
-
-  isa_ok $style->parent_rule, 'Web::DOM::CSSStyleRule';
-  isa_ok $style->parent_rule->parent_style_sheet, 'Web::DOM::CSSStyleSheet';
+  is $rule->css_rules, $list;
 
   done $c;
-} n => 5, name => 'style';
+} n => 3, name => 'css_rules empty';
 
 test {
   my $c = shift;
-  my $css = from_style_el 'p >Q\s {}';
+  my $css = from_style_el '@media {p{} Q{}}';
   my $rule = $css->css_rules->[0];
 
-  is $rule->selector_text, 'p > Qs';
+  my $list = $rule->css_rules;
+  isa_ok $list, 'Web::DOM::CSSRuleList';
+  is $list->length, 2;
+  is $list->[0]->selector_text, 'p';
+  is $list->[1]->selector_text, 'Q';
 
-  $rule->selector_text ('hoGe *.foo+bar');
-  is $rule->selector_text, 'hoGe .foo + bar';
-
-  $rule->selector_text ('aa|foo');
-  is $rule->selector_text, 'hoGe .foo + bar';
+  is $list->[0]->parent_rule, $rule;
+  is $list->[1]->parent_rule, $rule;
+  is $list->[0]->parent_style_sheet, $css;
+  is $list->[1]->parent_style_sheet, $css;
 
   done $c;
-} n => 3, name => 'selector_text';
+} n => 8, name => 'css_rules not empty';
 
 run_tests;
 

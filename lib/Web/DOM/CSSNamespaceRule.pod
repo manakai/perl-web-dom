@@ -1,0 +1,53 @@
+=head1 NAME
+
+Web::DOM::CSSNamespaceRule - The DOM |CSSNamespaceRule| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CSSNamespacerule> class implements the DOM
+C<CSSNamespaceRule> interface.  It represents an C<@namespace>
+at-rule.
+
+=head1 METHODS
+
+In addition to the methods of the L<Web::DOM::CSSRule> class,
+following methods are available:
+
+=over 4
+
+=item $string = $rule->namespace_uri
+
+Return the namespace URL.  [CSSOM]
+
+=item $prefix = $rule->prefix
+
+Return the namespace prefix, if any, or the empty string.  [CSSOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item CSSOM
+
+CSSOM <http://dev.w3.org/csswg/cssom/>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::CSSRule>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

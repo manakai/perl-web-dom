@@ -1,0 +1,49 @@
+=head1 NAME
+
+Web::DOM::CSSImportRule - The DOM |CSSImportRule| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CSSImportRule> class implements the DOM
+C<CSSImportRule> interface.  It represents an C<@import> at-rule.
+
+=head1 METHOD
+
+In addition to the methods of the L<Web::DOM::CSSRule> class, the
+following method is available:
+
+=over 4
+
+=item $string = $rule->href
+
+Return the URL specified in the at-rule, possibly relative or broken.
+[CSSOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item CSSOM
+
+CSSOM <http://dev.w3.org/csswg/cssom/>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::CSSRule>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

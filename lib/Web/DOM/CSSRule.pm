@@ -53,10 +53,28 @@ push our @ISA, qw(Web::DOM::CSSRule);
 
 sub type ($) { Web::DOM::CSSRule::STYLE_RULE }
 
-# XXX selector_text
+sub selector_text ($;$) {
+  if (@_ > 1) {
+    require Web::CSS::Selectors::Parser;
+    # XXX media context, parser reuse
+    my $parser = Web::CSS::Selectors::Parser->new;
+    # XXX namespaces
+    my $parsed = $parser->parse_char_string_as_selectors (''.$_[1]);
+    if (defined $parsed) {
+      ${$_[0]}->[2]->{selectors} = $parsed;
+    }
+  }
+  return unless defined wantarray;
+  
+  require Web::CSS::Selectors::Serializer;
+  my $serializer = Web::CSS::Selectors::Serializer->new;
+  # XXX namespaces
+  return $serializer->serialize_selector_text (${$_[0]}->[2]->{selectors});
+} # selector_text
 
 sub style ($) {
-  return ${$_[0]}->[0]->style (${$_[0]}->[1]);
+  # XXX setter
+  return ${$_[0]}->[0]->source_style ('rule', $_[0]);
 } # style
 
 package Web::DOM::CSSCharsetRule;
@@ -66,7 +84,6 @@ push our @ISA, qw(Web::DOM::CSSRule);
 sub type ($) { Web::DOM::CSSRule::CHARSET_RULE }
 
 sub encoding ($;$) {
-  # XXX setter behavior not defined in spec (this is chrome behavior)
   if (@_ > 1) {
     ${$_[0]}->[2]->{encoding} = ''.$_[1];
   }
@@ -85,23 +102,34 @@ sub href ($) {
 
 # XXX media
 
+# XXX
 sub style_sheet ($) {
-  return ${$_[0]}->[0]->sheet (${$_[0]}->[2]->{style_sheet});
+  return ${$_[0]}->[0]->node (${$_[0]}->[2]->{sheet});
 } # style_sheet
 
-package Web::DOM::CSSMediaRule;
+package Web::DOM::CSSGroupingRule;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
 
-sub type ($) { Web::DOM::CSSRule::MEDIA_RULE }
-
-# XXX media
-
-# XXX css_rules
+sub css_rules ($) {
+  my $self = $_[0];
+  return $$self->[0]->collection ('css_rules', $self, sub {
+    my $node = $_[0];
+    return @{$$node->[2]->{rule_ids} or []};
+  });
+} # css_rules
 
 # XXX insert_rule
 
 # XXX delete_rule
+
+package Web::DOM::CSSMediaRule;
+our $VERSION = '2.0';
+push our @ISA, qw(Web::DOM::CSSGroupingRule);
+
+sub type ($) { Web::DOM::CSSRule::MEDIA_RULE }
+
+# XXX media
 
 package Web::DOM::CSSFontFaceRule;
 our $VERSION = '1.0';
@@ -109,6 +137,7 @@ push our @ISA, qw(Web::DOM::CSSRule);
 
 sub type ($) { Web::DOM::CSSRule::FONT_FACE_RULE }
 
+#XXX
 sub style ($) {
   return ${$_[0]}->[0]->style (${$_[0]}->[1]);
 } # style
@@ -121,6 +150,7 @@ sub type ($) { Web::DOM::CSSRule::PAGE_RULE }
 
 # XXX selector_text
 
+#XXX
 sub style ($) {
   return ${$_[0]}->[0]->style (${$_[0]}->[1]);
 } # style
@@ -132,11 +162,13 @@ push our @ISA, qw(Web::DOM::CSSRule);
 sub type ($) { Web::DOM::CSSRule::NAMESPACE_RULE }
 
 sub namespace_uri ($) {
-  return ${${$_[0]}->[2]->{namespace_uri}};
+  # XXXsetter
+  return ${$_[0]}->[2]->{nsurl};
 } # namespace_uri
 
 sub prefix ($) {
-  return ${${$_[0]}->[2]->{prefix}};
+  # XXX setter
+  return defined ${$_[0]}->[2]->{prefix} ? ${$_[0]}->[2]->{prefix} : '';
 } # prefix
 
 1;

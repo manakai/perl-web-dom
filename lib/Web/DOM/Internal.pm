@@ -761,6 +761,17 @@ sub import_parsed_ss ($$) {
   ## |Web::CSS::Parser::process_style_element|.
 } # import_parsed_ss
 
+sub source_style ($$$) {
+  my ($self, $type, $obj) = @_;
+  return $self->{source_style}->[$$obj->[1]] || do {
+    require Web::DOM::CSSStyleDeclaration;
+    ## $type = 'rule', $obj = CSSStyleRule - Declarations in the style rule
+    my $style = bless [$type, $obj], 'Web::DOM::CSSStyleDeclaration';
+    weaken ($self->{source_style}->[$$obj->[1]] = $style);
+    $style;
+  };
+} # source_style
+
 sub connect ($$$) {
   my ($self, $id => $parent_id) = @_;
   my @id = ($id);

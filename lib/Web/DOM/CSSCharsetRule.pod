@@ -1,0 +1,53 @@
+=head1 NAME
+
+Web::DOM::CSSCharsetRule - The DOM |CSSCharsetRule| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CSSCharsetRule> class implements the DOM
+C<CSSCharsetRule> interface.  It represents an C<@charset> at-rule.
+
+=head1 METHOD
+
+In addition to the methods of the L<Web::DOM::CSSRule> class, the
+following method is available:
+
+=over 4
+
+=item $string = $rule->encoding
+
+=item $rule->encoding ($string)
+
+Return or set the encoding name.  [CSSOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item CSSOM
+
+CSSOM <http://dev.w3.org/csswg/cssom/>.
+
+On setting, the C<encoding> attribute MUST set the encoding
+information to the new value.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::CSSRule>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

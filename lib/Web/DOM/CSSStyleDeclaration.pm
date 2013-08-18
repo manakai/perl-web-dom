@@ -1,7 +1,7 @@
 package Web::DOM::CSSStyleDeclaration;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 
 # XXX css_text
 
@@ -18,16 +18,16 @@ our $VERSION = '1.0';
 # XXX remove_property
 
 sub parent_rule ($) {
-  return ${$_[0]}->[0]->rule (${$_[0]}->[2]->{parent_rule});
+  if ($_[0]->[0] eq 'rule') {
+    return $_[0]->[1];
+  } else {
+    return undef;
+  }
 } # parent_rule
 
 # XXX add manakaiBaseURI ?
 
 # XXX property methods
-
-sub DESTROY ($) {
-  ${$_[0]}->[0]->destroy_style (${$_[0]}->[1]);
-} # DESTROY
 
 1;
 

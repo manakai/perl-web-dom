@@ -1,0 +1,56 @@
+=head1 NAME
+
+Web::DOM::CSSStyleRule - The DOM |CSSStyleRule| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CSSStyleRule> class implements the DOM C<CSSStyleRule>
+interface.  It represents a CSS style rule.
+
+=head1 METHODS
+
+In addition to the methods of the L<Web::DOM::CSSRule> class,
+following methods are available:
+
+=over 4
+
+=item $string = $rule->selector_text
+
+=item $rule->selector_text ($string)
+
+Return or set the list of selectors associated with the style rule.
+[CSSOM]
+
+=item $style = $rule->style
+
+Return the L<Web::DOM::CSSStyleDeclaration> object of the style rule.
+[CSSOM]
+
+=back
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item CSSOM
+
+CSSOM <http://dev.w3.org/csswg/cssom/>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::CSSRule>, L<Web::DOM::CSSStyleDeclaration>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
