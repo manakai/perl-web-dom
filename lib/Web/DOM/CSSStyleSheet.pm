@@ -2,9 +2,22 @@ package Web::DOM::CSSStyleSheet;
 use strict;
 use warnings;
 our $VERSION = '3.0';
+use Carp;
 use Web::DOM::StyleSheet;
 push our @ISA, qw(Web::DOM::StyleSheet);
 use Web::DOM::CSSRule;
+
+use overload
+    '""' => sub {
+      return ref ($_[0]) . '=DOM(' . ${$_[0]}->[2] . ')';
+    },
+    bool => sub { 1 },
+    cmp => sub {
+      carp "Use of uninitialized value in string comparison (cmp)"
+          unless defined $_[1];
+      overload::StrVal ($_[0]) cmp overload::StrVal ($_[1])
+    },
+    fallback => 1;
 
 sub type ($) {
   return 'text/css';

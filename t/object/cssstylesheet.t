@@ -143,6 +143,38 @@ test {
   done $c;
 } n => 5, name => 'css_rules not empty';
 
+test {
+  my $c = shift;
+  my $css1 = from_style_el 'p {} q{}';
+  my $css2 = from_style_el 'p {} q{}';
+
+  ok $css1;
+
+  isnt $css1 cmp $css2, 0;
+  is $css1 cmp $css1, 0;
+  isnt $css1 cmp undef, 0;
+  isnt undef cmp $css1, 0;
+
+  ok $css1 eq $css1;
+  ok not $css1 eq $css2;
+  ok $css1 ne $css2;
+  ok not $css1 ne $css1;
+
+  done $c;
+} n => 9, name => 'comparison';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {poSition: absolUTe; border-top-style:hidden}';
+  my $css_s = ''.$css;
+  my $node = $css->owner_node;
+  undef $css;
+
+  is $node->sheet . '', $css_s;
+
+  done $c;
+} n => 1, name => 'string comparison';
+
 run_tests;
 
 =head1 LICENSE

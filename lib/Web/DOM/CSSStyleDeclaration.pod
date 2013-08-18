@@ -1,0 +1,82 @@
+=head1 NAME
+
+Web::DOM::CSSStyleDeclaration - The DOM |CSSStyleDeclaration| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CSSStyleDeclaration> class implements the DOM
+C<CSSStyleDeclaration> interface.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $string = $style->get_property_priorty ($prop_name)
+
+Return the string C<important> if the declaration for the specified
+property contains the C<!important> keyword.  [CSSOM]
+
+=item $string = $style->get_property_value ($prop_name)
+
+Return the character string serialization of the property value with
+the specified name, if any.  [CSSOM]
+
+=item $prop_name = $style->[$index]
+
+=item $prop_name = $style->item ($index)
+
+Return the property name at the specified index, if any.  [CSSOM]
+[DOMPERL]
+
+Use of the C<item> method is discouraged as it doesn't support
+Perl-ish ways to access items, such as negative indexing, while C<<
+$style->[-1] >> works as intended.
+
+=item $length = $style->length
+
+=item $length = scalar @$style
+
+Return the number of declarations.  [CSSOM] [DOMPERL]
+
+=item $style = $style->parent_rule
+
+Return the parent rule, if any.  [CSSOM]
+
+=back
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item CSSOM
+
+CSSOM <http://dev.w3.org/csswg/cssom/>.
+
+The C<item> method MUST return the empty string if there is no item at
+the specified index.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding#anchor-86>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::CSSStyleRule>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

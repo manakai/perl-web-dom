@@ -2,10 +2,23 @@ package Web::DOM::CSSRule;
 use strict;
 use warnings;
 our $VERSION = '3.0';
+use Carp;
 use Web::DOM::Internal;
 
 our @EXPORT;
 *import = \&Web::DOM::Internal::import;
+
+use overload
+    '""' => sub {
+      return ref ($_[0]) . '=DOM(' . ${$_[0]}->[2] . ')';
+    },
+    bool => sub { 1 },
+    cmp => sub {
+      carp "Use of uninitialized value in string comparison (cmp)"
+          unless defined $_[1];
+      overload::StrVal ($_[0]) cmp overload::StrVal ($_[1])
+    },
+    fallback => 1;
 
 push @EXPORT, qw(UNKNOWN_RULE STYLE_RULE CHARSET_RULE IMPORT_RULE MEDIA_RULE
                  FONT_FACE_RULE PAGE_RULE NAMESPACE_RULE);

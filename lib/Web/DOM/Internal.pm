@@ -766,7 +766,7 @@ sub source_style ($$$) {
   return $self->{source_style}->[$$obj->[1]] || do {
     require Web::DOM::CSSStyleDeclaration;
     ## $type = 'rule', $obj = CSSStyleRule - Declarations in the style rule
-    my $style = bless [$type, $obj], 'Web::DOM::CSSStyleDeclaration';
+    my $style = bless \[$type, $obj], 'Web::DOM::CSSStyleDeclaration';
     weaken ($self->{source_style}->[$$obj->[1]] = $style);
     $style;
   };
