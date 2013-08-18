@@ -225,6 +225,16 @@ Following methods are also available: C<attributes>, C<prefix>,
 C<namespace_uri>, C<local_name>, and C<manakai_local_name>.
 [DOMATTREXODUS] [DOMNODEEXODUS] [MANAKAI]
 
+Any C<Node> object is an instance of one of its subclasses.  For
+example, a C<Node> object whose C<node_type> is C<ELEMENT_NODE> is an
+instance of L<Web::DOM::Element>.  There are following subclasses:
+
+L<Web::DOM::Element>, L<Web::DOM::Document>,
+L<Web::DOM::DocumentType>, L<Web::DOM::DocumentFragment>,
+L<Web::DOM::CharacterData>, L<Web::DOM::Attr>, L<Web::DOM::Entity>,
+L<Web::DOM::Notation>, L<Web::DOM::ElementTypeDefinition>, and
+L<Web::DOM::AttributeDefinition>.
+
 =head1 CONSTANTS
 
 Constants are exported from the L<Web::DOM::Node> module by default.
@@ -297,12 +307,6 @@ manakai DOM Extensions
 =back
 
 =head1 SEE ALSO
-
-L<Web::DOM::Element>, L<Web::DOM::Document>,
-L<Web::DOM::DocumentType>, L<Web::DOM::DocumentFragment>,
-L<Web::DOM::CharacterData>, L<Web::DOM::Attr>, L<Web::DOM::Entity>,
-L<Web::DOM::EntityReference>, L<Web::DOM::Notation>,
-L<Web::DOM::ElementTypeDefinition>, L<Web::DOM::AttributeDefinition>.
 
 L<Web::DOM::NodeList>, L<Web::DOM::HTMLCollection>,
 L<Web::DOM::NamedNodeMap>.

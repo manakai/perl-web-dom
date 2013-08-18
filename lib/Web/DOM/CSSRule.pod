@@ -1,0 +1,94 @@
+=head1 NAME
+
+Web::DOM::CSSRule - The DOM |CSSRule| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::CSSRule> class implements the DOM C<CSSRule>
+interface.  The C<Web::DOM::CSSRule> class is an abstract class.  It
+is used as subclasses such as C<Web::DOM::CSSStyleRule> and
+C<Web::DOM::CSSMediaRule>.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $rule = $rule->parent_rule
+
+Return the parent rule, if any.  [CSSOM]
+
+=item $rule = $rule->parent_style_sheet
+
+Return the owner style sheet, if any.  [CSSOM]
+
+=item $type = $rule->type
+
+Return the type of the rule, as one of the L</"CONSTANTS"> exported by
+the module.  [CSSOM]
+
+=back
+
+Any C<CSSRule> object is an instance of one of its subclasses.  For
+example, a C<CSSRule> object whose C<type> is C<STYLE_RULE> is an
+instance of L<Web::DOM::CSSStyleRule>.  There are following
+subclasses:
+
+L<Web::DOM::CSSStyleRule>,
+L<Web::DOM::CSSCharsetRule>,
+L<Web::DOM::CSSImportRule>,
+L<Web::DOM::CSSMediaRule>,
+L<Web::DOM::CSSFontFaceRule>,
+L<Web::DOM::CSSPageRule>, and
+L<Web::DOM::CSSNamespaceRule>.
+
+In addition, there is C<Web::DOM::CSSUnknownRule> subclass, which
+implements the obsolete C<CSSUnknownRule> interface [DOM2CSS].  The
+subclass has no additional method.
+
+=head1 CONSTANTS
+
+Constants are exported from the L<Web::DOM::CSSRule> module by
+default.  In addition, they are accessible as methods of C<CSSRule>
+objects.
+
+Following constants are defined for the C<type> attribute [CSSOM]:
+
+STYLE_RULE CHARSET_RULE IMPORT_RULE MEDIA_RULE FONT_FACE_RULE
+PAGE_RULE NAMESPACE_RULE
+
+In addition, obsolete constant C<UNKNOWN_RULE> [DOM2CSS] is also
+defined.
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item CSSOM
+
+CSSOM <http://dev.w3.org/csswg/cssom/>.
+
+=item DOM2CSS
+
+Document Object Model CSS
+<http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSRule>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::CSSStyleSheet>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

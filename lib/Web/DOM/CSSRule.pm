@@ -25,11 +25,16 @@ sub type ($) {
 # XXX css_text
 
 sub parent_rule ($) {
-  return ${$_[0]}->[0]->rule (${$_[0]}->[2]->{parent_rule}); # or undef
+  my $id = ${$_[0]}->[2]->{parent_id};
+  if (defined $id and ${$_[0]}->[0]->{data}->[$id]->{rule_type} ne 'sheet') {
+    return ${$_[0]}->[0]->node ($id);
+  } else {
+    return undef;
+  }
 } # parent_rule
 
 sub parent_style_sheet ($) {
-  return ${$_[0]}->[0]->sheet (${$_[0]}->[2]->{parent_style_sheet}); # or undef
+  return ${$_[0]}->[0]->node (${$_[0]}->[2]->{owner_sheet});
 } # parent_style_sheet
 
 sub DESTROY ($) {

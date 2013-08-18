@@ -74,6 +74,14 @@ values, these methods are not implemented in efficient ways and are
 confusing when mixed with Perl string functions.  Moreover, these
 method can break surrogate pairs.
 
+Any C<CharacterData> object is an instance of one of its subclasses.
+For example, a C<CharacterData> object whose C<node_type> is
+C<TEXT_NODE> is an instance of L<Web::DOM::Text>.  There are following
+subclasses:
+
+L<Web::DOM::Text>, L<Web::DOM::Comment>, and
+L<Web::DOM::ProcessingInstruction>.
+
 =head1 SPECIFICATIONS
 
 =over 4
@@ -86,14 +94,13 @@ DOM Living Standard
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =back
 
 =head1 SEE ALSO
 
-L<Web::DOM::Node>, L<Web::DOM::Text>, L<Web::DOM::CDATASection>,
-L<Web::DOM::Comment>, and L<Web::DOM::ProcessingInstruction>.
+L<Web::DOM::Node>.
 
 =head1 AUTHOR
 

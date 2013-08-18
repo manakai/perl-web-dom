@@ -6,23 +6,7 @@ use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', 
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
 use Test::X1;
 use Test::More;
-use Test::Differences;
-use Web::DOM::Document;
-use Web::CSS::Parser;
-
-sub from_style_el ($;%) {
-  my (undef, %args) = @_;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('style');
-  $el->text_content ($_[0]);
-  $el->type ($args{type}) if defined $args{type};
-  $el->title ($args{title}) if defined $args{title};
-
-  my $parser = Web::CSS::Parser->new;
-  $parser->parse_style_element ($el);
-
-  return $el->sheet;
-} # from_style_el
+use Test::DOM::CSS;
 
 test {
   my $c = shift;
