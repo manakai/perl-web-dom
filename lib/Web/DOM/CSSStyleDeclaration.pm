@@ -92,11 +92,83 @@ sub get_property_priority ($$) {
   return '';
 } # get_property_priority
 
-# XXX set_property
+sub set_property ($$;$$) {
+  my $self = $_[0];
+  my $prop_name = ''.$_[1];
+  my $value = defined $_[2] ? ''.$_[2] : '';
+  my $priority = defined $_[3] ? ''.$_[3] : '';
 
-# XXX remove_property
+  ## 1.
+  # XXX If readonly, NoModificationAllowedError
 
-# XXX add manakaiBaseURI ?
+  ## 2.
+  $prop_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
+
+  ## 3.
+  my $def = $Web::CSS::Props::Prop->{$prop_name} or return;
+  
+  ## 4.
+  if ($value eq '') {
+    $self->remove_property ($prop_name);
+    return;
+  }
+
+  ## 5.
+  $priority =~ tr/A-Z/a-z/; ## ASCII case-insensitive
+  unless ($priority eq '' or $priority eq 'important') {
+    return;
+  }
+
+  ## 6.-8. & Set a CSS property
+  my $parser = Web::CSS::Parser->new; # XXX reuse / context
+  my $parsed = $parser->parse_char_string_as_prop_value ($prop_name, $value);
+  if (defined $parsed) {
+    if (${$_[0]}->[0] eq 'rule') {
+      my $decl = ${${$_[0]}->[1]}->[2];
+      for my $key (@{$parsed->{prop_keys}}) {
+        push @{$decl->{prop_keys}}, $key;
+        $decl->{prop_values}->{$key} = $parsed->{prop_values}->{$key};
+        if ($priority eq 'important') {
+          $decl->{prop_importants}->{$key} = 1;
+        } else {
+          delete $decl->{prop_importants}->{$key};
+        }
+      }
+    }
+  }
+
+  return;
+} # set_property
+
+sub remove_property ($$) {
+  my $self = $_[0];
+  my $prop_name = ''.$_[1];
+
+  ## 1.
+  # XXX read-only
+
+  ## 2.
+  $prop_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
+
+  ## 3.
+  my $value = $self->get_property_value ($prop_name);
+
+  ## 4.
+  # XXX if  shorthand ...; else:
+
+  ## 5.
+  my $def = $Web::CSS::Props::Prop->{$prop_name} or return $value;
+  my $key = $def->{key};
+  if (${$_[0]}->[0] eq 'rule') {
+    my $data = ${${$_[0]}->[1]}->[2];
+    @{$data->{prop_keys}} = grep { $_ ne $key } @{$data->{prop_keys}};
+    delete $data->{prop_values}->{$key};
+    delete $data->{prop_importants}->{$key};
+  }
+  
+  ## 6.
+  return $value;
+} # remove_property
 
 # XXX property methods
 

@@ -132,6 +132,194 @@ test {
   done $c;
 } n => 1, name => 'string comparison';
 
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {poSition: absolUTe; border-top-style:hidden}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property ('DISplay' => 'InLiNE', '');
+  is $style->get_property_value ('display'), 'inline';
+  is $style->get_property_priority ('display'), '';
+  is scalar @$style, 3;
+  is $style->[2], 'display';
+
+  done $c;
+} n => 4, name => 'set_property normal';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {poSition: absolUTe; border-top-style:hidden}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property ('DISplay' => 'InLiNE', 'ImporTANT');
+  is $style->get_property_value ('display'), 'inline';
+  is $style->get_property_priority ('display'), 'important';
+  is scalar @$style, 3;
+  is $style->[2], 'display';
+
+  done $c;
+} n => 4, name => 'set_property important';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {poSition: absolUTe; border-top-style:hidden}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property ('display' => 'block');
+
+  $style->set_property ('border-top-style' => '');
+  is scalar @$style, 2;
+  is $style->[0], 'position';
+  is $style->[1], 'display';
+
+  $style->set_property ('DISplay' => '', 'ImporTANT');
+  is $style->get_property_value ('display'), '';
+  is $style->get_property_priority ('display'), '';
+  is scalar @$style, 1;
+  is $style->[0], 'position';
+
+  done $c;
+} n => 7, name => 'set_property empty';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {poSition: absolUTe; border-top-style:hidden}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property ('HoGefuga' => 'block');
+  is scalar @$style, 2;
+  is $style->[0], 'position';
+  is $style->[1], 'border-top-style';
+
+  done $c;
+} n => 3, name => 'set_property unknown property';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {poSition: absolUTe; border-top-style:hidden}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property ('list-style-type' => '');
+  is scalar @$style, 2;
+  is $style->[0], 'position';
+  is $style->[1], 'border-top-style';
+
+  done $c;
+} n => 3, name => 'set_property remove no value property';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {poSition: absolUTe; border-top-style:hidden}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property ('display' => 'block', 'Hoge');
+  is scalar @$style, 2;
+  is $style->[0], 'position';
+  is $style->[1], 'border-top-style';
+  is $style->get_property_value ('display'), '';
+
+  done $c;
+} n => 4, name => 'set_property wrong priority';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {display: none !important}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property ('display' => 'block', '');
+  is $style->get_property_value ('display'), 'block';
+  is $style->get_property_priority ('display'), '';
+
+  done $c;
+} n => 2, name => 'set_property clear priority';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {display: none !important}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property ('display' => 'block');
+  is $style->get_property_value ('display'), 'block';
+  is $style->get_property_priority ('display'), '';
+
+  done $c;
+} n => 2, name => 'set_property clear priority by default';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {display: none !important}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property ('display');
+  is $style->get_property_value ('display'), '';
+  is $style->get_property_priority ('display'), '';
+  is scalar @$style, 0;
+
+  done $c;
+} n => 3, name => 'set_property clear by default';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {display: none !important}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->remove_property ('display');
+  is $style->get_property_value ('display'), '';
+  is $style->get_property_priority ('display'), '';
+  is scalar @$style, 0;
+
+  done $c;
+} n => 3, name => 'remove_property';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {display: none !important}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->remove_property ('dispLAY');
+  is $style->get_property_value ('display'), '';
+  is $style->get_property_priority ('display'), '';
+  is scalar @$style, 0;
+
+  done $c;
+} n => 3, name => 'remove_property';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {display: none !important}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->remove_property ('list-style-type');
+  is $style->get_property_value ('list-style-type'), '';
+  is $style->get_property_priority ('list-style-type'), '';
+  is scalar @$style, 1;
+  is $style->[0], 'display';
+
+  done $c;
+} n => 4, name => 'remove_property not set';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {display: none !important}';
+  my $style = $css->css_rules->[0]->style;
+
+  my $value = $style->remove_property ('display');
+  is $value, 'none';
+
+  done $c;
+} n => 1, name => 'remove_property return';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {display: none !important}';
+  my $style = $css->css_rules->[0]->style;
+
+  my $value = $style->remove_property ('position');
+  is $value, '';
+
+  done $c;
+} n => 1, name => 'remove_property not found return';
+
 run_tests;
 
 =head1 LICENSE

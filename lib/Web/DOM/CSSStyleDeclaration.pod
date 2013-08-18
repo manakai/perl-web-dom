@@ -44,6 +44,15 @@ Return the number of declarations.  [CSSOM] [DOMPERL]
 
 Return the parent rule, if any.  [CSSOM]
 
+=item $old_value = $style->remove_property ($prop_name)
+
+Remove the specified property and return the old value.  [CSSOM]
+
+=item $style->set_property ($prop_name, $value, $priority)
+
+Set the specified property's value and priority (C<"important"> or
+C<undef>).  [CSSOM]
+
 =back
 
 =head1 SPECIFICATIONS
