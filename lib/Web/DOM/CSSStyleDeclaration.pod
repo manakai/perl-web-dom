@@ -55,6 +55,22 @@ C<undef>).  [CSSOM]
 
 =back
 
+In addition, there are methods reflecting CSS properties.  For
+example, the C<display> method reflects the C<display> CSS property.
+The C<list_style_type> method reflects the C<list-style-type> CSS
+property.  Note that both C<float> and C<css_float> methods reflect
+the C<float> CSS property.
+
+  $style->display ('block');
+  $string = $style->display; # 'block'
+
+For the list of CSS properties, see L<Web::CSS::Props> in the web-css
+package.
+
+=head1 DEPENDENCY
+
+See L<Web::DOM/DEPENDENCY>.
+
 =head1 SPECIFICATIONS
 
 =over 4

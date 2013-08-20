@@ -61,6 +61,10 @@ PAGE_RULE NAMESPACE_RULE
 In addition, obsolete constant C<UNKNOWN_RULE> [DOM2CSS] is also
 defined.
 
+=head1 DEPENDENCY
+
+See L<Web::DOM/DEPENDENCY>.
+
 =head1 SPECIFICATIONS
 
 =over 4

@@ -18,6 +18,10 @@ XXX
 
 =back
 
+=head1 DEPENDENCY
+
+See L<Web::DOM/DEPENDENCY>.
+
 =head1 SPECIFICATION
 
 =over 4

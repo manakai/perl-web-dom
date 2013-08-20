@@ -320,6 +320,62 @@ test {
   done $c;
 } n => 1, name => 'remove_property not found return';
 
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->set_property (display => 'block');
+  $style->set_property (float => 'left');
+
+  eq_or_diff [@$style], [qw(display float)];
+
+  $style->set_property (display => 'inline');
+
+  eq_or_diff [@$style], [qw(display float)];
+
+  $style->set_property ('list-style-type' => 'none');
+
+  eq_or_diff [@$style], [qw(display float list-style-type)];
+
+  $style->remove_property ('float');
+
+  eq_or_diff [@$style], [qw(display list-style-type)];
+
+  done $c;
+} n => 4, name => 'property order';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {}';
+  my $style = $css->css_rules->[0]->style;
+
+  is $style->display, '';
+
+  $style->display ('block');
+  is $style->display, 'block';
+  is $style->get_property_value ('display'), 'block';
+
+  $style->set_property ('float', 'left', 'important');
+  is $style->float, 'left';
+  is $style->css_float, 'left';
+
+  $style->float ('Right');
+  is $style->float, 'right';
+  is $style->get_property_priority ('float'), '';
+
+  $style->float ('');
+  is $style->float, '';
+  is $style->length, 1;
+  is $style->[0], 'display';
+
+  $style->list_style_type ('none');
+  is $style->list_style_type, 'none';
+  is $style->get_property_value ('list-style-type'), 'none';
+
+  done $c;
+} n => 12, name => '<style> style camel-cased attributes';
+
 run_tests;
 
 =head1 LICENSE

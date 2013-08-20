@@ -179,8 +179,10 @@ statement):
 
 Some classes contain private methods and variables.  Applications must
 not invoke or use them.  As a general rule methods with name starting
-by C<_> is private, although there might be exceptions.  Anything
-EXCEPT for followings are private and should not be used:
+by C<_> is private, although there might be exceptions
+(e.g. C<_manakai_border_spacing_x> method, reflecting CSS
+C<-manakai-border-spacing-x> property, is not a private method).
+Anything EXCEPT for followings are private and should not be used:
 
 =over 4
 
@@ -277,9 +279,10 @@ Following features require the perl-web-markup package
 its family): C<inner_html>, C<outer_html>, C<insert_adjacent_html>,
 C<DOMParser>, and C<XMLSerializer>.
 
-Following features require the L<Web::CSS::Selectors::API> module in
-the perl-web-css package <https://github.com/manakai/perl-web-css>:
-C<query_selector> and C<query_selector_all>.
+Following features require the perl-web-css package
+<https://github.com/manakai/perl-web-css>: C<query_selector>,
+C<query_selector_all>, L<CSSStyleSheet>, L<CSSRule> and its
+subclasses, and L<CSSStyleDeclaration>.
 
 Features performing URL-related operations require the perl-web-url
 package <https://github.com/manakai/perl-web-url>, which depends on
@@ -372,8 +375,6 @@ except for obsolete features.  Following features will be
 
 =item Window [HTML]
 
-=item CSSOM
-
 =item manakai CSSOM/Window extensions
 
 Element.prototype.manakaiComputedStyle,
@@ -394,6 +395,8 @@ not limited to:
 =item Mutation observers [DOM]
 
 =item Selectors API Level 2 features
+
+=item New CSSOM features
 
 =item New mutation methods [DOM]
 

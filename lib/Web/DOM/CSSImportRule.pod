@@ -21,6 +21,10 @@ Return the URL specified in the at-rule, possibly relative or broken.
 
 =back
 
+=head1 DEPENDENCY
+
+See L<Web::DOM/DEPENDENCY>.
+
 =head1 SPECIFICATION
 
 =over 4

@@ -134,6 +134,8 @@ sub set_property ($$;$$) {
           delete $decl->{prop_importants}->{$key};
         }
       }
+      my $fnd = {};
+      @{$decl->{prop_keys}} = grep { not $fnd->{$_}++ } @{$decl->{prop_keys}};
     }
   }
 
@@ -170,7 +172,18 @@ sub remove_property ($$) {
   return $value;
 } # remove_property
 
-# XXX property methods
+for my $name (keys %$Web::CSS::Props::Attr) {
+  my $def = $Web::CSS::Props::Attr->{$name};
+  my $css_name = $def->{css};
+  no strict 'refs';
+  *$name = sub ($;$) {
+    if (@_ > 1) {
+      $_[0]->set_property ($css_name => $_[1]);
+    }
+    return unless defined wantarray;
+    return $_[0]->get_property_value ($css_name);
+  };
+}
 
 sub parent_rule ($) {
   if (${$_[0]}->[0] eq 'rule') {

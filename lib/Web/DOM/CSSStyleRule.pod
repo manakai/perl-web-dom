@@ -28,6 +28,10 @@ Return the L<Web::DOM::CSSStyleDeclaration> object of the style rule.
 
 =back
 
+=head1 DEPENDENCY
+
+See L<Web::DOM/DEPENDENCY>.
+
 =head1 SPECIFICATION
 
 =over 4

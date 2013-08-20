@@ -49,6 +49,10 @@ Return the MIME type of the style sheet, i.e. C<text/css>.  [CSSOM]
 
 =back
 
+=head1 DEPENDENCY
+
+See L<Web::DOM/DEPENDENCY>.
+
 =head1 SPECIFICATIONS
 
 =over 4
