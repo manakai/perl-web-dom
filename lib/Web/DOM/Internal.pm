@@ -78,6 +78,9 @@ sub new ($) {
     ## Lists
     # cols tokens strmap iterators
 
+    ## CSS
+    # source_style media
+
     ## Other objects
     # impl
     # config config_obj config_hashref config_names
@@ -771,6 +774,16 @@ sub source_style ($$$) {
     $style;
   };
 } # source_style
+
+sub media ($$) {
+  my ($self, $obj) = @_;
+  return $self->{media}->[$$obj->[1]] || do {
+    require Web::DOM::MediaList;
+    my $list = bless \[$obj], 'Web::DOM::MediaList';
+    weaken ($self->{media}->[$$obj->[1]] = $list);
+    $list;
+  };
+} # media
 
 sub connect ($$$) {
   my ($self, $id => $parent_id) = @_;

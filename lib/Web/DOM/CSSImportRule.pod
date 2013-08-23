@@ -9,14 +9,24 @@ C<CSSImportRule> interface.  It represents an C<@import> at-rule.
 
 =head1 METHOD
 
-In addition to the methods of the L<Web::DOM::CSSRule> class, the
-following method is available:
+In addition to the methods of the L<Web::DOM::CSSRule> class,
+following methods are available:
 
 =over 4
 
 =item $string = $rule->href
 
 Return the URL specified in the at-rule, possibly relative or broken.
+[CSSOM]
+
+=item $media_list = $rule->media
+
+Return the L<Web::DOM::MediaList> representing the list of media
+queries of the rule.  [CSSOM]
+
+=item $rule->media ($string)
+
+Set the specified string as the list of media queries of the rule.
 [CSSOM]
 
 =back

@@ -9,6 +9,8 @@ C<CSSStyleSheet> interface.  It represents a CSS style sheet.
 
 =head1 METHODS
 
+Following methods are available:
+
 =over 4
 
 =item $list = $ss->css_rules
@@ -25,6 +27,16 @@ Return or set the disable flag of the style sheet.  [CSSOM]
 =item $string = $ss->href
 
 If the owner is a C<style> element, return C<undef>.  [CSSOM] [HTML]
+
+=item $media_list = $ss->media
+
+Return the L<Web::DOM::MediaList> representing the list of media
+queries of the style sheet.  [CSSOM]
+
+=item $ss->media ($string)
+
+Set the specified string as the list of media queries of the style
+sheet.  [CSSOM]
 
 =item $node = $ss->owner_node
 

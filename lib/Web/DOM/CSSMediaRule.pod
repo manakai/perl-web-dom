@@ -10,11 +10,19 @@ interface.  It represents an C<@media> at-rule.
 =head1 METHODS
 
 In addition to the methods of classes L<Web::DOM::CSSRule> and
-L<Web::DOM::CSSGroupingRule>, the following method is available:
+L<Web::DOM::CSSGroupingRule>, following methods are available:
 
 =over 4
 
-XXX
+=item $media_list = $rule->media
+
+Return the L<Web::DOM::MediaList> representing the list of media
+queries of the rule.  [CSSOM]
+
+=item $rule->media ($string)
+
+Set the specified string as the list of media queries of the rule.
+[CSSOM]
 
 =back
 

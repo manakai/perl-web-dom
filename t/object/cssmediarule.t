@@ -51,6 +51,22 @@ test {
   done $c;
 } n => 8, name => 'css_rules not empty';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@media screen  , print  {}';
+  my $rule = $css->css_rules->[0];
+
+  my $media = $rule->media;
+  is $media->media_text, 'screen, print';
+  is $media->[0], 'screen';
+  is $media->[1], 'print';
+
+  $rule->media ('abc, speech');
+  is $media->media_text, 'abc, speech';
+
+  done $c;
+} n => 4, name => 'media';
+
 run_tests;
 
 =head1 LICENSE

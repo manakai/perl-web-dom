@@ -48,7 +48,13 @@ sub title ($) {
   return ${$_[0]}->[2]->{title}; # or undef
 } # title
 
-# XXX media
+sub media ($;$) {
+  my $list = ${$_[0]}->[0]->media ($_[0]);
+  if (@_ > 1) {
+    $list->media_text ($_[1]);
+  }
+  return $list;
+} # media
 
 sub disabled ($;$) {
   if (@_ > 1) {

@@ -1,0 +1,96 @@
+=head1 NAME
+
+Web::DOM::MediaList - The DOM |MediaList| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::MediaList> class implements the DOM C<MediaList>
+interface.  It represents a list of media queries.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $media_list->append_medium ($string)
+
+Append a media query to the list.  [CSSOM]
+
+=item $media_list->delete_medium ($string)
+
+Delete a media query from the list.  [CSSOM]
+
+=item $string = $media_list->[$index]
+
+=item $string = $media_list->item ($index)
+
+Return the media query in the list, specified by its index.  [CSSOM]
+[DOMPERL]
+
+Use of the C<item> method is discouraged as it doesn't support
+Perl-ish ways to access items, such as negative indexing, while C<<
+$media_list->[-1] >> works as intended.
+
+=item $number = @$media_list
+
+=item $number = $media_list->length
+
+Return the number of the media queries in the list.  [CSSOM] [DOMPERL]
+
+=item $string = $media_list->media_text
+
+=item $string = '' . $media_list
+
+=item $media_list->media_text ($string)
+
+Return or set the list of media queries as a character string.
+[CSSOM] [DOMPERL]
+
+=item $arrayref = $media_list->to_a
+
+Return the new static array reference containing the media queries in
+the list.  [DOMPERL]
+
+=item ($rule1, $rule2, ...) = $media_list->to_list
+
+=item ($rule1, $rule2, ...) = @$media_list
+
+Return the list of the media queries contained in the list.  [DOMPERL]
+
+=back
+
+The object supports Perl standard read-only operations for array
+references, e.g. C<< exists $media_list->[4] >>.  [DOMPERL]
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item CSSOM
+
+CSSOM <http://dev.w3.org/csswg/cssom/#medialist>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding#anchor-86>.
+
+=back
+
+=head1 DEPENDENCY
+
+See L<Web::DOM/DEPENDENCY>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

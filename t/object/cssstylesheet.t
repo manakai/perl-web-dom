@@ -175,6 +175,31 @@ test {
   done $c;
 } n => 1, name => 'string comparison';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+  my $media = $css->media;
+  isa_ok $media, 'Web::DOM::MediaList';
+  is $media->media_text, '';
+  $media->media_text ('scree\n, All');
+  is $media->media_text, 'screen, all';
+  is $css->owner_node->media, '';
+  done $c;
+} n => 4, name => 'media not specified';
+
+# XXX
+#test {
+#  my $c = shift;
+#  my $css = from_style_el '', media => 'hoge, (), screEn';
+#  my $media = $css->media;
+#  isa_ok $media, 'Web::DOM::MediaList';
+#  is $media->media_text, 'hoge, not all, screen';
+#  $media->media_text ('scree\n, All');
+#  is $media->media_text, 'screen, all';
+#  is $css->owner_node->media, 'hoge, (), screEn';
+#  done $c;
+#} n => 4, name => 'media specified';
+
 run_tests;
 
 =head1 LICENSE

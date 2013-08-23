@@ -190,7 +190,6 @@ _define_reflect_string target => 'target';
 package Web::DOM::HTMLLinkElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
-# XXX LinkStyle
 use Web::DOM::Element;
 
 _define_reflect_url href => 'href';
@@ -218,6 +217,10 @@ sub rel_list ($) {
         if @$new or $self->has_attribute_ns (undef, 'rel');
   }, 'rel');
 } # rel_list
+
+# XXX LinkStyle
+
+# XXX <link> -> StyleSheet reflection
 
 # XXX disabled
 
@@ -247,6 +250,8 @@ sub sheet ($) {
   my $sheet_id = ${$_[0]}->[2]->{sheet};
   return defined $sheet_id ? ${$_[0]}->[0]->node ($sheet_id) : undef;
 } # sheet
+
+# XXX <style> -> StyleSheet reflection
 
 ## Test: cssstylesheet.t
 sub disabled ($;$) {

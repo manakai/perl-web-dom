@@ -113,7 +113,13 @@ sub href ($) {
   return ${$_[0]}->[2]->{href};
 } # href
 
-# XXX media
+sub media ($;$) {
+  my $list = ${$_[0]}->[0]->media ($_[0]);
+  if (@_ > 1) {
+    $list->media_text ($_[1]);
+  }
+  return $list;
+} # media
 
 # XXX
 sub style_sheet ($) {
@@ -142,7 +148,13 @@ push our @ISA, qw(Web::DOM::CSSGroupingRule);
 
 sub type ($) { Web::DOM::CSSRule::MEDIA_RULE }
 
-# XXX media
+sub media ($;$) {
+  my $list = ${$_[0]}->[0]->media ($_[0]);
+  if (@_ > 1) {
+    $list->media_text ($_[1]);
+  }
+  return $list;
+} # media
 
 package Web::DOM::CSSFontFaceRule;
 our $VERSION = '1.0';

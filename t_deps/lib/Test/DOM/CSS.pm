@@ -15,6 +15,7 @@ sub from_style_el ($;%) {
   $el->text_content ($_[0]);
   $el->type ($args{type}) if defined $args{type};
   $el->title ($args{title}) if defined $args{title};
+  $el->media ($args{media}) if defined $args{media};
 
   my $parser = Web::CSS::Parser->new;
   $parser->parse_style_element ($el);

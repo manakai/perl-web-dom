@@ -19,6 +19,36 @@ test {
   done $c;
 } n => 4, name => 'basic';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@import "a" screen  , print  ;';
+  my $rule = $css->css_rules->[0];
+
+  my $media = $rule->media;
+  is $media->media_text, 'screen, print';
+  is $media->[0], 'screen';
+  is $media->[1], 'print';
+
+  $rule->media ('abc, speech');
+  is $media->media_text, 'abc, speech';
+
+  done $c;
+} n => 4, name => 'media';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@import "a" screen  , print  ;';
+  my $rule = $css->css_rules->[0];
+
+  my $media = $rule->media;
+  undef $css;
+  undef $rule;
+
+  is $media->media_text, 'screen, print';
+
+  done $c;
+} n => 1, name => 'media ref';
+
 run_tests;
 
 =head1 LICENSE
