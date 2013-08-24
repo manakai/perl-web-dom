@@ -376,6 +376,54 @@ test {
   done $c;
 } n => 12, name => '<style> style camel-cased attributes';
 
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {}';
+  my $style = $css->css_rules->[0]->style;
+
+  is $style->background_position, '';
+  is $style->get_property_value ('background-position'), '';
+  is $style->get_property_priority ('background-position'), '';
+  is $style->get_property_value ('background-position-x'), '';
+  is $style->get_property_priority ('background-position-x'), '';
+  is $style->get_property_value ('background-position-y'), '';
+  is $style->get_property_priority ('background-position-y'), '';
+
+  $style->background_position ('1px 2PX');
+  is $style->background_position, '1px 2px';
+  is $style->get_property_value ('baCKGROUND-POSITION'), '1px 2px';
+  is $style->get_property_priority ('baCKGROUND-POSITION'), '';
+
+  $style->set_property ('background-position', 'top');
+  is $style->background_position, 'center top';
+  is $style->get_property_value ('background-position'), 'center top';
+
+  $style->set_property ('background-position', '20px', 'important');
+  is $style->get_property_priority ('background-position'), 'important';
+  is $style->get_property_priority ('background-position-x'), 'important';
+  is $style->get_property_priority ('background-position-y'), 'important';
+
+  $style->set_property ('background-position', '20px');
+  is $style->get_property_priority ('background-position'), '';
+  is $style->get_property_priority ('background-position-x'), '';
+  is $style->get_property_priority ('background-position-y'), '';
+
+  $style->set_property ('background-position-x', '10px', 'important');
+  is $style->get_property_priority ('background-position'), '';
+  is $style->get_property_priority ('background-position-x'), 'important';
+  is $style->get_property_priority ('background-position-y'), '';
+
+  $style->remove_property ('background-position');
+  is $style->get_property_value ('background-position'), '';
+  is $style->get_property_priority ('background-position'), '';
+  is $style->get_property_value ('background-position-x'), '';
+  is $style->get_property_priority ('background-position-x'), '';
+  is $style->get_property_value ('background-position-y'), '';
+  is $style->get_property_priority ('background-position-y'), '';
+
+  done $c;
+} n => 27, name => 'shorthand props';
+
 run_tests;
 
 =head1 LICENSE

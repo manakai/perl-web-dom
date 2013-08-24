@@ -29,7 +29,6 @@ sub length ($) {
   return scalar @{${${$_[0]}->[0]}->[2]->{mqs}};
 } # length
 
-# XXXspec: DOMString?
 sub item ($$) {
   # WebIDL: unsigned long
   my $n = $_[1] % 2**32;

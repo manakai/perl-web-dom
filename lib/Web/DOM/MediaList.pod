@@ -71,6 +71,8 @@ references, e.g. C<< exists $media_list->[4] >>.  [DOMPERL]
 
 CSSOM <http://dev.w3.org/csswg/cssom/#medialist>.
 
+The type of the C<item> method is C<DOMString?>.
+
 =item DOMPERL
 
 manakai's DOM Perl Binding

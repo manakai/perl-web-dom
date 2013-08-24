@@ -252,6 +252,8 @@ sub sheet ($) {
 } # sheet
 
 # XXX <style> -> StyleSheet reflection
+# XXX sheet should be cleared by "node is removed"
+  # XXX test: appendChild, removeChild, adoptNode
 
 ## Test: cssstylesheet.t
 sub disabled ($;$) {

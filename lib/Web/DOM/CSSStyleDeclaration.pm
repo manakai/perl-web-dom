@@ -1,7 +1,7 @@
 package Web::DOM::CSSStyleDeclaration;
 use strict;
 use warnings;
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Carp;
 use Web::CSS::Props;
 
@@ -56,20 +56,11 @@ sub get_property_value ($$) {
   ## 1.
   $prop_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
 
-  my $def = $Web::CSS::Props::Prop->{$prop_name} or return '';
-
-  ## 2. Shorthand
-  # XXX
-
-  ## 3.
-  my $value = ${${$_[0]}->[1]}->[2]->{prop_values}->{$def->{key}};
-  if (defined $value) {
-    require Web::CSS::Serializer;
-    return Web::CSS::Serializer->new->serialize_value ('XXX', $value);
-  }
-
-  ## 4.
-  return '';
+  ## 2.-4.
+  require Web::CSS::Serializer;
+  my $se = Web::CSS::Serializer->new;
+  my $str = $se->serialize_prop_value (${${$_[0]}->[1]}->[2], $prop_name);
+  return defined $str ? $str : '';
 } # get_property_value
 
 sub get_property_priority ($$) {
@@ -78,18 +69,11 @@ sub get_property_priority ($$) {
   ## 1.
   $prop_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
 
-  my $def = $Web::CSS::Props::Prop->{$prop_name} or return '';
-
-  ## 2. Shorthand
-  # XXX
-
-  ## 3.
-  if (${${$_[0]}->[1]}->[2]->{prop_importants}->{$def->{key}}) {
-    return 'important';
-  }
-
-  ## 4.
-  return '';
+  ## 2.-4.
+  require Web::CSS::Serializer;
+  my $se = Web::CSS::Serializer->new;
+  my $str = $se->serialize_prop_priority (${${$_[0]}->[1]}->[2], $prop_name);
+  return defined $str ? $str : '';
 } # get_property_priority
 
 sub set_property ($$;$$) {
@@ -155,17 +139,18 @@ sub remove_property ($$) {
   ## 3.
   my $value = $self->get_property_value ($prop_name);
 
-  ## 4.
-  # XXX if  shorthand ...; else:
-
-  ## 5.
+  ## 4.-5.
   my $def = $Web::CSS::Props::Prop->{$prop_name} or return $value;
-  my $key = $def->{key};
   if (${$_[0]}->[0] eq 'rule') {
     my $data = ${${$_[0]}->[1]}->[2];
-    @{$data->{prop_keys}} = grep { $_ ne $key } @{$data->{prop_keys}};
-    delete $data->{prop_values}->{$key};
-    delete $data->{prop_importants}->{$key};
+    my %removed = $def->{longhand_subprops}
+        ? map { $_ => 1 } @{$def->{longhand_subprops}}
+        : ($def->{key} => 1);
+    @{$data->{prop_keys}} = grep { not $removed{$_} } @{$data->{prop_keys}};
+    for my $key (keys %removed) {
+      delete $data->{prop_values}->{$key};
+      delete $data->{prop_importants}->{$key};
+    }
   }
   
   ## 6.
