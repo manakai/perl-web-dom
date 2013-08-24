@@ -13,6 +13,13 @@ Following methods are available:
 
 =over 4
 
+=item $string = $style->css_text
+
+=item $style->css_text ($string)
+
+Return or set the list of declarations contained by the
+C<CSSStyleDeclaration> object.  [CSSOM]
+
 =item $string = $style->get_property_priorty ($prop_name)
 
 Return the string C<important> if the declaration for the specified

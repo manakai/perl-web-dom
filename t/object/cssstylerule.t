@@ -44,6 +44,17 @@ test {
   my $css = from_style_el 'p >Q\s {}';
   my $rule = $css->css_rules->[0];
 
+  $rule->style ('display: none ');
+  is $rule->style->css_text, 'display: none;';
+
+  done $c;
+} n => 1, name => 'style setter';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p >Q\s {}';
+  my $rule = $css->css_rules->[0];
+
   is $rule->selector_text, 'p > Qs';
 
   $rule->selector_text ('hoGe *.foo+bar');

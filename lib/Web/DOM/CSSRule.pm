@@ -85,9 +85,12 @@ sub selector_text ($;$) {
   return $serializer->serialize_selector_text (${$_[0]}->[2]->{selectors});
 } # selector_text
 
-sub style ($) {
-  # XXX setter
-  return ${$_[0]}->[0]->source_style ('rule', $_[0]);
+sub style ($;$) {
+  my $style = ${$_[0]}->[0]->source_style ('rule', $_[0]);
+  if (@_ > 1) {
+    $style->css_text ($_[1]);
+  }
+  return $style;
 } # style
 
 package Web::DOM::CSSCharsetRule;

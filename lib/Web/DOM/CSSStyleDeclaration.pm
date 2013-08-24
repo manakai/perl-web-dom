@@ -178,7 +178,29 @@ sub parent_rule ($) {
   }
 } # parent_rule
 
-# XXX css_text
+sub css_text ($;$) {
+  my $data;
+  if (${$_[0]}->[0] eq 'rule') {
+    $data = ${${$_[0]}->[1]}->[2];
+  }
+  if (@_ > 1) {
+    ## 1.
+    # XXX read-only
+
+    ## 2.-3.
+    require Web::CSS::Parser;
+    my $parser = Web::CSS::Parser->new; # XXX reuse / context
+    my $parsed = $parser->parse_char_string_as_prop_decls (''.$_[1]);
+    $data->{prop_keys} = $parsed->{prop_keys};
+    $data->{prop_values} = $parsed->{prop_values};
+    $data->{prop_importants} = $parsed->{prop_importants};
+  }
+  return unless defined wantarray;
+
+  require Web::CSS::Serializer;
+  my $se = Web::CSS::Serializer->new;
+  return $se->serialize_prop_decls ($data);
+} # css_text
 
 1;
 

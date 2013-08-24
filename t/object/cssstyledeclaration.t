@@ -424,6 +424,58 @@ test {
   done $c;
 } n => 27, name => 'shorthand props';
 
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {  }';
+  my $style = $css->css_rules->[0]->style;
+
+  is $style->css_text, '';
+
+  $style->css_text ('display : BLOCK  /**/ ');
+  is $style->css_text, 'display: block;';
+  is $style->length, 1;
+  is $style->display, 'block';
+
+  $style->list_style_type ('disc');
+  is $style->css_text, 'display: block; list-style-type: disc;';
+
+  $style->set_property ('display', 'inline', 'IMPORTANt');
+  is $style->css_text, 'display: inline !important; list-style-type: disc;';
+
+  done $c;
+} n => 6, name => 'css_text';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {list-style-type: none;display: Block !important }';
+  my $style = $css->css_rules->[0]->style;
+
+  is $style->css_text, 'list-style-type: none; display: block !important;';
+
+  $style->remove_property ('list-style-type');
+  $style->list_style_type ('disc');
+  is $style->css_text, 'display: block !important; list-style-type: disc;';
+
+  $style->css_text ('');
+  is $style->css_text, '';
+
+  is $css->owner_node->text_content, 'p {list-style-type: none;display: Block !important }';
+
+  done $c;
+} n => 4, name => 'css_text';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {list-style-type: none;display: Block !important }';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->css_text ('hoge: fuga');
+
+  is $style->css_text, '';
+
+  done $c;
+} n => 1, name => 'css_text invalid';
+
 run_tests;
 
 =head1 LICENSE

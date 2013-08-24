@@ -26,6 +26,10 @@ Return or set the list of selectors associated with the style rule.
 Return the L<Web::DOM::CSSStyleDeclaration> object of the style rule.
 [CSSOM]
 
+=item $rule->style ($string)
+
+Set the list of declarations of the style rule.  [CSSOM]
+
 =back
 
 =head1 DEPENDENCY
