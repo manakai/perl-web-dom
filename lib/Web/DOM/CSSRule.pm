@@ -47,7 +47,8 @@ sub parent_rule ($) {
 } # parent_rule
 
 sub parent_style_sheet ($) {
-  return ${$_[0]}->[0]->node (${$_[0]}->[2]->{owner_sheet});
+  my $id = ${$_[0]}->[2]->{owner_sheet};
+  return defined $id ? ${$_[0]}->[0]->node ($id) : undef;
 } # parent_style_sheet
 
 sub DESTROY ($) {
@@ -75,6 +76,8 @@ sub selector_text ($;$) {
     my $parsed = $parser->parse_char_string_as_selectors (''.$_[1]);
     if (defined $parsed) {
       ${$_[0]}->[2]->{selectors} = $parsed;
+
+      # XXX notification
     }
   }
   return unless defined wantarray;

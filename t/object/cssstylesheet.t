@@ -7,6 +7,8 @@ use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->str
 use Test::X1;
 use Test::More;
 use Test::DOM::CSS;
+use Test::DOM::Exception;
+use Test::DOM::Destroy;
 
 test {
   my $c = shift;
@@ -199,6 +201,134 @@ test {
 #  is $css->owner_node->media, 'hoge, (), screEn';
 #  done $c;
 #} n => 4, name => 'media specified';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+  
+  dies_here_ok {
+    $css->delete_rule (0);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'IndexSizeError';
+  is $@->message, 'The specified rule index is invalid';
+
+  is $css->css_rules->length, 0;
+
+  done $c;
+} n => 5, name => 'delete_rule empty';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}r{}';
+  
+  $css->delete_rule (1);
+
+  is $$css->[0]->{data}->[$$css->[1] + 2], undef;
+
+  is $css->css_rules->length, 2;
+
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'r';
+
+  done $c;
+} n => 4, name => 'delete_rule deleted';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}r{}';
+  
+  $css->delete_rule (1 + 2**32);
+
+  is $css->css_rules->length, 2;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'r';
+
+  done $c;
+} n => 3, name => 'delete_rule deleted unsigned long';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}r{}';
+  my $old_rule = $css->css_rules->[1];
+  my $main_destroyed = 0;
+  ondestroy { $main_destroyed = 1 } $$css->[0];
+  
+  $css->delete_rule (1);
+
+  isnt $$old_rule->[0], $$css->[0];
+
+  is $old_rule->parent_rule, undef;
+  is $old_rule->parent_style_sheet, undef;
+
+  undef $css;
+  ok $main_destroyed;
+
+  my $old_destroyed = 0;
+  ondestroy { $old_destroyed = 1 } $old_rule;
+  undef $old_rule;
+  ok $old_destroyed;
+
+  done $c;
+} n => 5, name => 'delete_rule deleted rule';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  dies_here_ok {
+    $css->delete_rule (2);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'IndexSizeError';
+  is $@->message, 'The specified rule index is invalid';
+
+  is $css->css_rules->length, 2;
+
+  done $c;
+} n => 5, name => 'delete_rule greater index';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@charset "";@import "";@namespace "aa";@namespace b "c";';
+  
+  $css->delete_rule (2);
+
+  is $css->css_rules->length, 3;
+  is $css->css_rules->[2]->prefix, 'b';
+
+  done $c;
+} n => 2, name => 'delete_rule @namespace ok';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@charset "";@import "";@namespace "aa";p{}';
+  
+  dies_here_ok {
+    $css->delete_rule (2);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'InvalidStateError';
+  is $@->message, 'Namespace rule cannot be deleted if there are following rules';
+
+  is $css->css_rules->length, 4;
+  is $css->css_rules->[2]->type, 10;
+
+  done $c;
+} n => 6, name => 'delete_rule @namespace ok';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}r{}';
+  my $destroyed = 0;
+  ondestroy { $destroyed = 1 } $css->css_rules->[1];
+  
+  $css->delete_rule (1);
+
+  ok $destroyed;
+
+  done $c;
+} n => 1, name => 'delete_rule deleted ref';
 
 run_tests;
 

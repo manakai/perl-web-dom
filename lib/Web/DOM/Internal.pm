@@ -756,7 +756,6 @@ sub import_parsed_ss ($$) {
   ## $ss->{base_urlref} is ignored
 
   $self->{next_node_id} += @{$ss->{rules}};
-  $self->{rc}->[$id_delta + 0] += @{$ss->{rules}} - 1; # |owner_sheet|
 
   return $id_delta + 0;
 
@@ -824,14 +823,7 @@ sub disconnect ($$) {
         values %{$data->{notations} or {}},
         values %{$data->{attribute_definitions} or {}},
         $data->{sheet};
-
-    ## If the disconnected node is a CSS rule and contained in a style
-    ## sheet, decrement the reference count for the sheet.  (The
-    ## reference itself should be removed by the invokee after the
-    ## invocation of this method.)
-    if (defined $data->{owner_sheet}) {
-      $self->{rc}->[$data->{owner_sheet}]--;
-    }
+    delete $data->{owner_sheet};
   }
 } # disconnect
 
@@ -923,22 +915,16 @@ sub adopt ($$) {
             owner_sheet)) {
       $data->{$_} = $id_map{$data->{$_}} if defined $data->{$_};
     }
-  }
+  } # @data
 } # adopt
 
 sub gc ($$) {
   return if @{$_[0]->{data} or []} > 100 and 0.95 > rand 1;
   my ($self, $id) = @_;
-
-  my $osid = $self->{data}->[$id]->{owner_sheet};
-  if (defined $osid) {
-    ## |rc| is used to not free style sheet until all rules
-    ## referencing it are freed.
-    $self->{rc}->[$osid]--;
-  }
-
   delete $self->{nodes}->[$id];
   my $tree_id = $self->{tree_id}->[$id];
+  ## The tree with ID |0| is special, which cannot be freed until the
+  ## entire grove can be freed.
   return if $tree_id == 0;
   my @id = grep { defined $self->{tree_id}->[$_] and 
                   $self->{tree_id}->[$_] == $tree_id } 0..$#{$self->{tree_id}};

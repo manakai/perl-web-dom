@@ -18,6 +18,11 @@ Following methods are available:
 Return the L<Web::DOM::CSSRuleList> object containing the CSS rules in
 the style sheet.  [CSSOM]
 
+=item $ss->delete_rule ($index)
+
+Return a rule from the list of rules contained by the style sheet.
+[CSSOM]
+
 =item $boolean = $ss->disabled
 
 =item $ss->disabled ($boolean)
@@ -72,6 +77,9 @@ See L<Web::DOM/DEPENDENCY>.
 =item CSSOM
 
 CSS Object Model (CSSOM) <http://dev.w3.org/csswg/cssom/>.
+
+The C<deleteRule> method MUST set the "parent CSS style sheet" of the
+rules contained by the /old rule/ to null.
 
 =item HTML
 

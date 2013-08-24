@@ -5,6 +5,8 @@ our $VERSION = '3.0';
 use Carp;
 use Web::DOM::StyleSheet;
 push our @ISA, qw(Web::DOM::StyleSheet);
+push our @CARP_NOT, qw(Web::DOM::Exception);
+use Web::DOM::Exception;
 use Web::DOM::CSSRule;
 
 use overload
@@ -43,7 +45,52 @@ sub css_rules ($) {
 
 # XXX insert_rule
 
-# XXX delete_rule
+sub delete_rule ($$) {
+  # WebIDL: unsigned long
+  my $index = $_[1] % 2**32;
+  
+  ## 1.
+  # XXX origin
+
+  ## 2. Remove a CSS rule
+  {
+    ## 1.-2.
+    if ($index >= scalar @{${$_[0]}->[2]->{rule_ids} or []}) {
+      _throw Web::DOM::Exception 'IndexSizeError',
+          'The specified rule index is invalid';
+    }
+
+    ## 3.
+    my $old_rule_id = ${$_[0]}->[2]->{rule_ids}->[$index];
+    my $old_rule = ${$_[0]}->[0]->node ($old_rule_id);
+
+    ## 4.
+    if ($$old_rule->[2]->{rule_type} eq 'namespace') {
+      for (map { ${$_[0]}->[0]->{data}->[$_] } @{${$_[0]}->[2]->{rule_ids}}) {
+        my $type = $_->{rule_type};
+        if ($type eq 'charset' or $type eq 'import' or $type eq 'namespace') {
+          #
+        } else {
+          _throw Web::DOM::Exception 'InvalidStateError',
+              'Namespace rule cannot be deleted if there are following rules';
+        }
+      }
+    }
+
+    ## 5.
+    splice @{${$_[0]}->[2]->{rule_ids}}, $index, 1, ();
+
+    ## 6.
+    delete $$old_rule->[2]->{parent_id}; # parent CSS rule
+    $$old_rule->[0]->disconnect ($old_rule_id); # parent CSS style sheet
+    my $new_int = ref ($$old_rule->[0])->new;
+    $new_int->adopt ($old_rule);
+
+    ## $old_rule->DESTROY is implicitly invoked such that that node
+    ## data might be discarded.
+  }
+  return undef;
+} # delete_rule
 
 # XXX css_text
 
