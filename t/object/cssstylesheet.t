@@ -664,6 +664,23 @@ test {
   done $c;
 } n => 5, name => 'insert_rule @namespace not allowed';
 
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}';
+  my $rules = $css->css_rules;
+  is $rules->length, 1;
+
+  $css->insert_rule ('q{}', 1);
+
+  is $rules->length, 2;
+
+  $css->delete_rule (0);
+
+  is $rules->length, 1;
+
+  done $c;
+} n => 3, name => 'css_rules mutation';
+
 run_tests;
 
 =head1 LICENSE

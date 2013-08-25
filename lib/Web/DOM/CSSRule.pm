@@ -135,6 +135,7 @@ sub style_sheet ($) {
 package Web::DOM::CSSGroupingRule;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::CSSRule);
+use Web::DOM::CSSStyleSheet;
 
 sub css_rules ($) {
   my $self = $_[0];
@@ -144,9 +145,8 @@ sub css_rules ($) {
   });
 } # css_rules
 
-# XXX insert_rule
-
-# XXX delete_rule
+*insert_rule = \&Web::DOM::CSSStyleSheet::insert_rule;
+*delete_rule = \&Web::DOM::CSSStyleSheet::delete_rule;
 
 package Web::DOM::CSSMediaRule;
 our $VERSION = '2.0';

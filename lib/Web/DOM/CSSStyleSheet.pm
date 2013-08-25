@@ -42,6 +42,7 @@ sub css_rules ($) {
   });
 } # css_rules
 
+## This method is also used by |Web::DOM::CSSGroupingRule|.
 sub insert_rule ($$$) {
   my $self = $_[0];
   my $rule = ''.$_[1];
@@ -49,7 +50,10 @@ sub insert_rule ($$$) {
   my $index = $_[2] % 2**32;
 
   ## 1.
-  # XXX origin
+  my $self_rule_type = ${$_[0]}->[2]->{rule_type};
+  if ($self_rule_type eq 'sheet') {
+    # XXX origin
+  }
 
   ## 2. Insert a CSS rule
   {
@@ -79,6 +83,10 @@ sub insert_rule ($$$) {
 
     ## 6.
     if ($new_type eq 'import') {
+      if ($self_rule_type ne 'sheet') {
+        _throw Web::DOM::Exception 'HierarchyRequestError',
+            'The specified rule cannot be inserted in this rule';
+      }
       if ($index > 0 and
           ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index-1]]->{rule_type} ne 'charset' and
           ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index-1]]->{rule_type} ne 'import') {
@@ -91,6 +99,10 @@ sub insert_rule ($$$) {
             'The specified rule cannot be inserted at the specified index';
       }
     } elsif ($new_type eq 'namespace') {
+      if ($self_rule_type ne 'sheet') {
+        _throw Web::DOM::Exception 'HierarchyRequestError',
+            'The specified rule cannot be inserted in this rule';
+      }
       if ($index > 0 and
           ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index-1]]->{rule_type} ne 'charset' and
           ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index-1]]->{rule_type} ne 'import' and
@@ -119,18 +131,24 @@ sub insert_rule ($$$) {
     splice @{${$_[0]}->[2]->{rule_ids} or []}, $index, 0, ($new_id);
     ## New rule's |owner_sheet| is set by |import_parsed_ss|.
     ${$_[0]}->[0]->{data}->[$new_id]->{parent_id} = ${$_[0]}->[1];
+    ${$_[0]}->[0]->children_changed (${$_[0]}->[1], 0);
+
+    # XXX notification
 
     ## 9.
     return $index;
   }
 } # insert_rule
 
+## This method is also used by |Web::DOM::CSSGroupingRule|.
 sub delete_rule ($$) {
   # WebIDL: unsigned long
   my $index = $_[1] % 2**32;
   
   ## 1.
-  # XXX origin
+  if (${$_[0]}->[2]->{rule_type} eq 'sheet') {
+    # XXX origin
+  }
 
   ## 2. Remove a CSS rule
   {
@@ -165,6 +183,9 @@ sub delete_rule ($$) {
     $$old_rule->[0]->disconnect ($old_rule_id); # parent CSS style sheet
     my $new_int = ref ($$old_rule->[0])->new;
     $new_int->adopt ($old_rule);
+    ${$_[0]}->[0]->children_changed (${$_[0]}->[1], 0);
+
+    # XXX notification
 
     ## $old_rule->DESTROY is implicitly invoked such that that node
     ## data might be discarded.

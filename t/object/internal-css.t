@@ -25,7 +25,7 @@ test {
   is $$sheet->[1], 1;
   is $$sheet->[2], $int->{data}->[1];
   is $int->{tree_id}->[1], 1;
-  is $int->{rc}->[1], 0;
+  is $int->{rc}->[1], undef;
 
   undef $sheet;
 
@@ -51,7 +51,7 @@ test {
   is $$sheet->[1], 1;
   is $$sheet->[2], $int->{data}->[1];
   is $int->{tree_id}->[1], 1;
-  is $int->{rc}->[1], 1;
+  is $int->{rc}->[1], undef;
   eq_or_diff $$sheet->[2]->{rule_ids}, [2];
   is $$sheet->[2]->{owner_sheet}, undef;
 
@@ -95,7 +95,7 @@ test {
   is $int->{tree_id}->[2], 2;
   is $int->{tree_id}->[3], 2;
 
-  is $int->{rc}->[1], 0;
+  is $int->{rc}->[1], undef;
 
   done $c;
 } n => 4, name => 'disconnect rule_ids';
@@ -130,12 +130,15 @@ test {
     {id => 1, rule_type => 'media', rule_ids => [2], parent_id => 0},
     {id => 2, rule_type => 'style', parent_id => 1},
   ]});
+  my $node = $int->node (1);
 
   $int->node (2); # ->gc
 
-  is $int->{rc}->[1], 1;
+  is $int->{rc}->[1], undef;
 
   $int->node (3); # ->gc
+
+  undef $node;
 
   is $int->{rc}->[1], undef;
   is $int->{data}->[1], undef;

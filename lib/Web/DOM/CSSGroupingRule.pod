@@ -7,10 +7,10 @@ Web::DOM::CSSGroupingRule - The DOM |CSSGroupingRule| object
 The C<Web::DOM::CSSGroupingRule> class implements the DOM
 C<CSSGroupingRule> interface.
 
-=head1 METHOD
+=head1 METHODS
 
-In addition to the methods of the L<Web::DOM::CSSRule> class, the
-following method is available:
+In addition to the methods of the L<Web::DOM::CSSRule> class,
+following methods are available:
 
 =over 4
 
@@ -18,6 +18,15 @@ following method is available:
 
 Return the L<Web::DOM::CSSRuleList> object containing the CSS rules in
 the rule.  [CSSOM]
+
+=item $rule->delete_rule ($index)
+
+Return a rule from the list of rules contained by the rule.  [CSSOM]
+
+=item $index = $rule->insert_rule ($string, $index)
+
+Parse the string as a CSS rule and insert into the specified index of
+the list of rules contained by the rule.  [CSSOM]
 
 =back
 
