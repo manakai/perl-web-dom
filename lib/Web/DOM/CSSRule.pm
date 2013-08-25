@@ -62,16 +62,15 @@ push our @ISA, qw(Web::DOM::CSSRule);
 sub type ($) { Web::DOM::CSSRule::UNKNOWN_RULE }
 
 package Web::DOM::CSSStyleRule;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::CSSRule);
 
 sub type ($) { Web::DOM::CSSRule::STYLE_RULE }
 
 sub selector_text ($;$) {
   if (@_ > 1) {
-    require Web::CSS::Selectors::Parser;
-    # XXX media context, parser reuse
-    my $parser = Web::CSS::Selectors::Parser->new;
+    my $parser = ${$_[0]}->[0]->css_parser;
+    $parser->init_parser;
     # XXX namespaces
     my $parsed = $parser->parse_char_string_as_selectors (''.$_[1]);
     if (defined $parsed) {
@@ -82,8 +81,7 @@ sub selector_text ($;$) {
   }
   return unless defined wantarray;
   
-  require Web::CSS::Selectors::Serializer;
-  my $serializer = Web::CSS::Selectors::Serializer->new;
+  my $serializer = ${$_[0]}->[0]->css_serializer;
   # XXX namespaces
   return $serializer->serialize_selector_text (${$_[0]}->[2]->{selectors});
 } # selector_text

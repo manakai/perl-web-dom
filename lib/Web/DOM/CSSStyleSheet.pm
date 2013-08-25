@@ -1,7 +1,7 @@
 package Web::DOM::CSSStyleSheet;
 use strict;
 use warnings;
-our $VERSION = '3.0';
+our $VERSION = '5.0';
 use Carp;
 use Web::DOM::StyleSheet;
 push our @ISA, qw(Web::DOM::StyleSheet);
@@ -58,8 +58,8 @@ sub insert_rule ($$$) {
   ## 2. Insert a CSS rule
   {
     ## 1.
-    require Web::CSS::Parser;
-    my $parser = Web::CSS::Parser->new; # XXX reuse / context
+    my $parser = ${$_[0]}->[0]->css_parser;
+    $parser->init_parser;
     my $parsed = $parser->parse_char_string_as_rule ($rule);
 
     ## 2.
@@ -199,7 +199,7 @@ sub delete_rule ($$) {
 sub manakai_is_default_namespace ($$) {
   my $uri = ''.$_[1];
   for my $rule (@{$_[0]->css_rules}) {
-    next unless $rule->type == NAMESPACE_RULE;
+    next unless $rule->type == $rule->NAMESPACE_RULE;
     if ($rule->prefix eq '') {
       return $uri eq $rule->namespace_uri;
     }
@@ -213,7 +213,7 @@ sub manakai_lookup_namespace_prefix ($$) {
   my $uri = ''.$_[1];
   return undef if $uri eq '';
   for my $rule (@{$_[0]->css_rules}) {
-    next unless $rule->type == NAMESPACE_RULE;
+    next unless $rule->type == $rule->NAMESPACE_RULE;
     if ($uri eq $rule->namespace_uri) {
       my $prefix = $rule->prefix;
       return $prefix if $prefix ne '';
@@ -226,7 +226,7 @@ sub manakai_lookup_namespace_prefix ($$) {
 sub manakai_lookup_namespace_uri ($$) {
   my $prefix = defined $_[1] ? ''.$_[1] : '';
   for my $rule (@{$_[0]->css_rules}) {
-    next unless $rule->type == NAMESPACE_RULE;
+    next unless $rule->type == $rule->NAMESPACE_RULE;
     if ($prefix eq $rule->prefix) {
       my $uri = $rule->namespace_uri;
       return $uri;

@@ -925,6 +925,20 @@ sub adopt ($$) {
   } # @data
 } # adopt
 
+sub css_parser ($) {
+  return $_[0]->{css_parser} ||= do {
+    require Web::CSS::Parser;
+    Web::CSS::Parser->new;
+  }; # XXX onerror -> error console
+} # css_parser
+
+sub css_serializer ($) {
+  return $_[0]->{css_serializer} ||= do {
+    require Web::CSS::Serializer;
+    Web::CSS::Serializer->new;
+  };
+} # css_serializer
+
 sub gc ($$) {
   return if @{$_[0]->{data} or []} > 100 and 0.95 > rand 1;
   my ($self, $id) = @_;

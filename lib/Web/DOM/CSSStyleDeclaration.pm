@@ -1,7 +1,7 @@
 package Web::DOM::CSSStyleDeclaration;
 use strict;
 use warnings;
-our $VERSION = '4.0';
+our $VERSION = '5.0';
 use Carp;
 use Web::CSS::Props;
 
@@ -57,9 +57,9 @@ sub get_property_value ($$) {
   $prop_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
 
   ## 2.-4.
-  require Web::CSS::Serializer;
-  my $se = Web::CSS::Serializer->new;
-  my $str = $se->serialize_prop_value (${${$_[0]}->[1]}->[2], $prop_name);
+  my $serializer = ${${$_[0]}->[1]}->[0]->css_serializer;
+  my $str = $serializer->serialize_prop_value
+      (${${$_[0]}->[1]}->[2], $prop_name);
   return defined $str ? $str : '';
 } # get_property_value
 
@@ -70,9 +70,9 @@ sub get_property_priority ($$) {
   $prop_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
 
   ## 2.-4.
-  require Web::CSS::Serializer;
-  my $se = Web::CSS::Serializer->new;
-  my $str = $se->serialize_prop_priority (${${$_[0]}->[1]}->[2], $prop_name);
+  my $serializer = ${${$_[0]}->[1]}->[0]->css_serializer;
+  my $str = $serializer->serialize_prop_priority
+      (${${$_[0]}->[1]}->[2], $prop_name);
   return defined $str ? $str : '';
 } # get_property_priority
 
@@ -104,7 +104,8 @@ sub set_property ($$;$$) {
   }
 
   ## 6.-8. & Set a CSS property
-  my $parser = Web::CSS::Parser->new; # XXX reuse / context
+  my $parser = ${${$_[0]}->[1]}->[0]->css_parser;
+  $parser->init_parser;
   my $parsed = $parser->parse_char_string_as_prop_value ($prop_name, $value);
   if (defined $parsed) {
     if (${$_[0]}->[0] eq 'rule') {
@@ -122,6 +123,8 @@ sub set_property ($$;$$) {
       @{$decl->{prop_keys}} = grep { not $fnd->{$_}++ } @{$decl->{prop_keys}};
     }
   }
+
+  # XXX notification
 
   return;
 } # set_property
@@ -152,6 +155,8 @@ sub remove_property ($$) {
       delete $data->{prop_importants}->{$key};
     }
   }
+
+  # XXX notification
   
   ## 6.
   return $value;
@@ -188,18 +193,19 @@ sub css_text ($;$) {
     # XXX read-only
 
     ## 2.-3.
-    require Web::CSS::Parser;
-    my $parser = Web::CSS::Parser->new; # XXX reuse / context
+    my $parser = ${${$_[0]}->[1]}->[0]->css_parser;
+    $parser->init_parser;
     my $parsed = $parser->parse_char_string_as_prop_decls (''.$_[1]);
     $data->{prop_keys} = $parsed->{prop_keys};
     $data->{prop_values} = $parsed->{prop_values};
     $data->{prop_importants} = $parsed->{prop_importants};
+
+    # XXX notification
   }
   return unless defined wantarray;
 
-  require Web::CSS::Serializer;
-  my $se = Web::CSS::Serializer->new;
-  return $se->serialize_prop_decls ($data);
+  my $serializer = ${${$_[0]}->[1]}->[0]->css_serializer;
+  return $serializer->serialize_prop_decls ($data);
 } # css_text
 
 1;

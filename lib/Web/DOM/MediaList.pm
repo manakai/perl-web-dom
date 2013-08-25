@@ -1,15 +1,15 @@
 package Web::DOM::MediaList;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Carp;
-use Web::CSS::MediaQueries::Parser;
-use Web::CSS::MediaQueries::Serializer;
 
 use overload
     '@{}' => sub {
-      my $se = Web::CSS::MediaQueries::Serializer->new;
-      my $list = [map { $se->serialize_mq ($_) } @{${${$_[0]}->[0]}->[2]->{mqs}}];
+      my $serializer = ${${$_[0]}->[0]}->[0]->css_serializer;
+      my $list = [map {
+        $serializer->serialize_mq ($_);
+      } @{${${$_[0]}->[0]}->[2]->{mqs}}];
       Internals::SvREADONLY (@$list, 1);
       Internals::SvREADONLY ($_, 1) for @$list;
       return $list;
@@ -36,32 +36,34 @@ sub item ($$) {
 
   my $mq = ${${$_[0]}->[0]}->[2]->{mqs}->[$n];
   return undef if not defined $mq;
-  my $se = Web::CSS::MediaQueries::Serializer->new;
-  return $se->serialize_mq ($mq);
+  my $serializer = ${${$_[0]}->[0]}->[0]->css_serializer;
+  return $serializer->serialize_mq ($mq);
 } # item
 
 sub media_text ($;$) {
   if (@_ > 1) {
-    my $pa = Web::CSS::MediaQueries::Parser->new; # XXX reuse, context
-    ${${$_[0]}->[0]}->[2]->{mqs} = $pa->parse_char_string_as_mq_list
+    my $parser = ${${$_[0]}->[0]}->[0]->css_parser;
+    $parser->init_parser;
+    ${${$_[0]}->[0]}->[2]->{mqs} = $parser->parse_char_string_as_mq_list
         (defined $_[1] ? ''.$_[1] : '');
     # XXX notify the change
   }
   return unless defined wantarray;
 
-  my $se = Web::CSS::MediaQueries::Serializer->new;
-  return $se->serialize_mq_list (${${$_[0]}->[0]}->[2]->{mqs});
+  my $serializer = ${${$_[0]}->[0]}->[0]->css_serializer;
+  return $serializer->serialize_mq_list (${${$_[0]}->[0]}->[2]->{mqs});
 } # media_text
 
 sub append_medium ($$) {
-  my $pa = Web::CSS::MediaQueries::Parser->new; # XXX reuse, context
-  my $parsed = $pa->parse_char_string_as_mq (''.$_[1]);
+  my $parser = ${${$_[0]}->[0]}->[0]->css_parser;
+  $parser->init_parser;
+  my $parsed = $parser->parse_char_string_as_mq (''.$_[1]);
   return unless defined $parsed;
 
-  my $se = Web::CSS::MediaQueries::Serializer->new;
-  my $serialized = $se->serialize_mq ($parsed);
+  my $serializer = ${${$_[0]}->[0]}->[0]->css_serializer;
+  my $serialized = $serializer->serialize_mq ($parsed);
   for (@{${${$_[0]}->[0]}->[2]->{mqs}}) {
-    if ($se->serialize_mq ($_) eq $serialized) {
+    if ($serializer->serialize_mq ($_) eq $serialized) {
       return;
     }
   }
@@ -72,14 +74,15 @@ sub append_medium ($$) {
 } # append_medium
 
 sub delete_medium ($$) {
-  my $pa = Web::CSS::MediaQueries::Parser->new; # XXX reuse, context
-  my $parsed = $pa->parse_char_string_as_mq (''.$_[1]);
+  my $parser = ${${$_[0]}->[0]}->[0]->css_parser;
+  $parser->init_parser;
+  my $parsed = $parser->parse_char_string_as_mq (''.$_[1]);
   return unless defined $parsed;
 
-  my $se = Web::CSS::MediaQueries::Serializer->new;
-  my $serialized = $se->serialize_mq ($parsed);
+  my $serializer = ${${$_[0]}->[0]}->[0]->css_serializer;
+  my $serialized = $serializer->serialize_mq ($parsed);
   @{${${$_[0]}->[0]}->[2]->{mqs}} = grep {
-    not $se->serialize_mq ($_) eq $serialized;
+    not $serializer->serialize_mq ($_) eq $serialized;
   } @{${${$_[0]}->[0]}->[2]->{mqs}};
   # XXX notification
   return;
