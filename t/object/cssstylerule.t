@@ -66,6 +66,26 @@ test {
   done $c;
 } n => 3, name => 'selector_text';
 
+test {
+  my $c = shift;
+  my $css = from_style_el 'p >Q {}';
+  my $rule = $css->css_rules->[0];
+  
+  is $rule->css_text, 'p > Q { }';
+
+  done $c;
+} n => 1, name => 'css_text getter';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p >Q {display:block!important}';
+  my $rule = $css->css_rules->[0];
+  
+  is $rule->css_text, 'p > Q { display: block !important; }';
+
+  done $c;
+} n => 1, name => 'css_text getter';
+
 run_tests;
 
 =head1 LICENSE

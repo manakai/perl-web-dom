@@ -21,6 +21,16 @@ test {
   done $c;
 } n => 5, name => 'basic';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@charset "utF-8";';
+  my $rule = $css->css_rules->[0];
+  
+  is $rule->css_text, '@charset "utF-8";';
+
+  done $c;
+} n => 1, name => 'css_text getter';
+
 run_tests;
 
 =head1 LICENSE

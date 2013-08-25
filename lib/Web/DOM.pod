@@ -297,6 +297,33 @@ C<poster>, and C<src>.
 Following features require the XXX module: C<value> of
 L<Web::DOM::AtomDateConstruct>.
 
+=head2 Using CSS, Selectors, and Media Queries
+
+How CSS style sheets are parsed and how CSSOM tree structure looks
+like depend on how much of CSS features are supported by the user
+agent.  Since the web-dom module set by itself is not a rendering
+engine, most CSS features are considered as "not supported", therefore
+by default parsing discards most of CSS declarations.  If you'd like
+to construct a CSS-based application on the top of the web-dom module
+set, you should turn on features you are supporting, through
+L<Web::CSS::MediaResolver> module in the web-css package.  The
+L<Web::CSS::MediaResolver> object for a document's CSS parser can be
+accessed like this:
+
+  use Web::CSS::Parser;
+  my $parser = Web::CSS::Parser->get_parser_for_document ($doc);
+  $resolver = $parser->media_resolver;
+
+... where $doc is the document node with which the CSS style sheet in
+question will be associated.  Then, you can set the "supported" flag
+of features you are supporting, like this:
+
+  $resolver->{prop}->{display} = 1;
+  $resolver->{prop_value}->{display}->{block} = 1;
+
+For more information on usage of the resolver, see
+L<Web::CSS::MediaResolver> in the web-css package.
+
 =head1 DEVELOPMENT
 
 Latest version of the modules is available from the GitHub repository:
@@ -347,11 +374,12 @@ HTMLMenuElement->autosubmit, HTMLBlockquoteElement,
 HTMLStrictlyInlineContainerExtended,
 HTMLStructuredInlineContainerExtended,
 HTMLStructuredInlineContainerExtended, HTMLSectioningElementExtended,
-HTMLListElementExtended, HTMLDListElementExtended.  Overloaded
-operators C<==>, C<!=>, and C<.=>, write operations through overloaded
-C<@{}> and C<%{}> operators for NodeList, NamedNodeMap, and
-HTMLCollection.  Attr, Entity, and AttributeDefinition nodes can no
-longer contain Text nodes.
+HTMLListElementExtended, HTMLDListElementExtended,
+CSSStyleDeclaration->styleFloat.  Overloaded operators C<==>, C<!=>,
+and C<.=>, write operations through overloaded C<@{}> and C<%{}>
+operators for NodeList, NamedNodeMap, and HTMLCollection.  Attr,
+Entity, and AttributeDefinition nodes can no longer contain Text
+nodes.
 
 By default the C<DocumentType> node can no longer contain
 C<ProcessingInstruction> nodes as children.  The old behavior can be
@@ -373,12 +401,11 @@ except for obsolete features.  Following features will be
 
 =over 4
 
-=item Window [HTML]
+=item CSSOM Cascading API
 
-=item manakai CSSOM/Window extensions
-
-Element.prototype.manakaiComputedStyle,
+getComputedStyle [CSSOM], Element.prototype.manakaiComputedStyle,
 Window.prototype.manakaiGetComputedStyle, Window.prototype.setDocument
+[MANAKAI]
 
 =item WebVTT DOM [HTML] [WEBVTT]
 
@@ -396,7 +423,15 @@ not limited to:
 
 =item Selectors API Level 2 features
 
-=item New CSSOM features
+=item DocumentStyle API [CSSOM]
+
+=item <?xml-stylesheet?> API [CSSOM]
+
+=item @font-face, @page [CSSOM]
+
+=item ElementCSSInlineStyle [CSSOM]
+
+=item GetStyleUtils, PseudoElement [CSSOM]
 
 =item New mutation methods [DOM]
 
@@ -407,6 +442,8 @@ prepend, append, before, after, replace, remove
 DOM Ranges interfaces and methods [DOM]; Ranges support in DOM Core
 methods and attributes [DOM]; Range.prototype.createContextualFragment
 [DOMPARSING].
+
+=item DOM Promise
 
 =back
 

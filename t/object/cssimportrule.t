@@ -49,6 +49,26 @@ test {
   done $c;
 } n => 1, name => 'media ref';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@import "aa.cs";';
+  my $rule = $css->css_rules->[0];
+  
+  is $rule->css_text, '@import url("aa.cs");';
+
+  done $c;
+} n => 1, name => 'css_text getter';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@import url(aa.cs) screen, Print;';
+  my $rule = $css->css_rules->[0];
+  
+  is $rule->css_text, '@import url("aa.cs") screen, print;';
+
+  done $c;
+} n => 1, name => 'css_text getter';
+
 run_tests;
 
 =head1 LICENSE

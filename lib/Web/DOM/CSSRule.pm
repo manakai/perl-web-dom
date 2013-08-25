@@ -1,7 +1,7 @@
 package Web::DOM::CSSRule;
 use strict;
 use warnings;
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Carp;
 use Web::DOM::Internal;
 
@@ -35,7 +35,12 @@ sub type ($) {
   die "Not implemented";
 } # type
 
-# XXX css_text
+sub css_text ($) {
+  # XXX setter (not implemented by Chrome)
+
+  my $serializer = ${$_[0]}->[0]->css_serializer;
+  return $serializer->serialize_rule ({rules => ${$_[0]}->[0]->{data}}, ${$_[0]}->[1]);
+} # css_text
 
 sub parent_rule ($) {
   my $id = ${$_[0]}->[2]->{parent_id};
@@ -56,10 +61,12 @@ sub DESTROY ($) {
 } # DESTROY
 
 package Web::DOM::CSSUnknownRule;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::CSSRule);
 
 sub type ($) { Web::DOM::CSSRule::UNKNOWN_RULE }
+
+sub css_text ($) { '' }
 
 package Web::DOM::CSSStyleRule;
 our $VERSION = '2.0';

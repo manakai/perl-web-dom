@@ -32,6 +32,26 @@ test {
   done $c;
 } n => 5, name => 'basic with prerix';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace ab "aa.cs";';
+  my $rule = $css->css_rules->[0];
+  
+  is $rule->css_text, '@namespace ab url("aa.cs");';
+
+  done $c;
+} n => 1, name => 'css_text getter';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace  URL("aa.cs");';
+  my $rule = $css->css_rules->[0];
+  
+  is $rule->css_text, '@namespace url("aa.cs");';
+
+  done $c;
+} n => 1, name => 'css_text getter';
+
 run_tests;
 
 =head1 LICENSE

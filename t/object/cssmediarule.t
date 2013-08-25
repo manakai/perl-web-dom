@@ -359,6 +359,16 @@ test {
   done $c;
 } n => 3, name => 'css_rules mutation';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@media PRINT { p{} }';
+  my $rule = $css->css_rules->[0];
+  
+  is $rule->css_text, '@media print { p { } }';
+
+  done $c;
+} n => 1, name => 'css_text getter';
+
 run_tests;
 
 =head1 LICENSE
