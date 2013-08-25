@@ -33,6 +33,11 @@ Return or set the disable flag of the style sheet.  [CSSOM]
 
 If the owner is a C<style> element, return C<undef>.  [CSSOM] [HTML]
 
+=item $index = $ss->insert_rule ($string, $index)
+
+Parse the string as a CSS rule and insert into the specified index of
+the list of rules contained by the style sheet.  [CSSOM]
+
 =item $media_list = $ss->media
 
 Return the L<Web::DOM::MediaList> representing the list of media

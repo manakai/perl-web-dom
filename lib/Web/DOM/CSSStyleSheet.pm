@@ -25,10 +25,9 @@ sub type ($) {
   return 'text/css';
 } # type
 
-# XXXtest
 sub owner_rule ($) {
   my $id = ${$_[0]}->[2]->{owner};
-  return defined $id && defined ${$_[0]}->{data}->[$id]->{rule_type}
+  return defined $id && defined ${$_[0]}->[0]->{data}->[$id]->{rule_type}
       ? ${$_[0]}->[0]->node ($id) : undef;
 } # owner_rule
 
@@ -43,7 +42,88 @@ sub css_rules ($) {
   });
 } # css_rules
 
-# XXX insert_rule
+sub insert_rule ($$$) {
+  my $self = $_[0];
+  my $rule = ''.$_[1];
+  # WebIDL: unsigned long
+  my $index = $_[2] % 2**32;
+
+  ## 1.
+  # XXX origin
+
+  ## 2. Insert a CSS rule
+  {
+    ## 1.
+    require Web::CSS::Parser;
+    my $parser = Web::CSS::Parser->new; # XXX reuse / context
+    my $parsed = $parser->parse_char_string_as_rule ($rule);
+
+    ## 2.
+    unless (defined $parsed->{rules}->[1]) {
+      _throw Web::DOM::Exception 'SyntaxError',
+          'The specified rule is invalid';
+    }
+
+    ## 3.
+    my $new_type = $parsed->{rules}->[1]->{rule_type};
+    if ($new_type eq 'charset') {
+      _throw Web::DOM::Exception 'SyntaxError',
+          '@charset is not allowed';
+    }
+
+    ## 4.-5.
+    if ($index > scalar @{${$_[0]}->[2]->{rule_ids} or []}) {
+      _throw Web::DOM::Exception 'IndexSizeError',
+          'The specified rule index is invalid';
+    }
+
+    ## 6.
+    if ($new_type eq 'import') {
+      if ($index > 0 and
+          ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index-1]]->{rule_type} ne 'charset' and
+          ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index-1]]->{rule_type} ne 'import') {
+        _throw Web::DOM::Exception 'HierarchyRequestError',
+            'The specified rule cannot be inserted at the specified index';
+      }
+      if (defined ${$_[0]}->[2]->{rule_ids}->[$index] and
+          ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index]]->{rule_type} eq 'charset') {
+        _throw Web::DOM::Exception 'HierarchyRequestError',
+            'The specified rule cannot be inserted at the specified index';
+      }
+    } elsif ($new_type eq 'namespace') {
+      if ($index > 0 and
+          ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index-1]]->{rule_type} ne 'charset' and
+          ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index-1]]->{rule_type} ne 'import' and
+          ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index-1]]->{rule_type} ne 'namespace') {
+        _throw Web::DOM::Exception 'HierarchyRequestError',
+            'The specified rule cannot be inserted at the specified index';
+      }
+      if (defined ${$_[0]}->[2]->{rule_ids}->[$index] and
+          (${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index]]->{rule_type} eq 'charset' or
+           ${$_[0]}->[0]->{data}->[${$_[0]}->[2]->{rule_ids}->[$index]]->{rule_type} eq 'import')) {
+        _throw Web::DOM::Exception 'HierarchyRequestError',
+            'The specified rule cannot be inserted at the specified index';
+      }
+
+      ## 7.
+      if (grep { $_ ne 'charset' and $_ ne 'import' and $_ ne 'namespace' }
+          map { ${$_[0]}->[0]->{data}->[$_]->{rule_type} }
+          @{${$_[0]}->[2]->{rule_ids} or []}) {
+        _throw Web::DOM::Exception 'InvalidStateError',
+            '@namespace cannot be inserted to this style sheet';
+      }
+    }
+    
+    ## 8.
+    my $new_id = ${$_[0]}->[0]->import_parsed_ss ($parsed, ${$_[0]}->[1]);
+    splice @{${$_[0]}->[2]->{rule_ids} or []}, $index, 0, ($new_id);
+    ## New rule's |owner_sheet| is set by |import_parsed_ss|.
+    ${$_[0]}->[0]->{data}->[$new_id]->{parent_id} = ${$_[0]}->[1];
+
+    ## 9.
+    return $index;
+  }
+} # insert_rule
 
 sub delete_rule ($$) {
   # WebIDL: unsigned long

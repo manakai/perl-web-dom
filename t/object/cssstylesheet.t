@@ -40,9 +40,10 @@ test {
 
   is $css->href, undef;
   is $css->parent_style_sheet, undef;
+  is $css->owner_rule, undef;
 
   done $c;
-} n => 2, name => '<style> attributes';
+} n => 3, name => '<style> attributes';
 
 test {
   my $c = shift;
@@ -290,6 +291,22 @@ test {
 
 test {
   my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  dies_here_ok {
+    $css->delete_rule (3);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'IndexSizeError';
+  is $@->message, 'The specified rule index is invalid';
+
+  is $css->css_rules->length, 2;
+
+  done $c;
+} n => 5, name => 'delete_rule greater index';
+
+test {
+  my $c = shift;
   my $css = from_style_el '@charset "";@import "";@namespace "aa";@namespace b "c";';
   
   $css->delete_rule (2);
@@ -329,6 +346,323 @@ test {
 
   done $c;
 } n => 1, name => 'delete_rule deleted ref';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  $css->insert_rule ('r{}', 2);
+
+  is $css->css_rules->length, 3;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'q';
+  is $css->css_rules->[2]->selector_text, 'r';
+
+  my $rule = $css->css_rules->[2];
+  is $rule->parent_style_sheet, $css;
+  is $rule->parent_rule, undef;
+  is $rule->style->length, 0;
+
+  done $c;
+} n => 7, name => 'insert_rule';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  $css->insert_rule ('@media{r{display:block}}', 2);
+
+  is $css->css_rules->length, 3;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'q';
+  is $css->css_rules->[2]->type, 4;
+
+  my $rule = $css->css_rules->[2];
+  is $rule->parent_style_sheet, $css;
+  is $rule->parent_rule, undef;
+  is $rule->css_rules->length, 1;
+  is $rule->css_rules->[0]->selector_text, 'r';
+  is $rule->css_rules->[0]->style->length, 1;
+  is $rule->css_rules->[0]->style->display, 'block';
+
+  done $c;
+} n => 10, name => 'insert_rule nested';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  my $return = $css->insert_rule ('r{}', 1 + 2**32);
+  is $return, 1;
+
+  is $css->css_rules->length, 3;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'r';
+  is $css->css_rules->[2]->selector_text, 'q';
+
+  done $c;
+} n => 5, name => 'insert_rule return';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  my $return = $css->insert_rule ('r{}', 2**32);
+  is $return, 0;
+
+  is $css->css_rules->length, 3;
+  is $css->css_rules->[0]->selector_text, 'r';
+  is $css->css_rules->[1]->selector_text, 'p';
+  is $css->css_rules->[2]->selector_text, 'q';
+
+  done $c;
+} n => 5, name => 'insert_rule return 0';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  dies_here_ok {
+    $css->insert_rule ('r{}', 3);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'IndexSizeError';
+  is $@->message, 'The specified rule index is invalid';
+
+  is $css->css_rules->length, 2;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'q';
+
+  done $c;
+} n => 7, name => 'insert_rule size error';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  dies_here_ok {
+    $css->insert_rule ('r{}', -1);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'IndexSizeError';
+  is $@->message, 'The specified rule index is invalid';
+
+  is $css->css_rules->length, 2;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'q';
+
+  done $c;
+} n => 7, name => 'insert_rule size error';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  dies_here_ok {
+    $css->insert_rule ('@hoge{}', 1);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The specified rule is invalid';
+
+  is $css->css_rules->length, 2;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'q';
+
+  done $c;
+} n => 7, name => 'insert_rule unknown rule';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  dies_here_ok {
+    $css->insert_rule ('r{}s{}', 1);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The specified rule is invalid';
+
+  is $css->css_rules->length, 2;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'q';
+
+  done $c;
+} n => 7, name => 'insert_rule multiple rules';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  dies_here_ok {
+    $css->insert_rule ('  ', 1);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The specified rule is invalid';
+
+  is $css->css_rules->length, 2;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'q';
+
+  done $c;
+} n => 7, name => 'insert_rule zero rule';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  $css->insert_rule ('r{disp', 1);
+
+  is $css->css_rules->length, 3;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'r';
+  is $css->css_rules->[2]->selector_text, 'q';
+
+  done $c;
+} n => 4, name => 'insert_rule partially broken';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  dies_here_ok {
+    $css->insert_rule ('@charset "UTF-8";', 0);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, '@charset is not allowed';
+
+  is $css->css_rules->length, 2;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'q';
+
+  done $c;
+} n => 7, name => 'insert_rule @charset';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  $css->insert_rule ('@import "a";', 0);
+
+  is $css->css_rules->length, 3;
+  is $css->css_rules->[0]->href, 'a';
+  is $css->css_rules->[1]->selector_text, 'p';
+  is $css->css_rules->[2]->selector_text, 'q';
+
+  done $c;
+} n => 4, name => 'insert_rule @import ok';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@charset "b";q{}';
+  
+  $css->insert_rule ('@import "a";', 1);
+
+  is $css->css_rules->length, 3;
+  is $css->css_rules->[0]->encoding, 'b';
+  is $css->css_rules->[1]->href, 'a';
+  is $css->css_rules->[2]->selector_text, 'q';
+
+  done $c;
+} n => 4, name => 'insert_rule @import ok';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}q{}';
+  
+  dies_here_ok {
+    $css->insert_rule ('@import "a";', 1);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  is $@->message, 'The specified rule cannot be inserted at the specified index';
+
+  is $css->css_rules->length, 2;
+  is $css->css_rules->[0]->selector_text, 'p';
+  is $css->css_rules->[1]->selector_text, 'q';
+
+  done $c;
+} n => 7, name => 'insert_rule @import not ok';
+
+for my $test (
+  ['@namespace "b";q{}' => '@import "a";', 1 => 0],
+  ['@media{}q{}'        => '@import "a";', 1 => 0],
+  ['@charset "a";'      => '@import "b";', 0 => 0],
+  ['@charset "a";'      => '@import "b";', 1 => 1],
+  ['@charset "a";@import "b";@import "c";@namespace "d";p{}'
+                        => '@import "e";', 0 => 0],
+  ['@charset "a";@import "b";@import "c";@namespace "d";p{}'
+                        => '@import "e";', 1 => 1],
+  ['@charset "a";@import "b";@import "c";@namespace "d";p{}'
+                        => '@import "e";', 2 => 1],
+  ['@charset "a";@import "b";@import "c";@namespace "d";p{}'
+                        => '@import "e";', 3 => 1],
+  ['@charset "a";@import "b";@import "c";@namespace "d";p{}'
+                        => '@import "e";', 4 => 0],
+  ['@charset "a";@import "b";@import "c";@namespace "d";p{}'
+                        => '@import "e";', 5 => 0],
+  ['@charset "a";@import "b";@import "c";@namespace "d";'
+                        => '@namespace "e";', 0 => 0],
+  ['@charset "a";@import "b";@import "c";@namespace "d";'
+                        => '@namespace "e";', 1 => 0],
+  ['@charset "a";@import "b";@import "c";@namespace "d";'
+                        => '@namespace "e";', 2 => 0],
+  ['@charset "a";@import "b";@import "c";@namespace "d";'
+                        => '@namespace "e";', 3 => 1],
+  ['@charset "a";@import "b";@import "c";@namespace "d";'
+                        => '@namespace "e";', 4 => 1],
+  ['@namespace "a";'    => '@namespace "a";', 1 => 1],
+  ['@namespace x "a";'  => '@namespace x "a";', 1 => 1],
+) {
+  if ($test->[3]) {
+    test {
+      my $c = shift;
+      my $css = from_style_el $test->[0];
+      my $length = $css->css_rules->length;
+
+      $css->insert_rule ($test->[1], $test->[2]);
+
+      is $css->css_rules->length, $length + 1;
+
+      done $c;
+    } n => 1, name => ['insert_rule @import', $test->[0], $test->[1], $test->[2], 'ok'];
+  } else {
+    test {
+      my $c = shift;
+      my $css = from_style_el $test->[0];
+      my $length = $css->css_rules->length;
+
+      dies_here_ok {
+        $css->insert_rule ($test->[1], $test->[2]);
+      };
+      isa_ok $@, 'Web::DOM::Exception';
+      is $@->name, 'HierarchyRequestError';
+      is $@->message, 'The specified rule cannot be inserted at the specified index';
+
+      is $css->css_rules->length, $length;
+
+      done $c;
+    } n => 5, name => ['insert_rule @import', $test->[0], $test->[1], $test->[2], 'ng'];
+  }
+}
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}';
+  
+  dies_here_ok {
+    $css->insert_rule ('@namespace x "y";', 0);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'InvalidStateError';
+  is $@->message, '@namespace cannot be inserted to this style sheet';
+
+  is $css->css_rules->length, 1;
+
+  done $c;
+} n => 5, name => 'insert_rule @namespace not allowed';
 
 run_tests;
 

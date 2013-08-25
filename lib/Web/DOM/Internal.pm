@@ -733,22 +733,28 @@ sub config_hashref ($) {
   };
 } # config_hashref
 
-sub import_parsed_ss ($$) {
-  my ($self, $ss) = @_;
+sub import_parsed_ss ($$;$) {
+  my ($self, $ss, $osid) = @_;
   ## $ss - Parsed style sheet data structure (See Web::CSS::Parser)
   ## (This method is destructive and some data in $ss is used as
   ## part of the internal.)
 
-  my $id_delta = $self->{next_node_id};
-  my $tree_id = $self->{next_tree_id}++;
-
   ## $ss->{rules}->[0] is always the style sheet construct
+
+  ## If $osid is defined, instead of importing $ss->{rules}->[0],
+  ## import rules into existing style sheet with ID $osid.
+
+  my $id_delta = $self->{next_node_id};
+  my $tree_id = defined $osid ? $self->{tree_id}->[$osid] : $self->{next_tree_id}++;
+  my $new_osid = defined $osid ? $osid : $id_delta + 0;
+
   for my $rule (@{$ss->{rules}}) {
+    next if $rule->{id} == 0 and defined $osid;
     my $id = $id_delta + delete $rule->{id};
     $rule->{parent_id} += $id_delta if defined $rule->{parent_id};
     @{$rule->{rule_ids}} = map { $_ + $id_delta } @{$rule->{rule_ids}}
         if $rule->{rule_ids};
-    $rule->{owner_sheet} = $id_delta + 0 if $id != $id_delta;
+    $rule->{owner_sheet} = $new_osid if $id != $id_delta + 0;
     $self->{data}->[$id] = $rule;
     $self->{tree_id}->[$id] = $tree_id;
   }
@@ -757,10 +763,11 @@ sub import_parsed_ss ($$) {
 
   $self->{next_node_id} += @{$ss->{rules}};
 
-  return $id_delta + 0;
+  return defined $osid ? $id_delta + 1 : $id_delta + 0;
 
   ## This method is invoked by
-  ## |Web::CSS::Parser::process_style_element|.
+  ## |Web::CSS::Parser::process_style_element| and
+  ## |Web::DOM::CSSStyleSheet::insert_rule|.
 } # import_parsed_ss
 
 sub source_style ($$$) {
