@@ -17,7 +17,9 @@ sub from_style_el ($;%) {
   $el->title ($args{title}) if defined $args{title};
   $el->media ($args{media}) if defined $args{media};
 
-  my $parser = Web::CSS::Parser->new;
+  my $parser = Web::CSS::Parser->get_parser_of_document ($doc);
+  $parser->media_resolver->set_supported (all => 1);
+
   $parser->parse_style_element ($el);
 
   return $el->sheet;

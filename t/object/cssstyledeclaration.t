@@ -476,6 +476,45 @@ test {
   done $c;
 } n => 1, name => 'css_text invalid';
 
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {}';
+  my $style = $css->css_rules->[0]->style;
+
+  delete Web::CSS::Parser->get_parser_of_document ($css)->media_resolver->{prop}->{display};
+
+  $style->css_text ('display: block');
+  is $style->css_text, '';
+
+  done $c;
+} n => 1, name => 'css_text non-supported property';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {}';
+  my $style = $css->css_rules->[0]->style;
+
+  delete Web::CSS::Parser->get_parser_of_document ($css)->media_resolver->{prop}->{display};
+
+  $style->display ('block');
+  is $style->display, '';
+
+  done $c;
+} n => 1, name => 'non-supported property method';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {display:inline}';
+  my $style = $css->css_rules->[0]->style;
+
+  delete Web::CSS::Parser->get_parser_of_document ($css)->media_resolver->{prop_value}->{display}->{block};
+
+  $style->display ('block');
+  is $style->display, 'inline';
+
+  done $c;
+} n => 1, name => 'non-supported property method value';
+
 run_tests;
 
 =head1 LICENSE
