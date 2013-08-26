@@ -26,6 +26,20 @@ sub from_style_el ($;%) {
   return $el->sheet;
 } # from_style_el
 
+push @EXPORT, qw(from_style_attr);
+sub from_style_attr ($;%) {
+  my (undef, %args) = @_;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('p');
+  $el->set_attribute_ns (undef, style => $_[0]) if defined $_[0];
+  $el->set_attribute_ns ('http://www.w3.org/XML/1998/namespace', 'xml:base' => $args{base_url}) if defined $args{base_url};
+
+  my $parser = Web::CSS::Parser->get_parser_of_document ($doc);
+  $parser->media_resolver->set_supported (all => 1);
+
+  return ($el, $el->style);
+} # from_style_attr
+
 1;
 
 =head1 LICENSE

@@ -1,7 +1,7 @@
 package Web::DOM::HTMLElement;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::Element);
 use Web::DOM::Internal;
 use Web::DOM::Element;
@@ -107,7 +107,16 @@ sub dataset ($) {
   return ${$_[0]}->[0]->strmap ($_[0]);
 } # dataset
 
-# XXX properties itemvalue command* style
+# XXX properties itemvalue command*
+
+# ElementCSSInlineStyle
+sub style ($;$) {
+  my $style = ${$_[0]}->[0]->source_style ('attr', $_[0]);
+  if (@_ > 1) {
+    $style->css_text ($_[1]);
+  }
+  return $style;
+} # style
 
 ## ------ User interaction ------
 

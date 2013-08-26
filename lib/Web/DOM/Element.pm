@@ -680,6 +680,17 @@ sub _attribute_is ($$$%) {
             split /[\x09\x0A\x0C\x0D\x20]+/,
             (defined $value ? $value : '');
     }
+
+    if ($$lnref eq 'style') {
+      ## See |Web::DOM::Internal::source_style| and
+      ## |Web::DOM::CSSStyleDeclaration::_modified|.
+      my $style = $$self->[0]->{source_style}->[$$self->[1]];
+      if (defined $style and not $$style->[2]) { # updating flag
+        my $value = $self->get_attribute_ns (undef, $$lnref);
+        local $$style->[2] = 1; # updating flag
+        $style->css_text (defined $value ? $value : '');
+      }
+    }
   }
 
   $$self->[0]->children_changed ($$self->[1], ATTRIBUTE_NODE);

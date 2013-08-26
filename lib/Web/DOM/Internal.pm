@@ -777,8 +777,24 @@ sub source_style ($$$) {
   return $self->{source_style}->[$$obj->[1]] || do {
     require Web::DOM::CSSStyleDeclaration;
     ## $type = 'rule', $obj = CSSStyleRule - Declarations in the style rule
+    ## $type = 'attr', $obj = Element      - style="" attribute
     my $style = bless \[$type, $obj], 'Web::DOM::CSSStyleDeclaration';
+        ## [0] $type
+        ## [1] $obj
+        ## [2] updating flag (See |Web::DOM::Element::_attribute_is|.)
+        ## [3] Property struct (See |Web::CSS::Parser|.)
     weaken ($self->{source_style}->[$$obj->[1]] = $style);
+    if ($type eq 'attr') {
+      $$style->[3] = {prop_keys => [], prop_values => {},
+                      prop_importants => {}};
+      my $value = $obj->get_attribute_ns (undef, 'style');
+      if (defined $value) {
+        local $$style->[2] = 1; # updating
+        $style->css_text ($value);
+      }
+    } else { # rule
+      $$style->[3] = $$obj->[2];
+    }
     $style;
   };
 } # source_style

@@ -8,6 +8,7 @@ use Test::More;
 use Test::DOM::Exception;
 use Web::DOM::Internal;
 use Web::DOM::Document;
+use Web::CSS::Parser;
 
 for my $attr (qw(title lang itemid accesskey)) {
   test {
@@ -2904,6 +2905,95 @@ test {
   is $el->get_attribute_ns (undef, 'href'), '';
   done $c;
 } n => 3, name => 'base.href setter';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('foo');
+  my $mr = Web::CSS::Parser->get_parser_of_document ($doc)->media_resolver;
+  $mr->{prop}->{display} = 1;
+  $mr->{prop_value}->{display}->{block} = 1;
+
+  my $style = $el->style;
+  isa_ok $style, 'Web::DOM::CSSStyleDeclaration';
+  is $style->length, 0;
+  is $style->display, '';
+
+  $style->display ('block');
+  is $style->display, 'block';
+  is $el->get_attribute_ns (undef, 'style'), 'display: block;';
+
+  is $el->style, $style;
+
+  done $c;
+} n => 6, name => 'style no attr';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('foo');
+  $el->set_attribute (style => 'display: inline; hoge: fuga');
+  my $mr = Web::CSS::Parser->get_parser_of_document ($doc)->media_resolver;
+  $mr->{prop}->{display} = 1;
+  $mr->{prop_value}->{display}->{block} = 1;
+  $mr->{prop_value}->{display}->{inline} = 1;
+
+  my $style = $el->style;
+  isa_ok $style, 'Web::DOM::CSSStyleDeclaration';
+  is $style->length, 1;
+  is $style->display, 'inline';
+  $style->remove_property ('hoge');
+  is $el->get_attribute_ns (undef, 'style'), 'display: inline; hoge: fuga';
+
+  $style->display ('block');
+  is $style->display, 'block';
+  is $el->get_attribute_ns (undef, 'style'), 'display: block;';
+
+  is $el->style, $style;
+
+  done $c;
+} n => 7, name => 'style has attr';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('foo');
+  $el->set_attribute (style => 'display: inline; hoge: fuga');
+  my $mr = Web::CSS::Parser->get_parser_of_document ($doc)->media_resolver;
+  $mr->{prop}->{display} = 1;
+  $mr->{prop_value}->{display}->{block} = 1;
+  $mr->{prop_value}->{display}->{inline} = 1;
+
+  my $style = $el->style;
+  is $style->length, 1;
+
+  $el->remove_attribute ('style');
+
+  is $style->length, 0;
+
+  $el->set_attribute (style => 'display: inline');
+
+  is $style->length, 1;
+  is $style->display, 'inline';
+
+  done $c;
+} n => 4, name => 'style attr mutation';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('foo');
+  my $mr = Web::CSS::Parser->get_parser_of_document ($doc)->media_resolver;
+  $mr->{prop}->{display} = 1;
+  $mr->{prop_value}->{display}->{block} = 1;
+  $mr->{prop_value}->{display}->{inline} = 1;
+
+  $el->style ('display: block  ');
+
+  is $el->get_attribute_ns (undef, 'style'), 'display: block;';
+
+  done $c;
+} n => 1, name => 'style setter';
 
 run_tests;
 

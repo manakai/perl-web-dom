@@ -12,6 +12,38 @@ use Test::DOM::Exception;
 
 test {
   my $c = shift;
+  my $style = from_style_attr undef;
+
+  is $style->css_text, '';
+  is $style->length, 0;
+  is $style->item (0), '';
+  is $style->[0], undef;
+  is $style->get_property_value ('display'), '';
+  is $style->get_property_priority ('display'), '';
+  is $style->display, '';
+  is $style->parent_rule, undef;
+
+  done $c;
+} n => 8, name => 'style="" basic no attr';
+
+test {
+  my $c = shift;
+  my $style = from_style_attr 'display: block';
+
+  is $style->css_text, 'display: block;';
+  is $style->length, 1;
+  is $style->item (0), 'display';
+  is $style->[0], 'display';
+  is $style->get_property_value ('display'), 'block';
+  is $style->get_property_priority ('display'), '';
+  is $style->display, 'block';
+  is $style->parent_rule, undef;
+
+  done $c;
+} n => 8, name => 'style="" basic has attr';
+
+test {
+  my $c = shift;
   my $css = from_style_el 'p {}';
   my $style = $css->css_rules->[0]->style;
   
@@ -47,7 +79,6 @@ test {
 
   done $c;
 } n => 21, name => 'style rule style empty';
-
 
 test {
   my $c = shift;
@@ -260,6 +291,17 @@ test {
 
 test {
   my $c = shift;
+  my ($el, $style) = from_style_attr 'display:block';
+
+  $style->set_property (display => 'inline', 'important');
+
+  is $style->css_text, 'display: inline !important;';
+  is $el->get_attribute_ns (undef, 'style'), 'display: inline !important;';
+  done $c;
+} n => 2, name => 'set_property style=""';
+
+test {
+  my $c = shift;
   my $css = from_style_el 'p {display: none !important}';
   my $style = $css->css_rules->[0]->style;
 
@@ -322,6 +364,30 @@ test {
 
 test {
   my $c = shift;
+  my ($el, $style) = from_style_attr 'display:none';
+
+  $style->remove_property ('display');
+  is $style->css_text, '';
+  is $style->display, '';
+  is $el->get_attribute_ns (undef, 'style'), '';
+
+  done $c;
+} n => 3, name => 'remove_property style=""';
+
+test {
+  my $c = shift;
+  my ($el, $style) = from_style_attr 'display:none';
+
+  $style->remove_property ('color');
+  is $style->css_text, 'display: none;';
+  is $style->display, 'none';
+  is $el->get_attribute_ns (undef, 'style'), 'display:none';
+
+  done $c;
+} n => 3, name => 'remove_property style="" not found';
+
+test {
+  my $c = shift;
   my $css = from_style_el 'p {}';
   my $style = $css->css_rules->[0]->style;
 
@@ -375,6 +441,17 @@ test {
 
   done $c;
 } n => 12, name => '<style> style camel-cased attributes';
+
+test {
+  my $c = shift;
+  my ($el, $style) = from_style_attr undef;
+
+  $style->display ('none');
+  is $style->css_text, 'display: none;';
+  is $el->get_attribute_ns (undef, 'style'), 'display: none;';
+
+  done $c;
+} n => 2, name => 'style="" camel-cased property';
 
 test {
   my $c = shift;
@@ -488,6 +565,16 @@ test {
 
   done $c;
 } n => 1, name => 'css_text non-supported property';
+
+test {
+  my $c = shift;
+  my ($el, $style) = from_style_attr 'display: list-item';
+
+  $style->css_text ('display: compact');
+  is $el->get_attribute ('style'), 'display: compact;';
+
+  done $c;
+} n => 1, name => 'css_text style=""';
 
 test {
   my $c = shift;

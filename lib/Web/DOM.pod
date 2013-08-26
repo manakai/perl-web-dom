@@ -429,7 +429,7 @@ not limited to:
 
 =item @font-face, @page [CSSOM]
 
-=item ElementCSSInlineStyle [CSSOM]
+=item SVGElement->style [CSSOM]
 
 =item GetStyleUtils, PseudoElement [CSSOM]
 

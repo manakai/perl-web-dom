@@ -1,16 +1,13 @@
 package Web::DOM::CSSStyleDeclaration;
 use strict;
 use warnings;
-our $VERSION = '5.0';
+our $VERSION = '6.0';
 use Carp;
 use Web::CSS::Props;
 
 use overload
     '@{}' => sub {
-      my $list = [];
-      if (${$_[0]}->[0] eq 'rule') {
-        $list = [map { $Web::CSS::Props::Key->{$_}->{css} } @{${${$_[0]}->[1]}->[2]->{prop_keys}}];
-      }
+      my $list = [map { $Web::CSS::Props::Key->{$_}->{css} } @{${$_[0]}->[3]->{prop_keys}}];
       Internals::SvREADONLY (@$list, 1);
       Internals::SvREADONLY ($_, 1) for @$list;
       return $list;
@@ -27,24 +24,16 @@ use overload
     fallback => 1;
 
 sub length ($) {
-  if (${$_[0]}->[0] eq 'rule') {
-    return scalar @{${${$_[0]}->[1]}->[2]->{prop_keys}};
-  } else {
-    return 0;
-  }
+  return scalar @{${$_[0]}->[3]->{prop_keys}};
 } # length
 
 sub item ($$) {
   # WebIDL: unsigned long
   my $n = $_[1] % 2**32;
   return '' if $n >= 2**31;
-  if (${$_[0]}->[0] eq 'rule') {
-    my $key = ${${$_[0]}->[1]}->[2]->{prop_keys}->[$n];
-    if (defined $key) {
-      return $Web::CSS::Props::Key->{$key}->{css};
-    } else {
-      return '';
-    }
+  my $key = ${$_[0]}->[3]->{prop_keys}->[$n];
+  if (defined $key) {
+    return $Web::CSS::Props::Key->{$key}->{css};
   } else {
     return '';
   }
@@ -58,8 +47,8 @@ sub get_property_value ($$) {
 
   ## 2.-4.
   my $serializer = ${${$_[0]}->[1]}->[0]->css_serializer;
-  my $str = $serializer->serialize_prop_value
-      (${${$_[0]}->[1]}->[2], $prop_name);
+  # XXX context
+  my $str = $serializer->serialize_prop_value (${$_[0]}->[3], $prop_name);
   return defined $str ? $str : '';
 } # get_property_value
 
@@ -71,8 +60,8 @@ sub get_property_priority ($$) {
 
   ## 2.-4.
   my $serializer = ${${$_[0]}->[1]}->[0]->css_serializer;
-  my $str = $serializer->serialize_prop_priority
-      (${${$_[0]}->[1]}->[2], $prop_name);
+  # XXX context
+  my $str = $serializer->serialize_prop_priority (${$_[0]}->[3], $prop_name);
   return defined $str ? $str : '';
 } # get_property_priority
 
@@ -109,23 +98,21 @@ sub set_property ($$;$$) {
   $parser->init_parser;
   my $parsed = $parser->parse_char_string_as_prop_value ($prop_name, $value);
   if (defined $parsed) {
-    if (${$_[0]}->[0] eq 'rule') {
-      my $decl = ${${$_[0]}->[1]}->[2];
-      for my $key (@{$parsed->{prop_keys}}) {
-        push @{$decl->{prop_keys}}, $key;
-        $decl->{prop_values}->{$key} = $parsed->{prop_values}->{$key};
-        if ($priority eq 'important') {
-          $decl->{prop_importants}->{$key} = 1;
-        } else {
-          delete $decl->{prop_importants}->{$key};
-        }
+    my $decl = ${$_[0]}->[3];
+    for my $key (@{$parsed->{prop_keys}}) {
+      push @{$decl->{prop_keys}}, $key;
+      $decl->{prop_values}->{$key} = $parsed->{prop_values}->{$key};
+      if ($priority eq 'important') {
+        $decl->{prop_importants}->{$key} = 1;
+      } else {
+        delete $decl->{prop_importants}->{$key};
       }
-      my $fnd = {};
-      @{$decl->{prop_keys}} = grep { not $fnd->{$_}++ } @{$decl->{prop_keys}};
     }
-  }
+    my $fnd = {};
+    @{$decl->{prop_keys}} = grep { not $fnd->{$_}++ } @{$decl->{prop_keys}};
 
-  # XXX notification
+    $self->_modified;
+  }
 
   return;
 } # set_property
@@ -145,19 +132,21 @@ sub remove_property ($$) {
 
   ## 4.-5.
   my $def = $Web::CSS::Props::Prop->{$prop_name} or return $value;
-  if (${$_[0]}->[0] eq 'rule') {
-    my $data = ${${$_[0]}->[1]}->[2];
-    my %removed = $def->{longhand_subprops}
-        ? map { $_ => 1 } @{$def->{longhand_subprops}}
-        : ($def->{key} => 1);
-    @{$data->{prop_keys}} = grep { not $removed{$_} } @{$data->{prop_keys}};
-    for my $key (keys %removed) {
-      delete $data->{prop_values}->{$key};
-      delete $data->{prop_importants}->{$key};
-    }
+  my $data = ${$_[0]}->[3];
+  my $removed;
+  my %removed = $def->{longhand_subprops}
+      ? map { $_ => 1 } @{$def->{longhand_subprops}}
+      : ($def->{key} => 1);
+  @{$data->{prop_keys}} = grep {
+    $removed = 1 if $removed{$_}; not $removed{$_};
+  } @{$data->{prop_keys}};
+  for my $key (keys %removed) {
+    delete $data->{prop_values}->{$key};
+    delete $data->{prop_importants}->{$key};
   }
 
-  # XXX notification
+  ## <http://suika.suikawiki.org/~wakaba/wiki/sw/n/removeProperty#anchor-1>
+  $self->_modified if $removed;
   
   ## 6.
   return $value;
@@ -185,10 +174,7 @@ sub parent_rule ($) {
 } # parent_rule
 
 sub css_text ($;$) {
-  my $data;
-  if (${$_[0]}->[0] eq 'rule') {
-    $data = ${${$_[0]}->[1]}->[2];
-  }
+  my $data = ${$_[0]}->[3];
   if (@_ > 1) {
     ## 1.
     # XXX read-only
@@ -202,13 +188,26 @@ sub css_text ($;$) {
     $data->{prop_values} = $parsed->{prop_values};
     $data->{prop_importants} = $parsed->{prop_importants};
 
-    # XXX notification
+    $_[0]->_modified unless ${$_[0]}->[2]; # updating flag
   }
   return unless defined wantarray;
 
   my $serializer = ${${$_[0]}->[1]}->[0]->css_serializer;
+  # XXX context
   return $serializer->serialize_prop_decls ($data);
 } # css_text
+
+sub _modified ($) {
+  my $self = $_[0];
+
+  if (${$_[0]}->[0] eq 'attr') {
+    my $serialized = $self->css_text;
+    local ${$_[0]}->[2] = 1; # updating flag
+    ${$_[0]}->[1]->set_attribute_ns (undef, style => $serialized);
+  }
+
+  # XXX schedule to update rendering
+} # _modified
 
 1;
 

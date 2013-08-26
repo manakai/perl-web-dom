@@ -128,6 +128,15 @@ For example:
   is $el->lang, 'ja';
   is $el->get_attribute ('lang'), 'ja';
 
+=item $style = $el->style
+
+Return the L<Web::DOM::CSSStyleDeclaration> object for the C<style>
+attribute.  [CSSOM]
+
+=item $el->style ($string)
+
+Set the C<style> attribute.  [CSSOM]
+
 =item $string = $el->title
 
 =item $el->title ($string)
@@ -218,7 +227,7 @@ L<Web::DOM::HTMLTemplateElement>.
 The L<Web::DOM::HTMLBaseFontElement> class is no longer available, as
 it is now dropped from the HTML Standard.
 
-=head1 SPECIFICATION
+=head1 SPECIFICATIONS
 
 =over 4
 
@@ -226,6 +235,10 @@ it is now dropped from the HTML Standard.
 
 HTML Standard
 <http://www.whatwg.org/specs/web-apps/current-work/#htmlelement>.
+
+=item CSSOM
+
+CSSOM <http://dev.w3.org/csswg/cssom/#elementcssinlinestyle>.
 
 =back
 
