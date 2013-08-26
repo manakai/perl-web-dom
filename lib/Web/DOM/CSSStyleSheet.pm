@@ -7,7 +7,6 @@ use Web::DOM::StyleSheet;
 push our @ISA, qw(Web::DOM::StyleSheet);
 push our @CARP_NOT, qw(Web::DOM::Exception);
 use Web::DOM::Exception;
-use Web::DOM::CSSRule;
 
 use overload
     '""' => sub {
@@ -221,7 +220,7 @@ sub _rebuild_nsmap ($) {
   $context->{url_to_prefixes} = {};
 
   for my $rule (@{$self->css_rules}) {
-    next unless $rule->type == NAMESPACE_RULE;
+    next unless $rule->type == 10; # NAMESPACE_RULE
     my $prefix = $rule->prefix;
     my $nsurl = $rule->namespace_uri;
     if (length $prefix and defined $context->{prefix_to_url}->{$prefix}) {
