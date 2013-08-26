@@ -78,7 +78,8 @@ sub selector_text ($;$) {
   if (@_ > 1) {
     my $parser = ${$_[0]}->[0]->css_parser;
     $parser->init_parser;
-    # XXX namespaces
+    my $parent = $_[0]->parent_style_sheet;
+    $parser->context (defined $parent ? $$parent->[2]->{context} : undef);
     my $parsed = $parser->parse_char_string_as_selectors (''.$_[1]);
     if (defined $parsed) {
       ${$_[0]}->[2]->{selectors} = $parsed;
@@ -89,8 +90,9 @@ sub selector_text ($;$) {
   return unless defined wantarray;
   
   my $serializer = ${$_[0]}->[0]->css_serializer;
-  # XXX namespaces
-  return $serializer->serialize_selector_text (${$_[0]}->[2]->{selectors});
+  my $parent = $_[0]->parent_style_sheet;
+  $serializer->context (defined $parent ? $$parent->[2]->{context} : undef);
+  return $serializer->serialize_selectors (${$_[0]}->[2]->{selectors});
 } # selector_text
 
 sub style ($;$) {

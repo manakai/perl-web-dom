@@ -369,6 +369,44 @@ test {
   done $c;
 } n => 1, name => 'css_text getter';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/";@media{}';
+  $css->css_rules->[1]->insert_rule ('hoge|p {} ', 0);
+  is $css->css_rules->[1]->css_rules->[0]->selector_text, 'hoge|p';
+  done $c;
+} n => 1, name => 'insert_rule namespace';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/";@media{}';
+  dies_here_ok {
+    $css->css_rules->[1]->insert_rule ('HOGE|p {} ', 0);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $css->css_rules->[1]->css_rules->length, 0;
+  done $c;
+} n => 4, name => 'insert_rule namespace';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/";@media{}';
+  my $rule = $css->css_rules->[1];
+  $css->delete_rule (1);
+  dies_here_ok {
+    $rule->insert_rule ('hoge|p {} ', 0);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $rule->css_rules->length, 0;
+
+  $rule->insert_rule ('p{}', 0);
+  is $rule->css_rules->length, 1;
+
+  done $c;
+} n => 5, name => 'insert_rule namespace deleted';
+
 run_tests;
 
 =head1 LICENSE

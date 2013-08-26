@@ -86,6 +86,42 @@ test {
   done $c;
 } n => 1, name => 'css_text getter';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/"; hoge|p {display:block!important}';
+  my $rule = $css->css_rules->[1];
+
+  is $rule->selector_text, 'hoge|p';
+
+  $rule->selector_text ('hoge|q');
+  is $rule->selector_text, 'hoge|q';
+
+  $rule->selector_text ('[hoge|p]');
+  is $rule->selector_text, '[hoge|p]';
+
+  $rule->selector_text ('fuga|*');
+  is $rule->selector_text, '[hoge|p]';
+
+  done $c;
+} n => 4, name => 'selector_text namespaces';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/"; hoge|p {display:block!important}';
+  my $rule = $css->css_rules->[1];
+  $css->delete_rule (1);
+
+  is $rule->selector_text, 'hoge|p';
+
+  $rule->selector_text ('hoge|q');
+  is $rule->selector_text, 'hoge|p';
+
+  $rule->selector_text ('fuga|*');
+  is $rule->selector_text, 'hoge|p';
+
+  done $c;
+} n => 3, name => 'selector_text namespaces deleted';
+
 run_tests;
 
 =head1 LICENSE

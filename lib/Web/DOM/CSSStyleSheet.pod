@@ -122,6 +122,9 @@ CSS Object Model (CSSOM) <http://dev.w3.org/csswg/cssom/>.
 The C<deleteRule> method MUST set the "parent CSS style sheet" of the
 rules contained by the /old rule/ to null.
 
+The C<insertRule> method MUST use the C<@namespace> at-rules in the
+style sheet to resolve namespaces, if necessary.
+
 =item HTML
 
 HTML Living Standard

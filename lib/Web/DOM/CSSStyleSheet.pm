@@ -60,7 +60,12 @@ sub insert_rule ($$$) {
     ## 1.
     my $parser = ${$_[0]}->[0]->css_parser;
     $parser->init_parser;
-    $parser->context (${$_[0]}->[2]->{context});
+    if (${$_[0]}->[2]->{rule_type} eq 'sheet') {
+      $parser->context (${$_[0]}->[2]->{context});
+    } else {
+      my $parent = $_[0]->parent_style_sheet;
+      $parser->context ($parent ? $$parent->[2]->{context} : undef);
+    }
     my $parsed = $parser->parse_char_string_as_rule ($rule);
 
     ## 2.

@@ -77,6 +77,11 @@ See L<Web::DOM/DEPENDENCY>.
 
 CSSOM <http://dev.w3.org/csswg/cssom/>.
 
+The C<insertRule> method and the C<selectorText> attribute MUST use
+the C<@namespace> at-rules in the parent style sheet to resolve
+namespaces, if necessary.  If there is no parent style sheet, there is
+no C<@namespace> at-rule applicable.
+
 =item DOM2CSS
 
 Document Object Model CSS

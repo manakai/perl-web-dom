@@ -1085,6 +1085,26 @@ test {
   done $c;
 } n => 1, name => 'css_text getter not empty';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/";';
+  $css->insert_rule ('hoge|p {} ', 0);
+  is $css->css_rules->[0]->selector_text, 'hoge|p';
+  done $c;
+} n => 1, name => 'insert_rule namespace';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/";';
+  dies_here_ok {
+    $css->insert_rule ('HOGE|p {} ', 0);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $css->css_rules->length, 1;
+  done $c;
+} n => 4, name => 'insert_rule namespace';
+
 run_tests;
 
 =head1 LICENSE
