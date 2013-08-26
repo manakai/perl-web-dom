@@ -207,6 +207,9 @@ sub prefix ($) {
   return defined ${$_[0]}->[2]->{prefix} ? ${$_[0]}->[2]->{prefix} : '';
 } # prefix
 
+# XXX If we'd like to implement setters, need to update
+# context->namespace mapping of the style sheet object
+
 1;
 
 =head1 LICENSE

@@ -60,6 +60,7 @@ sub insert_rule ($$$) {
     ## 1.
     my $parser = ${$_[0]}->[0]->css_parser;
     $parser->init_parser;
+    $parser->context (${$_[0]}->[2]->{context});
     my $parsed = $parser->parse_char_string_as_rule ($rule);
 
     ## 2.
@@ -133,6 +134,10 @@ sub insert_rule ($$$) {
     ${$_[0]}->[0]->{data}->[$new_id]->{parent_id} = ${$_[0]}->[1];
     ${$_[0]}->[0]->children_changed (${$_[0]}->[1], 0);
 
+    if ($new_type eq 'namespace') {
+      $_[0]->_rebuild_nsmap; # $_[0] is always style sheet
+    }
+
     # XXX notification
 
     ## 9.
@@ -185,6 +190,10 @@ sub delete_rule ($$) {
     $new_int->adopt ($old_rule);
     ${$_[0]}->[0]->children_changed (${$_[0]}->[1], 0);
 
+    if ($$old_rule->[2]->{rule_type} eq 'namespace') {
+      $_[0]->_rebuild_nsmap; # $_[0] is always style sheet
+    }
+
     # XXX notification
 
     ## $old_rule->DESTROY is implicitly invoked such that that node
@@ -193,46 +202,47 @@ sub delete_rule ($$) {
   return undef;
 } # delete_rule
 
-# XXX css_text
+sub css_text ($) {
+  # XXX setter (not specced yet)
 
-# XXXtest
-sub manakai_is_default_namespace ($$) {
-  my $uri = ''.$_[1];
-  for my $rule (@{$_[0]->css_rules}) {
-    next unless $rule->type == $rule->NAMESPACE_RULE;
-    if ($rule->prefix eq '') {
-      return $uri eq $rule->namespace_uri;
+  my $serializer = ${$_[0]}->[0]->css_serializer;
+  return $serializer->serialize_rule ({rules => ${$_[0]}->[0]->{data}}, ${$_[0]}->[1]);
+} # css_text
+
+sub _rebuild_nsmap ($) {
+  my $self = $_[0];
+  my $context = $$self->[2]->{context};
+  $context->{prefix_to_url} = {};
+  $context->{url_to_prefixes} = {};
+
+  for my $rule (@{$self->css_rules}) {
+    next unless $rule->type == NAMESPACE_RULE;
+    my $prefix = $rule->prefix;
+    my $nsurl = $rule->namespace_uri;
+    if (length $prefix and defined $context->{prefix_to_url}->{$prefix}) {
+      @{$context->{url_to_prefixes}->{$context->{prefix_to_url}->{$prefix}}}
+          = grep { $_ ne $prefix } @{$context->{url_to_prefixes}->{$context->{prefix_to_url}->{$prefix}}};
     }
+    $context->{prefix_to_url}->{$prefix} = $nsurl;
+    push @{$context->{url_to_prefixes}->{$nsurl} ||= []},
+        $prefix if length $prefix;
   }
-  return 0;
+} # _rebuild_nsmap
+
+sub manakai_is_default_namespace ($$) {
+  my $uri = defined $_[1] ? ''.$_[1] : '';
+  my $url = ${$_[0]}->[2]->{context}->get_url_by_prefix ('');
+  return defined $url && $url eq $uri;
 } # manakai_is_default_namespace
 
-# XXXtest
 sub manakai_lookup_namespace_prefix ($$) {
-  return undef unless defined $_[1];
-  my $uri = ''.$_[1];
-  return undef if $uri eq '';
-  for my $rule (@{$_[0]->css_rules}) {
-    next unless $rule->type == $rule->NAMESPACE_RULE;
-    if ($uri eq $rule->namespace_uri) {
-      my $prefix = $rule->prefix;
-      return $prefix if $prefix ne '';
-    }
-  }
-  return undef;
+  my $uri = defined $_[1] ? ''.$_[1] : '';
+  return ${$_[0]}->[2]->{context}->get_prefix_by_url ($uri);
 } # manakai_lookup_namespace_prefix
 
-# XXXtest
 sub manakai_lookup_namespace_uri ($$) {
   my $prefix = defined $_[1] ? ''.$_[1] : '';
-  for my $rule (@{$_[0]->css_rules}) {
-    next unless $rule->type == $rule->NAMESPACE_RULE;
-    if ($prefix eq $rule->prefix) {
-      my $uri = $rule->namespace_uri;
-      return $uri;
-    }
-  }
-  return undef;
+  return ${$_[0]}->[2]->{context}->get_url_by_prefix ($prefix);
 } # manakai_lookup_namespace_uri
 
 1;

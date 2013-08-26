@@ -1,27 +1,21 @@
 package Web::DOM::StyleSheet;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 
 sub type ($) {
   die "Not implemented";
 } # type
 
 sub href ($) {
-  #XXX
   return ${$_[0]}->[2]->{href}; # or undef
 } # href
 
 sub manakai_base_uri ($) {
-  #XXX
-  return ${$_[0]}->[2]->{manakai_base_uri}
-      if defined ${$_[0]}->[2]->{manakai_base_uri};
-  return ${$_[0]}->[2]->{href} if defined ${$_[0]}->[2]->{href};
-  return 'about:blank';
+  return ${$_[0]}->[2]->{context}->base_url;
 } # manakai_base_uri
 
 sub manakai_input_encoding ($) {
-  #XXX
   return ${$_[0]}->[2]->{input_encoding} || 'utf-8';
 } # manakai_input_encoding
 
@@ -32,20 +26,13 @@ sub owner_node ($) {
 } # owner_node
 
 sub parent_style_sheet ($) {
-  my $id = ${$_[0]}->[2]->{XXX};
+  my $id = ${$_[0]}->[2]->{parent_style_sheet};
   return defined $id ? ${$_[0]}->[0]->node ($id) : undef;
 } # parent_style_sheet
 
 sub title ($) {
-  my $owner = $_[0]->owner_node;
-  if (defined $owner) { # XXX HTML <style> or <link>
-    # XXX Chrome.  Should we really do this?
-    my $title = $owner->title;
-    return length $title ? $title : undef;
-  }
-
-  #XXX
-  return ${$_[0]}->[2]->{title}; # or undef
+  return defined ${$_[0]}->[2]->{title} && length ${$_[0]}->[2]->{title}
+      ? ${$_[0]}->[2]->{title} : undef;
 } # title
 
 sub media ($;$) {
@@ -58,8 +45,8 @@ sub media ($;$) {
 
 sub disabled ($;$) {
   if (@_ > 1) {
-    # XXX side effect??
     ${$_[0]}->[2]->{disabled} = !!$_[1];
+    # XXX notification
   }
   return ${$_[0]}->[2]->{disabled};
 } # disabled

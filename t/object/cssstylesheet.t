@@ -6,6 +6,7 @@ use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', 
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
 use Test::X1;
 use Test::More;
+use Test::Differences;
 use Test::DOM::CSS;
 use Test::DOM::Exception;
 use Test::DOM::Destroy;
@@ -41,9 +42,30 @@ test {
   is $css->href, undef;
   is $css->parent_style_sheet, undef;
   is $css->owner_rule, undef;
+  is $css->owner_node, $css->owner_node;
+  is $css->owner_node->local_name, 'style';
+  is $css->owner_node->text_content, 'p {}';
+  is $css->manakai_base_uri, 'about:blank';
+  is $css->manakai_input_encoding, 'utf-8';
+  ok not $css->disabled;
 
   done $c;
-} n => 3, name => '<style> attributes';
+} n => 9, name => '<style> attributes';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}', base_url => 'http://hoge.FOO/';
+  is $css->manakai_base_uri, 'http://hoge.foo/';
+  done $c;
+} n => 1, name => 'base URL';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}', base_url => 'http://hoge.FOO/';
+  $css->owner_node->set_attribute_ns ('http://www.w3.org/XML/1998/namespace', 'xml:base' => 'http://fpoobar/');
+  is $css->manakai_base_uri, 'http://hoge.foo/';
+  done $c;
+} n => 1, name => 'base URL changed';
 
 test {
   my $c = shift;
@@ -55,7 +77,7 @@ test {
   is $css->title, undef;
 
   $css->owner_node->title ('abc');
-  is $css->title, 'abc';
+  is $css->title, undef;
 
   done $c;
 } n => 3, name => '<style> no title';
@@ -67,10 +89,10 @@ test {
   is $css->title, 'aaa';
 
   $css->owner_node->title ('');
-  is $css->title, undef;
+  is $css->title, 'aaa';
 
   $css->owner_node->title ('abc');
-  is $css->title, 'abc';
+  is $css->title, 'aaa';
 
   done $c;
 } n => 3, name => '<style> with title';
@@ -190,18 +212,17 @@ test {
   done $c;
 } n => 4, name => 'media not specified';
 
-# XXX
-#test {
-#  my $c = shift;
-#  my $css = from_style_el '', media => 'hoge, (), screEn';
-#  my $media = $css->media;
-#  isa_ok $media, 'Web::DOM::MediaList';
-#  is $media->media_text, 'hoge, not all, screen';
-#  $media->media_text ('scree\n, All');
-#  is $media->media_text, 'screen, all';
-#  is $css->owner_node->media, 'hoge, (), screEn';
-#  done $c;
-#} n => 4, name => 'media specified';
+test {
+  my $c = shift;
+  my $css = from_style_el '', media => 'hoge, (), screEn';
+  my $media = $css->media;
+  isa_ok $media, 'Web::DOM::MediaList';
+  is $media->media_text, 'hoge, not all, screen';
+  $media->media_text ('scree\n, All');
+  is $media->media_text, 'screen, all';
+  is $css->owner_node->media, 'hoge, (), screEn';
+  done $c;
+} n => 4, name => 'media specified';
 
 test {
   my $c = shift;
@@ -680,6 +701,389 @@ test {
 
   done $c;
 } n => 3, name => 'css_rules mutation';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+  my $rules = $css->css_rules;
+
+  ok not $css->manakai_is_default_namespace (undef);
+  ok not $css->manakai_is_default_namespace ('');
+  ok not $css->manakai_is_default_namespace ('http://hoge/');
+
+  done $c;
+} n => 3, name => 'manakai_is_default_namespace no decls';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace "";';
+  my $rules = $css->css_rules;
+
+  ok $css->manakai_is_default_namespace (undef);
+  ok $css->manakai_is_default_namespace ('');
+  ok not $css->manakai_is_default_namespace ('http://hoge/');
+
+  done $c;
+} n => 3, name => 'manakai_is_default_namespace default = null';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace "http://hoge/";';
+  my $rules = $css->css_rules;
+
+  ok not $css->manakai_is_default_namespace (undef);
+  ok not $css->manakai_is_default_namespace ('');
+  ok $css->manakai_is_default_namespace ('http://hoge/');
+  ok not $css->manakai_is_default_namespace ('http://fuga/');
+
+  done $c;
+} n => 4, name => 'manakai_is_default_namespace default = non null';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace aa "http://hoge/";';
+  my $rules = $css->css_rules;
+
+  ok not $css->manakai_is_default_namespace (undef);
+  ok not $css->manakai_is_default_namespace ('');
+  ok not $css->manakai_is_default_namespace ('http://hoge/');
+  ok not $css->manakai_is_default_namespace ('http://fuga/');
+
+  done $c;
+} n => 4, name => 'manakai_is_default_namespace';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace aa "";';
+  my $rules = $css->css_rules;
+
+  ok not $css->manakai_is_default_namespace (undef);
+  ok not $css->manakai_is_default_namespace ('');
+  ok not $css->manakai_is_default_namespace ('http://hoge/');
+  ok not $css->manakai_is_default_namespace ('http://fuga/');
+
+  done $c;
+} n => 4, name => 'manakai_is_default_namespace';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace "";@namespace "http://hoge/"';
+  my $rules = $css->css_rules;
+
+  ok not $css->manakai_is_default_namespace (undef);
+  ok not $css->manakai_is_default_namespace ('');
+  ok $css->manakai_is_default_namespace ('http://hoge/');
+  ok not $css->manakai_is_default_namespace ('http://fuga/');
+
+  done $c;
+} n => 4, name => 'manakai_is_default_namespace';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace "http://hoge/";@namespace "";';
+  my $rules = $css->css_rules;
+
+  ok $css->manakai_is_default_namespace (undef);
+  ok $css->manakai_is_default_namespace ('');
+  ok not $css->manakai_is_default_namespace ('http://hoge/');
+  ok not $css->manakai_is_default_namespace ('http://fuga/');
+
+  done $c;
+} n => 4, name => 'manakai_is_default_namespace';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+  my $rules = $css->css_rules;
+
+  ok not $css->manakai_is_default_namespace ('http://hoge/');
+  ok not $css->manakai_is_default_namespace ('http://fuga/');
+
+  $css->insert_rule ('@namespace "http://hoge/";', 0);
+  ok $css->manakai_is_default_namespace ('http://hoge/');
+  ok not $css->manakai_is_default_namespace ('http://fuga/');
+
+  $css->insert_rule ('@namespace "http://fuga/";', 1);
+  ok not $css->manakai_is_default_namespace ('http://hoge/');
+  ok $css->manakai_is_default_namespace ('http://fuga/');
+
+  $css->delete_rule (1);
+  ok $css->manakai_is_default_namespace ('http://hoge/');
+  ok not $css->manakai_is_default_namespace ('http://fuga/');
+
+  done $c;
+} n => 8, name => 'manakai_is_default_namespace mutation';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_uri (undef), undef;
+  is $css->manakai_lookup_namespace_uri (''), undef;
+  is $css->manakai_lookup_namespace_uri ('hoge'), undef;
+
+  done $c;
+} n => 3, name => 'manakai_lookup_namespace_uri';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace "";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_uri (undef), '';
+  is $css->manakai_lookup_namespace_uri (''), '';
+  is $css->manakai_lookup_namespace_uri ('hoge'), undef;
+
+  done $c;
+} n => 3, name => 'manakai_lookup_namespace_uri';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace "aa";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_uri (undef), 'aa';
+  is $css->manakai_lookup_namespace_uri (''), 'aa';
+  is $css->manakai_lookup_namespace_uri ('hoge'), undef;
+
+  done $c;
+} n => 3, name => 'manakai_lookup_namespace_uri';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_uri (undef), undef;
+  is $css->manakai_lookup_namespace_uri (''), undef;
+  is $css->manakai_lookup_namespace_uri ('hoge'), '';
+  is $css->manakai_lookup_namespace_uri ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_uri';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "aa";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_uri (undef), undef;
+  is $css->manakai_lookup_namespace_uri (''), undef;
+  is $css->manakai_lookup_namespace_uri ('hoge'), 'aa';
+  is $css->manakai_lookup_namespace_uri ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_uri';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace  "aa";@namespace  "bb";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_uri (undef), 'bb';
+  is $css->manakai_lookup_namespace_uri (''), 'bb';
+  is $css->manakai_lookup_namespace_uri ('hoge'), undef;
+  is $css->manakai_lookup_namespace_uri ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_uri';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "aa";@namespace hoge "bb"';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_uri (undef), undef;
+  is $css->manakai_lookup_namespace_uri (''), undef;
+  is $css->manakai_lookup_namespace_uri ('hoge'), 'bb';
+  is $css->manakai_lookup_namespace_uri ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_uri';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_uri ('hoge'), undef;
+
+  $css->insert_rule ('@namespace hoge "ab";', 0);
+  is $css->manakai_lookup_namespace_uri ('hoge'), 'ab';
+
+  $css->insert_rule ('@namespace hoge "cd";', 1);
+  is $css->manakai_lookup_namespace_uri ('hoge'), 'cd';
+
+  $css->insert_rule ('@namespace hoge "ef";', 1);
+  is $css->manakai_lookup_namespace_uri ('hoge'), 'cd';
+
+  $css->delete_rule (2);
+  is $css->manakai_lookup_namespace_uri ('hoge'), 'ef';
+
+  done $c;
+} n => 5, name => 'manakai_lookup_namespace_uri';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), undef;
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_prefix';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace "";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), undef;
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_prefix';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace abc "";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_prefix (undef), 'abc';
+  is $css->manakai_lookup_namespace_prefix (''), 'abc';
+  is $css->manakai_lookup_namespace_prefix ('hoge'), undef;
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_prefix';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace "hoge";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), undef;
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_prefix';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace abc "hoge";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), 'abc';
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_prefix';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace abc "hoge";@namespace "hoge";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), 'abc';
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_prefix';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace abc "hoge";@namespace d "hoge";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), 'd';
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_prefix';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace abc "hoge";@namespace abc "fuga";';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), undef;
+  is $css->manakai_lookup_namespace_prefix ('fuga'), 'abc';
+
+  done $c;
+} n => 4, name => 'manakai_lookup_namespace_prefix';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+  my $rules = $css->css_rules;
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), undef;
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  $css->insert_rule ('@namespace abc "hoge";', 0);
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), 'abc';
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  $css->insert_rule ('@namespace abc "fuga";', 1);
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), undef;
+  is $css->manakai_lookup_namespace_prefix ('fuga'), 'abc';
+
+  $css->delete_rule (1);
+
+  is $css->manakai_lookup_namespace_prefix (undef), undef;
+  is $css->manakai_lookup_namespace_prefix (''), undef;
+  is $css->manakai_lookup_namespace_prefix ('hoge'), 'abc';
+  is $css->manakai_lookup_namespace_prefix ('fuga'), undef;
+
+  done $c;
+} n => 16, name => 'manakai_lookup_namespace_prefix mutation';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '';
+
+  is $css->css_text, '';
+
+  done $c;
+} n => 1, name => 'css_text getter empty';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@Charset"UTF-8";@namespace A\z "about:";p{} Q.a{display: BLOCK}@media ALL{:not(a){}}';
+
+  eq_or_diff $css->css_text, join "\x0A",
+      '@charset "UTF-8";',
+      '@namespace Az url("about:");',
+      'p { }',
+      'Q.a { display: block; }',
+      '@media all { :not(a) { } }';
+
+  done $c;
+} n => 1, name => 'css_text getter not empty';
 
 run_tests;
 

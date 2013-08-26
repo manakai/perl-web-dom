@@ -105,6 +105,7 @@ sub set_property ($$;$$) {
 
   ## 6.-8. & Set a CSS property
   my $parser = ${${$_[0]}->[1]}->[0]->css_parser;
+  # XXX context
   $parser->init_parser;
   my $parsed = $parser->parse_char_string_as_prop_value ($prop_name, $value);
   if (defined $parsed) {
@@ -194,6 +195,7 @@ sub css_text ($;$) {
 
     ## 2.-3.
     my $parser = ${${$_[0]}->[1]}->[0]->css_parser;
+    # XXX context
     $parser->init_parser;
     my $parsed = $parser->parse_char_string_as_prop_decls (''.$_[1]);
     $data->{prop_keys} = $parsed->{prop_keys};

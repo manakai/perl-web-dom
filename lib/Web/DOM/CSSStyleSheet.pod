@@ -18,6 +18,10 @@ Following methods are available:
 Return the L<Web::DOM::CSSRuleList> object containing the CSS rules in
 the style sheet.  [CSSOM]
 
+=item $string = $ss->css_text
+
+Return the serialized style sheet.  [MANAKAI]
+
 =item $ss->delete_rule ($index)
 
 Return a rule from the list of rules contained by the style sheet.
@@ -31,12 +35,44 @@ Return or set the disable flag of the style sheet.  [CSSOM]
 
 =item $string = $ss->href
 
-If the owner is a C<style> element, return C<undef>.  [CSSOM] [HTML]
+Return the URL of the style sheet.  If the style sheet is embedded in
+other document, return C<undef>.  [CSSOM] [HTML]
 
 =item $index = $ss->insert_rule ($string, $index)
 
 Parse the string as a CSS rule and insert into the specified index of
 the list of rules contained by the style sheet.  [CSSOM]
+
+=item $url = $ss->manakai_base_url
+
+Return the base URL of the style sheet.  [MANAKAI]
+
+=item $charset = $ss->manakai_input_encoding
+
+Return the encoding name used to parse the style sheet.  If the style
+sheet is embedded in other document, return C<utf-8>.  [MANAKAI]
+
+=item $boolean = $ss->manakai_is_default_namespace ($url)
+
+Return whether the specified namespace URL is the default namespace or
+not.  If the namespace URL is C<undef> or the empty string, it
+represents the null namespace.  [MANAKAI]
+
+=item $prefix = $ss->manakai_lookup_namespace_prefix ($url)
+
+Return the namespace prefix for the specified namespace URL, if
+declared.  If the namespace URL is C<undef> or the empty string, it
+represents the null namespace.  If no prefix is declared for the
+namespace URL, C<undef> is returned.  [MANAKAI]
+
+=item $url = $ss->manakai_lookup_namespace_uri ($prefix)
+
+Return the namespace URL for the specified namespace prefix, if
+declared.  If the prefix is C<undef> or the empty string, it
+represents the default namespace (i.e. the namespace for the
+prefixless type selectors).  If no namespace URL is declared for the
+prefix, C<undef> is returned.  If the prefix is bound to the null
+namespace, the empty string is returned.  [MANAKAI]
 
 =item $media_list = $ss->media
 
@@ -93,6 +129,11 @@ HTML Living Standard
 
 When a CSS style sheet is created from an HTML C<style> element, the
 owner node of the style sheet MUST be set to the element.
+
+=item MANAKAI
+
+manakai DOM Extensions
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
 =back
 

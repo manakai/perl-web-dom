@@ -184,8 +184,10 @@ sub add_data ($$) {
 ##   rule_type, rule_ids, parent_id, selectors,
 ##   prop_keys, prop_values, prop_importants, encoding,
 ##   href, mqs, prefix, nsurl       - See |Web::CSS::Parser|
+##   context                        object    Web::CSS::Context
 ##   owner                          node_id   Owner |Node| or |@import|
 ##   owner_sheet                    node_id   Owner style sheet
+##   parent_style_sheet             node_id   Parent style sheet
 ##   sheet                          node_id   Style sheet (for |@import|)
 
 my $NodeClassByNodeType = {

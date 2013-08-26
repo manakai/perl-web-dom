@@ -15,6 +15,10 @@ Following methods are available:
 
 =over 4
 
+=item $string = $rule->css_text
+
+Return the serialized rule.  [CSSOM]
+
 =item $rule = $rule->parent_rule
 
 Return the parent rule, if any.  [CSSOM]
