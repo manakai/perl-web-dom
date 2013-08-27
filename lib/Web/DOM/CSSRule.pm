@@ -91,7 +91,6 @@ sub selector_text ($;$) {
   
   my $serializer = ${$_[0]}->[0]->css_serializer;
   my $parent = $_[0]->parent_style_sheet;
-  $serializer->context (defined $parent ? $$parent->[2]->{context} : undef);
   return $serializer->serialize_selectors (${$_[0]}->[2]->{selectors});
 } # selector_text
 

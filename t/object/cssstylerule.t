@@ -58,10 +58,10 @@ test {
   is $rule->selector_text, 'p > Qs';
 
   $rule->selector_text ('hoGe *.foo+bar');
-  is $rule->selector_text, 'hoGe .foo + bar';
+  is $rule->selector_text, 'hoGe *.foo + bar';
 
   $rule->selector_text ('aa|foo');
-  is $rule->selector_text, 'hoGe .foo + bar';
+  is $rule->selector_text, 'hoGe *.foo + bar';
 
   done $c;
 } n => 3, name => 'selector_text';

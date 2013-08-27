@@ -46,9 +46,9 @@ sub get_property_value ($$) {
   $prop_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
 
   ## 2.-4.
+  my $def = $Web::CSS::Props::Prop->{$prop_name} or return '';
   my $serializer = ${${$_[0]}->[1]}->[0]->css_serializer;
-  # XXX context
-  my $str = $serializer->serialize_prop_value (${$_[0]}->[3], $prop_name);
+  my $str = $serializer->serialize_prop_value (${$_[0]}->[3], $def->{key});
   return defined $str ? $str : '';
 } # get_property_value
 
@@ -59,9 +59,9 @@ sub get_property_priority ($$) {
   $prop_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
 
   ## 2.-4.
+  my $def = $Web::CSS::Props::Prop->{$prop_name} or return '';
   my $serializer = ${${$_[0]}->[1]}->[0]->css_serializer;
-  # XXX context
-  my $str = $serializer->serialize_prop_priority (${$_[0]}->[3], $prop_name);
+  my $str = $serializer->serialize_prop_priority (${$_[0]}->[3], $def->{key});
   return defined $str ? $str : '';
 } # get_property_priority
 
@@ -193,7 +193,6 @@ sub css_text ($;$) {
   return unless defined wantarray;
 
   my $serializer = ${${$_[0]}->[1]}->[0]->css_serializer;
-  # XXX context
   return $serializer->serialize_prop_decls ($data);
 } # css_text
 

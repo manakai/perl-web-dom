@@ -364,7 +364,7 @@ test {
   my $css = from_style_el '@media PRINT { p{} }';
   my $rule = $css->css_rules->[0];
   
-  is $rule->css_text, '@media print { p { } }';
+  is $rule->css_text, '@media print { '."\x0A".'  p { }'."\x0A".'}';
 
   done $c;
 } n => 1, name => 'css_text getter';

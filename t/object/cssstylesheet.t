@@ -1080,7 +1080,9 @@ test {
       '@namespace Az url("about:");',
       'p { }',
       'Q.a { display: block; }',
-      '@media all { :not(a) { } }';
+      '@media all { ',
+      '  :not(a) { }',
+      '}';
 
   done $c;
 } n => 1, name => 'css_text getter not empty';
