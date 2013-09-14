@@ -1,7 +1,7 @@
 package Web::DOM::CSSStyleSheet;
 use strict;
 use warnings;
-our $VERSION = '5.0';
+our $VERSION = '6.0';
 use Carp;
 use Web::DOM::StyleSheet;
 push our @ISA, qw(Web::DOM::StyleSheet);
@@ -193,6 +193,8 @@ sub delete_rule ($$) {
     my $new_int = ref ($$old_rule->[0])->new;
     $new_int->adopt ($old_rule);
     ${$_[0]}->[0]->children_changed (${$_[0]}->[1], 0);
+    $new_int->{css_parser} = ${$_[0]}->[0]->css_parser;
+    $new_int->{css_serializer} = ${$_[0]}->[0]->css_serializer;
 
     if ($$old_rule->[2]->{rule_type} eq 'namespace') {
       $_[0]->_rebuild_nsmap; # $_[0] is always style sheet

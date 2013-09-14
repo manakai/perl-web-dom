@@ -407,6 +407,46 @@ test {
   done $c;
 } n => 5, name => 'insert_rule namespace deleted';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/";@media{}';
+  my $rule = $css->css_rules->[1];
+
+  $rule->insert_rule ('hoge|p {content: attr(hoge|avc)}', 0);
+  is $rule->css_rules->[0]->css_text, 'hoge|p { content: attr(hoge|avc); }';
+
+  $rule->insert_rule ('hoge|p {content: attr(Hoge|avc);color:red}', 0);
+  is $rule->css_rules->[0]->css_text, 'hoge|p { color: red; }';
+  is $rule->css_rules->length, 2;
+
+  done $c;
+} n => 3, name => 'insert_rule - attr() namespaces';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/";@media{}';
+  my $rule = $css->css_rules->[1];
+  $css->delete_rule (1);
+
+  dies_here_ok {
+    $rule->insert_rule ('hoge|p {content: attr(hoge|avc)}', 0);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The specified rule is invalid';
+  dies_here_ok {
+    $rule->insert_rule ('hoge|p {content: attr(Hoge|avc);color:red}', 0);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The specified rule is invalid';
+  $rule->insert_rule ('p {display:block;content: attr(hoge|avc);color:red}', 0);
+  is $rule->css_rules->length, 1;
+  is $rule->css_rules->[0]->css_text, 'p { display: block; color: red; }';
+
+  done $c;
+} n => 10, name => 'insert_rule - deleted - attr() namespaces';
+
 run_tests;
 
 =head1 LICENSE

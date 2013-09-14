@@ -1107,6 +1107,20 @@ test {
   done $c;
 } n => 4, name => 'insert_rule namespace';
 
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace hoge "http://hoge/";';
+
+  $css->insert_rule ('hoge|p {content: attr(hoge|avc)}', 1);
+  is $css->css_rules->[1]->css_text, 'hoge|p { content: attr(hoge|avc); }';
+
+  $css->insert_rule ('hoge|p {content: attr(Hoge|avc);color:red}', 2);
+  is $css->css_rules->[2]->css_text, 'hoge|p { color: red; }';
+  is $css->css_rules->length, 3;
+
+  done $c;
+} n => 3, name => 'insert_rule - attr() namespaces';
+
 run_tests;
 
 =head1 LICENSE
