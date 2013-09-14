@@ -472,8 +472,8 @@ test {
   is $style->get_property_priority ('baCKGROUND-POSITION'), '';
 
   $style->set_property ('background-position', 'top');
-  is $style->background_position, 'center top';
-  is $style->get_property_value ('background-position'), 'center top';
+  is $style->background_position, '50% top';
+  is $style->get_property_value ('background-position'), '50% top';
 
   $style->set_property ('background-position', '20px', 'important');
   is $style->get_property_priority ('background-position'), 'important';
@@ -601,6 +601,115 @@ test {
 
   done $c;
 } n => 1, name => 'non-supported property method value';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {opacity: 1.2}';
+  my $style = $css->css_rules->[0]->style;
+
+  is $style->opacity, '1.2';
+  is $style->_webkit_opacity, '1.2';
+
+  $style->set_property (opacity => '-12');
+  is $style->get_property_value ('-webkit-opacity'), '-12';
+
+  $style->set_property ('-webkit-opacity' => '-12');
+  is $style->get_property_value ('-webkit-opacity'), '-12';
+
+  done $c;
+} n => 4, name => 'opacity';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {-manakai-border-spacing-x: 1.2px}';
+  my $style = $css->css_rules->[0]->style;
+
+  is $style->_manakai_border_spacing_x, '1.2px';
+  is $style->_webkit_border_horizontal_spacing, '1.2px';
+
+  $style->set_property ('-manakai-border-spacing-x' => '12px');
+  is $style->get_property_value ('-webkit-border-horizontal-spacing'), '12px';
+
+  done $c;
+} n => 3, name => 'border-spacing';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p {-manakai-border-spacing-Y: 1.2px}';
+  my $style = $css->css_rules->[0]->style;
+
+  is $style->_manakai_border_spacing_y, '1.2px';
+  is $style->_webkit_border_vertical_spacing, '1.2px';
+
+  $style->set_property ('-manakai-border-spacing-y' => '12px');
+  is $style->get_property_value ('-webkit-border-vertical-spacing'), '12px';
+
+  done $c;
+} n => 3, name => 'border-spacing';
+
+test {
+  my $c = shift;
+  my $css = from_style_el 'p{}';
+  my $style = $css->css_rules->[0]->style;
+
+  $style->content ('attr(foo)');
+  is $style->content, 'attr(foo)';
+
+  $style->content ('attr(abc|foo)');
+  is $style->content, 'attr(foo)';
+
+  done $c;
+} n => 2, name => 'attr() with no namespace';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace aB " dd"; p{}';
+  my $style = $css->css_rules->[1]->style;
+
+  $style->content ('attr(aB|foo)');
+  is $style->content, 'attr(aB|foo)';
+
+  $style->content ('attr(ab|foo)');
+  is $style->content, 'attr(aB|foo)';
+
+  done $c;
+} n => 2, name => 'attr() with namespace';
+
+test {
+  my $c = shift;
+  my ($el, $style) = from_style_attr 'display: list-item';
+
+  $style->content ('attr(ax|bar)');
+  is $style->content, '';
+  is $el->get_attribute ('style'), 'display: list-item;';
+
+  done $c;
+} n => 2, name => 'style="" attr() prefixed';
+
+test {
+  my $c = shift;
+  my $css = from_style_el '@namespace aB " dd"; p{}';
+  my $style = $css->css_rules->[1]->style;
+
+  $style->css_text ('content: attr(aB|foo)');
+  is $style->content, 'attr(aB|foo)';
+
+  $style->css_text ('content: attr(ab|foo)');
+  is $style->content, '';
+
+  done $c;
+} n => 2, name => 'css_text - attr() with namespace';
+
+test {
+  my $c = shift;
+  my ($el, $style) = from_style_attr 'display: list-item';
+
+  $style->css_text ('content: attr(ax|bar)');
+  is $style->content, '';
+  is $el->get_attribute ('style'), '';
+
+  done $c;
+} n => 2, name => 'style="" css_text - attr() prefixed';
 
 run_tests;
 
