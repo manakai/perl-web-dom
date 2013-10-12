@@ -12,7 +12,6 @@ sub new ($) {
 
 sub create_expression ($$;$) {
   my $expr = ''.$_[1];
-  # XXX DOM Perl binding for NSResolver
   my $resolver = sub { undef };
   if (not defined $_[2]) {
     #

@@ -71,22 +71,29 @@ See also L<Web::DOM/DEPENDENCY>.
 Return the last element child of the node.  If there is no such node,
 C<undef> is returned.  [DOM]
 
-=item $element = $node->query_selector ($selectors)
+=item $element = $node->query_selector ($selectors, $resolver)
 
 Return the first element identified by the group of selectors
 specified as the argument, if any, or C<undef>.  [SELECTORSAPI]
-[NSRESOLVER]
+
+The optional second argument can specify the namespace resolver,
+i.e. a code reference or a L<Web::DOM::XPathNSResolver> object.
+[NSRESOLVER] [DOMPERL]
 
 For the list of supported Selectors features, see the documentation of
 the L<Web::CSS::Selectors::API> module.
 
 See also L<Web::DOM/DEPENDENCY>.
 
-=item $nodelist = $node->query_selector_all ($selectors)
+=item $nodelist = $node->query_selector_all ($selectors, $resolver)
 
 Return a static L<Web::DOM::NodeList> containing the elements
 identified by the group of selectors specified as the argument.
-[SELECTORSAPI] [NSRESOLVER]
+[SELECTORSAPI]
+
+The optional second argument can specify the namespace resolver,
+i.e. a code reference or a L<Web::DOM::XPathNSResolver> object.
+[NSRESOLVER] [DOMPERL]
 
 For the list of supported Selectors features, see the documentation of
 the L<Web::CSS::Selectors::API> module.
@@ -129,6 +136,11 @@ Selectors API Level 2 <http://dev.w3.org/2006/webapi/selectors-api2/>.
 
 Selectors API Editor's Draft 29 August 2007
 <http://dev.w3.org/cvsweb/~checkout~/2006/webapi/selectors-api/Overview.html?rev=1.28&content-type=text/html;%20charset=utf-8>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =item MANAKAI
 

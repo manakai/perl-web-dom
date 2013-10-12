@@ -22,7 +22,7 @@ other arguments are optional.  The second argument is the namespace
 prefix resolver, specified as either a code reference or the
 L<Web::DOM::XPathResolver> object.  The third argument is ignored.
 The method returns the L<Web::DOM::XPathResult> object containing the
-evaluation result.  [DOMXPATH]
+evaluation result.  [DOMXPATH] [DOMPERL]
 
 See also L<Web::DOM/DEPENDENCY>.
 
@@ -54,6 +54,11 @@ The IDL definition MUST be modified as follows:
                          optional unsigned short type = 0,
                          optional object? result = null);
   };
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =back
 

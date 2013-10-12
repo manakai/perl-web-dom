@@ -32,7 +32,7 @@ The following method is available:
 =item $url = $resolver->lookup_namespace_uri ($prefix)
 
 Return the namespace URL associated with the specified namespace
-prefix.  [DOMXPATH]
+prefix.  [NSRESOLVER]
 
 =back
 
@@ -44,6 +44,11 @@ prefix.  [DOMXPATH]
 
 Document Object Model XPath
 <http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html#XPathNSResolver>.
+
+=item NSRESOLVER
+
+Selectors API - The NSResolver Interface
+<http://dev.w3.org/cvsweb/~checkout~/2006/webapi/selectors-api/Overview.html?rev=1.28&content-type=text/html;%20charset=utf-8#nsresolver-interface>.
 
 =item DOMPERL
 

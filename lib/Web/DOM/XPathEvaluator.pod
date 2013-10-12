@@ -44,7 +44,7 @@ reference or the L<Web::DOM::XPathResolver> object.  The fourth
 argument is the requested result type, specified by one of constants
 in L<Web::DOM::XPathResult>.  The fifth argument is ignored.  The
 method returns the L<Web::DOM::XPathResult> object containing the
-evaluation result.  [DOMXPATH]
+evaluation result.  [DOMXPATH] [DOMPERL]
 
 See also L<Web::DOM/DEPENDENCY>.
 
@@ -98,6 +98,11 @@ size MUST be set to C<1>.
 The C<evaluate> method MUST return a newly created C<XPathResult>
 object.  It MUST NOT return the C<WRONG_DOCUMENT_ERR> or
 C<NOT_SUPPORTED_ERR>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =back
 

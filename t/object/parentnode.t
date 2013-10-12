@@ -5,6 +5,7 @@ use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', 
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
 use Test::X1;
 use Test::More;
+use Test::Differences;
 use Test::DOM::Exception;
 use Web::DOM::Document;
 
@@ -1187,7 +1188,7 @@ test {
   $el->append_child ($el3);
   $el3->append_child ($el4);
   my $resolver = sub {
-    my $prefix = $_[0] // '';
+    my $prefix = $_[1] // '';
     if ($prefix eq 'html') {
       return 'http://www.w3.org/1999/xhtml';
     } elsif ($prefix eq 'svg') {
@@ -1227,12 +1228,12 @@ test {
   };
   is $el->query_selector ('ss', $resolver), $el2;
   is $el->query_selector ('ss', sub { 'http://hoge/' }), undef;
-  is $el->query_selector ('ss', sub { '' }), undef; # XXX
-  is $el->query_selector ('ss', sub { undef }), undef; # XXX
+  is $el->query_selector ('ss', sub { '' }), $el2;
+  is $el->query_selector ('ss', sub { undef }), $el2;
   is $el->query_selector_all ('ss', $resolver)->length, 2;
   is $el->query_selector_all ('ss', sub { 'http://foo/' })->length, 0;
-  is $el->query_selector_all ('ss', sub { '' })->length, 0; # XXX
-  is $el->query_selector_all ('ss', sub { undef })->length, 2; # XXX
+  is $el->query_selector_all ('ss', sub { '' })->length, 2;
+  is $el->query_selector_all ('ss', sub { undef })->length, 2;
   done $c;
 } n => 8, name => 'query_selector, query_selector_all ns resolver default';
 
@@ -1260,9 +1261,125 @@ test {
   done $c;
 } n => 4, name => 'query_selector_all ns 0';
 
-# XXX exceptions in nsresolver
+for my $method (qw(query_selector query_selector_all)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('aa');
+    dies_here_ok {
+      $el->$method ('aa', 'hoge');
+    };
+    isa_ok $@, 'Web::DOM::TypeError';
+    is $@->message, 'The second argument is not an XPathNSResolver';
+    done $c;
+  } n => 3, name => [$method, 'nsresolver is not object'];
 
-# XXX nsresolver perl binding
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('aa');
+    dies_here_ok {
+      $el->$method ('aa', $doc);
+    };
+    isa_ok $@, 'Web::DOM::TypeError';
+    is $@->message, 'The second argument is not an XPathNSResolver';
+    done $c;
+  } n => 3, name => [$method, 'nsresolver is not NSResolver'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('aax');
+    my $el2 = $doc->create_element ('aa');
+    my $el3 = $doc->create_element_ns (undef, 'aa');
+    $el->append_child ($el2);
+    $el->append_child ($el3);
+    my $el5 = $doc->create_element ('aa');
+    $el5->set_attribute_ns ('http://www.w3.org/2000/xmlns/', 'xmlns:foo' => $el2->namespace_uri);
+    my $resolver = $doc->create_ns_resolver ($el5);
+    my $el4 = $el->$method ('foo|aa', $resolver);
+    if ($method eq 'query_selector') {
+      is $el4, $el2;
+    } else {
+      is $el4->[0], $el2;
+    }
+    done $c;
+  } n => 1, name => [$method, 'nsresolver is XPathNSResolver'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('aax');
+    my $el2 = $doc->create_element ('aa');
+    my $el3 = $doc->create_element_ns (undef, 'aa');
+    $el->append_child ($el2);
+    $el->append_child ($el3);
+    my $invoked = 0;
+    my @self;
+    my @prefix;
+    my $resolver = sub {
+      push @self, $_[0];
+      push @prefix, $_[1];
+      $invoked++;
+      return 'http://www.w3.org/1999/xhtml';
+    };
+    my $el4 = $el->$method ('foo|aa, bar|aa', $resolver);
+    if ($method eq 'query_selector') {
+      is $el4, $el2;
+    } else {
+      is $el4->[0], $el2;
+    }
+    is $invoked, 3;
+    eq_or_diff \@self, [$resolver, $resolver, $resolver];
+    eq_or_diff \@prefix, ['', 'foo', 'bar'];
+    done $c;
+  } n => 4, name => [$method, 'nsresolver is code'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('aax');
+    my $el2 = $doc->create_element ('aa');
+    my $el3 = $doc->create_element_ns (undef, 'aa');
+    $el->append_child ($el2);
+    $el->append_child ($el3);
+    my $invoked = 0;
+    my $resolver = sub {
+      $invoked++;
+      return $_[1] eq 'foo' ? 'http://www.w3.org/1999/xhtml' : undef;
+    };
+    dies_here_ok {
+      $el->$method ('foo|aa, bar|aa', $resolver);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'NamespaceError';
+    is $@->message, 'The specified selectors has unresolvable namespace prefix |bar|';
+    is $invoked, 3;
+    done $c;
+  } n => 5, name => [$method, 'nsresolver is code nserror'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('aax');
+    my $el2 = $doc->create_element ('aa');
+    my $el3 = $doc->create_element_ns (undef, 'aa');
+    $el->append_child ($el2);
+    $el->append_child ($el3);
+    my $invoked = 0;
+    my $resolver = sub {
+      $invoked++;
+      die "hoge";
+    };
+    dies_here_ok {
+      $el->$method ('foo|aa, bar|aa', $resolver);
+    };
+    ok not ref $@;
+    like $@, qr{^hoge at };
+    is $invoked, 1;
+    done $c;
+  } n => 4, name => [$method, 'nsresolver is code exception'];
+}
 
 test {
   my $c = shift;

@@ -1,13 +1,15 @@
 package Web::DOM::ParentNode;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Node;
 use Web::DOM::Internal;
-our @CARP_NOT = qw(
-  Web::DOM::Exception Web::XML::Parser Web::HTML::Parser
+push our @CARP_NOT, qw(
+  Web::DOM::TypeError Web::DOM::Exception
+  Web::XML::Parser Web::HTML::Parser
   Web::HTML::Serializer Web::XML::Serializer
 );
+use Web::DOM::TypeError;
 use Web::DOM::Exception;
 
 sub get_elements_by_tag_name ($$) {
@@ -110,12 +112,21 @@ sub get_elements_by_class_name ($$) {
 } # get_elements_by_class_name
 
 sub query_selector ($$;$) {
+  my $sels = ''.$_[1];
+  my $resolver = $_[2];
+  if (defined $resolver and not ref $resolver eq 'CODE') {
+    unless (UNIVERSAL::isa ($resolver, 'Web::DOM::XPathNSResolver')) {
+      _throw Web::DOM::TypeError
+          'The second argument is not an XPathNSResolver';
+    }
+    my $obj = $resolver;
+    $resolver = sub { $obj->lookup_namespace_uri ($_[1]) }; # or throw
+  }
   require Web::CSS::Selectors::API;
   my $api = Web::CSS::Selectors::API->new;
   $api->is_html (${$_[0]}->[0]->{data}->[0]->{is_html});
   $api->root_node ($_[0]);
-  $api->set_selectors (''.$_[1], $_[2], nsresolver => 1);
-  # XXX DOM Perl Binding for coderef
+  $api->set_selectors ($sels, $resolver, nsresolver => 1);
   if (not defined $api->selectors) {
     my $prefix = $api->selectors_has_ns_error;
     if (defined $prefix) {
@@ -130,13 +141,22 @@ sub query_selector ($$;$) {
 } # query_selector
 
 sub query_selector_all ($$;$) {
+  my $sels = ''.$_[1];
+  my $resolver = $_[2];
+  if (defined $resolver and not ref $resolver eq 'CODE') {
+    unless (UNIVERSAL::isa ($resolver, 'Web::DOM::XPathNSResolver')) {
+      _throw Web::DOM::TypeError
+          'The second argument is not an XPathNSResolver';
+    }
+    my $obj = $resolver;
+    $resolver = sub { $obj->lookup_namespace_uri ($_[1]) }; # or throw
+  }
   require Web::CSS::Selectors::API;
   my $api = Web::CSS::Selectors::API->new;
   $api->is_html (${$_[0]}->[0]->{data}->[0]->{is_html});
   $api->root_node ($_[0]);
   $api->return_all (1);
-  $api->set_selectors (''.$_[1], $_[2]);
-  # XXX DOM Perl Binding for coderef
+  $api->set_selectors ($sels, $resolver, nsresolver => 1);
   if (not defined $api->selectors) {
     my $prefix = $api->selectors_has_ns_error;
     if (defined $prefix) {
@@ -285,7 +305,7 @@ sub inner_html ($;$) {
     ##   - <http://html5.org/tools/web-apps-tracker?from=6531&to=6532>
     ##   - <https://github.com/whatwg/domparsing/commit/59301cd77d4badbe16489087132a35621a2d460c>
     ## For document fragments:
-    ##   - <http://suika.fam.cx/~wakaba/wiki/sw/n/manakai++DOM%20Extensions#anchor-143>
+    ##   - <http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions#anchor-143>
     
     my $parser;
     if ($$self->[0]->{data}->[0]->{is_html}) {
