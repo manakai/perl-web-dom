@@ -1103,6 +1103,39 @@ sub create_tree_walker ($;$$$) {
   }, 'Web::DOM::TreeWalker';
 } # create_tree_walker
 
+sub create_touch ($$$$$$$$) {
+  # WebIDL
+  _throw Web::DOM::TypeError 'The first argument is not a WindowProxy'
+      unless UNIVERSAL::isa ($_[1], 'Web::DOM::WindowProxy');
+  _throw Web::DOM::TypeError 'The second argument is not an EventTarget'
+      unless UNIVERSAL::isa ($_[2], 'Web::DOM::EventTarget');
+  require Web::DOM::Touch;
+  return bless {
+    target => $_[2],
+    identifier => (unpack 'l', pack 'L', $_[3] % 2**32), # WebIDL long
+    page_x => (unpack 'l', pack 'L', $_[4] % 2**32), # WebIDL long
+    page_y => (unpack 'l', pack 'L', $_[5] % 2**32), # WebIDL long
+    screen_x => (unpack 'l', pack 'L', $_[6] % 2**32), # WebIDL long
+    screen_y => (unpack 'l', pack 'L', $_[7] % 2**32), # WebIDL long
+    client_x => 0,
+    client_y => 0,
+  }, 'Web::DOM::Touch';
+} # create_touch
+
+sub create_touch_list ($;@) {
+  shift;
+  # WebIDL
+  for (@_) {
+    _throw Web::DOM::TypeError 'An argument is not a Touch'
+        unless UNIVERSAL::isa ($_, 'Web::DOM::Touch');
+  }
+  require Web::DOM::TouchList;
+  my $list = bless [@_], 'Web::DOM::TouchList';
+  Internals::SvREADONLY (@$list, 1);
+  Internals::SvREADONLY ($_, 1) for @$list;
+  return $list;
+} # create_touch_list
+
 ## ------ Markup interaction ------
 
 # XXX open close write writeln current_script

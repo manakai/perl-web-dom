@@ -176,6 +176,15 @@ Create a notatioon (L<Web::DOM::Notation>) with the specified name.
 Create a new text node (L<Web::DOM::Text>) with the given character
 string.  [DOM]
 
+=item $touch = $doc->create_touch ($view, $target, $identifier, $page_x, $page_y, $screen_x, $screen_y)
+
+Create a new L<Web::DOM::Touch> with the specified arguments.  [TOUCH]
+
+=item $list = $doc->create_touch_list ($touch1, $touch2, ...)
+
+Create a new L<Web::DOM::TouchList> with the specified
+L<Web::DOM::Touch>es.  [TOUCH]
+
 =item $tw = $doc->create_tree_walker ($root, $what_to_show, $filter)
 
 Create a new tree walker (L<Web::DOM::TreeWalker>).  [DOM]
@@ -386,6 +395,11 @@ HTML Living Standard
 
 SVG
 <https://svgwg.org/svg2-draft/single-page.html#struct-InterfaceSVGDocument>.
+
+=item TOUCH
+
+Touch Events
+<https://dvcs.w3.org/hg/webevents/raw-file/v1/touchevents.html>.
 
 =item DOMDTDEF
 

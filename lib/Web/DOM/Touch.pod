@@ -1,0 +1,69 @@
+=head1 NAME
+
+Web::DOM::Touch - The DOM |Touch| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::Touch> class implements the DOM C<Touch> interface.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $number = $ev->client_x
+
+=item $number = $ev->client_y
+
+Return the coordinate of the target point in the viewport.  [TOUCH]
+
+=item $number = $ev->identifier
+
+Return the identification number for the touch point.  [TOUCH]
+
+=item $number = $ev->page_x
+
+=item $number = $ev->page_y
+
+Return the coordinate of the target point in the canvas.  [TOUCH]
+
+=item $number = $ev->screen_x
+
+=item $number = $ev->screen_y
+
+Return the coordinate of the target point in the screen.  [TOUCH]
+
+=item $target = $ev->target
+
+Return the target at the touch point.  [TOUCH]
+
+=back
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item TOUCH
+
+Touch Events
+<https://dvcs.w3.org/hg/webevents/raw-file/v1/touchevents.html>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::TouchList>, L<Web::DOM::TouchEvent>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

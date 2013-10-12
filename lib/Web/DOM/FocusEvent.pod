@@ -20,7 +20,7 @@ Return the additional object specified for the event.  [DOM3EVENTS]
 
 =back
 
-The C<new> method of the L<Web::DOM::RelatedEvent> class accepts the
+The C<new> method of the L<Web::DOM::FocusEvent> class accepts the
 C<related_target> name/value pair in its second arguments, in addition
 to the name/value pairs for L<Web::DOM::Event> and
 L<Web::DOM::UIEvent> objects.  [UIEVENTS]

@@ -707,11 +707,93 @@ test {
   done $c;
 } n => 4, name => 'create_attribute_definition not name';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $view = bless {}, 'Web::DOM::WindowProxy';
+  my $target = $doc->create_text_node ('');
+  my $touch = $doc->create_touch
+      ($view, $target, 1+2**32, 2+2**32, 3+2**32, 4+2**32, 5+2**32);
+  isa_ok $touch, 'Web::DOM::Touch';
+  is $touch->target, $target;
+  is $touch->identifier, 1;
+  is $touch->page_x, 2;
+  is $touch->page_y, 3;
+  is $touch->screen_x, 4;
+  is $touch->screen_y, 5;
+  is $touch->client_x, 0;
+  is $touch->client_y, 0;
+  done $c;
+} n => 9, name => 'create_touch';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $view = bless {}, 'Web::DOM::WindowProxy';
+  dies_here_ok {
+    $doc->create_touch ($view);
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->message, 'The second argument is not an EventTarget';
+  done $c;
+} n => 3, name => 'create_touch bad target';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  dies_here_ok {
+    $doc->create_touch ('aa', $doc);
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->message, 'The first argument is not a WindowProxy';
+  done $c;
+} n => 3, name => 'create_touch bad view';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $tl = $doc->create_touch_list;
+  isa_ok $tl, 'Web::DOM::TouchList';
+  is $tl->length, 0;
+  done $c;
+} n => 2, name => 'create_touch_list empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $view = bless {}, 'Web::DOM::WindowProxy';
+  my $target = $doc->create_text_node ('');
+  my $t1 = $doc->create_touch ($view, $target, 1, 2, 3, 4, 5);
+  my $t2 = $doc->create_touch ($view, $target, 6, 7, 8, 9, 10);
+  my $tl = $doc->create_touch_list ($t1, $t2, $t1);
+  isa_ok $tl, 'Web::DOM::TouchList';
+  is $tl->length, 3;
+  is $tl->[0], $t1;
+  is $tl->[1], $t2;
+  is $tl->[2], $t1;
+  done $c;
+} n => 5, name => 'create_touch_list';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $view = bless {}, 'Web::DOM::WindowProxy';
+  my $target = $doc->create_text_node ('');
+  my $t1 = $doc->create_touch ($view, $target, 1, 2, 3, 4, 5);
+  my $t2 = $doc->create_touch ($view, $target, 6, 7, 8, 9, 10);
+  dies_here_ok {
+    $doc->create_touch_list ($t1, 'abc', $t2);
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->message, 'An argument is not a Touch';
+  done $c;
+} n => 3, name => 'create_touch_list bad args';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -61,7 +61,7 @@ Return whether the key has been pressed or not.  [DOM3EVENTS]
 In addition, deprecated C<init_keyboard_event> method is supported.
 [DOM3EVENTS]
 
-The C<new> method of the L<Web::DOM::RelatedEvent> class accepts the
+The C<new> method of the L<Web::DOM::KeyboardEvent> class accepts the
 C<char>, C<key>, C<code>, C<location>, C<ctrl_key>, C<shift_key>,
 C<alt_key>, C<meta_key>, C<repeat>, C<locale>, C<char_code>,
 C<key_code>, and C<which> name/value pairs in its second arguments, in

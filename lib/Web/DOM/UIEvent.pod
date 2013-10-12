@@ -36,8 +36,8 @@ general.  [UIEVENTS]
 
 There are subclasses of the class, representing subinterfaces of the
 C<Event> interface, containing: L<Web::DOM::FocusEvent>,
-L<Web::DOM::MouseEvent>, L<Web::DOM::KeyboardEvent>, and
-L<Web::DOM::CompositionEvent>.
+L<Web::DOM::MouseEvent>, L<Web::DOM::KeyboardEvent>,
+L<Web::DOM::CompositionEvent>, and L<Web::DOM::TouchEvent>.
 
 =head1 SPECIFICATIONS
 

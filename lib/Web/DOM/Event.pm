@@ -398,6 +398,34 @@ sub init_composition_event ($$$$$$$) {
   return undef;
 }
 
+package Web::DOM::TouchEvent;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::UIEvent);
+
+sub _init_members ($) { $_[0]->SUPER::_init_members,
+                        [touches => 'object?', 'TouchList'],
+                        [target_touches => 'object?', 'TouchList'],
+                        [changed_touches => 'object?', 'TouchList'],
+                        [alt_key => 'boolean'],
+                        [meta_key => 'boolean'],
+                        [ctrl_key => 'boolean'],
+                        [shift_key => 'boolean'] }
+
+sub _touch () {
+  require Web::DOM::TouchList;
+  my $list = bless [], 'Web::DOM::TouchList';
+  Internals::SvREADONLY (@$list, 1);
+  return $list;
+} # _touch
+
+sub touches ($) { $_[0]->{touches} ||= _touch }
+sub target_touches ($) { $_[0]->{target_touches} ||= _touch }
+sub changed_touches ($) { $_[0]->{changed_touches} ||= _touch }
+sub ctrl_key ($) { $_[0]->{ctrl_key} }
+sub shift_key ($) { $_[0]->{shift_key} }
+sub alt_key ($) { $_[0]->{alt_key} }
+sub meta_key ($) { $_[0]->{meta_key} }
+
 1;
 
 =head1 LICENSE

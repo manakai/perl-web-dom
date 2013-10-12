@@ -80,7 +80,7 @@ Return the coordinate of the position in the screen.  [CSSOMVIEW]
 In addition, deprecated C<init_mouse_event> method is supported.
 [DOM3EVENTS]
 
-The C<new> method of the L<Web::DOM::RelatedEvent> class accepts the
+The C<new> method of the L<Web::DOM::MouseEvent> class accepts the
 C<screen_x>, C<screen_y>, C<client_x>, C<client_y>, C<ctrl_key>,
 C<shift_key>, C<alt_key>, C<meta_key>, C<button>, C<buttons>,
 C<related_target>, and C<region> name/value pairs in its second

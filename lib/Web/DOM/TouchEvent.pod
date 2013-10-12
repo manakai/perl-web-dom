@@ -1,0 +1,92 @@
+=head1 NAME
+
+Web::DOM::TouchEvent - The DOM |TouchEvent| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::TouchEvent> class implements the DOM C<TouchEvent>
+interface.
+
+=head1 METHODS
+
+In addition to the methods of the L<Web::DOM::Event> and
+L<Web::DOM::UIEvent> classes, following methods are available:
+
+=over 4
+
+=item $boolean = $ev->alt_key
+
+=item $boolean = $ev->ctrl_key
+
+=item $boolean = $ev->meta_key
+
+=item $boolean = $ev->shift_key
+
+Return whether the modifier key is pressed or not.  [TOUCH]
+
+=item $touches = $ev->changed_touches
+
+Return the L<Web::DOM::TouchList> containing the changed touches.
+[TOUCH]
+
+=item $touches = $ev->target_touches
+
+Return the L<Web::DOM::TouchList> containing the target touches.
+[TOUCH]
+
+=item $touches = $ev->touches
+
+Return the L<Web::DOM::TouchList> containing the current touches.
+[TOUCH]
+
+=back
+
+The C<new> method of the L<Web::DOM::TouchEvent> class accepts the
+C<touches>, C<target_touches>, C<changed_touches>, C<alt_key>,
+C<meta_key>, C<ctrl_key>, and C<shift_key> name/value pairs in its
+second arguments, in addition to the name/value pairs for
+L<Web::DOM::Event> and L<Web::DOM::UIEvent> objects.  [UIEVENTS]
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item TOUCH
+
+Touch Events
+<https://dvcs.w3.org/hg/webevents/raw-file/v1/touchevents.html>.
+
+Following constructor definition MUST be added:
+
+  [Constructor(DOMString type, optional TouchEventInit eventInitDict)]
+  partial interface TouchEvent {};
+  
+  dictionary TouchEventInit : EventInit {
+    TouchList touches;
+    TouchList targetTouches;
+    TouchList changedTouches;
+    boolean altKey;
+    boolean metaKey;
+    boolean ctrlKey;
+    boolean shiftKey;
+  };
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Event>, L<Web::DOM::UIEvent>, L<Web::DOM::Touch>,
+L<Web::DOM::TouchList>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

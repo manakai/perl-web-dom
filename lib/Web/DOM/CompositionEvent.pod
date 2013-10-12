@@ -24,8 +24,8 @@ Return the composition locale.  [DOM3EVENTS]
 
 =back
 
-The C<new> method of the L<Web::DOM::RelatedEvent> class accepts the
-C<data> and C<locale> name/value pairs in its second arguments, in
+The C<new> method of the L<Web::DOM::CompositionEvent> class accepts
+the C<data> and C<locale> name/value pairs in its second arguments, in
 addition to the name/value pairs for L<Web::DOM::Event> and
 L<Web::DOM::UIEvent> objects.  [UIEVENTS]
 
