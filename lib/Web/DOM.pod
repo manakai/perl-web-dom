@@ -48,6 +48,7 @@ Your favorite query methods are also available:
 
   $el = $doc->get_element_by_id ('site-logo');
   $el = $doc->query_selector ('article > p:first-child');
+  $el = $doc->evaluate ('//div[child::p]', $doc)->iterate_next;
   $col = $doc->get_elements_by_tag_name ('p');
   $col = $doc->get_elements_by_class_name ('blog-entry');
   $col = $doc->images;
@@ -146,6 +147,8 @@ Following classes have the constructor (i.e. the C<new> method):
 
 =item L<Web::DOM::XMLSerializer>
 
+=item L<Web::DOM::XPathEvaluator>
+
 =back
 
 =head1 CONSTANTS
@@ -170,6 +173,8 @@ statement):
 =item L<Web::DOM::Node>
 
 =item L<Web::DOM::NodeFilter>
+
+=item L<Web::DOM::XPathResult>
 
 =item L<Web::DOM::WheelEvent>
 
@@ -242,6 +247,11 @@ DOM Parsing and Serialization Standard
 Document Object Model (DOM) Level 3 Core Specification
 <http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/DOM3-Core.html>.
 
+=item DOMXPATH
+
+Document Object Model XPath
+<http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html>.
+
 =item HTML
 
 HTML Standard <http://www.whatwg.org/specs/web-apps/current-work/>.
@@ -277,7 +287,8 @@ the Git repository.
 Following features require the perl-web-markup package
 <https://github.com/manakai/perl-web-markup> (L<Web::HTML::Parser> and
 its family): C<inner_html>, C<outer_html>, C<insert_adjacent_html>,
-C<DOMParser>, and C<XMLSerializer>.
+C<DOMParser>, and C<XMLSerializer>; (L<Web::XPath::Parser> and related
+modules): C<XPathEvaluator> and C<XPathExpression>.
 
 Following features require the perl-web-css package
 <https://github.com/manakai/perl-web-css>: C<query_selector>,
@@ -449,6 +460,17 @@ methods and attributes [DOM]; Range.prototype.createContextualFragment
 
 In addition, source codes of the modules include many "XXX" markers,
 indicating TODO items.
+
+Middle priority: URL; Encoding.
+
+Lower priority: Form API; HTMLMediaElement and related interfaces;
+Canvas; The ImageBitmap interface; The Screen interface; SVG; DnD; The
+RelatedEvent interface; The Window interface and related interfaces;
+The History interface and related interfaces; The Location interface;
+The Navigator interface and related interfaces; Scripting; Workers;
+Console; XHR; EventSource; WebSocket; postMessage and related
+interfaces; Storage; IndexedDB; Fullscreen; Notifications; Zip; XSLT
+1.0.
 
 =head1 LIMITATIONS
 

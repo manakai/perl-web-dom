@@ -10,8 +10,8 @@ interface, which represents the document (either HTML or XML).
 =head1 METHODS
 
 In addition to the methods of classes L<Web::DOM::EventTarget>,
-L<Web::DOM::Node> and L<Web::DOM::ParentNode>, following methods are
-available:
+L<Web::DOM::Node>, L<Web::DOM::ParentNode>, and
+L<Web::DOM::XPathEvaluator>, following methods are available:
 
 =over 4
 
@@ -395,6 +395,11 @@ DOM Document Type Definitions
 =item ATOMDOM
 
 Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+
+=item DOMXPATH
+
+Document Object Model XPath
+<http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html#XPathEvaluator>.
 
 =item DOMPERL
 

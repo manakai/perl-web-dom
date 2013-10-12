@@ -84,6 +84,7 @@ sub new ($) {
     ## Other objects
     # impl
     # config config_obj config_hashref config_names
+    # xpath_results
   }, $_[0];
 } # new
 
@@ -689,6 +690,10 @@ sub children_changed ($$$) {
     push @id, $_[0]->{data}->[$id]->{parent_node};
     @key = ('iterator') if @key;
   }
+
+  for (@{$_[0]->{xpath_results} or []}) {
+    $_->{invalid_iterator_state} ||= 1;
+  }
 } # children_changed
 
 ## DOMStringMap
@@ -808,6 +813,17 @@ sub media ($$) {
     $list;
   };
 } # media
+
+sub xpath_result ($$) {
+  require Web::DOM::XPathResult;
+  my $result = bless $_[1], 'Web::DOM::XPathResult';
+  if ($result->{result_type} == 4 or # UNORDERED_NODE_ITERATOR_TYPE
+      $result->{result_type} == 5) { # ORDERED_NODE_ITERATOR_TYPE
+    push @{$_[0]->{xpath_results} ||= []}, $result;
+    weaken $_[0]->{xpath_results}->[-1];
+  }
+  return $result;
+} # xpath_result
 
 sub connect ($$$) {
   my ($self, $id => $parent_id) = @_;

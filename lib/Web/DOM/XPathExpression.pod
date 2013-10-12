@@ -1,0 +1,75 @@
+=head1 NAME
+
+Web::DOM::XPathExpression - The DOM |XPathExpression| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::XPathExpression> class implements the DOM
+C<XPathExpression> interface.  It represents a compiled XPath 1.0
+expression.
+
+=head1 METHOD
+
+The following method is available:
+
+=over 4
+
+=item $result = $expr->evaluate ($node, $result_type, $result)
+
+Evaluate the XPath 1.0 expression.  The first argument is the context
+node (L<Web::DOM::Node> object) used to evaluate the expression.  The
+other arguments are optional.  The second argument is the namespace
+prefix resolver, specified as either a code reference or the
+L<Web::DOM::XPathResolver> object.  The third argument is ignored.
+The method returns the L<Web::DOM::XPathResult> object containing the
+evaluation result.  [DOMXPATH]
+
+See also L<Web::DOM/DEPENDENCY>.
+
+=back
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOMXPATH
+
+Document Object Model XPath
+<http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html#XPathExpression>.
+
+DOM XPath <http://wiki.whatwg.org/wiki/DOM_XPath>.
+
+Improving DOM Traversal and DOM XPath
+<http://lists.w3.org/Archives/Public/public-webapps/2011AprJun/0310.html>.
+
+743888 - Replace SVGException and XPathException with DOMException
+<https://bugzilla.mozilla.org/show_bug.cgi?id=743888#c1>.
+
+L<Web::DOM::XPathEvaluation/"SPECIFICATIONS">.
+
+The IDL definition MUST be modified as follows:
+
+  interface XPathExpression {
+    XPathResult evaluate((Node or Attr) contextNode,
+                         optional unsigned short type = 0,
+                         optional object? result = null);
+  };
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::XPathEvaluator>, L<Web::DOM::XPathResult>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

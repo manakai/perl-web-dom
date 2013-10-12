@@ -5,7 +5,9 @@ no warnings 'utf8';
 our $VERSION = '1.0';
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
-push our @ISA, qw(Web::DOM::ParentNode Web::DOM::Node);
+use Web::DOM::XPathEvaluator;
+push our @ISA, qw(Web::DOM::ParentNode Web::DOM::XPathEvaluator
+                  Web::DOM::Node);
 use Web::DOM::Internal;
 use Web::DOM::TypeError;
 use Web::DOM::Exception;

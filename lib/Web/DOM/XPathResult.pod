@@ -1,0 +1,113 @@
+=head1 NAME
+
+Web::DOM::XPathResult - The DOM |XPathResult| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::XPathResult> class implements the DOM C<XPathResult>
+interface.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $boolean = $result->boolean_value
+
+Return the result boolean value.  [DOMXPATH]
+
+=item $boolean = $result->invalid_iterator_state
+
+Return whether the result iterator is invalid or not.  [DOMXPATH]
+
+=item $node = $result->iterate_next
+
+Return the next L<Web::DOM::Node> of the result iterator, if any, or
+C<undef>.  [DOMXPATH]
+
+=item $number = $result->number_value
+
+Return the result number value.  [DOMXPATH]
+
+=item $type = $result->result_type
+
+Return the result type, i.e. one of constants listed in the
+L</CONSTANTS>.  [DOMXPATH]
+
+=item $node = $result->single_node_value
+
+Return the result node value, if any, or C<undef>.  [DOMXPATH]
+
+=item $node = $result->snapshot_item ($index)
+
+Return the node at the specified index in the result snapshot, if any,
+or C<undef>.  [DOMXPATH]
+
+=item $number = $result->snapshot_length
+
+Return the number of nodes in the result snapshot.  [DOMXPATH]
+
+=item $string = $result->string_value
+
+Return the result string value.  [DOMXPATH]
+
+=back
+
+=head1 CONSTANTS
+
+Following result type constants are exported from the
+L<Web::DOM::XPathResult> module by default.  In addition, they are
+accessible as methods of C<XPathResult> objects.
+
+  ANY_TYPE NUMBER_TYPE STRING_TYPE BOOLEAN_TYPE
+  UNORDERED_NODE_ITERATOR_TYPE ORDERED_NODE_ITERATOR_TYPE
+  UNORDERED_NODE_SNAPSHOT_TYPE ORDERED_NODE_SNAPSHOT_TYPE
+  ANY_UNORDERED_NODE_TYPE FIRST_ORDERED_NODE_TYPE
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOMXPATH
+
+Document Object Model XPath
+<http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html#XPathResult>.
+
+DOM XPath <http://wiki.whatwg.org/wiki/DOM_XPath>.
+
+743888 - Replace SVGException and XPathException with DOMException
+<https://bugzilla.mozilla.org/show_bug.cgi?id=743888#c1>.
+
+The IDL definition MUST be modified as follows:
+
+  partial interface XPathResult {
+    readonly attribute (Node or Attr)? singleNodeValue;
+  };
+
+Instead of the C<TYPE_ERR> exception, the C<TypeError> MUST be thrown.
+
+If the C<resultType> attribute is C<ORDERED_NODE_ITERATOR_TYPE> or
+C<UNORDERED_NODE_ITERATOR_TYPE>, any mutation of the nodes whose node
+document is the document of the context node of the evaluation that
+results in the C<XPathResult> object MUST set the
+C<invalidIteratorState> attribute to C<true>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::XPathEvaluator>, L<Web::DOM::XPathExpression>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

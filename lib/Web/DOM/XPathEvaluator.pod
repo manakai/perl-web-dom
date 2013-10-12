@@ -1,0 +1,119 @@
+=head1 NAME
+
+Web::DOM::XPathEvaluator - The DOM |XPathEvaluator| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::XPathEvaluator> class implements the DOM
+C<XPathEvaluator> interface.  It is a superinterface of the
+C<Document> interface, but it can also be used as a standalone object.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $eval = new Web::DOM::XPathEvaluator
+
+Create a new C<XPathEvaluator> object.  [DOMXPATH]
+
+=item $expr = $eval->create_expression ($string, $resolver)
+
+Parse the specified string as an XPath 1.0 expression and returns it
+as a new L<Web::DOM::XPathExpression> object.  If a code reference or
+a L<Web::DOM::XPathNSResolver> object is also specified as the
+optional second argument, it is used as the namespace prefix resolver.
+[DOMXPATH]
+
+See also L<Web::DOM/DEPENDENCY>.
+
+=item $resolver = $eval->create_ns_resolver ($node)
+
+Create a L<Web::DOM::XPathNSResolver> object with the specified
+L<Web::DOM::Node> object.  [DOMXPATH]
+
+=item $result = $eval->evaluate ($string, $node, $resolver, $result_type, $result)
+
+Parse and evaluate an XPath 1.0 expression.  The first argument is an
+XPath 1.0 expression to be evaluated.  The second argument is the
+context node (L<Web::DOM::Node> object) used to evaluate the
+expression.  The remainging arguments are optional.  The third
+argument is the namespace prefix resolver, specified as either a code
+reference or the L<Web::DOM::XPathResolver> object.  The fourth
+argument is the requested result type, specified by one of constants
+in L<Web::DOM::XPathResult>.  The fifth argument is ignored.  The
+method returns the L<Web::DOM::XPathResult> object containing the
+evaluation result.  [DOMXPATH]
+
+See also L<Web::DOM/DEPENDENCY>.
+
+=back
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOMXPATH
+
+Document Object Model XPath
+<http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html#XPathEvaluator>.
+
+DOM XPath <http://wiki.whatwg.org/wiki/DOM_XPath>.
+
+Improving DOM Traversal and DOM XPath
+<http://lists.w3.org/Archives/Public/public-webapps/2011AprJun/0310.html>.
+
+743888 - Replace SVGException and XPathException with DOMException
+<https://bugzilla.mozilla.org/show_bug.cgi?id=743888#c1>.
+
+The definition for the C<evaluate> method MUST be modified as follows:
+
+  partial interface XPathEvaluator {
+    XPathResult evaluate(DOMString expression,
+                         (Node or Attr) contextNode,
+                         XPathNSResolver? resolver,
+                         optional unsigned short type = 0,
+                         optional object? result = null);
+  };
+
+The set of variable bindings MUST be empty.  Additional functions MUST
+NOT be added to the function library.
+
+The C<evaluate> method MUST accept any type of C<Node> as the
+C<contextNode> argument, i.e. as the context node of the evaluation.
+
+When an evaluation is failed due to a non-syntax non-namespace error,
+a C<SyntaxError> C<DOMException> MUST be thrown.
+
+The callback this value used when an C<XPathNSResolver> (specified as
+a function) is invoked is the callback function itself.
+
+If the C<XPathNSResolver> throws an exception, it MUST be catched and
+act as if the C<null> value is returned.
+
+When the evaluation is initiated, the context position and context
+size MUST be set to C<1>.
+
+The C<evaluate> method MUST return a newly created C<XPathResult>
+object.  It MUST NOT return the C<WRONG_DOCUMENT_ERR> or
+C<NOT_SUPPORTED_ERR>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Document>, L<Web::DOM::XPathResult>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

@@ -7,6 +7,7 @@ use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->str
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
+use Scalar::Util qw(refaddr);
 use Web::DOM::Document;
 use Web::DOM::Node;
 
@@ -180,6 +181,19 @@ test {
   
   done $c;
 } name => 'eq', n => 10;
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+
+  is refaddr $el1, refaddr $el1;
+  isnt refaddr $el1, refaddr $el2;
+
+  done $c;
+} n => 2, name => 'refaddr equality';
 
 test {
   my $c = shift;

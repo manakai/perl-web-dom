@@ -1,0 +1,70 @@
+=head1 NAME
+
+Web::DOM::XPathNSResolver - The DOM |XPathNSResolver| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::XPathNSResolver> class implements the DOM
+C<XPathNSResolver> interface.
+
+In the DOM Perl Binding, an C<XPathNSResolver> object can be
+represented as either a Perl subroutine (code) reference or an object
+returned by the C<create_ns_resolver> method of the C<Document>
+object.  The L<Web::DOM::XPathNSResolver> class is used for the
+latter.  In other word, the class is used to wrap an L<Web::DOM::Node>
+object by the C<XPathNSResolver> interface.
+
+If you'd like to define a custom namespace prefix resolver, you should
+use a simple subroutine as an C<XPathNSResolver>.  The subroutine will
+be invoked by the XPath parser when a namespace resolution is
+performed, with two arguments: I<$self> (the code reference itself)
+and I<$prefix> (the namespace prefix to resolve).  The subroutine is
+expected to return the corresponding namespace URL, as a character
+string, or C<undef> if the prefix is not has corresponding namespace
+URL.
+
+=head1 METHOD
+
+The following method is available:
+
+=over 5
+
+=item $url = $resolver->lookup_namespace_uri ($prefix)
+
+Return the namespace URL associated with the specified namespace
+prefix.  [DOMXPATH]
+
+=back
+
+=head1 SPECIFICATIONS
+
+=over 4
+
+=item DOMXPATH
+
+Document Object Model XPath
+<http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html#XPathNSResolver>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::XPathEvaluator>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
