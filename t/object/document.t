@@ -138,6 +138,7 @@ for my $test (
   ['unicode' => undef],
   ['iso-2022-cn' => undef],
   ['replacement' => undef],
+  [" euc-JP\x09" => 'euc-jp'],
 ) {
   test {
     my $c = shift;
