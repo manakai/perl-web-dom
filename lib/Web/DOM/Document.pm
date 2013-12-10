@@ -128,7 +128,7 @@ sub character_set ($) {
 sub input_encoding ($;$) {
   if (@_ > 1) {
     require Web::Encoding;
-    my $name = Web::Encoding::encoding_label_to_name ($_[1]);
+    my $name = Web::Encoding::encoding_label_to_name (''.$_[1]);
     ${$_[0]}->[2]->{encoding} = $name
         if Web::Encoding::is_encoding_label ($name);
   }
