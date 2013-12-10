@@ -125,6 +125,30 @@ test {
   done $c;
 } n => 3, name => 'charset';
 
+for my $test (
+  [undef, undef],
+  ['' => undef],
+  ['UTF-8' => 'utf-8'],
+  ['UtF8' => 'utf-8'],
+  ['Shift_JIS' => 'shift_jis'],
+  ['csiso2022jp' => 'iso-2022-jp'],
+  ['CESU-8' => undef],
+  ['X-User-Defined' => 'x-user-defined'],
+  ['utf-16BE' => 'utf-16be'],
+  ['unicode' => undef],
+  ['iso-2022-cn' => undef],
+  ['replacement' => undef],
+) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->input_encoding ($test->[0]);
+    is $doc->input_encoding, $test->[1] || 'utf-8';
+    is $doc->charset, $doc->input_encoding;
+    done $c;
+  } n => 2, name => ['input_encoding', 'setter', $test->[0]];
+}
+
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;

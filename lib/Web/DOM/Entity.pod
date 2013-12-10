@@ -50,8 +50,9 @@ returns false.  [DOMDTDEF]
 
 =item $string = $ent->input_encoding
 
-Return the encoding of the entity, if it is an external parsed entity
-and has been read, or C<undef>.  [DOM3CORE]
+=item $ent->input_encoding ($string)
+
+Return or set the encoding of the entity.  [DOM3CORE] [MANAKAI]
 
 =item $boolean = $ent->is_externally_declared
 

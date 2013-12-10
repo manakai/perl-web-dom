@@ -99,10 +99,12 @@ sub declaration_base_uri ($;$) {
 
 sub input_encoding ($) {
   if (@_ > 1) {
-    # XXX
-    #${$_[0]}->[2]->{encoding} = ''.$_[1];
+    require Web::Encoding;
+    my $name = Web::Encoding::encoding_label_to_name ($_[1]);
+    ${$_[0]}->[2]->{encoding} = $name
+        if Web::Encoding::is_encoding_label ($name);
   }
-  return ${$_[0]}->[2]->{input_encoding}; # or undef
+  return ${$_[0]}->[2]->{encoding} || 'utf-8';
 } # input_encoding
 
 sub xml_version ($) {

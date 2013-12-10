@@ -127,7 +127,10 @@ sub character_set ($) {
 
 sub input_encoding ($;$) {
   if (@_ > 1) {
-    # XXX if an Encoding encoding name, set it.
+    require Web::Encoding;
+    my $name = Web::Encoding::encoding_label_to_name ($_[1]);
+    ${$_[0]}->[2]->{encoding} = $name
+        if Web::Encoding::is_encoding_label ($name);
   }
   return $_[0]->character_set;
 } # input_encoding

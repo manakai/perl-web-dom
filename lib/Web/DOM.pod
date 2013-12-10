@@ -295,6 +295,10 @@ Following features require the perl-web-css package
 C<query_selector_all>, L<CSSStyleSheet>, L<CSSRule> and its
 subclasses, and L<CSSStyleDeclaration>.
 
+Following features require the perl-web-encodings package
+<https://github.com/manakai/perl-web-encodings>: setter of
+C<input_encoding> method of C<Document> and C<Entity>.
+
 Features performing URL-related operations require the perl-web-url
 package <https://github.com/manakai/perl-web-url>, which depends on
 the perl-web-encodings package
@@ -491,7 +495,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

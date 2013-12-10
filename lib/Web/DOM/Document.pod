@@ -49,7 +49,9 @@ element or the C<frameset> element).  [HTML]
 
 =item $string = $doc->input_encoding
 
-Return the encoding of the document.  [DOM] [MANAKAI]
+=item $doc->input_encoding ($string)
+
+Return or set the encoding of the document.  [DOM] [MANAKAI]
 
 =item $string = $doc->manakai_charset
 
