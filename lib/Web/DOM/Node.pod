@@ -38,7 +38,7 @@ of the node.  [DOM]
 
 Return the newly-created clone of the node.  If the argument is set to
 the true value, any descendant nodes are also cloned.  [DOM]
-[DOMATTREXODUS] [MANAKAI]
+[DOMATTREXODUS] [DOMDTDEF] [MANAKAI]
 
 =item $value = $node1->compare_document_position ($node2)
 

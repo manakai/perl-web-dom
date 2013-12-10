@@ -838,8 +838,7 @@ sub clone_node ($;$) {
   return $_[0]->_clone ($_[0]->owner_document || $_[0], !!$_[1]);
 } # clone_node
 
-# XXX DOMDTDEF
-sub _clone {
+sub _clone ($$$) {
   # 1.
   my ($node, $od, $deep) = @_;
 

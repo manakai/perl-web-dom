@@ -134,6 +134,19 @@ for my $ct (qw(text/html application/xml application/rss+xml
   } n => 1, name => ['document', 'content_type', $ct];
 }
 
+for my $ct (qw(utf-8 iso-2022-jp euc-jp windows-1252)) {
+  test {
+    my $c = shift;
+    my $d1 = new Web::DOM::Document;
+    $d1->input_encoding ($ct);
+
+    my $d2 = $d1->clone_node;
+    is $d2->character_set, $ct;
+
+    done $c;
+  } n => 1, name => ['document', 'character_set', $ct];
+}
+
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
