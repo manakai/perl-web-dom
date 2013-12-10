@@ -1,5 +1,9 @@
 use strict;
 use warnings;
+BEGIN {
+  my $time = time;
+  *CORE::GLOBAL::time = sub { return $time };
+}
 use Path::Class;
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
