@@ -42,7 +42,13 @@ sub content_type ($) {
   return ${$_[0]}->[2]->{content_type} || 'application/xml';
 } # content_type
 
-# internal
+## Internal method.
+##
+## Set the content type of the document.  It must be a lowercase
+## canonical valid MIME type without parameters.  It can be
+## "text/html" iff it is an HTML document.  This method must be
+## invoked after |manakai_is_html| method as that method mutates the
+## content type of the document.
 sub _set_content_type ($$) {
   ${$_[0]}->[2]->{content_type} = $_[1];
 } # _set_content_type
@@ -169,6 +175,8 @@ sub manakai_set_url ($$) {
   ${$_[0]}->[2]->{url} = $url;
   return;
 } # manakai_set_url
+
+# XXX origin
 
 # XXX location
 
@@ -453,6 +461,7 @@ sub body ($;$) {
 } # body
 
 # XXX need O(1) implementation...
+# XXX <https://github.com/whatwg/dom/commit/1e953d1b2205dbf0ca78af82e6fd7c59a04c347e>
 sub get_element_by_id ($$) {
   my $id = ''.$_[1];
   return undef unless length $id;

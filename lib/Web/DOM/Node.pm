@@ -914,6 +914,9 @@ sub _clone {
     }
     $od = $copy;
 
+    $$copy->[2]->{$_} = $$node->[2]->{$_}
+        for qw(content_type is_html compat_mode encoding);
+
     $orig_strict_error_checking = $od->strict_error_checking;
     $od->strict_error_checking (0);
     $orig_strict_document_children

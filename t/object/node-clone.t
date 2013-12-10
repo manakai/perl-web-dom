@@ -103,17 +103,36 @@ test {
   done $c;
 } n => 3, name => 'xmldocument';
 
-test {
-  my $c = shift;
-  my $doc = Web::DOM::Document->new;
-  $doc->manakai_is_html (1);
+for my $compat_mode ('quirks', 'limited quirks', 'no quirks') {
+  test {
+    my $c = shift;
+    my $doc = Web::DOM::Document->new;
+    $doc->manakai_is_html (1);
+    $doc->manakai_compat_mode ($compat_mode);
 
-  my $clone = $doc->clone_node (1);
-  isa_ok $clone, 'Web::DOM::Document';
-  ok not $clone->manakai_is_html;
+    my $clone = $doc->clone_node (1);
+    isa_ok $clone, 'Web::DOM::Document';
+    ok $clone->manakai_is_html;
+    is $clone->content_type, 'text/html';
+    is $clone->manakai_compat_mode, $compat_mode;
 
-  done $c;
-} n => 2, name => 'htmldocument';
+    done $c;
+  } n => 4, name => ['htmldocument', $compat_mode];
+}
+
+for my $ct (qw(text/html application/xml application/rss+xml
+               image/png image/svg+xml text/xml text/xsl)) {
+  test {
+    my $c = shift;
+    my $d1 = new Web::DOM::Document;
+    $d1->_set_content_type ($ct);
+
+    my $d2 = $d1->clone_node;
+    is $d2->content_type, $ct;
+
+    done $c;
+  } n => 1, name => ['document', 'content_type', $ct];
+}
 
 test {
   my $c = shift;
