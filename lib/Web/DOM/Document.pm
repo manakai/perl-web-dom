@@ -2,7 +2,7 @@ package Web::DOM::Document;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
 use Web::DOM::XPathEvaluator;
@@ -617,7 +617,13 @@ sub create_element ($$) {
               namespace_uri => Web::DOM::Internal->text (HTML_NS),
               local_name => Web::DOM::Internal->text ($ln)};
   my $id = $$self->[0]->add_data ($data);
-  return $$self->[0]->node ($id);
+  my $node = $$self->[0]->node ($id);
+  if ($ln eq 'template') {
+    my $tmpl_doc = $$self->[0]->template_doc;
+    my $df_id = $$tmpl_doc->[0]->add_data ({node_type => DOCUMENT_FRAGMENT_NODE});
+    $$self->[0]->set_template_content ($id => $$tmpl_doc->[0]->node ($df_id));
+  }
+  return $node;
 } # create_element
 
 sub create_element_ns {
@@ -713,7 +719,13 @@ sub create_element_ns {
               namespace_uri => Web::DOM::Internal->text ($nsurl),
               local_name => Web::DOM::Internal->text ($ln)};
   my $id = $$self->[0]->add_data ($data);
-  return $$self->[0]->node ($id);
+  my $node = $$self->[0]->node ($id);
+  if (defined $nsurl and $nsurl eq HTML_NS and $ln eq 'template') {
+    my $tmpl_doc = $$self->[0]->template_doc;
+    my $df_id = $$tmpl_doc->[0]->add_data ({node_type => DOCUMENT_FRAGMENT_NODE});
+    $$self->[0]->set_template_content ($id => $$tmpl_doc->[0]->node ($df_id));
+  }
+  return $node;
 } # create_element_ns
 
 sub create_attribute ($$) {

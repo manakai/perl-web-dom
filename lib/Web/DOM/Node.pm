@@ -959,6 +959,8 @@ sub _clone ($$$) {
   # 5.
   # XXX cloning steps
 
+  # XXX template
+
   # 6.
   if ($deep) {
     for ($node->child_nodes->to_list) {

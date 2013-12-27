@@ -1817,10 +1817,17 @@ _define_reflect_string face => 'face';
 _define_reflect_string size => 'size';
 
 package Web::DOM::HTMLTemplateElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 
-# XXX content
+sub content ($) {
+  my $df = ${$_[0]}->[2]->{content_df};
+  if ($df =~ /\A[0-9]+\z/) {
+    return ${$_[0]}->[0]->node ($df);
+  } else {
+    return $df;
+  }
+} # content
 
 1;
 

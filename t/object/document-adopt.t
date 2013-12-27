@@ -8,6 +8,8 @@ use Test::More;
 use Test::DOM::Exception;
 use Web::DOM::Document;
 
+## See also: htmltemplateelement.t
+
 {
   package test::DestroyCallback;
   sub DESTROY {
@@ -662,7 +664,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

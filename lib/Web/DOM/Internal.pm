@@ -2,6 +2,7 @@ package Web::DOM::Internal;
 use strict;
 use warnings;
 no warnings 'utf8';
+our $VERSION = '2.0';
 use Carp;
 
 ## Web::DOM internal data structure and core utilities
@@ -85,6 +86,7 @@ sub new ($) {
     # impl
     # config config_obj config_hashref config_names
     # xpath_results
+    # template_doc
   }, $_[0];
 } # new
 
@@ -141,6 +143,7 @@ sub add_data ($$) {
 ##   child_nodes                    [node_id] Child nodes
 ##   class_list                     [string]  Classes
 ##   compat_mode                    string    Quirksness
+##   content_df                     scalar    Template content
 ##   content_type                   string    MIME type
 ##   data                           \string   Data
 ##   declared_type                  integer   Declared type
@@ -149,6 +152,7 @@ sub add_data ($$) {
 ##   encoding                       string    Character encoding
 ##   event_listeners                {}[]      Event listener callbacks
 ##   general_entities               {node_id} General entities
+##   host_el                        scalar    Host element
 ##   is_html                        boolean   An HTML document?
 ##   is_srcdoc                      boolean   An iframe srcdoc document?
 ##   is_XMLDocument                 boolean   An XMLDocument?
@@ -432,6 +436,49 @@ sub node ($$) {
   weaken ($self->{nodes}->[$id] = $node);
   return $node;
 } # node
+
+## $int->{template_doc} - appropriate template contents owner document
+##     undef    - not yet created
+##     Document - associated inert template document (strong ref)
+##     node ID  - same document
+## $data->{host_el} - host element
+##     undef    - not a template document or host element no longer available
+##     Element  - outermost document's host element (weak ref)
+##     node ID  - same document's host element
+## $data->{content_df} - template content's document fragment
+##     undef    - not a template content
+##     DocumentFragment - template document's document fragment (strong ref)
+##     node ID  - same document's document fragment
+
+## Return the appropriate template contents owner document.
+sub template_doc ($) {
+  my $int = $_[0];
+  if (defined $int->{template_doc}) {
+    if (not ref $int->{template_doc}) {
+      return $int->node ($int->{template_doc});
+    } else {
+      return $int->{template_doc};
+    }
+  } else {
+    require Web::DOM::Document;
+    my $doc = $int->{template_doc} = Web::DOM::Document->new;
+    $$doc->[2]->{is_html} = 1 if $int->{data}->[0]->{is_html};
+    $$doc->[0]->{template_doc} = $$doc->[1];
+    return $doc;
+  }
+} # template_doc
+
+sub set_template_content ($$$) {
+  my ($int, $node_id => $df) = @_;
+  if ($int eq $$df->[0]) {
+    $int->{data}->[$node_id]->{content_df} = $$df->[1];
+    $$df->[2]->{host_el} = $node_id;
+    $int->connect ($$df->[1] => $node_id);
+  } else {
+    $int->{data}->[$node_id]->{content_df} = $df;
+    weaken ($$df->[2]->{host_el} = $int->node ($node_id));
+  }
+} # set_template_content
 
 ## Live collection data structure
 ##
@@ -843,6 +890,9 @@ sub connect ($$$) {
         values %{$data->{notations} or {}},
         values %{$data->{attribute_definitions} or {}},
         $data->{sheet};
+    push @id, $data->{content_df}
+        if defined $data->{content_df} and
+           not ref $data->{content_df};
   }
 } # connect
 
@@ -864,8 +914,13 @@ sub disconnect ($$) {
         values %{$data->{notations} or {}},
         values %{$data->{attribute_definitions} or {}},
         $data->{sheet};
+    push @id, $data->{content_df}
+        if defined $data->{content_df} and
+           not ref $data->{content_df};
     delete $data->{owner_sheet};
   }
+  ## This method is not invoked when template content is disconnected
+  ## by the |set_template_content| invocation in |adopt|.
 } # disconnect
 
 ## Move a node, with its descendants and their related objects, from
@@ -881,8 +936,10 @@ sub adopt ($$) {
 
   my @old_id = ($$node->[1]);
   my $new_tree_id = $new_int->{next_tree_id}++;
+  my $new_templ_doc;
   my %id_map;
   my @data;
+  my @template;
   while (@old_id) {
     my $old_id = shift @old_id;
     my $new_id = $new_int->{next_node_id}++;
@@ -894,6 +951,14 @@ sub adopt ($$) {
 
     delete $old_int->{tree_id}->[$old_id];
     $new_int->{tree_id}->[$new_id] = $new_tree_id;
+
+    if (defined $data->{content_df}) {
+      my $df = $data->{content_df};
+      $df = $old_int->node ($df) if not ref $df;
+      $new_templ_doc ||= $new_int->template_doc;
+      $$new_templ_doc->[0]->adopt ($df);
+      push @template, [$new_id => $df];
+    }
 
     push @old_id, grep { not ref $_ } @{$data->{attributes} or []};
     push @old_id,
@@ -926,8 +991,8 @@ sub adopt ($$) {
 
     $new_int->{rc}->[$new_id] = delete $old_int->{rc}->[$old_id]
         if $old_int->{rc}->[$old_id];
-  }
-  
+  } # @old_id
+
   for my $data (@data) {
     @{$data->{attributes}} = map {
       ref $_ ? $_ : $id_map{$_};
@@ -957,6 +1022,18 @@ sub adopt ($$) {
       $data->{$_} = $id_map{$data->{$_}} if defined $data->{$_};
     }
   } # @data
+
+  ## Note that |disconnect| is not invoked here, as all descendants
+  ## are also adopted anyway.
+  $new_int->set_template_content (@$_) for @template;
+
+  if (defined $$node->[2]->{host_el}) {
+    my $el = $$node->[2]->{host_el};
+    $el = defined $id_map{$el} ? $new_int->node ($id_map{$el})
+                               : $old_int->node ($el) if not ref $el;
+    ## Note that |disconnect| is not invoked here.
+    $$el->[0]->set_template_content ($$el->[1] => $node);
+  }
 } # adopt
 
 sub css_parser ($) {
