@@ -465,6 +465,7 @@ sub body ($;$) {
 
 # XXX need O(1) implementation...
 # XXX <https://github.com/whatwg/dom/commit/1e953d1b2205dbf0ca78af82e6fd7c59a04c347e>
+# XXX Move to ParentNode
 sub get_element_by_id ($$) {
   my $id = ''.$_[1];
   return undef unless length $id;

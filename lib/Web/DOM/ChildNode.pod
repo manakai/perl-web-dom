@@ -4,10 +4,10 @@ Web::DOM::ChildNode - The DOM |ChildNode| object
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::ChildNode> class implements the DOM C<ChildNode>
-interface.  The C<Web::DOM::ChildNode> class is an abstract class.  It
-is used as subclasses such as C<Web::DOM::Element> and
-C<Web::DOM::Text>.
+The C<Web::DOM::ChildNode> class implements the DOM C<ChildNode> and
+C<NonDocumentTypeChildNode> interfaces.  The C<Web::DOM::ChildNode>
+class is an abstract class.  It is used as subclasses such as
+C<Web::DOM::Element> and C<Web::DOM::Text>.
 
 =head1 METHODS
 
@@ -16,22 +16,28 @@ C<Web::DOM::Text>.
 =item $sibling = $node->next_element_sibling
 
 Return the next element sibling.  If there is no such node, C<undef>
-is returned.  [DOM]
+is returned.  [DOM] [DOMELEMENTSIBLING]
 
 =item $sibling = $node->previous_element_sibling
 
 Return the previous element sibling.  If there is no such node,
-C<undef> is returned.  [DOM]
+C<undef> is returned.  [DOM] [DOMELEMENTSIBLING]
 
 =back
 
-=head1 SPECIFICATION
+=head1 SPECIFICATIONS
 
 =over 4
 
 =item DOM
 
 DOM Living Standard <http://dom.spec.whatwg.org/#interface-childnode>.
+
+=item DOMELEMENTSIBLING
+
+Drop previousElementSibling and nextElementSibling from DocumentType
+for now.
+<https://github.com/whatwg/dom/commit/4aab68a697d902f68e2f48b6158052e081cf3ce0>.
 
 =back
 
@@ -46,7 +52,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
