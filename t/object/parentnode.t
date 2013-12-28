@@ -1412,6 +1412,24 @@ test {
   done $c;
 } n => 3, name => 'query_selector, query_selector_all';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('template');
+
+  my $el2 = $doc->create_element ('p');
+  $el->content->append_child ($el2);
+  is $el->query_selector ('p'), undef;
+  eq_or_diff $el->query_selector_all ('p')->to_a, [];
+
+  my $el3 = $doc->create_element ('p');
+  $el->append_child ($el3);
+  is $el->query_selector ('p'), $el3;
+  eq_or_diff $el->query_selector_all ('p')->to_a, [$el3];
+
+  done $c;
+} n => 4, name => 'template content';
+
 run_tests;
 
 =head1 LICENSE

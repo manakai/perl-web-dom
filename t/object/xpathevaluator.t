@@ -409,6 +409,26 @@ test {
   done $c;
 } n => 3, name => 'evaluate result ignored';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $el = $doc->create_element ('template');
+
+  my $el2 = $doc->create_element ('p');
+  $el->content->append_child ($el2);
+  my $el3 = $doc->create_element ('p');
+  $el->append_child ($el3);
+
+  my $result = $doc->evaluate ('.//p', $el);
+  is $result->result_type, $result->UNORDERED_NODE_ITERATOR_TYPE;
+  is $result->iterate_next, $el3;
+  is $result->iterate_next, undef;
+  is $result->iterate_next, undef;
+
+  done $c;
+} n => 4, name => 'template content';
+
 run_tests;
 
 =head1 LICENSE

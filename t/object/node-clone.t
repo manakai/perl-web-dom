@@ -681,11 +681,50 @@ test {
   done $c;
 } n => 27, name => 'document type';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->strict_error_checking (0);
+  my $el = $doc->create_element_ns (undef, ['hoge:fuga', 'abc:dde']);
+  $doc->strict_error_checking (1);
+  my $clone = $el->clone_node;
+  is $clone->prefix, 'hoge:fuga';
+  is $clone->local_name, 'abc:dde';
+  done $c;
+} n => 2, name => 'non-strict prefixed element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->strict_error_checking (0);
+  my $el = $doc->create_element_ns (undef, ['hoge', 'abc']);
+  $el->set_attribute_ns (undef, ['ab:cd', 'xx:aaa'] => 'foo');
+  $doc->strict_error_checking (1);
+  my $clone = $el->clone_node;
+  is $clone->attributes->[0]->prefix, 'ab:cd';
+  is $clone->attributes->[0]->local_name, 'xx:aaa';
+  done $c;
+} n => 2, name => 'non-strict prefixed element attribute';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->strict_error_checking (0);
+  my $attr = $doc->create_attribute_ns (undef, ['ab:cd', 'xx:aaa'] => 'foo');
+  $doc->strict_error_checking (1);
+  my $clone = $attr->clone_node;
+  is $clone->prefix, 'ab:cd';
+  is $clone->local_name, 'xx:aaa';
+  done $c;
+} n => 2, name => 'non-strict prefixed attribute';
+
+## See also: htmltemplateelement.t
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

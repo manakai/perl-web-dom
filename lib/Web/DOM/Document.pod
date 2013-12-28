@@ -23,6 +23,7 @@ Create a new document object. [DOM]
 
 Change the node document (i.e. the C<owner_document> attribute value)
 of the specified node and its descendant nodes to the document.  [DOM]
+[HTML]
 
 =item $bool = $doc->all_declarations_processed
 
@@ -117,14 +118,14 @@ specified name.  [DOMDTDEF]
 =item $el = $doc->create_element ($local_name)
 
 Create a new element (L<Web::DOM::HTMLElement>) with the specified
-local name in the HTML namespace.  [DOM]
+local name in the HTML namespace.  [DOM] [HTML] [MANAKAI]
 
 =item $el = $doc->create_element_ns ($nsurl, $qname)
 
 =item $el = $doc->create_element_ns ($nsurl, [$prefix, $local_name])
 
 Create a new element (L<Web::DOM::Element>) with specified namespace
-URL and qualified name.  [DOM]
+URL and qualified name.  [DOM] [HTML] [MANAKAI]
 
 The qualified name can be represented as an array reference, where the
 first item is the prefix (or C<undef> for the null namespace) and the
@@ -204,7 +205,7 @@ L<Web::DOM::TypeWalker/"CONSTANTS">.
 
 Create a new processing instruction node
 (L<Web::DOM::ProcessingInstruction>) with the specified target and
-data.  [DOM]
+data.  [DOM] [MANAKAI]
 
 =item $text = $doc->dir
 
@@ -291,7 +292,8 @@ document.  [DOM]
 
 Return the newly-created clone of the specified node, belonging to the
 document.  If the second argument is set to the true value, any
-descendant nodes are also cloned.  [DOM] [DOMATTREXODUS] [MANAKAI]
+descendant nodes are also cloned.  [DOM] [DOMATTREXODUS] [HTML]
+[MANAKAI]
 
 =item $bool = $doc->manakai_is_html
 

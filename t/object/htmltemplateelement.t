@@ -7,6 +7,7 @@ use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->str
 use Test::X1;
 use Test::More;
 use Test::DOM::Destroy;
+use Test::DOM::Exception;
 use Web::DOM::Document;
 
 test {
@@ -512,6 +513,250 @@ test {
 
   done $c;
 } n => 9, name => 'adopt multiple nested templates with multiple docs';
+
+for my $method (qw(append_child insert_before replace_child)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('template');
+    my $df = $el->content;
+    my $el2 = $df->owner_document->create_element ('hoge');
+    $df->append_child ($el2);
+    my @ref = $method eq 'append_child' ? () : ($el2);
+
+    dies_here_ok {
+      $df->$method ($el, @ref);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'HierarchyRequestError';
+    is $@->message, 'The child is a host-including inclusive ancestor of the parent';
+
+    is $df->first_child, $el2;
+    is $df->last_child, $el2;
+    is $el2->parent_node, $df;
+    is $el->parent_node, undef;
+    isnt $el->owner_document, $df->owner_document;
+
+    done $c;
+  } n => 9, name => ['template content # template element', $method];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el0 = $doc->create_element ('p');
+    my $el = $doc->create_element ('template');
+    $el0->append_child ($el);
+    my $df = $el->content;
+    my $el2 = $df->owner_document->create_element ('hoge');
+    $df->append_child ($el2);
+    my @ref = $method eq 'append_child' ? () : ($el2);
+
+    dies_here_ok {
+      $df->$method ($el0, @ref);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'HierarchyRequestError';
+    is $@->message, 'The child is a host-including inclusive ancestor of the parent';
+
+    is $df->first_child, $el2;
+    is $df->last_child, $el2;
+    is $el2->parent_node, $df;
+    is $el->parent_node, $el0;
+    is $el0->parent_node, undef;
+    isnt $el0->owner_document, $df->owner_document;
+
+    done $c;
+  } n => 10, name => ['template content # parent of template element', $method];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el0 = $doc->create_element ('p');
+    my $el = $doc->create_element ('template');
+    $el0->append_child ($el);
+    my $df = $el->content;
+    my $el2 = $df->owner_document->create_element ('hoge');
+    $df->append_child ($el2);
+    my $el3 = $df->owner_document->create_element ('fuga');
+    $el2->append_child ($el3);
+    my @ref = $method eq 'append_child' ? () : ($el3);
+
+    dies_here_ok {
+      $el2->$method ($el0, @ref);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'HierarchyRequestError';
+    is $@->message, 'The child is a host-including inclusive ancestor of the parent';
+
+    is $el2->first_child, $el3;
+    is $el2->last_child, $el3;
+    is $el2->parent_node, $df;
+    is $el3->parent_node, $el2;
+    is $el->parent_node, $el0;
+    is $el0->parent_node, undef;
+    isnt $el0->owner_document, $df->owner_document;
+
+    done $c;
+  } n => 11, name => ['child of template content # parent of template element', $method];
+
+  test {
+    my $c = shift;
+    my $doc0 = new Web::DOM::Document;
+    my $el0 = $doc0->create_element ('template');
+    my $doc = $el0->content->owner_document;
+    my $el = $doc->create_element ('template');
+    my $df = $el->content;
+    my $el2 = $df->owner_document->create_element ('hoge');
+    $df->append_child ($el2);
+    my @ref = $method eq 'append_child' ? () : ($el2);
+
+    dies_here_ok {
+      $df->$method ($el, @ref);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'HierarchyRequestError';
+    is $@->message, 'The child is a host-including inclusive ancestor of the parent';
+
+    is $df->first_child, $el2;
+    is $df->last_child, $el2;
+    is $el2->parent_node, $df;
+    is $el->parent_node, undef;
+    is $el->owner_document, $df->owner_document;
+
+    done $c;
+  } n => 9, name => ['template content # template element, in template document', $method];
+
+  test {
+    my $c = shift;
+    my $doc0 = new Web::DOM::Document;
+    my $el0 = $doc0->create_element ('template');
+    my $doc = $el0->content->owner_document;
+    my $el = $doc->create_element ('template');
+    $el0->content->append_child ($el);
+    my $df = $el->content;
+    my $el2 = $df->owner_document->create_element ('hoge');
+    $df->append_child ($el2);
+    my @ref = $method eq 'append_child' ? () : ($el2);
+
+    dies_here_ok {
+      $df->$method ($el0, @ref);
+    };
+    isa_ok $@, 'Web::DOM::Exception';
+    is $@->name, 'HierarchyRequestError';
+    is $@->message, 'The child is a host-including inclusive ancestor of the parent';
+
+    is $df->first_child, $el2;
+    is $df->last_child, $el2;
+    is $el2->parent_node, $df;
+    is $el0->parent_node, undef;
+    isnt $el0->owner_document, $df->owner_document;
+
+    done $c;
+  } n => 9, name => ['template content # template element, indirect', $method];
+}
+
+for my $method (qw(clone_node import_node)) {
+  for my $deep (0, 1) {
+    test {
+      my $c = shift;
+      my $doc = new Web::DOM::Document;
+      my $el = $doc->create_element ('template');
+      my $df = $el->content;
+      my $doc2 = new Web::DOM::Document;
+      my $doc3 = $method eq 'clone_node' ? $df->owner_document : $doc2->create_element ('template')->content->owner_document;
+      my $clone = $method eq 'clone_node' ? $el->clone_node ($deep) : $doc2->import_node ($el, $deep);
+      isnt $clone, $el;
+      isa_ok $clone, 'Web::DOM::Element';
+      is $clone->namespace_uri, $el->namespace_uri;
+      is $clone->local_name, $el->local_name;
+      is $clone->first_child, undef;
+      isnt $clone->content, $df;
+      isa_ok $clone->content, 'Web::DOM::DocumentFragment';
+      is $clone->content->owner_document, $doc3;
+      is $clone->content->first_child, undef;
+      done $c;
+    } n => 9, name => ['empty template content', $method, $deep];
+  }
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('template');
+    my $df = $el->content;
+    my $el2 = $df->owner_document->create_element ('p');
+    $df->append_child ($el2);
+    my $doc2 = new Web::DOM::Document;
+    my $doc3 = $method eq 'clone_node' ? $df->owner_document : $doc2->create_element ('template')->content->owner_document;
+    my $clone = $method eq 'clone_node' ? $el->clone_node : $doc2->import_node ($el);
+    isnt $clone, $el;
+    isa_ok $clone, 'Web::DOM::Element';
+    is $clone->namespace_uri, $el->namespace_uri;
+    is $clone->local_name, $el->local_name;
+    is $clone->first_child, undef;
+    isnt $clone->content, $df;
+    isa_ok $clone->content, 'Web::DOM::DocumentFragment';
+    is $clone->content->owner_document, $doc3;
+    is $clone->content->first_child, undef;
+    done $c;
+  } n => 9, name => ['non-empty template content, not deep', $method];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('template');
+    my $df = $el->content;
+    my $el2 = $df->owner_document->create_element ('p');
+    $df->append_child ($el2);
+    $df->owner_document->strict_error_checking (0);
+    my $el3 = $df->owner_document->create_element_ns (undef, ['ho:ge', 'aa']);
+    $df->owner_document->strict_error_checking (1);
+    $el2->append_child ($el3);
+    my $doc2 = new Web::DOM::Document;
+    my $doc3 = $method eq 'clone_node' ? $df->owner_document : $doc2->create_element ('template')->content->owner_document;
+    my $clone = $method eq 'clone_node' ? $el->clone_node (1) : $doc2->import_node ($el, 1);
+    isnt $clone, $el;
+    isa_ok $clone, 'Web::DOM::Element';
+    is $clone->namespace_uri, $el->namespace_uri;
+    is $clone->local_name, $el->local_name;
+    is $clone->first_child, undef;
+    isnt $clone->content, $df;
+    isa_ok $clone->content, 'Web::DOM::DocumentFragment';
+    is $clone->content->owner_document, $doc3;
+    ok $clone->content->owner_document->strict_error_checking;
+    my $clone2 = $clone->content->first_child;
+    isa_ok $clone2, 'Web::DOM::Element';
+    is $clone2->namespace_uri, $el2->namespace_uri;
+    is $clone2->local_name, $el2->local_name;
+    is $clone2->child_nodes->length, 1;
+    my $clone3 = $clone->content->first_child->first_child;
+    isa_ok $clone2, 'Web::DOM::Element';
+    is $clone3->namespace_uri, $el3->namespace_uri;
+    is $clone3->local_name, $el3->local_name;
+    is $clone3->first_child, undef;
+    done $c;
+  } n => 17, name => ['non-empty template content, deep', $method];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('template');
+    my $el1 = $doc->create_element ('p');
+    my $el2 = $doc->create_element ('q');
+    $el->content->append_child ($el1);
+    $el->append_child ($el2);
+
+    my $doc2 = new Web::DOM::Document;
+    my $clone = $method eq 'clone_node' ? $el->clone_node (1) : $doc2->import_node ($el, 1);
+
+    is $clone->content->child_nodes->length, 1;
+    is $clone->content->first_child->local_name, 'p';
+
+    is $clone->child_nodes->length, 1;
+    is $clone->first_child->local_name, 'q';
+
+    done $c;
+  } n => 4, name => ['content and template content, deep', $method];
+}
 
 run_tests;
 

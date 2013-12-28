@@ -739,7 +739,7 @@ test {
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'HierarchyRequestError';
-  is $@->message, 'The child is an inclusive ancestors of the parent';
+  is $@->message, 'The child is a host-including inclusive ancestor of the parent';
 
   is scalar @{$df->child_nodes}, 3;
   is $el1->parent_node, $df;
@@ -1232,3 +1232,14 @@ test {
 } n => 6, name => 'doc > df > el + doctype, allowed';
 
 run_tests;
+
+## See also: htmltemplateelement.t
+
+=head1 LICENSE
+
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

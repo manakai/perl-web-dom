@@ -96,7 +96,7 @@ for my $method (qw(append_child insert_before)) {
     };
     isa_ok $@, 'Web::DOM::Exception';
     is $@->name, 'HierarchyRequestError';
-    is $@->message, 'The child is an inclusive ancestors of the parent';
+    is $@->message, 'The child is a host-including inclusive ancestor of the parent';
     is scalar @{$el->child_nodes}, 0;
     is $el->parent_node, undef;
     done $c;
@@ -113,7 +113,7 @@ for my $method (qw(append_child insert_before)) {
     };
     isa_ok $@, 'Web::DOM::Exception';
     is $@->name, 'HierarchyRequestError';
-    is $@->message, 'The child is an inclusive ancestors of the parent';
+    is $@->message, 'The child is a host-including inclusive ancestor of the parent';
     is scalar @{$el2->child_nodes}, 0;
     is $el1->parent_node, undef;
     done $c;
@@ -134,7 +134,7 @@ for my $method (qw(append_child insert_before)) {
     };
     isa_ok $@, 'Web::DOM::Exception';
     is $@->name, 'HierarchyRequestError';
-    is $@->message, 'The child is an inclusive ancestors of the parent';
+    is $@->message, 'The child is a host-including inclusive ancestor of the parent';
     is scalar @{$el4->child_nodes}, 0;
     is $el1->parent_node, undef;
     done $c;
@@ -1082,7 +1082,7 @@ for my $method (qw(append_child insert_before)) {
     };
     isa_ok $@, 'Web::DOM::Exception';
     is $@->name, 'HierarchyRequestError';
-    is $@->message, 'The child is an inclusive ancestors of the parent';
+    is $@->message, 'The child is a host-including inclusive ancestor of the parent';
 
     is scalar @{$df1->child_nodes}, 1;
     is $node1->parent_node, $df1;
@@ -1496,9 +1496,11 @@ test {
 
 run_tests;
 
+## See also: htmltemplateelement.t
+
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

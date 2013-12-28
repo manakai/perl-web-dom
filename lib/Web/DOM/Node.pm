@@ -337,15 +337,28 @@ sub _pre_insert ($$;$$) {
   }
 
   # 2.
-  if ($$parent->[0] eq $$node->[0]) {
+  {
+    my $int = $$parent->[0];
     my $id = $$parent->[1];
-    while (defined $id) {
-      if ($id == $$node->[1]) {
+    while (1) {
+      if ($int eq $$node->[0] and $id == $$node->[1]) {
         _throw Web::DOM::Exception 'HierarchyRequestError',
-            'The child is an inclusive ancestors of the parent';
+            'The child is a host-including inclusive ancestor of the parent';
       }
-      $id = $$parent->[0]->{data}->[$id]->{parent_node};
-      # XXX host
+      if (defined $int->{data}->[$id]->{parent_node}) {
+        $id = $int->{data}->[$id]->{parent_node};
+      } elsif (defined $int->{data}->[$id]->{host_el}) {
+        for ($int->{data}->[$id]->{host_el}) {
+          if (ref $_) {
+            $int = $$_->[0];
+            $id = $$_->[1];
+          } else {
+            $id = $_;
+          }
+        }
+      } else {
+        last;
+      }
     }
   }
   
@@ -856,9 +869,33 @@ sub _clone ($$$) {
   my $nt = $node->node_type;
   if ($nt == ELEMENT_NODE) {
     $copy = $od->create_element_ns
-        ($node->namespace_uri, $node->manakai_tag_name);
+        ($node->namespace_uri, [$node->prefix, $node->local_name]);
     for ($node->attributes->to_list) {
-      $copy->set_attribute_ns ($_->namespace_uri, $_->name, $_->value);
+      $copy->set_attribute_ns
+          ($_->namespace_uri, [$_->prefix, $_->local_name], $_->value);
+    }
+
+    # 5. Cloning steps
+    my $nsurl = $node->namespace_uri || '';
+    my $ln = $node->local_name;
+    if ($nsurl eq HTML_NS) {
+      if ($ln eq 'template') {
+        if ($deep) {
+          my $copy_df = $copy->content;
+          my $copy_od = $copy_df->owner_document;
+          for ($node->content->child_nodes->to_list) {
+            $copy_df->append_child ($_->_clone ($copy_od, 1));
+          }
+        }
+      } elsif ($ln eq 'input') {
+        # XXX
+      } elsif ($ln eq 'script') {
+        # XXX
+      }
+    } elsif ($nsurl eq SVG_NS) {
+      if ($ln eq 'script') {
+        # XXX
+      }
     }
   } elsif ($nt == TEXT_NODE) {
     $copy = $od->create_text_node ($node->data);
@@ -897,7 +934,8 @@ sub _clone ($$$) {
       $copy->set_notation_node ($copy_sub);
     }
   } elsif ($nt == ATTRIBUTE_NODE) {
-    $copy = $od->create_attribute_ns ($node->namespace_uri, $node->name);
+    $copy = $od->create_attribute_ns
+        ($node->namespace_uri, [$node->prefix, $node->local_name]);
     $copy->value ($node->value);
   } elsif ($nt == DOCUMENT_NODE) {
     $od->strict_error_checking ($orig_strict_error_checking);
@@ -955,11 +993,6 @@ sub _clone ($$$) {
   } else {
     die "Unknown node type $nt";
   }
-
-  # 5.
-  # XXX cloning steps
-
-  # XXX template
 
   # 6.
   if ($deep) {
