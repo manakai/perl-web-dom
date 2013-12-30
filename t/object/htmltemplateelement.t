@@ -758,6 +758,66 @@ for my $method (qw(clone_node import_node)) {
   } n => 4, name => ['content and template content, deep', $method];
 }
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('template');
+  is $el->manakai_append_content ('hoge'), undef;
+  is $el->content->child_nodes->length, 1;
+  is $el->content->first_child->node_type, 3;
+  is $el->content->first_child->data, 'hoge';
+  done $c;
+} n => 4, name => 'manakai_append_content text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('template');
+  my $obj = {};
+  is $el->manakai_append_content ($obj), undef;
+  is $el->content->child_nodes->length, 1;
+  is $el->content->first_child->node_type, 3;
+  is $el->content->first_child->data, ''.$obj;
+  done $c;
+} n => 4, name => 'manakai_append_content non-node';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('template');
+  my $child = $doc->create_text_node ('hoge');
+  is $el->manakai_append_content ($child), undef;
+  is $child->parent_node, $el->content;
+  is $el->content->child_nodes->length, 1;
+  is $el->content->first_child, $child;
+  done $c;
+} n => 4, name => 'manakai_append_content text node';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('template');
+  my $child = $doc->create_element ('hoge');
+  is $el->manakai_append_content ($child), undef;
+  is $child->parent_node, $el->content;
+  is $el->content->child_nodes->length, 1;
+  is $el->content->first_child, $child;
+  done $c;
+} n => 4, name => 'manakai_append_content element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('template');
+  my $child = $doc->create_attribute ('hoge');
+  dies_here_ok {
+    $el->manakai_append_content ($child);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  done $c;
+} n => 3, name => 'manakai_append_content bad';
+
 run_tests;
 
 =head1 LICENSE

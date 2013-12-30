@@ -1829,6 +1829,10 @@ sub content ($) {
   }
 } # content
 
+sub manakai_append_content ($$) {
+  return $_[0]->content->manakai_append_content ($_[1]);
+} # manakai_append_content
+
 1;
 
 =head1 LICENSE

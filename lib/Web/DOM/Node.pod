@@ -19,7 +19,13 @@ following methods are available:
 
 Append the specified node to the list of child nodes.  [DOM]
 
-=iem $node = $node->manakai_append_text ($string)
+=item $node->manakai_append_content ($child)
+
+Append the specified node or string.  If the context object is an HTML
+C<template> element, it is appended to the template content.
+Otherwise, it is appended to the context object.  [MANAKAI]
+
+=item $node = $node->manakai_append_text ($string)
 
 Append the string to the C<text_content> of the node.  [MANAKAI]
 

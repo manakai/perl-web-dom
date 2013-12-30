@@ -757,6 +757,16 @@ sub manakai_append_text ($$) {
   return $_[0];
 } # manakai_append_text
 
+## Overridden by |HTMLTemplateElement|.
+sub manakai_append_content ($$) {
+  if (UNIVERSAL::isa ($_[1], 'Web::DOM::Node')) {
+    $_[0]->append_child ($_[1]);
+  } else {
+    $_[0]->manakai_append_text ($_[1]);
+  }
+  return undef;
+} # manakai_append_content
+
 sub normalize ($) {
   my $self = shift;
   my $int = $$self->[0];
