@@ -120,6 +120,10 @@ HTML Living Standard
 
 DOM Parsing and Serialization <http://domparsing.spec.whatwg.org/>.
 
+If the C<innerHTML> attribute would mutate the children of the context
+object and the context object is an HTML C<template> element, it must
+mutate the template content of the element instead.
+
 =item DOCUMENTINNERHTML
 
 Document innerHTML
@@ -145,7 +149,7 @@ manakai's DOM Perl Binding
 =item MANAKAI
 
 manakai's DOM Extensions
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
 =back
 
@@ -160,7 +164,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

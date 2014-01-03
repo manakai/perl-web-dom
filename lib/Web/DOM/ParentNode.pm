@@ -340,10 +340,13 @@ sub inner_html ($;$) {
     }
 
     # XXX mutation, ranges
-    for ($self->child_nodes->to_list) {
-      $self->remove_child ($_);
+    my $parent = ($self->node_type == ELEMENT_NODE and
+                  $self->manakai_element_type_match (HTML_NS, 'template'))
+        ? $self->content : $self;
+    for ($parent->child_nodes->to_list) {
+      $parent->remove_child ($_);
     }
-    $self->append_child ($_) for $new_children->to_list;
+    $parent->append_child ($_) for $new_children->to_list;
 
     return unless defined wantarray;
   }
@@ -361,7 +364,7 @@ sub inner_html ($;$) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

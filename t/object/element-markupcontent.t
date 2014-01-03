@@ -598,11 +598,44 @@ test {
   done $c;
 } n => 5, name => 'isnert_adjacent_html xml ill-formed';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('template');
+
+  $el->insert_adjacent_html ('afterbegin', '<p>abc</p>');
+  is $el->child_nodes->length, 1;
+  is $el->content->child_nodes->length, 0;
+
+  $el->insert_adjacent_html ('beforeend', '<p>abc</p>');
+  is $el->child_nodes->length, 2;
+  is $el->content->child_nodes->length, 0;
+
+  done $c;
+} n => 4, name => 'insert_adjacent_html <template> XML';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $el = $doc->create_element ('template');
+
+  $el->insert_adjacent_html ('afterbegin', '<p>abc</p>');
+  is $el->child_nodes->length, 1;
+  is $el->content->child_nodes->length, 0;
+
+  $el->insert_adjacent_html ('beforeend', '<p>abc</p>');
+  is $el->child_nodes->length, 2;
+  is $el->content->child_nodes->length, 0;
+
+  done $c;
+} n => 4, name => 'insert_adjacent_html <template> HTML';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

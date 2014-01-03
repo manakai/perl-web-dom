@@ -63,7 +63,7 @@ test {
   is $el->inner_html, '';
 
   $el->inner_html ('<tr><td>hoge<th>fo<![CDATA[o]]>');
-  is $el->inner_html, 'hogefo<!--[CDATA[o]]-->';
+  is $el->inner_html, '<tr><td>hoge<th>foo</th></td></tr>';
 
   done $c;
 } n => 4, name => 'element.inner_html html svg';
@@ -236,6 +236,41 @@ test {
 
   done $c;
 } n => 14, name => 'doc.inner_html xml';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $el = $doc->create_element ('template');
+  $el->inner_html ('<P>abc</P>aaa');
+  is $el->first_child, undef;
+  is $el->content->child_nodes->length, 2;
+  is $el->content->first_child->local_name, 'p';
+  is $el->content->last_child->data, 'aaa';
+  is $el->inner_html, '<p>abc</p>aaa';
+  $el->manakai_append_text ('hoge');
+  is $el->child_nodes->length, 1;
+  $el->inner_html ('');
+  is $el->content->child_nodes->length, 0;
+  done $c;
+} n => 7, name => '<template>.innerHTML HTML';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('template');
+  $el->inner_html ('<P>abc</P>aaa');
+  is $el->first_child, undef;
+  is $el->content->child_nodes->length, 2;
+  is $el->content->first_child->local_name, 'P';
+  is $el->content->last_child->data, 'aaa';
+  is $el->inner_html, '<P xmlns="http://www.w3.org/1999/xhtml">abc</P>aaa';
+  $el->manakai_append_text ('hoge');
+  is $el->child_nodes->length, 1;
+  $el->inner_html ('');
+  is $el->content->child_nodes->length, 0;
+  done $c;
+} n => 7, name => '<template>.innerHTML XML';
 
 run_tests;
 
