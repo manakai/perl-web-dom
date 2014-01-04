@@ -11,7 +11,7 @@ use Web::DOM::Exception;
 
 _define_reflect_string title => 'title';
 _define_reflect_string lang => 'lang';
-_define_reflect_string itemid => 'itemid';
+_define_reflect_url itemid => 'itemid';
 _define_reflect_string accesskey => 'accesskey';
 _define_reflect_boolean itemscope => 'itemscope';
 _define_reflect_boolean hidden => 'hidden';

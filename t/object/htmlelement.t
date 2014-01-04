@@ -10,7 +10,7 @@ use Web::DOM::Internal;
 use Web::DOM::Document;
 use Web::CSS::Parser;
 
-for my $attr (qw(title lang itemid accesskey)) {
+for my $attr (qw(title lang accesskey)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
@@ -268,6 +268,7 @@ for my $test (
 }
 
 for my $test (
+  ['hoge', 'itemid'],
   ['link', 'href'],
   ['script', 'src'],
   ['blockquote', 'cite'],
