@@ -45,11 +45,13 @@ Return or set the C<href> attribute.  [HTML]
 
 Return or set the C<hreflang> attribute.  [HTML]
 
-=item $string = $el->ping
+=item $tokens = $el->ping
 
 =item $el->ping ($string)
 
-Return or set the C<ping> attribute.  [HTML]
+Return the L<Web::DOM::SettableTokenList> object for the C<ping>
+attribute, or set the C<ping> attribute to the specified string value.
+[HTML]
 
 =item $string = $el->rel
 
@@ -91,7 +93,7 @@ HTML Standard
 
 =head1 SEE ALSO
 
-L<Web::DOM::HTMLElement>.
+L<Web::DOM::HTMLElement>, L<Web::DOM::HTMLAnchorElement>.
 
 =head1 AUTHOR
 
@@ -99,7 +101,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -325,8 +325,7 @@ for my $test (
 }
 
 for my $test (
-  ['a', 'ping'],
-  ['area', 'ping'],
+  (),
 ) {
   my $attr = $test->[1];
   test {
@@ -1272,6 +1271,8 @@ for my $test (
   {element => 'link', attr => 'sizes'},
   {element => 'iframe', attr => 'sandbox'},
   {element => 'output', attr => 'for', method => 'html_for'},
+  {element => 'a', attr => 'ping', method => 'ping'},
+  {element => 'area', attr => 'ping', method => 'ping'},
 ) {
   my $el_name = $test->{element};
   my $method = $test->{method} || $test->{attr};
@@ -2999,7 +3000,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

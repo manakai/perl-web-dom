@@ -423,7 +423,7 @@ _define_reflect_string rel => 'rel';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
 _define_reflect_url href => 'href';
-_define_reflect_urls ping => 'ping';
+_define_reflect_settable_token_list ping => 'ping';
 
 # XXX URLUtils toString
 
@@ -691,7 +691,7 @@ _define_reflect_string rel => 'rel';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
 _define_reflect_url href => 'href';
-_define_reflect_urls ping => 'ping';
+_define_reflect_settable_token_list ping => 'ping';
 
 # XXX URLUtils toString
 
@@ -1837,7 +1837,7 @@ sub manakai_append_content ($$) {
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

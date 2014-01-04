@@ -633,6 +633,7 @@ sub destroy_iterator ($$) {
 ##   - {itemprop}             - $el->itemprop
 ##   - {itemref}              - $el->itemref
 ##   - {itemtype}             - $el->itemtype
+##   - {ping}                 - $el->ping
 ##   - {sandbox}              - $el->sandbox
 ##   - {sizes}                - $el->sizes
 ##

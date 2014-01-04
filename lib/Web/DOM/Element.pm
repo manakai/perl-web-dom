@@ -738,6 +738,8 @@ sub _define_reflect_url ($$;$) {
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_url
 
+=for comment
+
 push @EXPORT, qw(_define_reflect_urls);
 sub _define_reflect_urls ($$) {
   my ($perl_name, $content_name) = @_;
@@ -760,6 +762,8 @@ sub _define_reflect_urls ($$) {
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_urls
+
+=cut
 
 push @EXPORT, qw(_define_reflect_string_undef);
 sub _define_reflect_string_undef ($$) {
@@ -1228,7 +1232,7 @@ sub _define_reflect_child_url ($$$) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
