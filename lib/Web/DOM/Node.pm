@@ -23,7 +23,13 @@ use overload
     cmp => sub {
       carp "Use of uninitialized value in string comparison (cmp)"
           unless defined $_[1];
-      overload::StrVal ($_[0]) cmp overload::StrVal ($_[1])
+      if (UNIVERSAL::isa ($_[0], 'Web::DOM::Node') and
+          UNIVERSAL::isa ($_[1], 'Web::DOM::Node')) {
+        return (${$_[0]}->[0] eq ${$_[1]}->[0] and
+                ${$_[0]}->[1] == ${$_[1]}->[1]);
+      } else {
+        return 0;
+      }
     },
     fallback => 1;
 

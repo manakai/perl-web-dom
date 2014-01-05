@@ -1052,7 +1052,7 @@ sub css_serializer ($) {
 } # css_serializer
 
 sub gc ($$) {
-  return if @{$_[0]->{data} or []} > 100 and 0.95 > rand 1;
+  return if @{$_[0]->{data} or []} > 100 and 0.995 > rand 1;
   my ($self, $id) = @_;
   delete $self->{nodes}->[$id];
   my $tree_id = $self->{tree_id}->[$id];
