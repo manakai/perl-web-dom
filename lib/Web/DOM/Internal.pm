@@ -87,6 +87,8 @@ sub new ($) {
     # config config_obj config_hashref config_names
     # xpath_results
     # template_doc
+
+    # document_base_url
   }, $_[0];
 } # new
 
@@ -742,6 +744,8 @@ sub children_changed ($$$) {
   for (@{$_[0]->{xpath_results} or []}) {
     $_->{invalid_iterator_state} ||= 1;
   }
+
+  delete $_[0]->{document_base_url};
 } # children_changed
 
 ## DOMStringMap

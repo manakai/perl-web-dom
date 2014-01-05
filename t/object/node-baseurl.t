@@ -104,6 +104,22 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  is $doc->base_uri, 'about:blank';
+  $$doc->[0]->{document_base_url} = 'hoge';
+  is $doc->base_uri, 'hoge'; # cached!
+  $doc->manakai_set_url ('http://hoge/fuga#');
+  is $doc->base_uri, 'http://hoge/fuga#';
+  my $base = $doc->create_element ('base');
+  $doc->append_child ($base);
+  is $doc->base_uri, 'http://hoge/fuga#';
+  $base->href ('http://foo/bar');
+  is $doc->base_uri, 'http://foo/bar';
+  done $c;
+} n => 5, name => 'document base changed';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://abc/');
   my $attr = $doc->create_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'base');

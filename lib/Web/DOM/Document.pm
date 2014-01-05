@@ -115,6 +115,7 @@ sub manakai_is_srcdoc ($;$) {
     } else {
       delete ${$_[0]}->[2]->{is_srcdoc};
     }
+    delete ${$_[0]}->[0]->{document_base_url};
   }
   return ${$_[0]}->[2]->{is_srcdoc};
 } # manakai_is_srcdoc
@@ -176,6 +177,7 @@ sub manakai_set_url ($$) {
 
   # 3.
   ${$_[0]}->[2]->{url} = $url;
+  delete ${$_[0]}->[0]->{document_base_url};
   return;
 } # manakai_set_url
 
