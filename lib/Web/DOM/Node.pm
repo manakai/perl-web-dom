@@ -23,7 +23,7 @@ use overload
     cmp => sub {
       carp "Use of uninitialized value in string comparison (cmp)"
           unless defined $_[1];
-      if (UNIVERSAL::isa ($_[0], 'Web::DOM::Node') and
+      if ((ref $_[0]) eq (ref $_[1]) or
           UNIVERSAL::isa ($_[1], 'Web::DOM::Node')) {
         return (${$_[0]}->[0] cmp ${$_[1]}->[0] ||
                 ${$_[0]}->[1] <=> ${$_[1]}->[1]);
