@@ -236,6 +236,7 @@ sub text_content ($;$) {
         # XXX mutation
         #$int->children_changed ($$self->[1], ???_NODE); # redundant
         delete $int->{data}->[$node_id]->{parent_node};
+        delete $int->{data}->[$node_id]->{i_in_parent};
         $int->disconnect ($node_id);
         # don't include $node_id to new child_nodes
       }
@@ -245,7 +246,8 @@ sub text_content ($;$) {
       if (defined $node) {
         # XXX range
         $$node->[2]->{parent_node} = $$self->[1];
-        @{$$self->[2]->{child_nodes} ||= []} = $$node->[1];
+        $$node->[2]->{i_in_parent} = 0;
+        @{$$self->[2]->{child_nodes} ||= []} = ($$node->[1]);
         $int->connect ($$node->[1] => $$self->[1]);
         #$int->children_changed ($$self->[1], TEXT_NODE); # redundant
       } else {

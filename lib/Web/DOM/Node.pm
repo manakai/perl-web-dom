@@ -590,6 +590,13 @@ sub _pre_insert ($$;$$) {
       # Remove 8.
       @{$old_parent->{child_nodes}}
           = grep { $_ != $$node->[1] } @{$old_parent->{child_nodes}};
+      {
+        my $i = 0;
+        for (@{$old_parent->{child_nodes}}) {
+          $$node->[0]->{data}->[$_]->{i_in_parent} = $i++;
+        }
+        ## $$node->[2]->{i_in_parent} is updated later
+      }
       $$node->[0]->children_changed ($old_parent_id, $$node->[2]->{node_type});
 
       # Remove 9.
@@ -624,6 +631,7 @@ sub _pre_insert ($$;$$) {
     ## Redundant
     #$$parent->[0]->children_changed ($$parent->[1], $$old_child->[2]->{node_type});
     delete $$old_child->[2]->{parent_node};
+    delete $$old_child->[2]->{i_in_parent};
     $$old_child->[0]->disconnect ($$old_child->[1]);
     
     # Remove 9.
@@ -664,6 +672,7 @@ sub _pre_insert ($$;$$) {
         # Remove 8.
         @{$$node->[2]->{child_nodes}} = ();
         $$node->[0]->children_changed ($$node->[1], ELEMENT_NODE);
+        ## Children's ->{i_in_parent} are updated later
         
         # Remove 9.
         #
@@ -679,6 +688,12 @@ sub _pre_insert ($$;$$) {
         $$node->[0]->{data}->[$node_id]->{parent_node} = $$parent->[1];
         $$parent->[0]->connect ($node_id => $$parent->[1]);
       }
+      {
+        my $i = 0;
+        for (@{$$parent->[2]->{child_nodes}}) {
+          $$node->[0]->{data}->[$_]->{i_in_parent} = $i++;
+        }
+      }
       
       # Insert 9.
       # XXX node is inserted
@@ -691,6 +706,12 @@ sub _pre_insert ($$;$$) {
       $$parent->[0]->children_changed
           ($$parent->[1], $$node->[2]->{node_type});
       $$node->[2]->{parent_node} = $$parent->[1];
+      {
+        my $i = 0;
+        for (@{$$parent->[2]->{child_nodes}}) {
+          $$node->[0]->{data}->[$_]->{i_in_parent} = $i++;
+        }
+      }
       $$parent->[0]->connect ($$node->[1] => $$parent->[1]);
 
       # Insert 9.
@@ -742,6 +763,13 @@ sub remove_child ($$) {
       $_ != $child_id;
     } @{$$parent->[2]->{child_nodes}};
     delete $$child->[2]->{parent_node};
+    delete $$child->[2]->{i_in_parent};
+    {
+      my $i = 0;
+      for (@{$$parent->[2]->{child_nodes}}) {
+        $$parent->[0]->{data}->[$_]->{i_in_parent} = $i++;
+      }
+    }
     $$parent->[0]->children_changed ($$parent->[1], $$child->[2]->{node_type});
     $$child->[0]->disconnect ($$child->[1]);
 
@@ -806,6 +834,7 @@ sub normalize ($) {
         # Remove 8.
         #$int->children_changed ($$self->[1], TEXT_NODE); # redundant
         delete $int->{data}->[$node_id]->{parent_node};
+        delete $int->{data}->[$node_id]->{i_in_parent};
         $int->disconnect ($node_id);
         # don't include $node_id to $new_child_nodes
         
@@ -835,6 +864,7 @@ sub normalize ($) {
       # XXX mutation
       #$int->children_changed ($$self->[1], TEXT_NODE); # redundant
       delete $int->{data}->[$_]->{parent_node};
+      delete $int->{data}->[$_]->{i_in_parent};
       $int->disconnect ($_);
       # don't include $_ to $new_child_nodes
       # XXX node is removed
@@ -864,6 +894,12 @@ sub normalize ($) {
   }
   $int->children_changed ($$self->[1], ELEMENT_NODE);
   @{$$self->[2]->{child_nodes} or []} = @$new_child_nodes;
+  {
+    my $i = 0;
+    for (@{$$self->[2]->{child_nodes} or []}) {
+      $$self->[0]->{data}->[$_]->{i_in_parent} = $i++;
+    }
+  }
   return;
 } # normalize
 
@@ -1672,6 +1708,23 @@ sub _iterator ($) {
 
 # XXX manakai_language manakai_html_language
 
+## Return [@{$parent_node_if_any->_tree_node_indexes}, /index/] where
+## /index/ is the index of the node in the parent's child node list.
+## If the node has no parent, /index/ is zero.
+sub _tree_node_indexes ($) {
+  my $n = $_[0];
+  my $r = [];
+  while (defined $n) {
+    unless (defined $$n->[2]->{i_in_parent}) {
+      unshift @$r, 0;
+      return $r;
+    }
+    unshift @$r, $$n->[2]->{i_in_parent};
+    $n = $n->parent_node;
+  }
+  die;
+} # _tree_node_indexes
+
 sub DESTROY ($) {
   ${$_[0]}->[0]->gc (${$_[0]}->[1]);
 } # DESTROY
@@ -1680,7 +1733,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2007-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

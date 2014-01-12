@@ -5,6 +5,7 @@ use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', 
 use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
 use Test::X1;
 use Test::More;
+use Test::Differences;
 use Test::DOM::Exception;
 use Web::DOM::Document;
 use Web::DOM::Node;
@@ -647,11 +648,38 @@ test {
   done $c;
 } n => 4, name => 'contains attribute definition';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  $doc->inner_html (q{<!DOCTYPE html><html><head><title>aaa</title><link><base><p>aaaaa<span>afwww</span><span>afwww</span>afffff<p>aaaa<br><img>});
+  eq_or_diff $doc->_tree_node_indexes, [0];
+  for (
+    ['html' => [0, 1]],
+    ['body' => [0, 1, 1]],
+    ['title' => [0, 1, 0, 0]],
+    ['link' => [0, 1, 0, 1]],
+    ['img' => [0, 1, 1, 1, 2]],
+  ) {
+    eq_or_diff $doc->query_selector ($_->[0])->_tree_node_indexes, $_->[1];
+  }
+  $doc->append_child ($doc->create_comment ('aa'));
+  eq_or_diff $doc->last_child->_tree_node_indexes, [0, 2];
+  my $el = $doc->create_element ('aa');
+  $doc->body->first_child->replace_child ($el, $doc->body->first_child->first_child);
+  eq_or_diff $el->_tree_node_indexes, [0, 1, 1, 0, 0];
+  eq_or_diff $doc->query_selector ('span')->_tree_node_indexes, [0, 1, 1, 0, 1];
+  $el->parent_node->remove_child ($el);
+  eq_or_diff $doc->query_selector ('span')->_tree_node_indexes, [0, 1, 1, 0, 0];
+  eq_or_diff $el->_tree_node_indexes, [0];
+  done $c;
+} n => 11, name => '_tree_node_indexes';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
