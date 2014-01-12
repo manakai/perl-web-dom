@@ -689,9 +689,8 @@ sub _pre_insert ($$;$$) {
         $$parent->[0]->connect ($node_id => $$parent->[1]);
       }
       {
-        my $i = 0;
-        for (@{$$parent->[2]->{child_nodes}}) {
-          $$node->[0]->{data}->[$_]->{i_in_parent} = $i++;
+        for ($insert_position..$#{$$parent->[2]->{child_nodes}}) {
+          $$node->[0]->{data}->[$$parent->[2]->{child_nodes}->[$_]]->{i_in_parent} = $_;
         }
       }
       
@@ -707,9 +706,8 @@ sub _pre_insert ($$;$$) {
           ($$parent->[1], $$node->[2]->{node_type});
       $$node->[2]->{parent_node} = $$parent->[1];
       {
-        my $i = 0;
-        for (@{$$parent->[2]->{child_nodes}}) {
-          $$node->[0]->{data}->[$_]->{i_in_parent} = $i++;
+        for ($insert_position..$#{$$parent->[2]->{child_nodes}}) {
+          $$node->[0]->{data}->[$$parent->[2]->{child_nodes}->[$_]]->{i_in_parent} = $_;
         }
       }
       $$parent->[0]->connect ($$node->[1] => $$parent->[1]);
@@ -1711,6 +1709,9 @@ sub _iterator ($) {
 ## Return [@{$parent_node_if_any->_tree_node_indexes}, /index/] where
 ## /index/ is the index of the node in the parent's child node list.
 ## If the node has no parent, /index/ is zero.
+##
+## Used by: |Web::HTML::Microdata| (XXX and possibly,
+## |Web::XPath::Evaluator|).
 sub _tree_node_indexes ($) {
   my $n = $_[0];
   my $r = [];
