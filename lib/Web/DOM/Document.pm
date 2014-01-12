@@ -586,7 +586,7 @@ sub all ($) {
   });
 } # all
 
-# XXX commands get_items css_element_map
+# XXX commands css_element_map
 
 # XXX getter
 

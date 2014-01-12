@@ -38,6 +38,13 @@ elements whose namespace URL and local name matching to the specified
 values.  Both namespace URL and local name arguments can be C<*>,
 which represents the wildcard.  [DOM] [MANAKAI]
 
+=item $node_list = $node->get_items ($types)
+
+Return a L<Web::DOM::NodeList> containing the elements creating
+top-level microdata items in the subtree rooted by the context object.
+If the argument is specified, only the elements creating items with
+specified types are returned.  [HTML] [MANAKAI]
+
 =item $number = $node->child_element_count
 
 Return the number of child elements.  [DOM]

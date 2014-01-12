@@ -288,7 +288,8 @@ Following features require the perl-web-markup package
 <https://github.com/manakai/perl-web-markup> (L<Web::HTML::Parser> and
 its family): C<inner_html>, C<outer_html>, C<insert_adjacent_html>,
 C<DOMParser>, and C<XMLSerializer>; (L<Web::XPath::Parser> and related
-modules): C<XPathEvaluator> and C<XPathExpression>.
+modules): C<XPathEvaluator> and C<XPathExpression>;
+(L<Web::HTML::Microdata>: C<manakai_get_properties>).
 
 Following features require the perl-web-css package
 <https://github.com/manakai/perl-web-css>: C<query_selector>,
@@ -476,6 +477,10 @@ Console; XHR; EventSource; WebSocket; postMessage and related
 interfaces; Storage; IndexedDB; Fullscreen; Notifications; Zip; XSLT
 1.0.
 
+At the time of writing, there is no plan to implement the
+C<properties> attribute of the C<HTMLElement> interface (Instead, the
+C<manakaiGetProperties> method is implemented).
+
 =head1 LIMITATIONS
 
 Methods returning the index or position in some list or string, whose
@@ -495,7 +500,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2007-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

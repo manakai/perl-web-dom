@@ -107,7 +107,77 @@ sub dataset ($) {
   return ${$_[0]}->[0]->strmap ($_[0]);
 } # dataset
 
-# XXX properties itemvalue command*
+sub manakai_get_properties ($) {
+  my $self = $_[0];
+  my $result = {};
+
+  if ($self->has_attribute_ns (undef, 'itemscope')) {
+    require Web::HTML::Microdata;
+    my $md = Web::HTML::Microdata->new;
+    # XXX onerror -> console
+    my $item = $md->_get_item_of_element ($self, no_value => 1);
+    for my $prop (keys %{$item->{props}}) {
+      next unless @{$item->{props}->{$prop}};
+      $result->{$prop} = [map { $_->{node} } @{$item->{props}->{$prop}}];
+      Internals::SvREADONLY (@{$result->{$prop}}, 1);
+      Internals::SvREADONLY ($_, 1) for @{$result->{$prop}};
+    }
+  }
+
+  tie my %hash, 'Web::DOM::Internal::ReadOnlyHash', $result;
+  return \%hash;
+} # manakai_get_properties
+
+sub itemvalue ($;$) {
+  my $self = shift;
+
+  unless ($self->has_attribute_ns (undef, 'itemprop')) {
+    if (@_ > 0) {
+      _throw Web::DOM::Exception 'InvalidAccessError',
+          'The element has no |itemprop| attribute';
+    }
+    return undef;
+  }
+
+  if ($self->has_attribute_ns (undef, 'itemscope')) {
+    if (@_ > 0) {
+      _throw Web::DOM::Exception 'InvalidAccessError',
+          'The value is an item';
+    }
+    return $self;
+  }
+
+  my $ln = $self->local_name;
+  if ($ln eq 'meta') {
+    return $self->content (@_);
+  } elsif ($ln eq 'audio' or $ln eq 'embed' or $ln eq 'iframe' or
+           $ln eq 'img' or $ln eq 'source' or $ln eq 'track' or
+           $ln eq 'video') {
+    return $self->src (@_);
+  } elsif ($ln eq 'a' or $ln eq 'area' or $ln eq 'link') {
+    return $self->href (@_);
+  } elsif ($ln eq 'object') {
+    return $self->data (@_);
+  } elsif ($ln eq 'data') {
+    return $self->value (@_);
+  } elsif ($ln eq 'meter') {
+    if (@_ > 0) {
+      $self->set_attribute_ns (undef, 'value', $_[0]);
+    }
+    my $v = $self->get_attribute_ns (undef, 'value');
+    return defined $v ? $v : '';
+  } elsif ($ln eq 'time') {
+    if (@_ > 0) {
+      $self->datetime ($_[0]);
+    }
+    my $value = $self->get_attribute_ns (undef, 'datetime');
+    return defined $value ? $value : $self->text_content;
+  } else {
+    return $self->text_content (@_);
+  }
+} # itemvalue
+
+# XXX command*
 
 # ElementCSSInlineStyle
 sub style ($;$) {

@@ -176,6 +176,43 @@ sub query_selector_all ($$;$) {
       'Web::DOM::StaticNodeList';
 } # query_selector_all
 
+sub get_items ($;$) {
+  my $self = $_[0];
+
+  ## Top-level microdata items
+  my $nodes = [];
+  my @cand = ($self);
+  while (@cand) {
+    my $node = shift @cand;
+    if ($node->node_type == ELEMENT_NODE and
+        ($node->namespace_uri || '') eq HTML_NS and
+        $node->has_attribute_ns (undef, 'itemscope') and
+        not $node->has_attribute_ns (undef, 'itemprop')) {
+      push @$nodes, $node;
+    }
+    unshift @cand, @{$node->child_nodes};
+  }
+
+  my $types = [grep { length } split /[\x09\x0A\x0C\x0D\x20]+/, defined $_[1] ? ''.$_[1] : ''];
+  my $result = $nodes;
+  if (@$types) {
+    $result = [];
+    NODE: for my $node (@$nodes) {
+      for my $type (@$types) {
+        next NODE unless $node->itemtype->contains ($type);
+      }
+      push @$result, $node;
+    }
+  }
+
+  # 0, 3 - Keys for comparison
+  # 1 - Items
+  # 2 - Unused
+  require Web::DOM::StaticNodeList;
+  return bless \[''.$_[0], $result, undef, ''.$nodes],
+      'Web::DOM::StaticNodeList';
+} # get_items
+
 sub text_content ($;$) {
   if (@_ > 1) {
     my $self = $_[0];

@@ -116,6 +116,13 @@ Return the L<Web::DOM::SettableTokenList> object for the C<itemtype>
 attribute, or set the C<itemtype> attribute to the specified string
 value.  [HTML]
 
+=item $value = $el->itemvalue
+
+=item $el->itemvalue ($value)
+
+Get or set the value of the property of the item, represented by the
+element.  [HTML]
+
 =item $string = $el->lang
 
 =item $el->lang ($string)
@@ -127,6 +134,14 @@ For example:
   $el->lang ('ja');
   is $el->lang, 'ja';
   is $el->get_attribute ('lang'), 'ja';
+
+=item $hashref = $el->manakai_get_properties
+
+Return a hash reference of item properties, where hash keys are
+property names and hash values are array references of property
+elements.  [MANAKAI] [DOMPERL]
+
+See also L<Web::DOM/DEPENDENCY>.
 
 =item $style = $el->style
 
@@ -239,6 +254,16 @@ HTML Standard
 =item CSSOM
 
 CSSOM <http://dev.w3.org/csswg/cssom/#elementcssinlinestyle>.
+
+=item MANAKAI
+
+manakai DOM Extensions
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+
+=item DOMPERL
+
+manakai's DOM Perl Binding
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =back
 
