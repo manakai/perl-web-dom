@@ -387,13 +387,8 @@ sub title ($;$) {
       }
     }
 
-    if (defined $te) {
-      # 4.
-      $te->text_content ('');
-
-      # 5.
-      $te->append_child ($self->create_text_node (''.$_[1]));
-    }
+    # 4.
+    $te->text_content (''.$_[1]) if defined $te;
 
     return unless defined wantarray;
   }

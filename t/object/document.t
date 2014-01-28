@@ -1173,7 +1173,7 @@ test {
   $el2->append_child ($el3);
   $doc->title ('');
   is $doc->title, '';
-  is $el3->first_child->node_type, 3;
+  is $el3->first_child, undef;
   done $c;
 } n => 2, name => 'title setter head/title empty';
 
