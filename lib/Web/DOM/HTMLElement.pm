@@ -777,7 +777,7 @@ sub rel_list ($) {
 } # rel_list
 
 package Web::DOM::HTMLTableElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Internal;
 use Web::DOM::Node;
@@ -801,11 +801,9 @@ sub caption ($;$) {
         'The new value is not a |caption| element'
         if defined $_[1] and
            not UNIVERSAL::isa ($_[1], 'Web::DOM::HTMLTableCaptionElement');
-    _throw Web::DOM::Exception 'HierarchyRequestError',
-        'The new value is not a |caption| element' unless defined $_[1];
     my $cap = $_[0]->caption; # recursive!
     $_[0]->remove_child ($cap) if defined $cap;
-    $_[0]->insert_before ($_[1], $_[0]->first_child);
+    $_[0]->insert_before ($_[1], $_[0]->first_child) if defined $_[1];
     return unless defined wantarray;
   }
 
@@ -841,18 +839,20 @@ sub thead ($;$) {
            not UNIVERSAL::isa ($_[1], 'Web::DOM::HTMLTableSectionElement');
     _throw Web::DOM::Exception 'HierarchyRequestError',
         'The new value is not a |thead| element'
-            if not defined $_[1] or not $_[1]->local_name eq 'thead';
+            if defined $_[1] and not $_[1]->local_name eq 'thead';
     my $current = $_[0]->thead; # recursive!
     $_[0]->remove_child ($current) if defined $current;
-    my $after;
-    for ($_[0]->child_nodes->to_list) {
-      next unless $_->node_type == ELEMENT_NODE;
-      next if $_->manakai_element_type_match (HTML_NS, 'caption');
-      next if $_->manakai_element_type_match (HTML_NS, 'colgroup');
-      $after = $_;
-      last;
+    if (defined $_[1]) {
+      my $after;
+      for ($_[0]->child_nodes->to_list) {
+        next unless $_->node_type == ELEMENT_NODE;
+        next if $_->manakai_element_type_match (HTML_NS, 'caption');
+        next if $_->manakai_element_type_match (HTML_NS, 'colgroup');
+        $after = $_;
+        last;
+      }
+      $_[0]->insert_before ($_[1], $after);
     }
-    $_[0]->insert_before ($_[1], $after);
     return unless defined wantarray;
   }
 
@@ -888,19 +888,21 @@ sub tfoot ($;$) {
            not UNIVERSAL::isa ($_[1], 'Web::DOM::HTMLTableSectionElement');
     _throw Web::DOM::Exception 'HierarchyRequestError',
         'The new value is not a |tfoot| element'
-            if not defined $_[1] or not $_[1]->local_name eq 'tfoot';
+            if defined $_[1] and not $_[1]->local_name eq 'tfoot';
     my $current = $_[0]->tfoot; # recursive!
     $_[0]->remove_child ($current) if defined $current;
-    my $after;
-    for ($_[0]->child_nodes->to_list) {
-      next unless $_->node_type == ELEMENT_NODE;
-      next if $_->manakai_element_type_match (HTML_NS, 'caption');
-      next if $_->manakai_element_type_match (HTML_NS, 'colgroup');
-      next if $_->manakai_element_type_match (HTML_NS, 'thead');
-      $after = $_;
-      last;
+    if (defined $_[1]) {
+      my $after;
+      for ($_[0]->child_nodes->to_list) {
+        next unless $_->node_type == ELEMENT_NODE;
+        next if $_->manakai_element_type_match (HTML_NS, 'caption');
+        next if $_->manakai_element_type_match (HTML_NS, 'colgroup');
+        next if $_->manakai_element_type_match (HTML_NS, 'thead');
+        $after = $_;
+        last;
+      }
+      $_[0]->insert_before ($_[1], $after);
     }
-    $_[0]->insert_before ($_[1], $after);
     return unless defined wantarray;
   }
 

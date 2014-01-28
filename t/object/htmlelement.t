@@ -1800,15 +1800,22 @@ for my $name (qw(caption thead tfoot)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     my $table = $doc->create_element ('table');
-    dies_here_ok {
-      $table->$name (undef);
-    };
-    isa_ok $@, 'Web::DOM::Exception';
-    is $@->name, 'HierarchyRequestError';
-    is $@->message, "The new value is not a |$name| element";
+    $table->$name (undef);
     is $table->first_child, undef;
     done $c;
-  } n => 5, name => ['table', $name, 'undef'];
+  } n => 1, name => ['table', $name, 'undef'];
+
+  my $create_name = "create_$name";
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    my $el = $table->$create_name;
+    $table->$name (undef);
+    is $table->first_child, undef;
+    is $el->parent_node, undef;
+    done $c;
+  } n => 2, name => ['table', $name, 'undef'];
 
   test {
     my $c = shift;
@@ -1824,7 +1831,6 @@ for my $name (qw(caption thead tfoot)) {
     done $c;
   } n => 5, name => ['table', $name, 'not expected element'];
 
-  my $create_name = "create_$name";
   my $pfx = $name eq 'caption' ? '' : '<tr><td>';
   test {
     my $c = shift;
