@@ -14,6 +14,7 @@ for my $method (qw(append_child insert_before)) {
     my $doc = new Web::DOM::Document;
     
     my $node = $doc->create_element ('el');
+    $method; # Perl 5.8 compat
     dies_here_ok {
       $node->$method (undef);
     };
@@ -28,6 +29,7 @@ for my $method (qw(append_child insert_before)) {
     my $doc = new Web::DOM::Document;
     
     my $node = $doc->create_element ('el');
+    $method; # Perl 5.8 compat
     dies_here_ok {
       $node->$method ('hoge');
     };
@@ -72,6 +74,7 @@ for my $method (qw(append_child insert_before)) {
     ) {
       test {
         my $c = shift;
+        $method; # Perl 5.8 compat
         dies_here_ok {
           $parent->$method ($node2);
         };
@@ -232,6 +235,7 @@ for my $method (qw(insert_before append_child)) {
     test {
       my $c = shift;
 
+      $method; # Perl 5.8 compat
       dies_here_ok {
         $doc->$method ($node);
       };
@@ -250,6 +254,7 @@ for my $method (qw(insert_before append_child)) {
     test {
       my $c = shift;
 
+      $method; # Perl 5.8 compat
       dies_here_ok {
         $doc->$method ($node);
       };
@@ -461,6 +466,7 @@ for my $method (qw(append_child insert_before)) {
     my $el1 = $doc->create_element ('a');
     my $el2 = $doc->create_element ('b');
     $doc->append_child ($el1);
+    $method; # Perl 5.8 compat
     dies_here_ok {
       $doc->$method ($el2);
     };
@@ -560,6 +566,7 @@ for my $method (qw(append_child insert_before)) {
     ) {
       test {
         my $c = shift;
+        $method; # Perl 5.8 compat
         dies_here_ok {
           $parent->$method ($child);
         };
@@ -577,6 +584,7 @@ for my $method (qw(append_child insert_before)) {
     ) {
       test {
         my $c = shift;
+        $method; # Perl 5.8 compat
         dies_here_ok {
           $parent->$method ($child);
         };

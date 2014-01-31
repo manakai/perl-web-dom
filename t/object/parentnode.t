@@ -1188,7 +1188,7 @@ test {
   $el->append_child ($el3);
   $el3->append_child ($el4);
   my $resolver = sub {
-    my $prefix = $_[1] // '';
+    my $prefix = $_[1] || '';
     if ($prefix eq 'html') {
       return 'http://www.w3.org/1999/xhtml';
     } elsif ($prefix eq 'svg') {

@@ -435,7 +435,7 @@ for my $test (
   ['th', 'nowrap'],
   ['ul', 'compact'],
 ) {
-  my $attr = $test->[2] // $test->[1];
+  my $attr = $test->[2] || $test->[1];
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
@@ -547,7 +547,7 @@ for my $test (
     ) {
       $el->$attr ($_->[0]);
       is $el->$attr, $_->[1];
-      is $el->get_attribute ($attr), $_->[2] // $_->[1];
+      is $el->get_attribute ($attr), defined $_->[2] ? $_->[2] : $_->[1];
     }
     for (
       ["" => $test->[2]],
@@ -641,7 +641,7 @@ for my $test (
     ) {
       $el->$attr ($_->[0]);
       is $el->$attr, $_->[1], [$_->[0], 'idl attr'];
-      is $el->get_attribute ($attr), $_->[2] // $_->[1],
+      is $el->get_attribute ($attr), defined $_->[2] ? $_->[2] : $_->[1],
           [$_->[0], 'content attr'];
     }
     $el->set_attribute ($attr => '361');
@@ -760,7 +760,7 @@ for my $test (
     ) {
       $el->$attr ($_->[0]);
       is $el->$attr, $_->[1], [$_->[0], 'idl attr'];
-      is $el->get_attribute ($attr), $_->[2] // $_->[1],
+      is $el->get_attribute ($attr), defined $_->[2] ? $_->[2] : $_->[1],
           [$_->[0], 'content attr'];
     }
     for (
@@ -828,7 +828,7 @@ for my $test (
     ) {
       $el->$attr ($_->[0]);
       is $el->$attr, $_->[1], [$_->[0], 'idl attr'];
-      is $el->get_attribute ($attr), $_->[2] // $_->[1],
+      is $el->get_attribute ($attr), defined $_->[2] ? $_->[2] : $_->[1],
           [$_->[0], 'content attr'];
     }
     $el->set_attribute ($attr => '361');
@@ -1182,7 +1182,7 @@ for my $test (
     for (@{$test->{valid_values}}) {
       $el->$attr ($_->[0]);
       is $el->$attr, $_->[1];
-      is $el->get_attribute ($test->{content_attr} // $attr), $_->[0];
+      is $el->get_attribute ($test->{content_attr} || $attr), $_->[0];
     }
     for (
       (map { [$_->[0].'  '] } @{$test->{valid_values}}),
@@ -1191,8 +1191,8 @@ for my $test (
       ['#missing'],
     ) {
       $el->$attr ($_->[0]);
-      is $el->$attr, $test->{invalid_default} // $test->{default};
-      is $el->get_attribute ($test->{content_attr} // $attr), $_->[0] // '';
+      is $el->$attr, defined $test->{invalid_default} ? $test->{invalid_default} : $test->{default};
+      is $el->get_attribute ($test->{content_attr} || $attr), defined $_->[0] ? $_->[0] : '';
     }
     done $c;
   } n => 3 + @{$test->{valid_values}}*2 +

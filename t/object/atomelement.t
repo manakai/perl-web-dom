@@ -18,19 +18,19 @@ for (
     my $c = shift;
     my $doc = new Web::DOM::Document;
     my $el = $doc->create_element_ns (ATOM_NS, 'hoge');
-    is $el->xmlbase, '';
+    is $el->$method_name, '';
     
-    $el->xmlbase ('hge');
-    is $el->xmlbase, 'hge';
-    is $el->get_attribute_ns (XML_NS, 'base'), 'hge';
+    $el->$method_name ('hge');
+    is $el->$method_name, 'hge';
+    is $el->get_attribute_ns (XML_NS, $local_name), 'hge';
     is $el->attributes->[0]->prefix, 'xml';
     
-    $el->xmlbase (undef);
-    is $el->xmlbase, '';
+    $el->$method_name (undef);
+    is $el->$method_name, '';
     is $el->attributes->length, 1;
     
-    $el->xmlbase (0);
-    is $el->xmlbase, '0';
+    $el->$method_name (0);
+    is $el->$method_name, '0';
     
     done $c;
   } n => 7, name => [$method_name, $local_name, 'string xml attr'];
@@ -654,6 +654,7 @@ for my $test (
     my $doc = new Web::DOM::Document;
     my $el = $doc->create_element_ns (ATOM_NS, $test->{el});
 
+    $method; # Perl 5.8 compat
     for my $value (0+"nan", 0+"inf", 0-"inf") {
       dies_here_ok {
         $el->$method ($value);
