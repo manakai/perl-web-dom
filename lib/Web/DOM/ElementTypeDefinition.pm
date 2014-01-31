@@ -1,7 +1,7 @@
 package Web::DOM::ElementTypeDefinition;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Node;
 push our @ISA, qw(Web::DOM::Node);
 use Web::DOM::DocumentType;
@@ -21,7 +21,10 @@ sub owner_document_type_definition ($) {
 
 sub attribute_definitions ($) {
   return ${$_[0]}->[0]->collection ('attribute_definitions', $_[0], sub {
-    return grep { defined $_ } values %{${$_[0]}->[2]->{attribute_definitions} or {}};
+    my $int = ${$_[0]}->[0];
+    return sort { $int->{data}->[$a]->{node_name} cmp $int->{data}->[$b]->{node_name} }
+           grep { defined $_ }
+           values %{${$_[0]}->[2]->{attribute_definitions} or {}};
   });
 } # attribute_definitions
 
@@ -82,7 +85,7 @@ sub content_model_text ($;$) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

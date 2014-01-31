@@ -357,8 +357,8 @@ test {
   isa_ok $col, 'Web::DOM::NamedNodeMap';
   is $col->length, 2;
   is scalar @$col, 2;
-  is $col->[0], $node2;
-  is $col->[1], $node1;
+  is $col->[0], $node1;
+  is $col->[1], $node2;
 
   is $et->attribute_definitions, $col;
   done $c;
@@ -368,7 +368,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -427,10 +427,10 @@ test {
   $el->set_attribute_definition_node ($attr2);
 
   is $attr2->compare_document_position ($attr1),
-      DOCUMENT_POSITION_FOLLOWING |
+      DOCUMENT_POSITION_PRECEDING |
       DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC;
   is $attr1->compare_document_position ($attr2),
-      DOCUMENT_POSITION_PRECEDING |
+      DOCUMENT_POSITION_FOLLOWING |
       DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC;
   is $attr1->compare_document_position ($el),
       DOCUMENT_POSITION_PRECEDING | DOCUMENT_POSITION_CONTAINS;
