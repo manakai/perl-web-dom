@@ -22,7 +22,7 @@ sub owner_document_type_definition ($) {
 sub attribute_definitions ($) {
   return ${$_[0]}->[0]->collection ('attribute_definitions', $_[0], sub {
     my $int = ${$_[0]}->[0];
-    return sort { $int->{data}->[$a]->{node_name} cmp $int->{data}->[$b]->{node_name} }
+    return sort { ${$int->{data}->[$a]->{node_name}} cmp ${$int->{data}->[$b]->{node_name}} }
            grep { defined $_ }
            values %{${$_[0]}->[2]->{attribute_definitions} or {}};
   });
