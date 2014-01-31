@@ -702,7 +702,7 @@ sub _define_reflect_string ($$;$) {
   my $class = caller;
   $default = '' if not defined $default;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         $_[0]->set_attribute_ns (undef, '%s', $_[1]);
         return unless defined wantarray;
@@ -710,7 +710,7 @@ sub _define_reflect_string ($$;$) {
 
       my $v = $_[0]->get_attribute_ns (undef, '%s');
       return defined $v ? $v : $default;
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_string
@@ -720,7 +720,7 @@ sub _define_reflect_url ($$;$) {
   my ($perl_name, $content_name, $code) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         $_[0]->set_attribute_ns (undef, '%s', $_[1]);
         return unless defined wantarray;
@@ -733,7 +733,7 @@ sub _define_reflect_url ($$;$) {
       } else {
         return $code ? $code->($_[0]) : '';
       }
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_url
@@ -745,7 +745,7 @@ sub _define_reflect_urls ($$) {
   my ($perl_name, $content_name) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         $_[0]->set_attribute_ns (undef, '%s', $_[1]);
         return unless defined wantarray;
@@ -758,7 +758,7 @@ sub _define_reflect_urls ($$) {
       } else {
         return ''; # or default
       }
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_urls
@@ -770,7 +770,7 @@ sub _define_reflect_string_undef ($$) {
   my ($perl_name, $content_name) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         $_[0]->set_attribute_ns (undef, '%s', defined $_[1] ? $_[1] : '');
         return unless defined wantarray;
@@ -778,7 +778,7 @@ sub _define_reflect_string_undef ($$) {
 
       my $v = $_[0]->get_attribute_ns (undef, '%s');
       return defined $v ? $v : '';
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_string_undef
@@ -788,7 +788,7 @@ sub _define_reflect_enumerated ($$$) {
   my ($perl_name, $content_name, $values) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         $_[0]->set_attribute_ns (undef, '%s', $_[1]);
         return unless defined wantarray;
@@ -806,7 +806,7 @@ sub _define_reflect_enumerated ($$$) {
       } else {
         return defined $values->{'#missing'} ? $values->{'#missing'} : '';
       }
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_enumerated
@@ -816,7 +816,7 @@ sub _define_reflect_boolean ($$) {
   my ($perl_name, $content_name) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         if ($_[1]) {
           $_[0]->set_attribute_ns (undef, '%s', '');
@@ -827,7 +827,7 @@ sub _define_reflect_boolean ($$) {
       }
 
       return $_[0]->has_attribute_ns (undef, '%s');
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name, $content_name or die $@;
 } # _define_reflect_boolean
@@ -837,7 +837,7 @@ sub _define_reflect_long ($$$) {
   my ($perl_name, $content_name, $get_default) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         # WebIDL: long
         $_[0]->set_attribute_ns
@@ -851,7 +851,7 @@ sub _define_reflect_long ($$$) {
         return 0+$v if -2**31 <= $v and $v <= 2**31-1;
       }
       return $get_default->($_[0]);
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_long
@@ -861,7 +861,7 @@ sub _define_reflect_long_nn ($$$) {
   my ($perl_name, $content_name, $get_default) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         # WebIDL: long
         my $v = unpack 'l', pack 'L', $_[1] %% 2**32;
@@ -879,7 +879,7 @@ sub _define_reflect_long_nn ($$$) {
         return 0+$v if 0 <= $v and $v <= 2**31-1;
       }
       return $get_default->($_[0]);
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_long_nn
@@ -889,7 +889,7 @@ sub _define_reflect_unsigned_long ($$$) {
   my ($perl_name, $content_name, $get_default) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         # WebIDL: unsigned long
         $_[0]->set_attribute_ns
@@ -903,7 +903,7 @@ sub _define_reflect_unsigned_long ($$$) {
         return 0+$v if 0 <= $v and $v <= 2**31-1;
       }
       return $get_default->($_[0]);
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_unsigned_long
@@ -913,7 +913,7 @@ sub _define_reflect_unsigned_long_positive ($$$) {
   my ($perl_name, $content_name, $get_default) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         # WebIDL: unsigned long
         my $v = unpack 'L', pack 'L', $_[1] %% 2**32;
@@ -931,7 +931,7 @@ sub _define_reflect_unsigned_long_positive ($$$) {
         return 0+$v if 1 <= $v and $v <= 2**31-1;
       }
       return $get_default->($_[0]);
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_unsigned_long_positive
@@ -941,7 +941,7 @@ sub _define_reflect_settable_token_list ($$) {
   my ($perl_name, $content_name) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       my $self = $_[0];
       if (@_ > 1) {
         $self->%s->value ($_[1]); # recursive!
@@ -953,7 +953,7 @@ sub _define_reflect_settable_token_list ($$) {
         $self->set_attribute_ns (undef, '%s' => join ' ', @$new)
             if @$new or $self->has_attribute_ns (undef, '%s');
       }, '%s');
-    }
+    };
     1;
   }, $class, $perl_name, $perl_name,
      $perl_name, $perl_name, $content_name, $content_name, $content_name
@@ -966,7 +966,7 @@ sub _define_reflect_idref ($$$) {
   my ($perl_name, $content_name, $el_class) = @_;
   my $class = caller;
   eval sprintf q{
-    sub %s::%s ($;$) {
+    *%s::%s = sub ($;$) {
       if (@_ > 1) {
         # WebIDL: object
         _throw Web::DOM::TypeError 'The argument is not a ' . $el_class
@@ -997,7 +997,7 @@ sub _define_reflect_idref ($$$) {
 
       # 4.
       return $cand;
-    }
+    };
     1;
   }, $class, $perl_name, $content_name, $content_name, $content_name or die $@;
 } # _define_reflect_idref
