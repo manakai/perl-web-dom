@@ -357,8 +357,8 @@ test {
   isa_ok $col, 'Web::DOM::NamedNodeMap';
   is $col->length, 2;
   is scalar @$col, 2;
-  is $col->[0], $node1;
-  is $col->[1], $node2;
+  is $col->[0], $node2;
+  is $col->[1], $node1;
 
   is $et->attribute_definitions, $col;
   done $c;
