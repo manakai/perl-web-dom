@@ -81,7 +81,7 @@ sub evaluate ($$$;$$$) {
     }
   }
   my $type = unpack 'S', pack 'S', ($_[4] || 0) % 2**16; # WebIDL unsigned short
-  if (defined $_[5] and not UNIVERSAL::can ($_[5], 'isa')) { # WebIDL object?
+  if (defined $_[5] and (not ref $_[5] or not UNIVERSAL::can ($_[5], 'isa'))) { # WebIDL object?
     _throw Web::DOM::TypeError 'The fifth argument is not an object';
   }
 

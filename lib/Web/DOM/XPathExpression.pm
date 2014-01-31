@@ -13,7 +13,7 @@ sub evaluate ($$;$$) {
     _throw Web::DOM::TypeError 'The first argument is not a Node';
   }
   my $type = unpack 'S', pack 'S', ($_[2] || 0) % 2**16; # WebIDL unsigned short
-  if (defined $_[3] and not UNIVERSAL::can ($_[3], 'isa')) { # WebIDL object?
+  if (defined $_[3] and (not ref $_[3] or not UNIVERSAL::can ($_[3], 'isa'))) { # WebIDL object?
     _throw Web::DOM::TypeError 'The third argument is not an object';
   }
 
