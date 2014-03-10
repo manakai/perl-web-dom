@@ -3,11 +3,11 @@ use strict;
 use warnings;
 use Web::DOM::HTMLCollection;
 push our @ISA, qw(Web::DOM::HTMLCollection);
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Internal;
 
 use overload
-    bool => sub { 0 },
+    bool => sub { 1 },
     '%{}' => sub {
       return ${$_[0]}->[4] ||= do {
         my %data;
@@ -100,7 +100,7 @@ sub tags ($$) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

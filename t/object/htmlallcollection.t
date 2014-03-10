@@ -173,7 +173,7 @@ test {
   ok not $nl3 eq $nl2;
 
   ok defined $nl2;
-  ok not $nl2;
+  ok not not $nl2;
 
   done $c;
 } n => 14, name => 'children comparison';

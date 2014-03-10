@@ -87,6 +87,8 @@ For example:
 Return the user data associated to the node with the specified key, if
 any, or C<undef>.  [DOM3CORE]
 
+See L</USER DATA>.
+
 =item $bool = $node->has_attributes
 
 Return whether the node has any content attribute or not.
@@ -203,10 +205,7 @@ Set the specified key-value pair as one of user data of the node.
 Note that this implementation does not support user data handler.  The
 third argument cannot be specified.
 
-Please note that, if the value directly or indirectly references the
-node itself, the node will not be garbage collected even when the
-other references to the node have been removed.  This is the
-limitation of the Perl's garbage collection mechanism.
+See L</USER DATA>.
 
 =item $string = $node->text_content
 
@@ -273,6 +272,22 @@ DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC [DOM]
 
 =back
 
+=head1 USER DATA
+
+Methods C<get_user_data> and C<set_user_data> can be used to store and
+retrieve custom data associated with the node.
+
+Please note that, if the value directly or indirectly references the
+node itself, the node will not be garbage collected even when the
+other references to the node have been removed.  This is the
+limitation of the Perl's garbage collection mechanism.
+
+User data keys with prefix C<manakai_> are used by various Perl
+modules by the manakai project.  Other modules and applications should
+not use such keys.  See
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++Predefined%20User%20Data%20Names>
+for the list of currently used keys.
+
 =head1 SPECIFICATIONS
 
 =over 4
@@ -323,7 +338,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

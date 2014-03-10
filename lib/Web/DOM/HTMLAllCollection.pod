@@ -44,15 +44,6 @@ them is returned instead.  [DOM] [HTML] [DOMPERL]
 
 =back
 
-Please note that the L<Web::DOM::HTMLAllCollection> object is
-evaluated to false in boolean context:
-
-  if ($document->all) {
-    ok 0;
-  } else {
-    ok 1;
-  }
-
 =head1 SPECIFICATIONS
 
 =over 4
@@ -84,7 +75,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
