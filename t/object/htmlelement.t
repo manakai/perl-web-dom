@@ -355,7 +355,7 @@ for my $test (
   } n => 11, name => ['reflect urls', $test->[0], $test->[1]];
 }
 
-for my $attr (qw(itemscope hidden inert)) {
+for my $attr (qw(itemscope hidden)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;

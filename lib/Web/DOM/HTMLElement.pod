@@ -72,13 +72,6 @@ For example:
   $el->hidden (1);
   ok $el->hidden; # <span hidden>
 
-=item $boolean = $el->inert
-
-=item $el->inert ($boolean)
-
-Return or set whether the C<inert> attribute is specified or not.
-[HTML]
-
 =item $string = $el->itemid
 
 =item $el->itemid ($string)
