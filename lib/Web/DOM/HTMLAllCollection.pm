@@ -64,10 +64,6 @@ use overload
         \%hash;
       };
     },
-    '&{}' => sub {
-      my $self = shift;
-      return sub { $self->item (@_) };
-    },
     fallback => 1;
 
 sub item ($$) {
@@ -78,23 +74,6 @@ sub item ($$) {
     return $_[0]->named_item ($index);
   }
 } # item
-
-sub tags ($$) {
-  my $tag_name = ''.$_[1];
-  if (${${$_[0]}->[0]}->[0]->{data}->[0]->{is_html}) {
-    $tag_name =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
-  }
-  my $filter_ = ${$_[0]}->[1];
-  my $filter = sub {
-    my $int = ${$_[0]}->[0];
-    return grep {
-      ${$int->{data}->[$_]->{namespace_uri} || \''} eq HTML_NS and
-      ${$int->{data}->[$_]->{local_name}} eq $tag_name;
-    } $filter_->($_[0]);
-  };
-  return ${${$_[0]}->[0]}->[0]->collection
-      ([@{${$_[0]}->[3]}, 't', $tag_name], ${$_[0]}->[0], $filter);
-} # tags
 
 1;
 

@@ -377,13 +377,11 @@ test {
 
   is $all->item (0), $el1;
   is $all->[0], $el1;
-  is $all->(0), $el1;
   is $all->named_item (0), undef;
   is $all->{0}, undef;
   is $all->{foo}, $el1;
   is $all->named_item ('foo'), $el1;
   is $all->item ('foo'), $el1;
-  is $all->('foo'), $el1;
 
   is $all->item (1), undef;
   is $all->[1], undef;
@@ -391,7 +389,7 @@ test {
   is $all->named_item (1), undef;
 
   done $c;
-} n => 14, name => 'all items name';
+} n => 12, name => 'all items name';
 
 test {
   my $c = shift;
@@ -405,13 +403,11 @@ test {
 
   is $all->item (0), $el1;
   is $all->[0], $el1;
-  is $all->(0), $el1;
   is $all->named_item (0), undef;
   is $all->{0}, undef;
   is $all->{foo}, $el1;
   is $all->named_item ('foo'), $el1;
   is $all->item ('foo'), $el1;
-  is $all->('foo'), $el1;
 
   is $all->item (1), undef;
   is $all->[1], undef;
@@ -419,7 +415,7 @@ test {
   is $all->named_item (1), undef;
 
   done $c;
-} n => 14, name => 'all items id';
+} n => 12, name => 'all items id';
 
 test {
   my $c = shift;
@@ -434,23 +430,20 @@ test {
   is $all->item (0), $el1;
   is $all->[0], $el1;
   is $all->named_item (0), undef;
-  is $all->(0), $el1;
   is $all->{0}, undef;
   is $all->{foo}, undef;
-  is $all->('foo'), undef;
   is $all->named_item ('foo'), undef;
   is $all->item ('foo'), undef;
   ok exists $all->{foo};
   ok not exists $all->{0};
 
   is $all->item (1), undef;
-  is $all->(1), undef;
   is $all->[1], undef;
   is $all->{1}, undef;
   is $all->named_item (1), undef;
 
   done $c;
-} n => 17, name => 'all items name not name element';
+} n => 14, name => 'all items name not name element';
 
 test {
   my $c = shift;
@@ -501,21 +494,18 @@ test {
   is $col->[1], $el3;
   
   my $col2 = $col->item ('foo');
-  is $col->('foo'), $col2;
   isa_ok $col2, 'Web::DOM::HTMLAllCollection';
   is $col2->length, 2;
   isnt $col2, $col;
   is $col2->[0], $el2;
-  is $col2->(0), $el2;
   is $col2->[1], $el3;
-  is $col2->(1), $el3;
 
   my $col3 = $col2->named_item ('foo');
   isa_ok $col2, 'Web::DOM::HTMLAllCollection';
   is $col2->length, 2;
 
   done $c;
-} n => 17, name => 'all nameditem collection';
+} n => 14, name => 'all nameditem collection';
 
 test {
   my $c = shift;
@@ -533,83 +523,6 @@ test {
   is $all->{hoge}, $el2;
   done $c;
 } n => 2, name => 'all nameditem id/name';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $all = $doc->all;
-  my $el1 = $doc->create_element ('hoge');
-  $doc->append_child ($el1);
-  my $el2 = $doc->create_element ('hoge');
-  my $el3 = $doc->create_element ('fuga');
-  $el1->append_child ($el2);
-  $el1->append_child ($el3);
-
-  my $col2 = $all->tags ('hoge');
-  is $col2->length, 2;
-  is $col2->[0], $el1;
-  is $col2->[1], $el2;
-
-  my $col3 = $all->tags ('fuga');
-  is $col3->length, 1;
-  is $col3->(0), $el3;
-
-  my $col1 = $all->tags ('abc');
-  is $col1->length, 0;
-
-  my $el4 = $doc->create_element ('abc');
-  $el3->append_child ($el4);
-  is $col1->length, 1;
-  is $col1->item (0), $el4;
-
-  $el4->id ('aaa');
-  is $col1->{aaa}, $el4;
-
-  done $c;
-} n => 9, name => 'tags';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('aa');
-  $doc->append_child ($el1);
-  my $el2 = $doc->create_element ('bbb');
-  my $el3 = $doc->create_element_ns (undef, 'bbb');
-  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a:bbb');
-  my $el5 = $doc->create_element ('BBB');
-  $el1->append_child ($el2);
-  $el1->append_child ($el3);
-  $el1->append_child ($el4);
-  $el1->append_child ($el5);
-
-  my $all = $doc->all;
-  my $col1 = $all->tags ('BBB');
-  is $col1->length, 1;
-  is $col1->[0], $el5;
-
-  my $col2 = $all->tags ('a:bbb');
-  is $col2->length, 0;
-
-  my $col3 = $all->tags ('bbb');
-  is $col3->length, 2;
-  is $col3->[0], $el2;
-  is $col3->[1], $el4;
-
-  $doc->manakai_is_html (1);
-  is $col1->length, 1;
-  is $col2->length, 0;
-  is $col3->length, 2;
-
-  my $col1_1 = $all->tags ('BBB');
-  is $col1_1->length, 2;
-  is $col1_1->[0], $el2;
-  is $col1_1->[1], $el4;
-
-  my $col2_3 = $all->tags ('bbb');
-  is $col2_3, $col1_1;
-
-  done $c;
-} n => 13, name => 'tags case-sensitivity';
 
 test {
   my $c = shift;
@@ -646,7 +559,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

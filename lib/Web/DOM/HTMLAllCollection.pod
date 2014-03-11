@@ -18,8 +18,6 @@ following methods are available:
 
 =item $node = $col->{$index}
 
-=item $node = $col->($index)
-
 =item $node = $col->item ($index)
 
 Return the node in the collection, specified by its index.  [DOM]
@@ -30,8 +28,6 @@ Perl-ish ways to access items, such as negative indexing, while C<<
 $col->[-1] >> works as intended.
 
 =item $obj = $col->{$key}
-
-=item $obj = $col->($key)
 
 =item $obj = $col->item ($key)
 
