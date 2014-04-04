@@ -606,8 +606,6 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 # XXX plugin-specific interface
 
-# XXX legacycaller
-
 _define_reflect_url src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string width => 'width';
@@ -622,7 +620,7 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 # XXX plugin-specific interface
 
-# XXX legacycaller form content_document content_window will_validate
+# XXX form content_document content_window will_validate
 # validity validation_message check_validity set_custom_validity
 
 _define_reflect_url data => 'data';
