@@ -353,59 +353,59 @@ sub head ($) {
 sub title ($;$) {
   my $self = $_[0];
 
-  # Getter 1. / Setter 1.
+  my $title_el;
   my $re = $self->document_element;
-  if (defined $re and $re->manakai_element_type_match (SVG_NS, 'svg')) {
-    if (@_ > 1) {
-      my $value = ''.$_[1];
-      return unless defined wantarray;
-    }
-
-    # SVG spec is unclear...
-    for ($re->child_nodes->to_list) {
-      if ($_->node_type == ELEMENT_NODE and
-          $_->manakai_element_type_match (SVG_NS, 'title')) {
-        return $_->text_content;
+  if (defined $re) {
+    if ($re->manakai_element_type_match (SVG_NS, 'svg')) {
+      for ($re->children->to_list) {
+        if ($_->manakai_element_type_match (SVG_NS, 'title')) {
+          if (@_ > 1) {
+            $_->text_content ($_[1]);
+          }
+          $title_el = $_;
+          last;
+        }
       }
-    }
-    return '';
-  }
 
-  # The |title| element
-  my $te = $self->get_elements_by_tag_name ('title')->[0];
-
-  if (@_ > 1) {
-    if (not defined $te) {
-      my $he = $self->head;
-      if (defined $he) {
-        # 3.
-        $te = $self->create_element ('title');
-        $he->append_child ($te);
+      if (@_ > 1) {
+        $title_el = $self->create_element_ns (SVG_NS, 'title');
+        $re->append_child ($title_el);
+        $title_el->text_content ($_[1]);
+      }
+    } elsif (($re->namespace_uri || '') eq HTML_NS) {
+      $title_el = $self->get_elements_by_tag_name ('title')->[0];
+      if (defined $title_el) {
+        if (@_ > 1) {
+          $title_el->text_content ($_[1]);
+        }
       } else {
-        # 2.
-        #
+        my $head = $self->head;
+        if (defined $head) {
+          $title_el = $self->create_element ('title');
+          if (@_ > 1) {
+            $head->append_child ($title_el);
+            $title_el->text_content ($_[1]);
+          }
+        }
       }
+    } else {
+      return unless defined wantarray;
+      $title_el = $self->get_elements_by_tag_name ('title')->[0];
     }
-
-    # 4.
-    $te->text_content (''.$_[1]) if defined $te;
-
+  } else {
     return unless defined wantarray;
+    $title_el = $self->get_elements_by_tag_name ('title')->[0];
   }
+  return unless defined wantarray;
 
-  # 2.
   my $value = '';
-  if (defined $te) {
+  if (defined $title_el) {
     $value = join '', map { $_->data }
-        grep { $_->node_type == TEXT_NODE } $te->child_nodes->to_list;
+        grep { $_->node_type == TEXT_NODE } $title_el->child_nodes->to_list;
   }
-
-  # 3.-4.
   $value =~ s/[\x09\x0A\x0C\x0D\x20]+/ /g;
   $value =~ s/\A //;
   $value =~ s/ \z//;
-  
-  # 5.
   return $value;
 } # title
 
@@ -1174,7 +1174,7 @@ sub clear ($) { }
 
 =head1 LICENSE
 
-Copyright 2007-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

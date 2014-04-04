@@ -880,7 +880,7 @@ test {
   my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
   $el2->inner_html ('hoge <p>fuga</p>bar');
   $el->append_child ($el2);
-  is $doc->title, 'hoge fugabar';
+  is $doc->title, 'hoge bar';
   done $c;
 } n => 1, name => 'title /svg/{html:title|title}';
 
@@ -902,9 +902,9 @@ test {
   my $el = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
   $doc->append_child ($el);
   my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
-  $el2->inner_html ('hoge <p>fuga</p>bar  ');
+  $el2->inner_html ("hoge \t<p>fuga</p>bar  ");
   $el->append_child ($el2);
-  is $doc->title, 'hoge fugabar  ';
+  is $doc->title, 'hoge bar';
   done $c;
 } n => 1, name => 'title /svg/title/nodes';
 
@@ -1023,7 +1023,7 @@ test {
   my $el1 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'svg');
   $doc->append_child ($el1);
   $doc->title ('hoge');
-  is $doc->title, '';
+  is $doc->title, 'hoge';
   is $doc->first_child, $el1;
   done $c;
 } n => 2, name => 'title setter /svg';
@@ -1036,8 +1036,8 @@ test {
   my $el2 = $doc->create_element_ns ('http://www.w3.org/2000/svg', 'title');
   $el1->append_child ($el2);
   $doc->title ('hoge');
-  is $doc->title, '';
-  is $el2->first_child, undef;
+  is $doc->title, 'hoge';
+  is $el2->first_child->data, 'hoge';
   done $c;
 } n => 2, name => 'title setter /svg/title';
 
@@ -1050,8 +1050,8 @@ test {
   $el1->append_child ($el2);
   $el2->inner_html ('foo<p>bar</p>');
   $doc->title ('hoge');
-  is $doc->title, 'foobar';
-  is $el2->child_nodes->length, 2;
+  is $doc->title, 'hoge';
+  is $el2->child_nodes->length, 1;
   done $c;
 } n => 2, name => 'title setter /svg/title';
 
@@ -1066,7 +1066,7 @@ test {
   $el2->append_child ($el3);
   $el3->inner_html ('foo<p>bar</p>');
   $doc->title ('hoge');
-  is $doc->title, '';
+  is $doc->title, 'hoge';
   is $el3->child_nodes->length, 2;
   done $c;
 } n => 2, name => 'title setter /svg/g/title';
@@ -1082,10 +1082,11 @@ test {
   $el2->append_child ($el3);
   $el3->inner_html ('foo<p>bar</p>');
   $doc->title ('hoge');
-  is $doc->title, '';
+  is $doc->title, 'hoge';
   is $el3->child_nodes->length, 2;
+  is $el1->child_nodes->length, 2;
   done $c;
-} n => 2, name => 'title setter /svg/g/title';
+} n => 3, name => 'title setter /svg/g/title';
 
 test {
   my $c = shift;
@@ -1198,6 +1199,69 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('head');
+  $doc->append_child ($el);
+  is $doc->title, '';
+  $doc->title ('foo');
+  is $doc->title, '';
+  is $el->child_nodes->length, 0;
+  done $c;
+} n => 3, name => 'title, root is html';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('head');
+  $doc->append_child ($el);
+  my $el2 = $doc->create_element ('title');
+  $el2->text_content ('aa');
+  $el->append_child ($el2);
+  is $doc->title, 'aa';
+  $doc->title ('foo');
+  is $doc->title, 'foo';
+  is $el->child_nodes->length, 1;
+  done $c;
+} n => 3, name => 'title, root is html';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('html');
+  $doc->append_child ($el);
+  my $el2 = $doc->create_element ('title');
+  $el2->text_content ('aa');
+  my $el3 = $doc->create_element ('head');
+  $el->append_child ($el2);
+  $el->append_child ($el3);
+  is $doc->title, 'aa';
+  $doc->title ('foo');
+  is $doc->title, 'foo';
+  is $el->child_nodes->length, 2;
+  is $el3->child_nodes->length, 0;
+  done $c;
+} n => 4, name => 'title, title is at wrong place';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element_ns (undef, 'html');
+  $doc->append_child ($el);
+  my $el2 = $doc->create_element ('title');
+  $el2->text_content ('aa');
+  my $el3 = $doc->create_element ('head');
+  $el->append_child ($el2);
+  $el->append_child ($el3);
+  is $doc->title, 'aa';
+  $doc->title ('foo');
+  is $doc->title, 'aa';
+  is $el->child_nodes->length, 2;
+  is $el3->child_nodes->length, 0;
+  done $c;
+} n => 4, name => 'title, non html';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   is $doc->dir, '';
   $doc->dir ('ltr');
   is $doc->dir, '';
@@ -1284,7 +1348,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
