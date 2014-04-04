@@ -2,9 +2,11 @@
 
 all:
 
-updatenightly:
+updatenightly: local/bin/pmbp.pl
 	curl https://gist.githubusercontent.com/motemen/667573/raw/git-submodule-track | sh
 	git add modules t_deps/modules
+	perl local/bin/pmbp.pl --update
+	git add config
 
 ## ------ Setup ------
 
