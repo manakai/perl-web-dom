@@ -13,3 +13,8 @@ notifications:
     channels:
       - "irc.suikawiki.org#mechanize"
     use_notice: true
+env:
+  global:
+    secure: "FGwFzoFqyPp2+ekLZt5Lg7oq73CqmlRhB5hSD9uOkn1++MD+XYQUS2mPfhDgZAhaX+ogVSrqY/nO3MJDfcA9YUy/qDCpjI/V/4KnD/sYpWxBl8x+j/vw4W4feZ3E+6JSBO8q2mosd8GhpS8TAz6kRP6Z+dndBp8alBBnmKUYWug="
+after_success:
+  - curl https://gist.githubusercontent.com/wakaba/9970857/raw/travis-merger.pl | perl

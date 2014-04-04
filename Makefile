@@ -2,6 +2,10 @@
 
 all:
 
+updatenightly:
+	curl https://gist.githubusercontent.com/motemen/667573/raw/git-submodule-track | sh
+	git add modules t_deps/modules
+
 ## ------ Setup ------
 
 GIT = git
