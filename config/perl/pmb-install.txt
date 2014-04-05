@@ -1,11 +1,11 @@
 Scalar::Util~1.38
 Types::Serialiser~1.0
 JSON::XS~3.01
+Test::Simple~1.001003
 Test::NoWarnings~1.04
 Encode~2.58
 Unicode::Normalize~1.17
 Filter::Util::Call~1.49
-Test::Builder~1.001003
 Sub::Uplevel~0.24
 Algorithm::Diff~1.1902
 MRO::Compat~0.12
