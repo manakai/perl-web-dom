@@ -3,7 +3,7 @@ Types::Serialiser~1.0
 JSON::XS~3.01
 Test::Simple~1.001003
 Test::NoWarnings~1.04
-Encode~2.58
+Encode~2.59
 Unicode::Normalize~1.17
 Filter::Util::Call~1.49
 Sub::Uplevel~0.24
