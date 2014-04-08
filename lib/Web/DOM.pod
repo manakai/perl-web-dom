@@ -230,12 +230,9 @@ Specifications defining features supported by the modules include:
 
 =over
 
-=item DOM and Selectors API
+=item DOM
 
 DOM Standard <http://dom.spec.whatwg.org/>.
-
-DOM Standard - Selectors API
-<https://github.com/whatwg/dom/pull/4/files>.
 
 =item DOMPARSING
 
@@ -293,8 +290,8 @@ modules): C<XPathEvaluator> and C<XPathExpression>;
 
 Following features require the perl-web-css package
 <https://github.com/manakai/perl-web-css>: C<query_selector>,
-C<query_selector_all>, L<CSSStyleSheet>, L<CSSRule> and its
-subclasses, and L<CSSStyleDeclaration>.
+C<query_selector_all>, C<CSSStyleSheet>, C<CSSRule> and its
+subclasses, and C<CSSStyleDeclaration>.
 
 Following features require the perl-web-encodings package
 <https://github.com/manakai/perl-web-encodings>: setter of

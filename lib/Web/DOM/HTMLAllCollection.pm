@@ -15,17 +15,17 @@ use overload
           my $name = ($_->namespace_uri || '') eq HTML_NS
               ? $_->get_attribute_ns (undef, 'name') : undef;
           my $id = $_->get_attribute_ns (undef, 'id');
-          $data{$name} ||= undef if defined $name;
-          $data{$id} ||= undef if defined $id;
+          $data{$name} ||= undef if defined $name and length $name;
+          $data{$id} ||= undef if defined $id and length $id;
           
-          undef $name if defined $name and not {
+          undef $name if defined $name and length $name and not {
             a => 1, applet => 1, area => 1, embed => 1, form => 1,
             frame => 1, frameset => 1, iframe => 1, img => 1, object => 1,
           }->{$_->local_name};
           undef $name if defined $name and defined $id and $name eq $id;
 
-          push @{$data{$name} ||= []}, $_ if defined $name;
-          push @{$data{$id} ||= []}, $_ if defined $id;
+          push @{$data{$name} ||= []}, $_ if defined $name and length $name;
+          push @{$data{$id} ||= []}, $_ if defined $id and length $id;
         }
         for (keys %data) {
           if (@{$data{$_} or []} == 0) {

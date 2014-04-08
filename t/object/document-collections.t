@@ -386,11 +386,33 @@ test {
   done $c;
 } n => 12, name => 'all not empty';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->name ('');
+  $doc->append_child ($el);
+  is $doc->all->{''}, undef;
+  is $doc->all->named_item (''), undef;
+  done $c;
+} n => 2, name => 'all[empty]';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->id ('');
+  $doc->append_child ($el);
+  is $doc->all->{''}, undef;
+  is $doc->all->named_item (''), undef;
+  done $c;
+} n => 2, name => 'all[empty]';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

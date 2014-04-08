@@ -1,0 +1,20 @@
+=head1 NAME
+
+Web::DOM::HTMLBaseFontElement - DOM |HTMLBaseFontElement| object
+
+=head1 DESCRIPTION
+
+This class and interface are obsolete.  See L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2007-2014 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
