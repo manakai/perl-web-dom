@@ -1,17 +1,18 @@
-# -*- Makefile -*-
+all: deps all-data
 
-all:
-
-updatenightly: local/bin/pmbp.pl
+updatenightly: local/bin/pmbp.pl updatedata
 	curl https://gist.githubusercontent.com/motemen/667573/raw/git-submodule-track | sh
 	git add modules t_deps/modules
 	perl local/bin/pmbp.pl --update
-	git add config
+	git add config lib/
+
+updatedata: clean-data all-data
 
 ## ------ Setup ------
 
 GIT = git
 WGET = wget
+PERL = ./perl
 
 deps: git-submodules pmbp-install
 
@@ -29,6 +30,19 @@ pmbp-install: pmbp-upgrade
 	perl local/bin/pmbp.pl --install \
             --create-perl-command-shortcut perl \
             --create-perl-command-shortcut prove
+
+## ------ Build ------
+
+all-data: lib/Web/DOM/_Defs.pm
+clean-data:
+	rm -fr local/elements.json
+
+lib/Web/DOM/_Defs.pm: local/elements.json bin/generate-defs.pl
+	$(PERL) bin/generate-defs.pl > $@
+	perl -c $@
+
+local/elements.json:
+	$(WGET) -O $@ https://raw.githubusercontent.com/manakai/data-web-defs/master/data/elements.json
 
 ## ------ Tests ------
 

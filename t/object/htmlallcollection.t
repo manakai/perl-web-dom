@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-use Path::Class;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
+use Path::Tiny;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps', 'modules', '*', 'lib')->stringify;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps', 'lib')->stringify;
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
@@ -434,7 +434,7 @@ test {
   is $all->{foo}, undef;
   is $all->named_item ('foo'), undef;
   is $all->item ('foo'), undef;
-  ok exists $all->{foo};
+  ok not exists $all->{foo};
   ok not exists $all->{0};
 
   is $all->item (1), undef;
@@ -554,6 +554,73 @@ test {
 
   done $c;
 } n => 8, name => 'all nameditem mutation';
+
+for my $name (qw(
+  a applet button embed form frame frameset iframe img input map meta
+  object select textarea
+)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($name);
+    $el->set_attribute (name => 'hoge');
+    $doc->append_child ($el);
+    is $doc->all->{hoge}, $el;
+    done $c;
+  } n => 1, name => ['all', $name, 'has name 1'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($name);
+    $el->set_attribute (name => 'hoge');
+    my $el2 = $doc->create_element ($name);
+    $el2->set_attribute (name => 'hoge');
+    $doc->append_child ($el);
+    $el->append_child ($el2);
+    is $doc->all->{hoge}->length, 2;
+    is $doc->all->{hoge}->[0], $el;
+    is $doc->all->{hoge}->[1], $el2;
+    done $c;
+  } n => 3, name => ['all', $name, 'has name 2'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element_ns (undef, $name);
+    $el->set_attribute (name => 'hoge');
+    $doc->append_child ($el);
+    is $doc->all->{hoge}, undef;
+    done $c;
+  } n => 1, name => ['all', $name, 'has name 1'];
+}
+
+for my $name (qw(
+  p div option
+)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($name);
+    $el->set_attribute (name => 'hoge');
+    $doc->append_child ($el);
+    is $doc->all->{hoge}, undef;
+    done $c;
+  } n => 1, name => ['all', $name, 'has name 1'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($name);
+    $el->set_attribute (name => 'hoge');
+    my $el2 = $doc->create_element ($name);
+    $el2->set_attribute (name => 'hoge');
+    $doc->append_child ($el);
+    $el->append_child ($el2);
+    is $doc->all->{hoge}, undef;
+    done $c;
+  } n => 1, name => ['all', $name, 'has name 2'];
+}
 
 run_tests;
 
