@@ -576,7 +576,7 @@ sub _pre_insert ($$;$$) {
   
   # 9. adopt
   {
-    # Adopt 1. Remove
+    # Adopt 2. Remove
     if (defined (my $old_parent_id = $$node->[2]->{parent_node})) {
       # Remove 1.
       my $old_parent = $$node->[0]->{data}->[$old_parent_id];
@@ -603,12 +603,12 @@ sub _pre_insert ($$;$$) {
       # XXX node is removed
     }
 
-    # Adopt 2.
+    # Adopt 3.
     $$parent->[0]->adopt ($node);
 
-    # Adopt 3.
+    # Adopt 4. Adopting steps
     if ($$node->[2]->{node_type} == ELEMENT_NODE) {
-      # XXX affected by a base URL change.
+      # XXX
     }
   } # adopt
 
