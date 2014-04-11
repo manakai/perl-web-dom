@@ -16,7 +16,7 @@ Test::Exception~0.32
 Test::Class~0.41
 Exporter::Lite~0.04
 Data::Dumper~2.151
-ExtUtils::MakeMaker~6.94
+ExtUtils::MakeMaker~6.96
 Test::Tester~0.109
 Exporter~5.68
 Carp~1.3301
