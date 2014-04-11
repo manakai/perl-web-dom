@@ -820,10 +820,10 @@ for my $feature (
   test {
     my $c = shift;
     my $impl = new Web::DOM::Implementation;
-    ok not $impl->has_feature ($feature . 'hogex');
-    ok not $impl->has_feature ($feature . 'hoge', '');
-    ok not $impl->has_feature ($feature, 'no such version');
-    ok not $impl->has_feature ($feature . 'hoge', 'no such version');
+    ok $impl->has_feature ($feature . 'hogex');
+    ok $impl->has_feature ($feature . 'hoge', '');
+    ok $impl->has_feature ($feature, 'no such version');
+    ok $impl->has_feature ($feature . 'hoge', 'no such version');
     done $c;
   } n => 4, name => ['has_feature', $feature];
 }
@@ -832,7 +832,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

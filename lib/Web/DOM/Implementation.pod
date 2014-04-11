@@ -1,14 +1,15 @@
 =head1 NAME
 
-Web::DOM::Implementation - The DOM |DOMImplementation| object
+Web::DOM::Implementation - DOM |DOMImplementation| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::Implementation> class implements the DOM
 C<DOMImplementation> interface.
 
-The C<DOMImplementation> object is returned by the C<implementation>
-method of the L<Web::DOM::Document> object.
+A C<DOMImplementation> object is associated with a
+L<Web::DOM::Document> object.  The C<DOMImplementation> object of the
+L<Web::DOM::Document> is returned by the C<implementation> method.
 
 =head1 METHODS
 
@@ -22,7 +23,7 @@ Create a new instance of the C<DOMImplementation> object.  This method
 is provided for some kind of compatibility and should not be used with
 newer applications.  Now that the L<Web::DOM::Document> class has the
 constructor, the constructor method of the L<Web::DOM::Implementation>
-class is useless. [DOMPERL]
+class is useless.  [DOMPERL]
 
 =item $doc = $impl->create_atom_entry_document ($id, $title, $lang)
 
@@ -64,10 +65,10 @@ Create a new document type node (L<Web::DOM::DocumentType>) with the
 specified name, public identifier, and system identifier.  [DOM]
 [DOMPERL]
 
-=item $bool = $impl->has_feature ($feature, $version)
+=item $bool = $impl->has_feature
 
-Return whether the specified SVG feature is supported or not.  [DOM]
-[SVG]
+Return true.  This method is only provided for backward compatibility
+and should not be used.  [DOM]
 
 =back
 
@@ -77,19 +78,13 @@ Return whether the specified SVG feature is supported or not.  [DOM]
 
 =item DOM
 
-DOM Living Standard
+DOM Standard
 <http://dom.spec.whatwg.org/#interface-domimplementation>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
 <http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
-
-=item SVG
-
-SVG - Feature Strings
-<https://svgwg.org/svg2-draft/single-page.html#chapter-feature>,
-<https://svgwg.org/svg2-draft/single-page.html#svgdom-FeatureStrings>.
 
 =item ATOMDOM
 
@@ -107,7 +102,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
