@@ -480,6 +480,7 @@ sub set_attribute_node ($$) {
 
   # 3. Adopt (simplified)
   $$node->[0]->adopt ($attr);
+  # XXX Adopting steps??
 
   $$node->[0]->children_changed ($$node->[1], ATTRIBUTE_NODE);
 

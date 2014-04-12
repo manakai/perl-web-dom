@@ -2,7 +2,7 @@ package Web::DOM::Implementation;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Carp;
 our @CARP_NOT = qw(Web::DOM::Document Web::DOM::TypeError);
 use Web::DOM::Node;
@@ -220,36 +220,13 @@ sub create_document_type ($$;$$) {
   return $$self->[0]->node ($id);
 } # create_document_type
 
-sub has_feature ($$;$) {
-  my $feature = ''.$_[1];
-  # WebIDL, 1.
-  my $version = defined $_[2] ? ''.$_[2] : '';
-
-  # 1.
-  $feature =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
-  if ($feature =~ m{\Ahttp://www\.w3\.org/tr/svg} or
-      $feature =~ m{\Aorg\.w3c\.dom\.svg} or
-      $feature =~ m{\Aorg\.w3c\.svg}) {
-    if ($version eq '') {
-      # 1.
-      # XXX
-      return 0;
-    }
-    
-    # 2.
-    # XXX
-    return 0;
-  }
-
-  # 2.
-  return 1;
-} # has_feature
+sub has_feature ($) { 1 }
 
 1;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

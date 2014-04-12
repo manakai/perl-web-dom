@@ -116,6 +116,7 @@ sub _set_node ($$$) {
 
   # 2. Adopt (simplified)
   $$node->[0]->adopt ($obj);
+  # XXX Adopting steps??
 
   # 3.-4.
   my $obj_name = $obj->node_name;

@@ -1029,7 +1029,7 @@ sub adopt_node ($$) {
 
   # 2. Adopt
   {
-    # Adopt 1. Remove
+    # Adopt 2. Remove
     if (defined $$node->[2]->{parent_node}) {
       $node->parent_node->remove_child ($node);
     } elsif (defined $$node->[2]->{owner}) {
@@ -1050,12 +1050,12 @@ sub adopt_node ($$) {
       }
     }
 
-    # Adopt 2.
+    # Adopt 3.
     ${$_[0]}->[0]->adopt ($node);
 
-    # Adopt 3.
+    # Adopt 4. Adopting steps
     if ($$node->[2]->{node_type} == ELEMENT_NODE) {
-      # XXX affected by a base URL change.
+      # XXX
     }
   }
 
