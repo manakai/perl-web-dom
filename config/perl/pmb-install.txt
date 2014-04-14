@@ -14,7 +14,7 @@ AnyEvent~7.07
 Exporter::Lite~0.04
 Data::Dumper~2.151
 Test::Tester~0.109
-Exporter~5.68
+Exporter~5.70
 Carp~1.3301
 Test::More~1.001003
 Path::Class~0.33
