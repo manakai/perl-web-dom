@@ -4,7 +4,7 @@ File::Spec~3.40
 JSON::XS~3.01
 Test::NoWarnings~1.04
 Unicode::Normalize~1.17
-Encode~2.59
+Encode~2.60
 Filter::Util::Call~1.49
 Test::Builder~1.001003
 Path::Tiny~0.052
