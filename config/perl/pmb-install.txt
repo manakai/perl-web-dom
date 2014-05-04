@@ -7,7 +7,7 @@ Unicode::Normalize~1.17
 Encode~2.60
 Filter::Util::Call~1.49
 Test::Builder~1.001003
-Path::Tiny~0.052
+Path::Tiny~0.054
 Term::ANSIColor~4.03
 parent~0.228
 AnyEvent~7.07
