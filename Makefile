@@ -33,8 +33,8 @@ pmbp-install: pmbp-upgrade
 
 ## ------ Build ------
 
-all-data: lib/Web/DOM/_Defs.pm
-clean-data:
+all-data: json-ps lib/Web/DOM/_Defs.pm
+clean-data: clean-json-ps
 	rm -fr local/elements.json
 
 lib/Web/DOM/_Defs.pm: local/elements.json bin/generate-defs.pl
@@ -43,6 +43,13 @@ lib/Web/DOM/_Defs.pm: local/elements.json bin/generate-defs.pl
 
 local/elements.json:
 	$(WGET) -O $@ https://raw.githubusercontent.com/manakai/data-web-defs/master/data/elements.json
+
+json-ps: local/perl-latest/pm/lib/perl5/JSON/PS.pm
+clean-json-ps:
+	rm -fr local/perl-latest/pm/lib/perl5/JSON/PS.pm
+local/perl-latest/pm/lib/perl5/JSON/PS.pm:
+	mkdir -p local/perl-latest/pm/lib/perl5/JSON
+	$(WGET) -O $@ https://raw.githubusercontent.com/wakaba/perl-json-ps/master/lib/JSON/PS.pm
 
 ## ------ Tests ------
 

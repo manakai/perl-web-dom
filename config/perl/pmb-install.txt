@@ -1,7 +1,5 @@
 Scalar::Util~1.38
-Types::Serialiser~1.0
 File::Spec~3.40
-JSON::XS~3.01
 Test::NoWarnings~1.04
 Unicode::Normalize~1.17
 Encode~2.60
@@ -9,14 +7,11 @@ Filter::Util::Call~1.49
 Test::Builder~1.001003
 Path::Tiny~0.054
 Term::ANSIColor~4.03
-parent~0.228
 AnyEvent~7.07
 Exporter::Lite~0.04
 Data::Dumper~2.151
 Test::Tester~0.109
 Exporter~5.70
 Carp~1.3301
-Test::More~1.001003
 Path::Class~0.33
-common::sense~3.72
 Unicode::Stringprep~1.104
