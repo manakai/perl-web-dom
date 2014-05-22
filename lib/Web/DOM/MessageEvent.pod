@@ -1,0 +1,71 @@
+=head1 NAME
+
+Web::DOM::MessageEvent - DOM |MessageEvent| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::MessageEvent> class implements the DOM C<MessageEvent>
+interface.
+
+=head1 METHODS
+
+In addition to the methods of the L<Web::DOM::Event> class, following
+methods are available:
+
+=over 4
+
+=item $value = $ev->data
+
+Return the data of the message.  [HTML]
+
+=item $string = $ev->last_event_id
+
+Return the last event ID of the server-sent event message.  [HTML]
+
+=item $string = $ev->origin
+
+Return the origin of the message.  [HTML]
+
+=item $arrayref = $ev->ports
+
+Return the array reference of the L<Web::DOM::MessagePort> objects of
+the message, if any.  [HTML]
+
+=item $object = $ev->source
+
+Return the L<Web::DOM::WindowProxy> or the L<Web::DOM::MessagePort> of
+the source of the message, if any.  [HTML]
+
+=back
+
+The C<new> method of the L<Web::DOM::MessageEvent> class accepts the
+C<data>, C<origin>, C<lastEventID>, C<source>, and C<port> name/value
+pairs in its second arguments, in addition to the name/value pairs for
+L<Web::DOM::Event> objects.  [HTML]
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard <http://www.whatwg.org/specs/web-apps/current-work/>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Event>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2014 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

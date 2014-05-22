@@ -1,15 +1,16 @@
 =head1 NAME
 
-Web::DOM::Attr - The DOM |Attr| object
+Web::DOM::Attr - DOM |Attr| object
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::Attr> class implements the DOM C<Attr> interface.
+The C<Web::DOM::Attr> class implements the DOM C<Attr> interface.  An
+C<Attr> object represents a content attribute of element.
 
 =head1 METHODS
 
 The methods of classes L<Web::DOM::EventTarget> and L<Web::DOM::Node>
-are available, as well as following methods:
+are available on a C<Attr> object, as well as following methods:
 
 =over 4
 
@@ -58,7 +59,7 @@ removed.  [DOMNODEEXODUS] [MANAKAI]
 
 =item $bool = $attr->specified
 
-Return true.  [DOMATTREXODUS] [MANAKAI]
+Return true for backward compatibility.  [DOM]
 
 =item $value = $attr->value
 
@@ -114,7 +115,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

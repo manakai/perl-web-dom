@@ -1067,20 +1067,18 @@ sub create_event ($$) {
   my $str = ''.$_[1];
   $str =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
   my $if = {
-    ## DOM Standard
     customevent => 'CustomEvent',
     event => 'Event',
     events => 'Event',
     htmlevents => 'Event',
+    keyboardevent => 'KeyboardEvent',
+    keyevents => 'KeyboardEvent',
+    messageevent => 'MessageEvent',
     mouseevent => 'MouseEvent',
     mouseevents => 'MouseEvent',
+    touchevent => 'TouchEvent',
     uievent => 'UIEvent',
     uievents => 'UIEvent',
-
-    ## DOM3 Events
-    focusevent => 'FocusEvent',
-    keyboardevent => 'KeyboardEvent',
-    compositionevent => 'CompositionEvent',
   }->{$str}
       or _throw Web::DOM::Exception 'NotSupportedError',
           'Unknown event interface';
