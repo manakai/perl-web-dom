@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Path::Tiny;
 use lib glob path (__FILE__)->parent->child ('modules/*/lib')->stringify;
-use JSON::Functions::XS qw(json_bytes2perl);
+use JSON::PS;
 use Data::Dumper;
 
 my $src_path = path (__FILE__)->parent->parent->child ('local/elements.json');

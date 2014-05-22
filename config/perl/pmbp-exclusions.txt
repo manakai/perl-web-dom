@@ -1,6 +1,6 @@
-- "../../bin/modules/json-functions-xs" tests
 - "../../modules/charclass" tests build
 - "../../t_deps/modules/web-css" tests
 - "../../t_deps/modules/web-encodings" tests
 - "../../t_deps/modules/web-markup" tests tests-json
 - "../../t_deps/modules/web-url" tests
+- "../../t_deps/modules/test-x1" tests
