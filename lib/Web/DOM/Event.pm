@@ -426,11 +426,28 @@ sub shift_key ($) { $_[0]->{shift_key} }
 sub alt_key ($) { $_[0]->{alt_key} }
 sub meta_key ($) { $_[0]->{meta_key} }
 
+package Web::DOM::MessageEvent;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::Event);
+
+sub _init_members ($) { $_[0]->SUPER::_init_members,
+                        [data => 'any'],
+                        [origin => 'string'],
+                        [last_event_id => 'string'],
+                        [source => 'object?', 'WindowProxy'], # XXX or MessagePort
+                        [ports => 'object?', 'XXX sequence<MessagePort>'] }
+
+sub data ($) { $_[0]->{data} }
+sub origin ($) { defined $_[0]->{origin} ? $_[0]->{origin} : '' }
+sub last_event_id ($) { defined $_[0]->{last_event_id} ? $_[0]->{last_event_id} : '' }
+sub source ($) { $_[0]->{source} }
+sub ports ($) { $_[0]->{ports} }
+
 1;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

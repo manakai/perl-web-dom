@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::Event - The DOM |Event| object
+Web::DOM::Event - DOM |Event| object
 
 =head1 DESCRIPTION
 
@@ -104,8 +104,8 @@ Following constants are used by the C<event_phase> method [DOM]:
 =head1 SUBCLASSES
 
 There are subclasses of the class, representing subinterfaces of the
-C<Event> interface, containing: L<Web::DOM::CustomEvent> and
-K<Web::DOM::UIEvent>.
+C<Event> interface, including: L<Web::DOM::CustomEvent>,
+L<Web::DOM::MessageEvent>, and K<Web::DOM::UIEvent>.
 
 =head1 SPECIFICATIONS
 
@@ -113,7 +113,7 @@ K<Web::DOM::UIEvent>.
 
 =item DOM
 
-DOM Living Standard <http://dom.spec.whatwg.org/#interface-event>.
+DOM Standard <http://dom.spec.whatwg.org/#interface-event>.
 
 =item MANAKAI
 
@@ -137,7 +137,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -147,7 +147,8 @@ interface is obsolete.  [MANAKAI]
 Create an event object.  The argument specifies the kind of the
 object, e.g. C<Event>, C<CustomEvent>, or C<MouseEvent>.  [DOM]
 
-Use L<Web::DOM::Event>'s (or its subclass'es) C<new> method instead.
+This method is considered as legacy.  Use L<Web::DOM::Event>'s (or its
+subclass'es) C<new> method instead.
 
 =item $ent = $doc->create_general_entity ($name)
 
@@ -161,11 +162,11 @@ Create a new node iterator (L<Web::DOM::NodeIterator>).  [DOM]
 The first argument is required, specifying the root node of the
 iterator.  Second and third arguments are optional, representing bit
 vector of node types and code reference, both used to filter candidate
-nodes.  For the bit vector, see L<Web::DOM::TypeWalker/"CONSTANTS">.
+nodes.  For the bit vector, see L<Web::DOM::TreeWalker/"CONSTANTS">.
 The code reference would be invoked with an argument (C<$_[1]>) which
 is the node in question.  The code is expected to return whether the
 node is accepted or not, using one of constants from
-L<Web::DOM::TypeWalker/"CONSTANTS">.
+L<Web::DOM::TreeWalker/"CONSTANTS">.
 
 =item $notation = $doc->create_notation ($name)
 
@@ -195,11 +196,11 @@ Create a new tree walker (L<Web::DOM::TreeWalker>).  [DOM]
 The first argument is required, specifying the root node of the tree
 walker.  Second and third arguments are optional, representing bit
 vector of node types and code reference, both used to filter candidate
-nodes.  For the bit vector, see L<Web::DOM::TypeWalker/"CONSTANTS">.
+nodes.  For the bit vector, see L<Web::DOM::TreeWalker/"CONSTANTS">.
 The code reference would be invoked with an argument (C<$_[1]>) which
 is the node in question.  The code is expected to return whether the
 node is accepted, rejected, or skipped, using one of constants from
-L<Web::DOM::TypeWalker/"CONSTANTS">.
+L<Web::DOM::TreeWalker/"CONSTANTS">.
 
 =item $pi = $doc->create_processing_instruction ($target, $data)
 
@@ -383,7 +384,7 @@ C<anchors>, C<applets>, and C<clear>.  [HTML]
 
 =item DOM
 
-DOM Living Standard <http://dom.spec.whatwg.org/#interface-document>.
+DOM Standard <http://dom.spec.whatwg.org/#interface-document>.
 
 =item DOM3CORE
 
@@ -392,8 +393,7 @@ Document Object Model (DOM) Level 3 Core Specification
 
 =item HTML
 
-HTML Living Standard
-<http://www.whatwg.org/specs/web-apps/current-work/>.
+HTML Standard <http://www.whatwg.org/specs/web-apps/current-work/>.
 
 =item SVG
 

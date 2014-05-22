@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::EventTarget - The DOM |EventTarget| object
+Web::DOM::EventTarget - DOM |EventTarget| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::EventTarget> class implements the DOM C<EventTarget>
 interface.  The C<EventTarget> object does not exist by itself, it is
-used as superclass of other classes, such as C<Web::DOM::Node>.
+used as a superclass of other classes, such as L<Web::DOM::Node>.
 
 =head1 METHODS
 
@@ -57,8 +57,7 @@ Unregister a callback function as event listener, if it is registered.
 
 =item DOM
 
-DOM Living Standard
-<http://dom.spec.whatwg.org/#interface-eventtarget>.
+DOM Standard <http://dom.spec.whatwg.org/#interface-eventtarget>.
 
 =item DOMPERL
 
@@ -77,7 +76,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
