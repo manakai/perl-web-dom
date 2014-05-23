@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::AtomDateConstruct - The DOM |AtomDateConstruct| object
+Web::DOM::AtomDateConstruct - DOM |AtomDateConstruct| object
 
 =head1 DESCRIPTION
 
@@ -23,6 +23,8 @@ Return or set the date-time value of the element content.  The
 date-time value is represented as C<time_t> real number (i.e. seconds
 from the Unix epoch).  [ATOMDOM] [DOMPERL]
 
+See also L<Web::DOM/DEPENDENCY>.
+
 =back
 
 There are subclasses for specific elements:
@@ -30,7 +32,8 @@ L<Web::DOM::AtomPublishedElement> and L<Web::DOM::AtomUpdatedElement>.
 
 =head1 DEPENDENCY
 
-XXX
+For the C<value> method, the perl-web-datetime package
+<https://github.com/manakai/perl-web-datetime> is required.
 
 =head1 SPECIFICATIONS
 
@@ -57,7 +60,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

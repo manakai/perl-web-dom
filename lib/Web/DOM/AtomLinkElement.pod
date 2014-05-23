@@ -80,7 +80,8 @@ Return or set the C<type> attribute.  [ATOMDOM]
 
 =head1 DEPENDENCY
 
-XXX
+For the C<thread_updated> method, the perl-web-datetime package
+<https://github.com/manakai/perl-web-datetime> is required.
 
 =head1 SPECIFICATIONS
 
@@ -108,7 +109,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

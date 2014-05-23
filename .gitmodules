@@ -22,3 +22,6 @@
 	path = t_deps/modules/web-url
 	url = git://github.com/manakai/perl-web-url
         track = master
+[submodule "t_deps/modules/web-datetime"]
+	path = t_deps/modules/web-datetime
+	url = git://github.com/manakai/perl-web-datetime

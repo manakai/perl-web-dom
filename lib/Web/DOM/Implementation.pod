@@ -31,11 +31,15 @@ Create a new L<Web::DOM::Document> whose document element is an
 C<atom:entry> element, using the specified C<atom:id>, C<atom:title>,
 and C<xml:lang> values.  [ATOMDOM]
 
+See also L<Web::DOM/DEPENDENCY>.
+
 =item $doc = $impl->create_atom_feed_document ($id, $title, $lang)
 
 Create a new L<Web::DOM::Document> whose document element is an
 C<atom:feed> element, using the specified C<atom:id>, C<atom:title>,
 and C<xml:lang> values.  [ATOMDOM]
+
+See also L<Web::DOM/DEPENDENCY>.
 
 =item $doc = $impl->create_document ($nsurl, $qname, $doctype)
 
@@ -71,6 +75,12 @@ Return true.  This method is only provided for backward compatibility
 and should not be used.  [DOM]
 
 =back
+
+=head1 DEPENDENCY
+
+For the C<create_atom_feed_document> and C<create_atom_entry_document>
+methods, the perl-web-datetime package
+<https://github.com/manakai/perl-web-datetime> is required.
 
 =head1 SPECIFICATIONS
 

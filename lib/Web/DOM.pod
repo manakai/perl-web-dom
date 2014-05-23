@@ -307,8 +307,11 @@ C<manakai_declaration_base_uri>, C<action>, C<cite>, C<codebase>,
 C<data>, C<formaction>, C<href>, C<longdesc>, C<object>, C<ping>,
 C<poster>, and C<src>.
 
-Following features require the XXX module: C<value> of
-L<Web::DOM::AtomDateConstruct>.
+Following features require modules in the perl-web-datetime package
+<https://github.com/manakai/perl-web-datetime>: C<value> of
+L<Web::DOM::AtomDateConstruct>, C<create_atom_feed_document>,
+C<create_atom_entry_element>, C<updated_element>, and
+C<published_element>.
 
 =head2 Using CSS, Selectors, and Media Queries
 
@@ -456,14 +459,12 @@ DOM Ranges interfaces and methods [DOM]; Ranges support in DOM Core
 methods and attributes [DOM]; Range.prototype.createContextualFragment
 [DOMPARSING].
 
-=item DOM Promise
-
 =back
 
 In addition, source codes of the modules include many "XXX" markers,
 indicating TODO items.
 
-Middle priority: URL; Encoding.
+Middle priority: URL; Encoding; Promise.
 
 Lower priority: Form API; HTMLMediaElement and related interfaces;
 Canvas; The ImageBitmap interface; The Screen interface; SVG; DnD; The
@@ -471,8 +472,10 @@ RelatedEvent interface; The Window interface and related interfaces;
 The History interface and related interfaces; The Location interface;
 The Navigator interface and related interfaces; Scripting; Workers;
 Console; XHR; EventSource; WebSocket; postMessage and related
-interfaces; Storage; IndexedDB; Fullscreen; Notifications; Zip; XSLT
-1.0.
+interfaces; Storage; IndexedDB; Fullscreen; Notifications.
+JS-compatible C<Date>, C<JSON> objects.
+
+Very low priority: Zip; XSLT 1.0.
 
 At the time of writing, there is no plan to implement the
 C<properties> attribute of the C<HTMLElement> interface (Instead, the
