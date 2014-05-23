@@ -145,113 +145,9 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomPersonConstruct);
 
 package Web::DOM::AtomDateConstruct;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::AtomElement);
 use Web::DOM::TypeError;
-
-# XXX maybe this function should be moved to separate module...
-sub _is_leap_year ($) {
-  return ($_[0] % 400 == 0 or ($_[0] % 4 == 0 and $_[0] % 100 != 0));
-} # _is_leap_year
-sub parse_global_date_and_time_string ($$) {
-  my ($self, $value) = @_;
-  
-  if ($value =~ /\A([0-9]{4,})-([0-9]{2})-([0-9]{2})T
-                 ([0-9]{2}):([0-9]{2})(?>:([0-9]{2})(?>(\.[0-9]+))?)?
-                 (?>Z|([+-][0-9]{2}):([0-9]{2}))\z/x) {
-    my ($y, $M, $d, $h, $m, $s, $sf, $zh, $zm)
-        = ($1, $2, $3, $4, $5, $6, $7, $8, $9);
-    if (0 < $M and $M < 13) {
-      $self->{onerror}->(type => 'datetime:bad day',
-                         level => $self->{level}->{must}), return undef
-          if $d < 1 or
-              $d > [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]->[$M];
-      $self->{onerror}->(type => 'datetime:bad day',
-                         level => $self->{level}->{must}), return undef
-          if $M == 2 and $d == 29 and not _is_leap_year ($y);
-    } else {
-      $self->{onerror}->(type => 'datetime:bad month',
-                         level => $self->{level}->{must});
-      return undef;
-    }
-    $self->{onerror}->(type => 'datetime:bad year',
-                       level => $self->{level}->{must}), return undef if $y == 0;
-    $self->{onerror}->(type => 'datetime:bad hour',
-                       level => $self->{level}->{must}), return undef if $h > 23;
-    $self->{onerror}->(type => 'datetime:bad minute',
-                       level => $self->{level}->{must}), return undef if $m > 59;
-    $s ||= 0;
-    $self->{onerror}->(type => 'datetime:bad second',
-                       level => $self->{level}->{must}), return undef if $s > 59;
-    $sf = defined $sf ? $sf : '';
-    if (defined $zh) {
-      $self->{onerror}->(type => 'datetime:bad timezone hour',
-                         level => $self->{level}->{must}), return undef
-          if $zh > 23 or $zh < -23;
-      $self->{onerror}->(type => 'datetime:bad timezone minute',
-                         level => $self->{level}->{must}), return undef
-          if $zm > 59;
-    } else {
-      $zh = 0;
-      $zm = 0;
-    }
-    if ($zh eq '-00' and $zm eq '00') {
-      $self->{onerror}->(type => 'datetime:-00:00', # XXXtype
-                         level => $self->{level}->{must}); # don't return
-    }
-
-    if (defined wantarray) {
-      return $self->{create}->($y, $M, $d, $h, $m, $s, $sf, $zh, $zm);
-    }
-  } else {
-    $self->{onerror}->(type => 'datetime:syntax error',
-                       level => $self->{level}->{must});
-    return undef;
-  }
-} # parse_global_date_and_time_string
-
-{
-  ## From Time::Local
-  use integer;
-
-  use constant SECS_PER_MINUTE => 60;
-  use constant SECS_PER_HOUR   => 3600;
-  use constant SECS_PER_DAY    => 86400;
-
-  # Determine the EPOC day for this machine
-  my $Epoc = _daygm( gmtime(0) );
-  my %Cheat = ();
-
-  sub _daygm {
-    # This is written in such a byzantine way in order to avoid
-    # lexical variables and sub calls, for speed
-    return $_[3] + (
-        $Cheat{ pack( 'ss', @_[ 4, 5 ] ) } ||= do {
-            my $month = ( $_[4] + 10 ) % 12;
-            my $year  = ( $_[5] + 1900 ) - ( $month / 10 );
-
-            ( ( 365 * $year )
-              + ( $year / 4 )
-              - ( $year / 100 )
-              + ( $year / 400 )
-              + ( ( ( $month * 306 ) + 5 ) / 10 )
-            )
-            - ($Epoc || 0);
-        }
-    );
-  }
-
-  sub timegm_nocheck {
-    my ( $sec, $min, $hour, $mday, $month, $year ) = @_;
-
-    my $days = _daygm( undef, undef, undef, $mday, $month, $year - 1900 );
-
-    return $sec
-           + ( SECS_PER_MINUTE * $min )
-           + ( SECS_PER_HOUR * $hour )
-           + ( SECS_PER_DAY * $days );
-  }
-}
 
 sub value ($;$) {
   if (@_ > 1) {
@@ -261,39 +157,23 @@ sub value ($;$) {
       _throw Web::DOM::TypeError "The value is out of range";
     }
 
-    # DOMPERL DOMTimeStamp
-    my $frac = '';
-    if ($value != int $value) {
-      my $mod = $value > 0 ? $value - int ($value)
-                           : $value - int ($value - 1);
-      $frac = sprintf '%f', $mod;
-      $frac =~ s/^0//;
-      $frac =~ s/0+$//;
-      $value -= $mod;
-      ## Handling of fraction is architecture dependent, although it
-      ## should support at least three figures.
-    }
-    my @t = gmtime $value; # The perl in use must support 64-bit time_t.
-    $t[4]++;
-    $t[5] += 1900;
-    if ($t[5] <= 0) {
-      #
-    } else {
-      $_[0]->text_content (sprintf '%04d-%02d-%02dT%02d:%02d:%02d%sZ',
-                               $t[5], $t[4], $t[3],
-                               $t[2], $t[1], $t[0], $frac);
+    require Web::DateTime;
+    my $dt = Web::DateTime->new_from_unix_time ($value);
+    if ($dt->year >= 0) {
+      $_[0]->text_content ($dt->to_global_date_and_time_string);
     }
     return unless defined wantarray;
   }
-  
-  my $value = parse_global_date_and_time_string {
-    onerror => sub { },
-    create => sub {
-      return timegm_nocheck ($_[5], $_[4]-$_[8], $_[3]-$_[7], $_[2], $_[1]-1, $_[0])
-          + (defined $_[6] ? '0'.$_[6] : 0);
-    },
-  }, $_[0]->text_content;
-  return $value || 0;
+
+  require Web::DateTime::Parser;
+  my $parser = Web::DateTime::Parser->new;
+  $parser->onerror (sub { }); # XXX console
+  my $dt = $parser->parse_rfc3339_date_time_string ($_[0]->text_content);
+  if (defined $dt) {
+    return $dt->to_unix_number;
+  } else {
+    return 0;
+  }
 } # value
 
 package Web::DOM::AtomPublishedElement;
@@ -634,7 +514,7 @@ sub value ($;$) {
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

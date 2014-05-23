@@ -469,7 +469,6 @@ for my $test (
       [133485926399, '6199-12-31T23:59:59Z'],
       [193444156799, '8099-12-31T23:59:59Z'],
       [253402300799, '9999-12-31T23:59:59Z'],
-      [884541340799, '29999-12-31T23:59:59Z'],
     ) {
       $el->value ($_->[0]);
       is $el->value, $_->[0], "$_->[0] roundtrip";
@@ -488,45 +487,55 @@ for my $test (
       '',
       'abc',
       '2013-05-01 00:12:44Z',
-      '2013-05-01t00:12:44Z',
       '-2013-05-01T00:12:44Z',
       '2013-05-01T00:12:44',
       ' 2013-05-01T00:12:44  ',
+      '29999-12-31T23:59:59Z',
+      '+29999-12-31T23:59:59Z',
     ) {
       $el->text_content ($_);
       is $el->value, 0;
     }
 
+    $el->text_content ('2013-05-01t00:12:44Z');
+    is $el->value, 1367367164;
+
+    $el->text_content ('2013-05-01T00:12:44z');
+    is $el->value, 1367367164;
+
     $el->text_content ('hoge');
     for (
-      -12415 + -62135596800,
-      -1 + -62135596800,
-      -0.001 + -62135596800,
+      -12415 + -62135596800 - 367*12*24*3600,
+      -1 + -62135596800 - 367*12*24*3600,
+      -0.001 + -62135596800 - 367*12*24*3600,
     ) {
       $el->value ($_);
       is $el->text_content, 'hoge';
     }
 
+    $el->value (884541340799);
+    is $el->text_content, '29999-12-31T23:59:59Z';
+
     $el->value (1430272255.912);
     is $el->value, 1430272255.912;
-    is $el->text_content, '2015-04-29T01:50:55.912Z';
+    like $el->text_content, qr/\A2015-04-29T01:50:55.91[0-9]+Z\z/;
 
     $el->text_content ('2015-04-29T01:50:55.0001Z');
     is $el->value, 1430272255.0001;
     $el->value (1430272255.0001);
-    is $el->text_content, '2015-04-29T01:50:55.0001Z';
+    like $el->text_content, qr/\A2015-04-29T01:50:55.000[0-9]+Z\z/;
 
     $el->text_content ('2015-04-29T01:50:55.9015Z');
     is $el->value, 1430272255.9015;
     $el->value (1430272255.9015);
-    is $el->text_content, '2015-04-29T01:50:55.9015Z';
+    like $el->text_content, qr/\A2015-04-29T01:50:55.901[0-9]+Z\z/;
 
     $el->text_content ('1015-04-29T01:50:55.000Z');
     is $el->value, -30126722945, '55.000Z';
     $el->text_content ('1015-04-29T01:50:55.0001Z');
     is $el->value, -30126722944.9999;
     $el->value (-30126722944.9999);
-    is $el->text_content, '1015-04-29T01:50:55.000099Z';
+    like $el->text_content, qr/\A1015-04-29T01:50:55.0000[0-9]+Z\z/;
 
     done $c;
   } n => 4 + 14*4 + 7 + 3 + 9, name => ['AtomDateConstruct.value', @$test];
@@ -582,7 +591,6 @@ for my $test (
       [133485926399, '6199-12-31T23:59:59Z'],
       [193444156799, '8099-12-31T23:59:59Z'],
       [253402300799, '9999-12-31T23:59:59Z'],
-      [884541340799, '29999-12-31T23:59:59Z'],
     ) {
       $el->$method ($_->[0]);
       is $el->$method, $_->[0], "$_->[0] roundtrip";
@@ -598,7 +606,6 @@ for my $test (
       '',
       'abc',
       '2013-05-01 00:12:44Z',
-      '2013-05-01t00:12:44Z',
       '-2013-05-01T00:12:44Z',
       '2013-05-01T00:12:44',
       ' 2013-05-01T00:12:44  ',
@@ -607,11 +614,17 @@ for my $test (
       is $el->$method, 0;
     }
 
+    $el->set_attribute_ns ($test->{ns}, [undef, $test->{name}] => '2013-05-01t00:12:44Z');
+    is $el->$method, 1367367164;
+
+    $el->set_attribute_ns ($test->{ns}, [undef, $test->{name}] => '2013-05-01T00:12:44z');
+    is $el->$method, 1367367164;
+
     $el->set_attribute_ns ($test->{ns}, [undef, $test->{name}] => 'hoge');
     for (
-      -12415 + -62135596800,
-      -1 + -62135596800,
-      -0.001 + -62135596800,
+      -12415 + -62135596800 - 367*12*24*3600,
+      -1 + -62135596800 - 367*12*24*3600,
+      -0.001 + -62135596800 - 367*12*24*3600,
     ) {
       $el->$method ($_);
       is $el->get_attribute_ns ($test->{ns}, $test->{name}), 'hoge';
@@ -619,22 +632,22 @@ for my $test (
 
     $el->$method (1430272255.912);
     is $el->$method, 1430272255.912;
-    is $el->get_attribute_ns ($test->{ns}, $test->{name}),
-        '2015-04-29T01:50:55.912Z';
+    like $el->get_attribute_ns ($test->{ns}, $test->{name}),
+        qr/\A2015-04-29T01:50:55.91[0-9]+Z\z/;
 
     $el->set_attribute_ns
         ($test->{ns}, [undef, $test->{name}] => '2015-04-29T01:50:55.0001Z');
     is $el->$method, 1430272255.0001;
     $el->$method (1430272255.0001);
-    is $el->get_attribute_ns ($test->{ns}, $test->{name}),
-        '2015-04-29T01:50:55.0001Z';
+    like $el->get_attribute_ns ($test->{ns}, $test->{name}),
+        qr/\A2015-04-29T01:50:55.000[0-9]+Z\z/;
 
     $el->set_attribute_ns
         ($test->{ns}, [undef, $test->{name}] => '2015-04-29T01:50:55.9015Z');
     is $el->$method, 1430272255.9015;
     $el->$method (1430272255.9015);
-    is $el->get_attribute_ns ($test->{ns}, $test->{name}),
-        '2015-04-29T01:50:55.9015Z';
+    like $el->get_attribute_ns ($test->{ns}, $test->{name}),
+        qr/\A2015-04-29T01:50:55.901[0-9]+Z\z/;
 
     $el->set_attribute_ns
         ($test->{ns}, [undef, $test->{name}] => '1015-04-29T01:50:55.000Z');
@@ -643,11 +656,11 @@ for my $test (
         ($test->{ns}, [undef, $test->{name}] => '1015-04-29T01:50:55.0001Z');
     is $el->$method, -30126722944.9999;
     $el->$method (-30126722944.9999);
-    is $el->get_attribute_ns ($test->{ns}, $test->{name}),
-        '1015-04-29T01:50:55.000099Z';
+    like $el->get_attribute_ns ($test->{ns}, $test->{name}),
+        qr/\A1015-04-29T01:50:55.00009[0-9]+Z\z/;
 
     done $c;
-  } n => 4 + 14*4 + 7 + 3 + 9, name => ['datetime', $method, %$test];
+  } n => 4 + 13*4 + 6 + 2 + 3 + 9, name => ['datetime', $method, %$test];
 
   test {
     my $c = shift;

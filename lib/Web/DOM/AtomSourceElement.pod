@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::AtomSourceElement - The DOM |AtomSourceElement| object
+Web::DOM::AtomSourceElement - DOM |AtomSourceElement| object
 
 =head1 DESCRIPTION
 
@@ -102,7 +102,14 @@ to true and there is no C<atom:updated> element child, a new element
 is created and returned.  Otherwise, no element is created and
 C<undef> is returned.
 
+See also L<Web::DOM/DEPENDENCY>.
+
 =back
+
+=head1 DEPENDENCY
+
+For the C<value> method, the perl-web-datetime package
+<https://github.com/manakai/perl-web-datetime> is required.
 
 =head1 SPECIFICATION
 
@@ -124,7 +131,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
