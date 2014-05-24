@@ -13,7 +13,7 @@ Try::Tiny~0.22
 AnyEvent~7.07
 Term::ANSIColor~4.03
 parent~0.228
-Exporter::Lite~0.04
+Exporter::Lite~0.05
 Data::Dumper~2.151
 ExtUtils::ParseXS~3.24
 ExtUtils::MakeMaker~6.98
