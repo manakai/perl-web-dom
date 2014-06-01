@@ -3,7 +3,7 @@ Capture::Tiny~0.24
 Sub::Exporter~0.987
 Time::Piece~1.27
 Test::NoWarnings~1.04
-Encode~2.60
+Encode~2.62
 DateTime::Locale~0.45
 CPAN::Meta~2.141170
 Module::Implementation~0.07
