@@ -33,7 +33,7 @@ Module::Metadata~1.000024
 File::Spec~3.47
 Package::Stash::XS~0.28
 Test::Fatal~0.013
-TAP::Harness::Env~3.31
+TAP::Harness::Env~3.32
 Module::Runtime~0.014
 Unicode::Normalize~1.18
 Params::Util~1.07
