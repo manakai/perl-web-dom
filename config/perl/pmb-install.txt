@@ -23,10 +23,10 @@ List::AllUtils~0.08
 Data::OptList~0.109
 Text::Diff~1.41
 Test::More~1.001003
-Test::Differences~0.61
+Test::Differences~0.62
 Module::Build::Tiny~0.036
 CPAN::Meta::Requirements~2.125
-ExtUtils::Config~0.007
+ExtUtils::Config~0.008
 Path::Class~0.33
 Unicode::Stringprep~1.104
 Test::Requires~0.07
@@ -57,5 +57,5 @@ Carp~1.3301
 Class::Singleton~1.4
 JSON::PP~2.27203
 DateTime::TimeZone~1.71
-Params::Validate~1.10
+Params::Validate~1.11
 Sub::Install~0.927
