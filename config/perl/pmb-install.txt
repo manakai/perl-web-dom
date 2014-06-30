@@ -41,7 +41,7 @@ Params::Util~1.07
 Test::Output~1.03
 Algorithm::Diff~1.1902
 Perl::OSType~1.007
-Path::Tiny~0.054
+Path::Tiny~0.055
 ExtUtils::CBuilder~0.280216
 Test::Warnings~0.016
 Parse::CPAN::Meta~1.4414
