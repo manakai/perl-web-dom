@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::HTMLSourceElement - The DOM |HTMLSourceElement| source
+Web::DOM::HTMLSourceElement - DOM |HTMLSourceElement| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::HTMLSourceElement> class implements the DOM
-C<HTMLSourceElement> interface.  The class is used by the HTML
-C<source> element.
+C<HTMLSourceElement> interface.  This class is used by HTML C<source>
+elements.
 
 =head1 METHODS
 
@@ -21,11 +21,23 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 Return or set the C<media> attribute.  [HTML]
 
+=item $string = $el->sizes
+
+=item $el->sizes ($string)
+
+Return or set the C<sizes> attribute.  [HTML]
+
 =item $string = $el->src
 
 =item $el->src ($string)
 
 Return or set the C<src> attribute.  [HTML]
+
+=item $string = $el->srcset
+
+=item $el->srcset ($string)
+
+Return or set the C<srcset> attribute.  [HTML]
 
 =item $string = $el->type
 
@@ -41,8 +53,7 @@ Return or set the C<type> attribute.  [HTML]
 
 =item HTML
 
-HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-source-element>.
+HTML Standard <http://www.whatwg.org/specs/web-apps/current-work/>.
 
 =back
 
@@ -56,7 +67,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

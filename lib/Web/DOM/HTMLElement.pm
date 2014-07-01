@@ -548,6 +548,11 @@ use Web::DOM::Element;
 _define_reflect_url cite => 'cite';
 _define_reflect_string datetime => 'datetime';
 
+package Web::DOM::HTMLPictureElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
 package Web::DOM::HTMLImageElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
@@ -567,7 +572,7 @@ _define_reflect_enumerated crossorigin => 'crossorigin', {
 _define_reflect_string usemap => 'usemap';
 _define_reflect_boolean ismap => 'ismap';
 
-# XXX width height natural_width natural_height complete
+# XXX width height natural_width natural_height complete current_src
 
 _define_reflect_string align => 'align';
 _define_reflect_url longdesc => 'longdesc';
@@ -690,13 +695,15 @@ push our @ISA, qw(Web::DOM::HTMLMediaElement);
 # XXX constructor
 
 package Web::DOM::HTMLSourceElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
 _define_reflect_url src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string media => 'media';
+_define_reflect_string srcset => 'srcset';
+_define_reflect_string sizes => 'sizes';
 
 package Web::DOM::HTMLTrackElement;
 our $VERSION = '1.0';
@@ -1308,7 +1315,7 @@ _define_reflect_boolean novalidate => 'novalidate';
 _define_reflect_string target => 'target';
 _define_reflect_url action => 'action', sub { $_[0]->owner_document->url };
 
-# XXX elements length getter
+# XXX elements length getter request_autocomplete
 
 ## ------ Validation and Submission ------
 
@@ -1535,7 +1542,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX form
+# XXX form autocomplete
 
 _define_reflect_boolean autofocus => 'autofocus';
 _define_reflect_boolean disabled => 'disabled';

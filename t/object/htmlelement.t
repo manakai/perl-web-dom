@@ -71,6 +71,8 @@ for my $test (
   ['param', 'value'],
   ['source', 'type'],
   ['source', 'media'],
+  ['source', 'srcset'],
+  ['source', 'sizes'],
   ['track', 'srclang'],
   ['track', 'label'],
   ['map', 'name'],
