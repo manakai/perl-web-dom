@@ -1,11 +1,11 @@
 =head1 NAME
 
-Web::DOM::HTMLElement - The DOM |HTMLElement| object
+Web::DOM::HTMLElement - DOM |HTMLElement| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::HTMLElement> class implements the DOM C<HTMLElement>
-interface.  The class is used by any element in the HTML namespace.
+interface.  This class is used by elements in the HTML namespace.
 
 =head1 METHODS
 
@@ -230,7 +230,8 @@ L<Web::DOM::HTMLFrameSetElement>,
 L<Web::DOM::HTMLFrameElement>,
 L<Web::DOM::HTMLDirectoryElement>,
 L<Web::DOM::HTMLFontElement>,
-L<Web::DOM::HTMLTemplateElement>.
+L<Web::DOM::HTMLTemplateElement>,
+L<Web::DOM::HTMLPictureElement>.
 
 The L<Web::DOM::HTMLBaseFontElement> class is no longer available, as
 it is now dropped from the HTML Standard.

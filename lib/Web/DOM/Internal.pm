@@ -346,6 +346,7 @@ for (
   ['nobr' => 'HTMLElement'],
   ['tt' => 'HTMLElement'],
   ['template' => 'HTMLTemplateElement'],
+  ['picture' => 'HTMLPictureElement'],
 ) {
   $ElementClass->{Web::DOM::Internal::HTML_NS}->{$_->[0]}
       = "Web::DOM::$_->[1]";

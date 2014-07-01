@@ -1,0 +1,41 @@
+=head1 NAME
+
+Web::DOM::HTMLPictureElement - DOM |HTMLPictureElement| object
+
+=head1 DESCRIPTION
+
+The C<Web::DOM::HTMLPictureElement> class implements the DOM
+C<HTMLPictureElement> interface.  This class is used by HTML
+C<picture> elements.
+
+=head1 METHODS
+
+The methods available for classes L<Web::DOM::Element> and
+L<Web::DOM::HTMLElement> are avaiable.
+
+=head1 SPECIFICATION
+
+=over 4
+
+=item HTML
+
+HTML Standard <http://www.whatwg.org/specs/web-apps/current-work/>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Web::DOM::HTMLElement>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2014 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
