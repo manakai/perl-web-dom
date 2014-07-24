@@ -1,7 +1,7 @@
 package Web::DOM::Collection;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '3.0';
 use Carp;
 
 ## Collection - superclass of |Web::DOM::NodeList|,
@@ -10,12 +10,19 @@ use Carp;
 
 use overload
     '@{}' => sub {
-      return ${$_[0]}->[2] ||= do {
-        my $list = $_[0]->to_a;
-        Internals::SvREADONLY (@$list, 1);
-        Internals::SvREADONLY ($_, 1) for @$list;
-        $list;
-      };
+      if (defined ${$_[0]}->[2] and
+          ${${$_[0]}->[0]}->[0]->{revision} == ${$_[0]}->[5]) {
+        return ${$_[0]}->[2];
+      } else {
+        return ${$_[0]}->[2] = do {
+          my $list = $_[0]->to_a;
+          Internals::SvREADONLY (@$list, 1);
+          Internals::SvREADONLY ($_, 1) for @$list;
+          delete ${$_[0]}->[4];
+          ${$_[0]}->[5] = ${${$_[0]}->[0]}->[0]->{revision};
+          $list;
+        };
+      }
       ## Strictly speaking, $obj->[$index]'s $index has to be
       ## converted to IDL |unsigned long| value before actual |getter|
       ## processing (or the |FETCH| method in Perl |tie| terminology).
@@ -72,7 +79,7 @@ sub to_list ($) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

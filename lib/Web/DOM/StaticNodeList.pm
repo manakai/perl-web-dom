@@ -5,6 +5,17 @@ our $VERSION = '1.0';
 use Web::DOM::NodeList;
 push our @ISA, qw(Web::DOM::NodeList);
 
+use overload
+    '@{}' => sub {
+      return ${$_[0]}->[2] ||= do {
+        my $list = $_[0]->to_a;
+        Internals::SvREADONLY (@$list, 1);
+        Internals::SvREADONLY ($_, 1) for @$list;
+        $list;
+      };
+    },
+    fallback => 1;
+
 sub to_list ($) {
   return @{${$_[0]}->[1]};
 } # to_list

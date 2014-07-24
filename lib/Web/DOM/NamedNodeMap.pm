@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Web::DOM::Collection;
 push our @ISA, qw(Web::DOM::Collection);
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @CARP_NOT, qw(
   Web::DOM::Element Web::DOM::DocumentType Web::DOM::ElementTypeDefinition
 );
@@ -14,11 +14,18 @@ use Web::DOM::Exception;
 
 use overload
     '%{}' => sub {
-      return ${$_[0]}->[4] ||= do {
-        my %data = map { $_->node_name => $_ } reverse $_[0]->to_list;
-        tie my %hash, 'Web::DOM::Internal::ReadOnlyHash', \%data;
-        \%hash;
-      };
+      if (defined ${$_[0]}->[4] and
+          ${${$_[0]}->[0]}->[0]->{revision} == ${$_[0]}->[5]) {
+        return ${$_[0]}->[4];
+      } else {
+        return ${$_[0]}->[4] = do {
+          my %data = map { $_->node_name => $_ } reverse $_[0]->to_list;
+          tie my %hash, 'Web::DOM::Internal::ReadOnlyHash', \%data;
+          delete ${$_[0]}->[2];
+          ${$_[0]}->[5] = ${${$_[0]}->[0]}->[0]->{revision};
+          \%hash;
+        };
+      }
     },
     fallback => 1;
 
@@ -140,7 +147,7 @@ sub remove_named_item_ns ($$$) {
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
