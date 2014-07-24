@@ -245,6 +245,7 @@ for my $method (qw(insert_before append_child)) {
       is scalar @{$doc->child_nodes}, 0;
       is $node->parent_node, undef;
       done $c;
+      undef $node;
     } n => 6, name => [$method, $node->node_type, 'cannot be a document node child'];
   }
 
@@ -264,6 +265,7 @@ for my $method (qw(insert_before append_child)) {
       is scalar @{$doc->child_nodes}, 0;
       is $node->parent_node, undef;
       done $c;
+      undef $node;
     } n => 6, name => [$method, $node->node_type, 'cannot be a document node child'];
   }
 
@@ -576,6 +578,7 @@ for my $method (qw(append_child insert_before)) {
         is scalar @{$parent->child_nodes}, 0;
         is $child->parent_node, undef;
         done $c;
+        undef $child;
       } n => 6, name => [$method, $parent->node_type, $child->node_type, 'parent/child error'];
     }
 
@@ -594,6 +597,7 @@ for my $method (qw(append_child insert_before)) {
         is scalar @{$parent->child_nodes}, 0;
         is $child->parent_node, undef;
         done $c;
+        undef $child;
       } n => 6, name => [$method, $parent->node_type, $child->node_type, 'parent/child error'];
     }
   }
@@ -617,6 +621,7 @@ for my $method (qw(append_child insert_before)) {
         is $child->parent_node, $parent;
         is $parent->last_child, $child;
         done $c;
+        undef $child;
       } n => 3, name => [$method, $parent->node_type, $child->node_type, 'parent/child ok'];
     }
   }

@@ -51,6 +51,7 @@ test {
   ) {
     test {
       my $c = shift;
+      my $doc = $parent->owner_document;
       my $node = $doc->create_element ('a');
       my $child = $doc->create_element ('a');
       dies_here_ok {
@@ -62,6 +63,7 @@ test {
       is $child->parent_node, undef;
       is $node->parent_node, undef;
       done $c;
+      undef $parent;
     } n => 6, name => [$parent->node_type, 'wrong parent'];
   }
 }
