@@ -2,7 +2,7 @@ package Web::DOM::Node;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
 use Web::DOM::Internal;
@@ -733,12 +733,12 @@ sub _pre_insert ($$;$$) {
 } # _insert
 
 sub remove_child ($$) {
-  # WebIDL
+  ## WebIDL
   unless (UNIVERSAL::isa ($_[1], 'Web::DOM::Node')) {
     _throw Web::DOM::TypeError 'The argument is not a Node';
   }
 
-  # Pre-remove 1.
+  ## Pre-remove 1.
   my ($parent, $child) = @_;
   if ($$child->[0] ne $$parent->[0] or
       not defined $$child->[2]->{parent_node} or
@@ -747,35 +747,10 @@ sub remove_child ($$) {
         'The specified node is not a child of this node';
   }
 
-  # Pre-remove 2. Remove
-  {
-    # Remove 1.-5.
-    # XXX range
+  ## Pre-remove 2.
+  $$parent->[0]->remove_node ($$parent->[1], $$child->[1], 0);
 
-    # Remove 6.-7.
-    # XXX mutation
-
-    # Remove 8.
-    my $child_id = $$child->[1];
-    @{$$parent->[2]->{child_nodes}} = grep {
-      $_ != $child_id;
-    } @{$$parent->[2]->{child_nodes}};
-    delete $$child->[2]->{parent_node};
-    delete $$child->[2]->{i_in_parent};
-    {
-      my $i = 0;
-      for (@{$$parent->[2]->{child_nodes}}) {
-        $$parent->[0]->{data}->[$_]->{i_in_parent} = $i++;
-      }
-    }
-    $$parent->[0]->children_changed ($$parent->[1], $$child->[2]->{node_type});
-    $$child->[0]->disconnect ($$child->[1]);
-
-    # Remove 9.
-    # XXX node is removed
-  }
-
-  # Pre-remove 3.
+  ## Pre-remove 3.
   return $child;
 } # remove_child
 

@@ -2,7 +2,7 @@ package Web::DOM::Internal;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Carp;
 
 ## Web::DOM internal data structure and core utilities
@@ -155,6 +155,7 @@ sub add_data ($$) {
 ##   event_listeners                {}[]      Event listener callbacks
 ##   general_entities               {node_id} General entities
 ##   host_el                        scalar    Host element
+##   i_in_parent                    integer   Index in parent's child_nodes
 ##   is_html                        boolean   An HTML document?
 ##   is_srcdoc                      boolean   An iframe srcdoc document?
 ##   is_XMLDocument                 boolean   An XMLDocument?
@@ -482,6 +483,32 @@ sub set_template_content ($$$) {
     weaken ($$df->[2]->{host_el} = $int->node ($node_id));
   }
 } # set_template_content
+
+## Remove <http://dom.spec.whatwg.org/#concept-node-remove>
+sub remove_node ($$$$) {
+  my ($int, $parent_id, $child_id, $suppress_observers) = @_;
+
+  ## 1.-5.
+  # XXX range
+
+  ## 6.-7.
+  # XXX mutation
+
+  ## 8.
+  my $parent_data = $int->{data}->[$parent_id];
+  my $child_data = $int->{data}->[$child_id];
+  my $child_i = delete $child_data->{i_in_parent};
+  splice @{$parent_data->{child_nodes}}, $child_i, 1, ();
+  delete $child_data->{parent_node};
+  for ($child_i..$#{$parent_data->{child_nodes}}) {
+    $int->{data}->[$parent_data->{child_nodes}->[$_]]->{i_in_parent}--;
+  }
+  $int->children_changed ($parent_id, $child_data->{node_type});
+  $int->disconnect ($child_id);
+
+  ## 9.
+  # XXX node is removed
+} # remove_node
 
 ## Live collection data structure
 ##
@@ -1138,7 +1165,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
