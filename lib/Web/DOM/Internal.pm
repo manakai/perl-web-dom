@@ -520,6 +520,9 @@ sub remove_node ($$$$) {
 ## iterated for all children.
 sub remove_children ($$$$) {
   my ($int, $parent_id, $suppress_observers) = @_;
+  my $parent_data = $int->{data}->[$parent_id];
+  my @removed = @{$parent_data->{child_nodes} or []};
+  return unless @removed;
 
   ## 1.-5.
   # XXX range
@@ -528,8 +531,6 @@ sub remove_children ($$$$) {
   # XXX mutation
 
   ## 8.
-  my $parent_data = $int->{data}->[$parent_id];
-  my @removed = @{$parent_data->{child_nodes} or []};
   for (@removed) {
     my $child_data = $int->{data}->[$_];
     delete $child_data->{parent_node};

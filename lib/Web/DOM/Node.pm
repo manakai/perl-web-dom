@@ -611,7 +611,7 @@ sub _pre_insert ($$;$$) {
       # Insert 4.
       # XXX mutation
 
-      # Insert 5. remove
+      # Insert 5.
       my @ref = $$node->[0]->remove_children ($$node->[1], 'suppress');
 
       # Insert 6.
@@ -748,7 +748,7 @@ sub normalize ($) {
     # 6.-7.
     # XXX range
 
-    # 8. Remove
+    # 8.
     $int->remove_node ($parent_id, $_, 0) for @text_id;
   }; # normalize
 
