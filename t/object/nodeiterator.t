@@ -369,6 +369,220 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
+  my $node0 = $doc->create_element ('foo');
+  my $node1 = $doc->create_element ('hoge');
+  my $node2 = $doc->create_element ('hoge');
+  my $node3 = $doc->create_element ('hoge');
+  my $node4 = $doc->create_element ('hoge');
+  my $node5 = $doc->create_text_node ('hoge');
+  $node0->append_child ($node1);
+  $node1->append_child ($node2);
+  $node1->append_child ($node3);
+  $node3->append_child ($node4);
+  $node1->append_child ($node5);
+
+  my $ni = $doc->create_node_iterator ($node1);
+  is $ni->next_node, $node1;
+  is $ni->next_node, $node2;
+  is $ni->next_node, $node3;
+  is $ni->next_node, $node4;
+  is $ni->next_node, $node5;
+  is $ni->previous_node, $node5;
+  is $ni->reference_node, $node5;
+  ok $ni->pointer_before_reference_node;
+
+  $node0->remove_child ($node1);
+  
+  is $ni->reference_node, $node5;
+  ok $ni->pointer_before_reference_node;
+  ok $ni->next_node, undef;
+  ok not $ni->pointer_before_reference_node;
+
+  done $c;
+} n => 12, name => 'root node is removed';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+
+  my $node01 = $doc->create_element ('foo');
+  my $node0 = $doc->create_element ('foo');
+  my $node1 = $doc->create_element ('hoge');
+  my $node2 = $doc->create_element ('hoge');
+  my $node3 = $doc->create_element ('hoge');
+  my $node4 = $doc->create_element ('hoge');
+  my $node5 = $doc->create_text_node ('hoge');
+  $node01->append_child ($node0);
+  $node0->append_child ($node1);
+  $node1->append_child ($node2);
+  $node1->append_child ($node3);
+  $node3->append_child ($node4);
+  $node1->append_child ($node5);
+
+  my $ni = $doc->create_node_iterator ($node1);
+  is $ni->next_node, $node1;
+  is $ni->next_node, $node2;
+  is $ni->next_node, $node3;
+  is $ni->next_node, $node4;
+  is $ni->next_node, $node5;
+  is $ni->previous_node, $node5;
+  is $ni->reference_node, $node5;
+  ok $ni->pointer_before_reference_node;
+
+  $node01->remove_child ($node0);
+  
+  is $ni->reference_node, $node5;
+  ok $ni->pointer_before_reference_node;
+  ok $ni->next_node, undef;
+  ok not $ni->pointer_before_reference_node;
+
+  done $c;
+} n => 12, name => 'ancestor of root node is removed';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+
+  my $node1 = $doc->create_element ('hoge');
+  my $node2 = $doc->create_text_node ('foo');
+  my $node3 = $doc->create_text_node ('foo');
+  my $node4 = $doc->create_text_node ('foo');
+  $node1->append_child ($node2);
+  $node1->append_child ($node3);
+  $node1->append_child ($node4);
+
+  my $ni = $doc->create_node_iterator ($node1);
+  is $ni->next_node, $node1;
+  is $ni->next_node, $node2;
+  is $ni->next_node, $node3;
+
+  $node1->text_content ('abc');
+
+  is $ni->reference_node, $node1;
+  ok not $ni->pointer_before_reference_node;
+
+  done $c;
+} n => 5, name => 'reference node removed (remove_children)';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+
+  my $node1 = $doc->create_element ('hoge');
+  my $node2 = $doc->create_text_node ('foo');
+  my $node3 = $doc->create_text_node ('foo');
+  my $node4 = $doc->create_text_node ('foo');
+  $node1->append_child ($node2);
+  $node1->append_child ($node3);
+  $node1->append_child ($node4);
+
+  my $ni = $doc->create_node_iterator ($node1);
+  is $ni->next_node, $node1;
+  is $ni->next_node, $node2;
+  is $ni->next_node, $node3;
+  is $ni->next_node, $node4;
+
+  $node1->text_content ('abc');
+
+  is $ni->reference_node, $node1;
+  ok not $ni->pointer_before_reference_node;
+
+  done $c;
+} n => 6, name => 'reference node removed (remove_children)';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+
+  my $node1 = $doc->create_element ('hoge');
+  my $node2 = $doc->create_element ('foo');
+  my $node3 = $doc->create_text_node ('foo');
+  my $node4 = $doc->create_text_node ('foo');
+  my $node5 = $doc->create_text_node ('foo');
+  $node1->append_child ($node2);
+  $node2->append_child ($node3);
+  $node2->append_child ($node4);
+  $node1->append_child ($node5);
+
+  my $ni = $doc->create_node_iterator ($node1);
+  is $ni->next_node, $node1;
+  is $ni->next_node, $node2;
+  is $ni->next_node, $node3;
+
+  $node2->text_content ('abc');
+
+  is $ni->reference_node, $node2;
+  ok not $ni->pointer_before_reference_node;
+
+  done $c;
+} n => 5, name => 'reference node removed (remove_children)';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+
+  my $node1 = $doc->create_element ('hoge');
+  my $node2 = $doc->create_element ('foo');
+  my $node3 = $doc->create_text_node ('foo');
+  my $node4 = $doc->create_text_node ('foo');
+  my $node5 = $doc->create_text_node ('foo');
+  $node1->append_child ($node2);
+  $node2->append_child ($node3);
+  $node2->append_child ($node4);
+  $node1->append_child ($node5);
+
+  my $ni = $doc->create_node_iterator ($node1);
+  is $ni->next_node, $node1;
+  is $ni->next_node, $node2;
+  is $ni->next_node, $node3;
+  is $ni->next_node, $node4;
+  is $ni->next_node, $node5;
+  is $ni->previous_node, $node5;
+  is $ni->previous_node, $node4;
+
+  $node2->text_content ('abc');
+
+  is $ni->reference_node, $node5;
+  ok $ni->pointer_before_reference_node;
+
+  done $c;
+} n => 9, name => 'reference node removed (remove_children)';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+
+  my $node1 = $doc->create_element ('hoge');
+  my $node2 = $doc->create_element ('foo');
+  my $node3 = $doc->create_text_node ('foo');
+  my $node4 = $doc->create_text_node ('foo');
+  my $node5 = $doc->create_text_node ('foo');
+  $node1->append_child ($node2);
+  $node2->append_child ($node3);
+  $node2->append_child ($node4);
+  $node1->append_child ($node5);
+
+  my $ni = $doc->create_node_iterator ($node1);
+  is $ni->next_node, $node1;
+  is $ni->next_node, $node2;
+  is $ni->next_node, $node3;
+  is $ni->next_node, $node4;
+  is $ni->next_node, $node5;
+  is $ni->previous_node, $node5;
+  is $ni->previous_node, $node4;
+
+  $node1->text_content ('abc');
+
+  is $ni->reference_node, $node1;
+  ok not $ni->pointer_before_reference_node;
+
+  done $c;
+} n => 9, name => 'reference node removed (remove_children)';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+
   my $node1 = $doc->create_element ('hoge');
   my $node2 = $doc->create_element ('hoge');
   my $node3 = $doc->create_element ('hoge');

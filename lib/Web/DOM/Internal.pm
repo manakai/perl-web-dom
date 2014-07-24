@@ -51,7 +51,7 @@ sub _resolve_url ($$) {
 ## subclasses covers this module.
 
 package Web::DOM::Internal::Objects;
-use Scalar::Util qw(weaken);
+use Scalar::Util qw(weaken refaddr);
 push our @CARP_NOT, qw(Web::DOM::Exception Web::DOM::StringArray);
 
 ## Nodes of a DOM document share an object store, which is represented
@@ -77,7 +77,7 @@ sub new ($) {
     # tree_id
 
     ## Lists
-    # cols tokens strmap iterators
+    # cols tokens strmap
 
     ## CSS
     # source_style media
@@ -159,6 +159,7 @@ sub add_data ($$) {
 ##   is_html                        boolean   An HTML document?
 ##   is_srcdoc                      boolean   An iframe srcdoc document?
 ##   is_XMLDocument                 boolean   An XMLDocument?
+##   iterators                      {addr-of-iterator => iterator}
 ##   local_name                     \string   Local name
 ##   manakai_charset                string    Content-Type charset=""
 ##   manakai_entity_base_uri        \string   Entity base URL
@@ -488,6 +489,47 @@ sub set_template_content ($$$) {
 sub remove_node ($$$$) {
   my ($int, $parent_id, $child_id, $suppress_observers) = @_;
 
+  ## Before a node is removed from the iterator collection
+  ## <http://dom.spec.whatwg.org/#iterator-collection>
+  {
+    ## 1.
+    my @iterator;
+    my @id = ($child_id);
+    my %descendant_id;
+    while (@id) {
+      my $id = shift @id;
+      $descendant_id{$id} = 1;
+      my $data = $int->{data}->[$id];
+      push @iterator, grep { defined } values %{$data->{iterators} or {}};
+      push @id, @{$data->{child_nodes} or []};
+    }
+    last unless @iterator;
+    my $child = $int->node ($child_id);
+    for my $iterator (@iterator) {
+      next if $descendant_id{${$iterator->{root}}->[1]};
+      $int->change_iterator_reference_node ($iterator, $child);
+
+      if ($iterator->{pointer_before_reference_node}) {
+        ## 3.
+        my $node = do {
+          local $iterator->{pointer_before_reference_node} = 0;
+          $iterator->_traverse ('next', 'remove');
+        };
+
+        ## 4.
+        unless (defined $node) {
+          $iterator->{pointer_before_reference_node} = 1;
+          $iterator->_traverse (!'next', 'remove');
+          delete $iterator->{pointer_before_reference_node};
+        }
+      } else {
+        ## 2.
+        local $iterator->{pointer_before_reference_node} = 1;
+        $iterator->_traverse (!'next', 'remove');
+      }
+    }
+  }
+
   ## 1.-5.
   # XXX range
 
@@ -523,6 +565,46 @@ sub remove_children ($$$$) {
   my $parent_data = $int->{data}->[$parent_id];
   my @removed = @{$parent_data->{child_nodes} or []};
   return unless @removed;
+
+  ## Before a node is removed from the iterator collection
+  ## <http://dom.spec.whatwg.org/#iterator-collection>
+  {
+    ## 1.
+    my @iterator;
+    my @id = (@removed);
+    my %descendant_id;
+    while (@id) {
+      my $id = shift @id;
+      $descendant_id{$id} = 1;
+      my $data = $int->{data}->[$id];
+      push @iterator, grep { defined } values %{$data->{iterators} or {}};
+      push @id, @{$data->{child_nodes} or []};
+    }
+    last unless @iterator;
+    my $parent = $int->node ($parent_id);
+    for my $iterator (@iterator) {
+      next if $descendant_id{${$iterator->{root}}->[1]};
+
+      if ($iterator->{pointer_before_reference_node}) {
+        ## 3.
+        my $node = do {
+          local $iterator->{pointer_before_reference_node} = 0;
+          $int->change_iterator_reference_node ($iterator, $parent);
+          $iterator->_traverse ('next', 'remove');
+        };
+
+        ## 4.
+        unless (defined $node) {
+          $int->change_iterator_reference_node ($iterator, $parent);
+          delete $iterator->{pointer_before_reference_node};
+        }
+      } else {
+        ## 2.
+        local $iterator->{pointer_before_reference_node} = 1;
+        $int->change_iterator_reference_node ($iterator, $parent);
+      }
+    }
+  }
 
   ## 1.-5.
   # XXX range
@@ -576,7 +658,6 @@ sub remove_children ($$$$) {
 ##   - {forms}                    - $doc->forms
 ##   - {general_entities}         - $dt->general_entities
 ##   - {images}                   - $doc->images
-##   - {iterator}                 - $node->_iterator (Web::DOM::NodeIterator)
 ##   - {link_elements}            - $el->link_elements
 ##   - {links}                    - $doc->links
 ##   - {notations}                - $dt->notations
@@ -652,7 +733,11 @@ sub collection_by_el ($$$$$) {
 ##   - {pointer_before_reference_node} - Boolean
 ##   - {what_to_show}                  - Bit vector
 ##   - {filter}                        - Code reference
-##   - {collection}                    = Iterator collection
+##
+## |$self->{data}->[$reference_node_id]->{iterators}->{refaddr $iterator}|
+## contains the node iterator object such that when the reference
+## node is removed from the tree, the reference node of the iterator
+## can be adjusted.  See |remove_node| and |remove_children|.
 sub iterator ($$$$) {
   require Web::DOM::NodeIterator;
   my $it = bless {
@@ -661,33 +746,16 @@ sub iterator ($$$$) {
     pointer_before_reference_node => 1,
     what_to_show => $_[2],
     filter => $_[3],
-    collection => $_[1]->_iterator,
   }, 'Web::DOM::NodeIterator';
-  my $list = $_[0]->{iterators}->[${$_[1]}->[1]] ||= [];
-  weaken ($list->[@$list] = $it);
+  weaken (${$_[1]}->[2]->{iterators}->{refaddr $_[1]} = $it);
   return $it;
 } # iterator
 
-sub destroy_iterator ($$) {
-  my $root = $_[1]->{root};
-  my $list = $_[0]->{iterators}->[$$root->[1]] || [];
-  my $found;
-  my $found_other;
-  for (0..$#$list) {
-    next unless $list->[$_];
-    if ($list->[$_] eq $_[1]) {
-      delete $list->[$_];
-      $found = 1;
-      last if $found_other;
-    } else {
-      $found_other = 1;
-      last if $found;
-    }
-  }
-  unless ($found_other) {
-    delete $_[0]->{cols}->[$$root->[1]]->{iterator};
-  }
-} # destroy_iterator
+sub change_iterator_reference_node ($$$) {
+  delete ${$_[2]}->[2]->{iterators}->{refaddr ($_[1]->{reference_node})};
+  $_[1]->{reference_node} = $_[2];
+  weaken (${$_[2]}->[2]->{iterators}->{refaddr $_[2]} = $_[1]);
+} # change_iterator_reference_node
 
 ## Live token data structure
 ##
@@ -769,44 +837,37 @@ sub tokens ($$$$$) {
   return $nl;
 } # tokens
 
+my @children_changed_key = qw(child_nodes children attributes
+                              element_types general_entities
+                              notations attribute_definitions
+                              css_rules);
 sub children_changed ($$$) {
   my $cols = $_[0]->{cols};
-  my @key = qw(child_nodes children attributes element_types general_entities
-               notations attribute_definitions iterator css_rules);
+  $_[0]->{revision}++;
+  my @key;
   if ($_[2] == 1 or $_[2] == 2) { # old child is ELEMENT_NODE or ATTRIBUTE_NODE
     @key = ();
+  } else {
+    @key = @children_changed_key;
   }
 
   my @id = ($_[1]);
   while (@id) {
     my $id = shift @id;
     next unless defined $id;
-    for my $key (@key ? @key : keys %{$cols->[$id] or {}}) {
-      my $col = $cols->[$id]->{$key};
-      next unless defined $col; # HTMLAllCollection is false!
-      my $old = $key eq 'iterator' ? [@$col] : undef;
-
-      delete $$col->[2];
-      delete $$col->[4];
-
-      if ($key eq 'iterator') {
-        my $new = [@$col];
-        my $new_found = {};
-        $new_found->{$$_->[1]} = 1 for @$new;
-        my $not_found = {};
-        for (@$old) {
-          next if $new_found->{$$_->[1]};
-          $not_found->{$$_->[1]} = 1;
-        }
-        if (keys %$not_found) {
-          for (@{$_[0]->{iterators}->[$_[1]] || []}) {
-            $_->_nodes_removed ($old, $not_found);
-          }
-        }
-      } # iterator
+    my $id_cols = $cols->[$id];
+    if (defined $id_cols) {
+      for my $key (@key ? @key : keys %$id_cols) {
+        my $col = $id_cols->{$key};
+        next unless defined $col;
+        my $old = undef;
+        
+        delete $$col->[2];
+        delete $$col->[4];
+      }
     }
     push @id, $_[0]->{data}->[$id]->{parent_node};
-    @key = ('iterator') if @key;
+    @key = () if @key;
   }
 
   for (@{$_[0]->{xpath_results} or []}) {
@@ -1058,10 +1119,6 @@ sub adopt ($$) {
       }
     }
 
-    if (my $its = delete $old_int->{iterators}->[$old_id]) {
-      $new_int->{iterators}->[$new_id] = $its;
-    }
-
     $new_int->{rc}->[$new_id] = delete $old_int->{rc}->[$old_id]
         if $old_int->{rc}->[$old_id];
   } # @old_id
@@ -1141,7 +1198,6 @@ sub gc ($$) {
     delete $self->{tree_id}->[$_];
     delete $self->{rc}->[$_];
     delete $self->{cols}->[$_];
-    delete $self->{iterators}->[$_];
   }
 } # gc
 
