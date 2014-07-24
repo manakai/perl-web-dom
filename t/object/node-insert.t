@@ -245,6 +245,7 @@ for my $method (qw(insert_before append_child)) {
       is scalar @{$doc->child_nodes}, 0;
       is $node->parent_node, undef;
       done $c;
+      undef $node;
     } n => 6, name => [$method, $node->node_type, 'cannot be a document node child'];
   }
 
@@ -264,6 +265,7 @@ for my $method (qw(insert_before append_child)) {
       is scalar @{$doc->child_nodes}, 0;
       is $node->parent_node, undef;
       done $c;
+      undef $node;
     } n => 6, name => [$method, $node->node_type, 'cannot be a document node child'];
   }
 
@@ -576,6 +578,7 @@ for my $method (qw(append_child insert_before)) {
         is scalar @{$parent->child_nodes}, 0;
         is $child->parent_node, undef;
         done $c;
+        undef $child;
       } n => 6, name => [$method, $parent->node_type, $child->node_type, 'parent/child error'];
     }
 
@@ -594,6 +597,7 @@ for my $method (qw(append_child insert_before)) {
         is scalar @{$parent->child_nodes}, 0;
         is $child->parent_node, undef;
         done $c;
+        undef $child;
       } n => 6, name => [$method, $parent->node_type, $child->node_type, 'parent/child error'];
     }
   }
@@ -617,6 +621,7 @@ for my $method (qw(append_child insert_before)) {
         is $child->parent_node, $parent;
         is $parent->last_child, $child;
         done $c;
+        undef $child;
       } n => 3, name => [$method, $parent->node_type, $child->node_type, 'parent/child ok'];
     }
   }
@@ -1502,13 +1507,32 @@ test {
   done $c;
 } n => 6, name => 'doc > df > el + doctype, allowed';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  my $df = $doc->create_document_fragment;
+  $df->append_child ($doc->create_element ('b'));
+  $df->append_child ($doc->create_element ('c'));
+
+  $el->append_child ($df);
+
+  is $el->child_nodes->length, 2;
+  isa_ok $el->first_child, 'Web::DOM::Node';
+  isa_ok $el->last_child, 'Web::DOM::Node';
+  is $el->first_child->local_name, 'b';
+  is $el->last_child->local_name, 'c';
+
+  done $c;
+} n => 5, name => 'df child GC';
+
 run_tests;
 
 ## See also: htmltemplateelement.t
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -1,7 +1,7 @@
 package Web::DOM::ParentNode;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Node;
 use Web::DOM::Internal;
 push our @CARP_NOT, qw(
@@ -231,16 +231,7 @@ sub text_content ($;$) {
       # adopt
 
       # Replace 2. Remove
-      for my $node_id (@{$$self->[2]->{child_nodes} or []}) {
-        # XXX range
-        # XXX mutation
-        #$int->children_changed ($$self->[1], ???_NODE); # redundant
-        delete $int->{data}->[$node_id]->{parent_node};
-        delete $int->{data}->[$node_id]->{i_in_parent};
-        $int->disconnect ($node_id);
-        # don't include $node_id to new child_nodes
-      }
-      @replaced = map { $int->node ($_) } @{$$self->[2]->{child_nodes} or []};
+      @replaced = $$self->[0]->remove_children ($$self->[1], 'suppress');
 
       # Replace 3. Insert (simplified)
       if (defined $node) {
@@ -249,9 +240,6 @@ sub text_content ($;$) {
         $$node->[2]->{i_in_parent} = 0;
         @{$$self->[2]->{child_nodes} ||= []} = ($$node->[1]);
         $int->connect ($$node->[1] => $$self->[1]);
-        #$int->children_changed ($$self->[1], TEXT_NODE); # redundant
-      } else {
-        @{$$self->[2]->{child_nodes} ||= []} = ();
         #$int->children_changed ($$self->[1], TEXT_NODE); # redundant
       }
     }
