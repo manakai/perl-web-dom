@@ -89,6 +89,8 @@ sub new ($) {
     # template_doc
 
     # document_base_url
+
+    revision => 1,
   }, $_[0];
 } # new
 
@@ -639,6 +641,7 @@ sub remove_children ($$$$) {
 ##   2 - List of the nodes in the collection
 ##   3 - Collection keys
 ##   4 - Hash reference for %{} operation
+##   5 - Mutation revision number
 ##
 ## $self->{cols}->[$root_node_id]->
 ## 
@@ -700,7 +703,7 @@ sub collection ($$$$) {
   if (not $ModuleLoaded->{$class}++) {
     eval qq{ require $class } or die $@;
   }
-  my $nl = bless \[$root_node, $filter, undef, $keys], $class;
+  my $nl = bless \[$root_node, $filter, undef, $keys, undef, $self->{revision}], $class;
   weaken ($self->{cols}->[$id]->{$key} = $nl);
   return $nl;
 } # collection
@@ -837,44 +840,10 @@ sub tokens ($$$$$) {
   return $nl;
 } # tokens
 
-my @children_changed_key = qw(child_nodes children attributes
-                              element_types general_entities
-                              notations attribute_definitions
-                              css_rules);
 sub children_changed ($$$) {
-  my $cols = $_[0]->{cols};
   $_[0]->{revision}++;
-  my @key;
-  if ($_[2] == 1 or $_[2] == 2) { # old child is ELEMENT_NODE or ATTRIBUTE_NODE
-    @key = ();
-  } else {
-    @key = @children_changed_key;
-  }
-
-  my @id = ($_[1]);
-  while (@id) {
-    my $id = shift @id;
-    next unless defined $id;
-    my $id_cols = $cols->[$id];
-    if (defined $id_cols) {
-      for my $key (@key ? @key : keys %$id_cols) {
-        my $col = $id_cols->{$key};
-        next unless defined $col;
-        my $old = undef;
-        
-        delete $$col->[2];
-        delete $$col->[4];
-      }
-    }
-    push @id, $_[0]->{data}->[$id]->{parent_node};
-    @key = () if @key;
-  }
-
-  for (@{$_[0]->{xpath_results} or []}) {
-    $_->{invalid_iterator_state} ||= 1;
-  }
-
   delete $_[0]->{document_base_url};
+  $_->{invalid_iterator_state} = 1 for @{$_[0]->{xpath_results} or []};
 } # children_changed
 
 ## DOMStringMap
