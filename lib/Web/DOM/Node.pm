@@ -576,32 +576,10 @@ sub _pre_insert ($$;$$) {
   
   # 9. adopt
   {
-    # Adopt 2. Remove
-    if (defined (my $old_parent_id = $$node->[2]->{parent_node})) {
-      # Remove 1.
-      my $old_parent = $$node->[0]->{data}->[$old_parent_id];
-      
-      # Remove 2.-5.
-      # XXX range
-      
-      # Remove 6.-7.
-      # XXX mutation
-      
-      # Remove 8.
-      @{$old_parent->{child_nodes}}
-          = grep { $_ != $$node->[1] } @{$old_parent->{child_nodes}};
-      {
-        my $i = 0;
-        for (@{$old_parent->{child_nodes}}) {
-          $$node->[0]->{data}->[$_]->{i_in_parent} = $i++;
-        }
-        ## $$node->[2]->{i_in_parent} is updated later
-      }
-      $$node->[0]->children_changed ($old_parent_id, $$node->[2]->{node_type});
-
-      # Remove 9.
-      # XXX node is removed
-    }
+    # Adopt 2.
+    my $old_parent_id = $$node->[2]->{parent_node};
+    $$node->[0]->remove_node ($old_parent_id, $$node->[1], 0)
+        if defined $old_parent_id;
 
     # Adopt 3.
     $$parent->[0]->adopt ($node);
@@ -612,31 +590,9 @@ sub _pre_insert ($$;$$) {
     }
   } # adopt
 
-  # Replace 10. remove ("suppress observers flag" set)
-  if (defined $old_child) {
-    # Remove 1.
-    #
-
-    # Remove 2.-5.
-    # XXX range
-    
-    # Remove 6.
-    #
-
-    # Remove 7.
-    # XXX mutation
-
-    # Remove 8.
-    splice @{$$parent->[2]->{child_nodes}}, $insert_position, 1, ();
-    ## Redundant
-    #$$parent->[0]->children_changed ($$parent->[1], $$old_child->[2]->{node_type});
-    delete $$old_child->[2]->{parent_node};
-    delete $$old_child->[2]->{i_in_parent};
-    $$old_child->[0]->disconnect ($$old_child->[1]);
-    
-    # Remove 9.
-    #
-  } # remove
+  # Replace 10.
+  $$node->[0]->remove_node ($$parent->[1], $$old_child->[1], 'suppress')
+      if defined $old_child;
 
   # Pre-insert 10. / Replace 11. insert
   {
@@ -645,43 +601,23 @@ sub _pre_insert ($$;$$) {
     # Insert 1.
     #
 
-    # Insert 2.-3.
+    # Insert 2.
     # XXX range
 
     if ($node_nt == DOCUMENT_FRAGMENT_NODE) {
-      # Insert 4.
+      # Insert 3.
       my @node = @{$$node->[2]->{child_nodes} or []};
       
-      # Insert 5.
+      # Insert 4.
       # XXX mutation
 
-      # Insert 6. remove
-      {
-        # Remove 1.
-        #
+      # Insert 5. remove
+      my @ref = $$node->[0]->remove_children ($$node->[1], 'suppress');
 
-        # Remove 2.-5.
-        # XXX range
-        
-        # Remove 6.
-        #
-
-        # Remove 7.
-        # XXX mutation
-
-        # Remove 8.
-        @{$$node->[2]->{child_nodes}} = ();
-        $$node->[0]->children_changed ($$node->[1], ELEMENT_NODE);
-        ## Children's ->{i_in_parent} are updated later
-        
-        # Remove 9.
-        #
-      } # remove
-
-      # Insert 7.
+      # Insert 6.
       # XXX mutation
       
-      # Insert 8.
+      # Insert 7.
       splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, @node;
       $$parent->[0]->children_changed ($$parent->[1], ELEMENT_NODE);
       for my $node_id (@node) {
@@ -694,13 +630,13 @@ sub _pre_insert ($$;$$) {
         }
       }
       
-      # Insert 9.
+      # Insert 8.
       # XXX node is inserted
     } else {
-      # Insert 7.
+      # Insert 6.
       # XXX mutation
       
-      # Insert 4., 8.
+      # Insert 3., 7.
       splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, $$node->[1];
       $$parent->[0]->children_changed
           ($$parent->[1], $$node->[2]->{node_type});
@@ -712,7 +648,7 @@ sub _pre_insert ($$;$$) {
       }
       $$parent->[0]->connect ($$node->[1] => $$parent->[1]);
 
-      # Insert 9.
+      # Insert 8.
       # XXX node is inserted
     }
   } # insert
@@ -781,7 +717,7 @@ sub manakai_append_content ($$) {
 sub normalize ($) {
   my $self = shift;
   my $int = $$self->[0];
-  my $new_child_nodes = [];
+  my $parent_id = $$self->[1];
   my @text_id;
 
   my $normalize = sub {
@@ -793,27 +729,9 @@ sub normalize ($) {
       # 2.
       my $length = length ${$int->{data}->[$node_id]->{data}};
 
-      # 3. Remove
+      # 3.
       if ($length == 0) {
-        # Remove 1.
-        #
-        
-        # Remove 2.-5.
-        # XXX range
-
-        # Remove 6.-7.
-        # XXX mutation
-
-        # Remove 8.
-        #$int->children_changed ($$self->[1], TEXT_NODE); # redundant
-        delete $int->{data}->[$node_id]->{parent_node};
-        delete $int->{data}->[$node_id]->{i_in_parent};
-        $int->disconnect ($node_id);
-        # don't include $node_id to $new_child_nodes
-        
-        # Remove 9.
-        $int->node ($node_id); # for DESTROY
-        # XXX node is removed
+        $int->remove_node ($parent_id, $node_id, 0);
         return unless @text_id;
         next;
       } else {
@@ -830,22 +748,12 @@ sub normalize ($) {
     # 6.-7.
     # XXX range
 
-    # 8. Remove (simplified)
-    push @$new_child_nodes, $node_id;
-    for (@text_id) {
-      # XXX range
-      # XXX mutation
-      #$int->children_changed ($$self->[1], TEXT_NODE); # redundant
-      delete $int->{data}->[$_]->{parent_node};
-      delete $int->{data}->[$_]->{i_in_parent};
-      $int->disconnect ($_);
-      # don't include $_ to $new_child_nodes
-      # XXX node is removed
-      $int->node ($_); # for DESTROY
-    }
+    # 8. Remove
+    $int->remove_node ($parent_id, $_, 0) for @text_id;
   }; # normalize
 
-  for my $node_id (@{$$self->[2]->{child_nodes} or []}) {
+  my @child_id = @{$$self->[2]->{child_nodes} or []};
+  for my $node_id (@child_id) {
     my $nt = $int->{data}->[$node_id]->{node_type};
     if ($nt == TEXT_NODE) {
       push @text_id, $node_id;
@@ -854,25 +762,10 @@ sub normalize ($) {
         $normalize->();
         @text_id = ();
       }
-      if ($nt == ELEMENT_NODE) {
-        $int->node ($node_id)->normalize;
-        push @$new_child_nodes, $node_id;
-      } else {
-        push @$new_child_nodes, $node_id;
-      }
+      $int->node ($node_id)->normalize if $nt == ELEMENT_NODE;
     }
   }
-  if (@text_id) {
-    $normalize->();
-  }
-  $int->children_changed ($$self->[1], ELEMENT_NODE);
-  @{$$self->[2]->{child_nodes} or []} = @$new_child_nodes;
-  {
-    my $i = 0;
-    for (@{$$self->[2]->{child_nodes} or []}) {
-      $$self->[0]->{data}->[$_]->{i_in_parent} = $i++;
-    }
-  }
+  $normalize->() if @text_id;
   return;
 } # normalize
 

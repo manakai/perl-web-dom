@@ -1031,7 +1031,8 @@ sub adopt_node ($$) {
   {
     # Adopt 2. Remove
     if (defined $$node->[2]->{parent_node}) {
-      $node->parent_node->remove_child ($node);
+      $$node->[0]->remove_node
+          ($$node->[2]->{parent_node}, $$node->[1], 0);
     } elsif (defined $$node->[2]->{owner}) {
       my $node_nt = $$node->[2]->{node_type};
       if ($node_nt == ATTRIBUTE_NODE) {

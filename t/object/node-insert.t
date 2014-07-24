@@ -1502,13 +1502,32 @@ test {
   done $c;
 } n => 6, name => 'doc > df > el + doctype, allowed';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  my $df = $doc->create_document_fragment;
+  $df->append_child ($doc->create_element ('b'));
+  $df->append_child ($doc->create_element ('c'));
+
+  $el->append_child ($df);
+
+  is $el->child_nodes->length, 2;
+  isa_ok $el->first_child, 'Web::DOM::Node';
+  isa_ok $el->last_child, 'Web::DOM::Node';
+  is $el->first_child->local_name, 'b';
+  is $el->last_child->local_name, 'c';
+
+  done $c;
+} n => 5, name => 'df child GC';
+
 run_tests;
 
 ## See also: htmltemplateelement.t
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

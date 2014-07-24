@@ -508,7 +508,46 @@ sub remove_node ($$$$) {
 
   ## 9.
   # XXX node is removed
+
+  ## Create a Node object such that the node data is GCed if it is no
+  ## longer referenced.  Return the object such that if the callee
+  ## does not want the node data to be GCed yet, it can hold the
+  ## reference.
+  return $int->node ($child_id); # mark for GC
 } # remove_node
+
+## Remove <http://dom.spec.whatwg.org/#concept-node-remove>, but
+## iterated for all children.
+sub remove_children ($$$$) {
+  my ($int, $parent_id, $suppress_observers) = @_;
+
+  ## 1.-5.
+  # XXX range
+
+  ## 6.-7.
+  # XXX mutation
+
+  ## 8.
+  my $parent_data = $int->{data}->[$parent_id];
+  my @removed = @{$parent_data->{child_nodes} or []};
+  for (@removed) {
+    my $child_data = $int->{data}->[$_];
+    delete $child_data->{parent_node};
+    delete $child_data->{i_in_parent};
+    $int->disconnect ($_);
+  }
+  @{$parent_data->{child_nodes}} = ();
+  $int->children_changed ($parent_id, 0);
+
+  ## 9.
+  # XXX node is removed
+
+  ## Create a Node object such that the node data is GCed if it is no
+  ## longer referenced.  Return the object such that if the callee
+  ## does not want the node data to be GCed yet, it can hold the
+  ## reference.
+  return map { $int->node ($_) } @removed;
+} # remove_children
 
 ## Live collection data structure
 ##
