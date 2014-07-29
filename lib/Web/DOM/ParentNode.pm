@@ -269,9 +269,10 @@ sub text_content ($;$) {
 } # text_content
 
 sub manakai_append_text ($$) {
-  return $_[0] unless length (ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1]);
-  my $int = ${$_[0]}->[0];
-  my $last_child_id = ${$_[0]}->[2]->{child_nodes}->[-1];
+  my $self = $_[0];
+  return $self unless length (ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1]);
+  my $int = $$self->[0];
+  my $last_child_id = $$self->[2]->{child_nodes}->[-1];
   if (defined $last_child_id and
       $int->{data}->[$last_child_id]->{node_type} == TEXT_NODE) {
     ${$int->{data}->[$last_child_id]->{data}}
@@ -283,8 +284,42 @@ sub manakai_append_text ($$) {
     $text = ''.$text if ref $_[1];
     $data->{data} = \$text;
     my $id = $int->add_data ($data);
-    $_[0]->_pre_insert ($int->node ($id));
-  }
+    my $node = $int->node ($id);
+
+    ## Pre-insert (simplified)
+    {
+      ## 1. Check validity
+      #
+      
+      ## 4. Adopt
+      #
+
+      ## 2., 3., 5. Insert (simplified)
+      {
+        ## 1.-2.
+        # XXX range
+
+        ## 4.-5. If document fragment
+        #
+
+        ## 6.
+        # XXX mutation
+        
+        ## 3., 7.
+        push @{$$self->[2]->{child_nodes}}, $id;
+        $int->children_changed ($$self->[1], TEXT_NODE);
+        $data->{parent_node} = $$self->[1];
+        $data->{i_in_parent} = $#{$$self->[2]->{child_nodes}};
+        $$self->[0]->connect ($id => $$self->[1]);
+
+        ## 8.
+        # node is inserted
+      } # insert
+
+      ## 6.
+      # return
+    } # pre-insert
+  } # no last child text node
   return $_[0];
 } # manakai_append_text
 
