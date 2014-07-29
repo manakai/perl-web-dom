@@ -1,7 +1,7 @@
 package Web::DOM::XPathExpression;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
 use Web::DOM::XPathResult;
@@ -59,15 +59,25 @@ sub evaluate ($$;$$) {
     $eval->sort_node_set ($r);
   }
 
-  return $$node->[0]->xpath_result
-      ({result => $r, result_type => $type, index => 0});
+  my $result = bless {result => $r,
+                      result_type => $type,
+                      index => 0}, 'Web::DOM::XPathResult';
+  if ($type == UNORDERED_NODE_ITERATOR_TYPE or
+      $type == ORDERED_NODE_ITERATOR_TYPE) {
+    $result->{current_revision_ref} = \($$node->[0]->{revision});
+    $result->{revision} = $$node->[0]->{revision};
+  } else {
+    $result->{current_revision_ref} = \1;
+    $result->{revision} = 1;
+  }
+  return $result;
 } # evaluate
 
 1;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

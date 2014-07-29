@@ -1,7 +1,7 @@
 package Web::DOM::XPathResult;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Internal;
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
@@ -68,7 +68,7 @@ sub snapshot_length ($) {
 } # snapshot_length
 
 sub invalid_iterator_state ($) {
-  return $_[0]->{invalid_iterator_state};
+  return not $_[0]->{revision} == ${$_[0]->{current_revision_ref}};
 } # invalid_iterator_state
 
 sub iterate_next ($) {
@@ -78,7 +78,7 @@ sub iterate_next ($) {
                  $_[0]->{result_type} == ORDERED_NODE_ITERATOR_TYPE;
 
   _throw Web::DOM::Exception 'InvalidStateError',
-      'This object is invalid' if $_[0]->{invalid_iterator_state};
+      'This object is invalid' if $_[0]->invalid_iterator_state;
 
   return $_[0]->{result}->{value}->[$_[0]->{index}++];
 } # iterate_next
@@ -108,7 +108,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

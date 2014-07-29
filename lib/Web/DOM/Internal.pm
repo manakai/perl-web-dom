@@ -27,6 +27,8 @@ sub XMLNS_NS () { q<http://www.w3.org/2000/xmlns/> }
 sub ATOM_NS () { q<http://www.w3.org/2005/Atom> }
 sub ATOM_THREAD_NS () { q<http://purl.org/syndication/thread/1.0> }
 
+$Text->{(HTML_NS)} = \HTML_NS;
+
 sub import ($;@) {
   my $from_class = shift;
   my ($to_class, $file, $line) = caller;
@@ -86,7 +88,6 @@ sub new ($) {
     ## Other objects
     # impl
     # config config_obj config_hashref config_names
-    # xpath_results
     # template_doc
 
     # document_base_url
@@ -859,7 +860,6 @@ sub tokens ($$$$$) {
 sub children_changed ($$$) {
   $_[0]->{revision}++;
   delete $_[0]->{document_base_url};
-  $_->{invalid_iterator_state} = 1 for @{$_[0]->{xpath_results} or []};
 } # children_changed
 
 ## DOMStringMap
@@ -979,17 +979,6 @@ sub media ($$) {
     $list;
   };
 } # media
-
-sub xpath_result ($$) {
-  require Web::DOM::XPathResult;
-  my $result = bless $_[1], 'Web::DOM::XPathResult';
-  if ($result->{result_type} == 4 or # UNORDERED_NODE_ITERATOR_TYPE
-      $result->{result_type} == 5) { # ORDERED_NODE_ITERATOR_TYPE
-    push @{$_[0]->{xpath_results} ||= []}, $result;
-    weaken $_[0]->{xpath_results}->[-1];
-  }
-  return $result;
-} # xpath_result
 
 sub connect ($$$) {
   my ($self, $id => $parent_id) = @_;
