@@ -2,7 +2,7 @@ package Web::DOM::Internal;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Carp;
 
 ## Web::DOM internal data structure and core utilities
@@ -73,8 +73,7 @@ sub new ($) {
     # data nodes rc
 
     ## Trees
-    next_tree_id => 0,
-    # tree_id
+    # tree_id tree_data
 
     ## Lists
     # cols tokens strmap
@@ -94,6 +93,16 @@ sub new ($) {
   }, $_[0];
 } # new
 
+## Tree
+##
+## The tree ID (|tree_id|) of a node is same as the node ID of the
+## root node of the tree to which the node belongs.
+##
+## A tree can have a set of associated data, referred to as "tree
+## data" (|tree_data|).
+
+## Node
+##
 ## Various characteristics of the node are put into the "data" hash
 ## reference for the node.
 ##
@@ -113,17 +122,13 @@ sub new ($) {
 ## (corresponding to the |ownerNode| attribute), which isconsidered as
 ## a child-parent link similar to the |parentNode| attribute of DOM
 ## |Node|s.
-
-sub add_data ($$) {
-  my $self = shift;
-  my $id = $self->{next_node_id}++;
-  $self->{data}->[$id] = $_[0];
-  $self->{tree_id}->[$id] = $self->{next_tree_id}++;
-  ## The |import_parsed_ss| method can also add |data| to the
-  ## internal.
-  return $id;
-} # add_data
-
+##
+## A node is identified by a non-negative integer, referrred to as
+## node ID (|node_id|).  Node IDs are unique within a document.  At
+## the time of writing, no node ID is reused even after the node
+## associated with the ID is GCed.  However, this should not be
+## assumed by the implementation.
+##
 ## The |Node| / |StyleSheet| / |CSSRule| object exposed to the
 ## application is a blessed reference to the array reference, which
 ## consists of following members:
@@ -200,6 +205,17 @@ sub add_data ($$) {
 ##   owner_sheet                    node_id   Owner style sheet
 ##   parent_style_sheet             node_id   Parent style sheet
 ##   sheet                          node_id   Style sheet (for |@import|)
+
+## Create a node with no parent or child, in this document.
+sub add_data ($$) {
+  my $self = shift;
+  my $id = $self->{next_node_id}++;
+  $self->{data}->[$id] = $_[0];
+  $self->{tree_id}->[$id] = $id;
+  ## The |import_parsed_ss| method can also add |data| to the
+  ## internal.
+  return $id;
+} # add_data
 
 my $NodeClassByNodeType = {
   2 => 'Web::DOM::Attr',
@@ -902,8 +918,8 @@ sub import_parsed_ss ($$;$) {
   ## import rules into existing style sheet with ID $osid.
 
   my $id_delta = $self->{next_node_id};
-  my $tree_id = defined $osid ? $self->{tree_id}->[$osid] : $self->{next_tree_id}++;
   my $new_osid = defined $osid ? $osid : $id_delta + 0;
+  my $tree_id = defined $osid ? $self->{tree_id}->[$osid] : $new_osid;
 
   for my $rule (@{$ss->{rules}}) {
     next if $rule->{id} == 0 and defined $osid;
@@ -997,12 +1013,14 @@ sub connect ($$$) {
         if defined $data->{content_df} and
            not ref $data->{content_df};
   }
+  ## Note that the caller should remove $self->{tree_data}->[$id], if
+  ## necessary.
 } # connect
 
 sub disconnect ($$) {
   my ($self, $id) = @_;
   my @id = ($id);
-  my $tree_id = $self->{next_tree_id}++;
+  my $tree_id = $id;
   while (@id) {
     my $id = shift @id;
     $self->{tree_id}->[$id] = $tree_id;
@@ -1038,7 +1056,6 @@ sub adopt ($$) {
   return if $old_int eq $new_int;
 
   my @old_id = ($$node->[1]);
-  my $new_tree_id = $new_int->{next_tree_id}++;
   my $new_templ_doc;
   my %id_map;
   my @data;
@@ -1052,8 +1069,8 @@ sub adopt ($$) {
         = delete $old_int->{data}->[$old_id];
     push @data, $data;
 
-    delete $old_int->{tree_id}->[$old_id];
-    $new_int->{tree_id}->[$new_id] = $new_tree_id;
+    $new_int->{tree_id}->[$new_id]
+        = $id_map{delete $old_int->{tree_id}->[$old_id]};
 
     if (defined $data->{content_df}) {
       my $df = $data->{content_df};
@@ -1165,6 +1182,7 @@ sub gc ($$) {
   for (@id) {
     delete $self->{data}->[$_];
     delete $self->{tree_id}->[$_];
+    delete $self->{tree_data}->[$_];
     delete $self->{rc}->[$_];
     delete $self->{cols}->[$_];
   }
