@@ -853,6 +853,7 @@ sub create_document_fragment ($) {
 } # create_document_fragment
 
 sub create_text_node ($) {
+  ## See also ParentNode::manakai_append_text
   my $id = ${$_[0]}->[0]->add_data
       ({node_type => TEXT_NODE, data => \(ref $_[1] eq 'SCALAR' ? ''.${$_[1]} : ''.$_[1])});
   return ${$_[0]}->[0]->node ($id);

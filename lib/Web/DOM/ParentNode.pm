@@ -269,14 +269,21 @@ sub text_content ($;$) {
 } # text_content
 
 sub manakai_append_text ($$) {
-  my $lc = $_[0]->last_child;
-  if ($lc and $lc->node_type == TEXT_NODE) {
-    $lc->manakai_append_text ($_[1]);
+  return $_[0] unless length (ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1]);
+  my $int = ${$_[0]}->[0];
+  my $last_child_id = ${$_[0]}->[2]->{child_nodes}->[-1];
+  if (defined $last_child_id and
+      $int->{data}->[$last_child_id]->{node_type} == TEXT_NODE) {
+    ${$int->{data}->[$last_child_id]->{data}}
+        .= ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
+    # XXX MutationObserver
   } else {
-    my $text = ($_[0]->owner_document || $_[0])->create_text_node ($_[1]);
-    if (length $text->data) {
-      $_[0]->append_child ($text);
-    }
+    my $data = {node_type => TEXT_NODE};
+    my $text = ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
+    $text = ''.$text if ref $_[1];
+    $data->{data} = \$text;
+    my $id = $int->add_data ($data);
+    $_[0]->_pre_insert ($int->node ($id));
   }
   return $_[0];
 } # manakai_append_text
