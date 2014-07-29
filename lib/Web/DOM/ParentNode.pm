@@ -284,7 +284,6 @@ sub manakai_append_text ($$) {
     $text = ''.$text if ref $_[1];
     $data->{data} = \$text;
     my $id = $int->add_data ($data);
-    my $node = $int->node ($id);
 
     ## Pre-insert (simplified)
     {
