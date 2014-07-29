@@ -240,7 +240,7 @@ sub text_content ($;$) {
         $$node->[2]->{i_in_parent} = 0;
         @{$$self->[2]->{child_nodes} ||= []} = ($$node->[1]);
         $int->connect ($$node->[1] => $$self->[1]);
-        #$int->children_changed ($$self->[1], TEXT_NODE); # redundant
+        #$int->{revision}++; # redundant
       }
     }
 
@@ -248,7 +248,7 @@ sub text_content ($;$) {
     # XXXmutation
 
     # 6.
-    $int->children_changed ($$self->[1], ELEMENT_NODE);
+    $int->{revision}++;
     # XXX node is removed
 
     return unless defined wantarray;
@@ -305,7 +305,7 @@ sub manakai_append_text ($$) {
         
         ## 3., 7.
         push @{$$self->[2]->{child_nodes}}, $id;
-        $int->children_changed ($$self->[1], TEXT_NODE);
+        $int->{revision}++;
         $data->{parent_node} = $$self->[1];
         $data->{i_in_parent} = $#{$$self->[2]->{child_nodes}};
         $$self->[0]->connect ($id => $$self->[1]);

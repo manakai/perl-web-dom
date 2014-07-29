@@ -256,7 +256,7 @@ sub set_attribute ($$$) {
     $name =~ tr/A-Z/a-z/; ## ASCII lowercase
   }
 
-  $$node->[0]->children_changed ($$node->[1], ATTRIBUTE_NODE);
+  $$node->[0]->{revision}++;
 
   # 3.
   for (@{$$node->[2]->{attributes} or []}) {
@@ -402,7 +402,7 @@ sub set_attribute_ns ($$$$) {
     }
   } # strict
 
-  $$node->[0]->children_changed ($$node->[1], ATTRIBUTE_NODE);
+  $$node->[0]->{revision}++;
 
   # 9. Set an attribute
   {
@@ -482,7 +482,7 @@ sub set_attribute_node ($$) {
   $$node->[0]->adopt ($attr);
   # XXX Adopting steps??
 
-  $$node->[0]->children_changed ($$node->[1], ATTRIBUTE_NODE);
+  $$node->[0]->{revision}++;
 
   # 4.
   my $nsurl = ${$$attr->[2]->{namespace_uri} || \''};
@@ -587,7 +587,7 @@ sub remove_attribute ($$) {
     } @{$$node->[2]->{attributes} or []};
 
     if ($found) {
-      $$node->[0]->children_changed ($$node->[1], ATTRIBUTE_NODE);
+      $$node->[0]->{revision}++;
 
       # Remove 3.
       $node->_attribute_is ($nsref, $lnref, removed => 1);
@@ -608,7 +608,7 @@ sub remove_attribute_ns ($$$) {
     # Remove 1.
     # XXX mutation if found
 
-    $$node->[0]->children_changed ($$node->[1], ATTRIBUTE_NODE);
+    $$node->[0]->{revision}++;
 
     # Remove 2.
     if (ref $attr_id) {
@@ -643,7 +643,7 @@ sub remove_attribute_node ($$) {
         'The specified attribute is not an attribute of the element';
   }
 
-  $$node->[0]->children_changed ($$node->[1], ATTRIBUTE_NODE);
+  $$node->[0]->{revision}++;
   
   delete $$node->[2]->{attrs}->{${$$attr->[2]->{namespace_uri} || \''}}->{${$$attr->[2]->{local_name}}};
   @{$$node->[2]->{attributes}} = grep {
@@ -694,7 +694,7 @@ sub _attribute_is ($$$%) {
     }
   }
 
-  $$self->[0]->children_changed ($$self->[1], ATTRIBUTE_NODE);
+  $$self->[0]->{revision}++;
 } # _attribute_is
 
 push @EXPORT, qw(_define_reflect_string);

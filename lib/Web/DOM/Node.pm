@@ -634,7 +634,7 @@ sub _pre_insert ($$;$$) {
       
       # Insert 7.
       splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, @node;
-      $$parent->[0]->children_changed ($$parent->[1], ELEMENT_NODE);
+      $$parent->[0]->{revision}++;
       for my $node_id (@node) {
         $$node->[0]->{data}->[$node_id]->{parent_node} = $$parent->[1];
         $$parent->[0]->connect ($node_id => $$parent->[1]);
@@ -653,8 +653,7 @@ sub _pre_insert ($$;$$) {
       
       # Insert 3., 7.
       splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, $$node->[1];
-      $$parent->[0]->children_changed
-          ($$parent->[1], $$node->[2]->{node_type});
+      $$parent->[0]->{revision}++;
       $$node->[2]->{parent_node} = $$parent->[1];
       {
         for ($insert_position..$#{$$parent->[2]->{child_nodes}}) {

@@ -92,6 +92,13 @@ sub new ($) {
 
     # document_base_url document_base_url_revision
 
+    ## $internal->{revision} is a non-negative integer, incremented
+    ## when some mutation has occurred on some node such that cached
+    ## data should not be hornored.  It is incremented when, for
+    ## example, a node is appended to another node, an attribute is
+    ## set, or a CSS rule is inserted.  This value is used to discard
+    ## caches of, e.g., collections and document base URL, and to
+    ## invalidate |XPathResult| objects.
     revision => 1,
   }, $_[0];
 } # new
@@ -564,7 +571,7 @@ sub remove_node ($$$$) {
   for ($child_i..$#{$parent_data->{child_nodes}}) {
     $int->{data}->[$parent_data->{child_nodes}->[$_]]->{i_in_parent}--;
   }
-  $int->children_changed ($parent_id, $child_data->{node_type});
+  $int->{revision}++;
   $int->disconnect ($child_id);
 
   ## 9.
@@ -639,7 +646,7 @@ sub remove_children ($$$$) {
     $int->disconnect ($_);
   }
   @{$parent_data->{child_nodes}} = ();
-  $int->children_changed ($parent_id, 0);
+  $int->{revision}++;
 
   ## 9.
   # XXX node is removed
@@ -856,10 +863,6 @@ sub tokens ($$$$$) {
 
   return $nl;
 } # tokens
-
-sub children_changed ($$$) {
-  $_[0]->{revision}++;
-} # children_changed
 
 ## DOMStringMap
 sub strmap ($$) {
