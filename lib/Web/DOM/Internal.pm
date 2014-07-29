@@ -1055,6 +1055,7 @@ sub adopt ($$) {
   my $old_int = $$node->[0];
   return if $old_int eq $new_int;
 
+  delete $old_int->{tree_data}->[$$node->[1]];
   my @old_id = ($$node->[1]);
   my $new_templ_doc;
   my %id_map;
