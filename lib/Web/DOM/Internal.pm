@@ -996,19 +996,29 @@ sub connect ($$$) {
     my $id = shift @id;
     $self->{tree_id}->[$id] = $tree_id;
     my $data = $self->{data}->[$id];
-    push @id, grep { not ref $_ } @{$data->{attributes} or []};
-    push @id,
-        @{$data->{child_nodes} or []},
-        @{$data->{rule_ids} or []},
-        grep { defined $_ } 
-        values %{$data->{element_types} or {}},
-        values %{$data->{general_entities} or {}},
-        values %{$data->{notations} or {}},
-        values %{$data->{attribute_definitions} or {}},
-        $data->{sheet};
-    push @id, $data->{content_df}
-        if defined $data->{content_df} and
-           not ref $data->{content_df};
+    my $nt = $data->{node_type};
+    if (not defined $nt) {
+      push @id, @{$data->{rule_ids}} if defined $data->{rule_ids};
+      push @id, $data->{sheet} if defined $data->{sheet};
+    } elsif ($nt == 1) { # ELEMENT_NODE
+      push @id, grep { not ref $_ } @{$data->{attributes} or []};
+      push @id, @{$data->{child_nodes}} if defined $data->{child_nodes};
+      push @id, $data->{content_df}
+          if defined $data->{content_df} and not ref $data->{content_df};
+      push @id, $data->{sheet} if defined $data->{sheet};
+    } elsif ($nt == 3 or $nt == 2) { # TEXT_NODE, ATTRIBUTE_NODE
+      #
+    } else {
+      push @id, @{$data->{child_nodes}} if defined $data->{child_nodes};
+      push @id, values %{$data->{element_types}}
+          if defined $data->{element_types};
+      push @id, values %{$data->{general_entities}}
+          if defined $data->{general_entities};
+      push @id, values %{$data->{notations}}
+          if defined $data->{notations};
+      push @id, values %{$data->{attribute_definitions}}
+          if defined $data->{attribute_definitions};
+    }
   }
 } # connect
 
