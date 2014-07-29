@@ -350,26 +350,36 @@ sub _pre_insert ($$;$$) {
   {
     my $int = $$parent->[0];
     my $id = $$parent->[1];
-    while (1) {
-      if ($int eq $$node->[0] and $id == $$node->[1]) {
-        _throw Web::DOM::Exception 'HierarchyRequestError',
-            'The child is a host-including inclusive ancestor of the parent';
-      }
-      if (defined $int->{data}->[$id]->{parent_node}) {
-        $id = $int->{data}->[$id]->{parent_node};
-      } elsif (defined $int->{data}->[$id]->{host_el}) {
-        for ($int->{data}->[$id]->{host_el}) {
-          if (ref $_) {
-            $int = $$_->[0];
-            $id = $$_->[1];
-          } else {
-            $id = $_;
+    TREES: {
+      if ($int eq $$node->[0]) {
+        ## If the new child node belongs to the same tree as the
+        ## parent, check inclusive ancestors.
+        TREE: {
+          if ($id == $$node->[1]) {
+            _throw Web::DOM::Exception 'HierarchyRequestError',
+                'The child is a host-including inclusive ancestor of the parent';
+          }
+          if (defined $int->{data}->[$id]->{parent_node}) {
+            $id = $int->{data}->[$id]->{parent_node};
+            redo TREE;
+          } elsif (defined $int->{data}->[$id]->{host_el}) {
+            $id = $int->{data}->[$id]->{host_el};
+            redo TREE unless ref $id;
+            ## Otherwise, the new child node is never a host-inclusive
+            ## ancestor of the parent.
           }
         }
       } else {
-        last;
+        ## If the new child node does not belong to the same tree as
+        ## the parent, check host element's tree, if any.
+        my $host_el = $int->{data}->[$int->{tree_id}->[$id]]->{host_el};
+        if (defined $host_el and ref $host_el) {
+          $int = $$host_el->[0];
+          $id = $$host_el->[1];
+          redo TREES;
+        }
       }
-    }
+    } # TREES
   }
   
   # 3.
