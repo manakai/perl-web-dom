@@ -90,7 +90,7 @@ sub new ($) {
     # config config_obj config_hashref config_names
     # template_doc
 
-    # document_base_url
+    # document_base_url document_base_url_revision
 
     revision => 1,
   }, $_[0];
@@ -859,7 +859,6 @@ sub tokens ($$$$$) {
 
 sub children_changed ($$$) {
   $_[0]->{revision}++;
-  delete $_[0]->{document_base_url};
 } # children_changed
 
 ## DOMStringMap

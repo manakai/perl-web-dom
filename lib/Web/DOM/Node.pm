@@ -137,7 +137,8 @@ sub base_uri ($) {
   my $nt = $self->node_type;
   if ($nt == DOCUMENT_NODE) {
     return $$self->[0]->{document_base_url}
-        if defined $$self->[0]->{document_base_url};
+        if defined $$self->[0]->{document_base_url} and
+           $$self->[0]->{document_base_url_revision} == $$self->[0]->{revision};
 
     # 1. document base URL
     # XXX <http://html5.org/tools/web-apps-tracker?from=7961&to=7962> is not applied yet
@@ -168,9 +169,11 @@ sub base_uri ($) {
       my $result = _resolve_url $url, $fallback_base_url;
 
       # 4.
+      $$self->[0]->{document_base_url_revision} = $$self->[0]->{revision};
       return $$self->[0]->{document_base_url}
           = defined $result ? $result : $fallback_base_url;
     } else {
+      $$self->[0]->{document_base_url_revision} = $$self->[0]->{revision};
       return $$self->[0]->{document_base_url} = $fallback_base_url;
     }
   } elsif ($nt == ATTRIBUTE_NODE) {
