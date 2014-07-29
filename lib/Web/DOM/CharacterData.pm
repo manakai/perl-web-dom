@@ -45,6 +45,7 @@ sub append_data ($$) {
 } # append_data
 
 sub manakai_append_text ($$) {
+  ## See also ParentNode::manakai_append_text
   $_[0]->append_data (ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1]);
   return $_[0];
 } # manakai_append_text
