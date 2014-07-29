@@ -10,10 +10,12 @@ use Carp;
 our @EXPORT;
 
 ## "Interned" string
-my $Text = {};
+our $Text = {};
 sub text ($$) {
   return defined $_[1] ? $Text->{$_[1]} ||= \(''.$_[1]) : undef;
 } # text
+## Note that |$Web::DOM::Internal::Text| is directly accessed from
+## |Web::DOM::Document| for performance reason.
 
 ## Namespace URLs
 push @EXPORT, qw(HTML_NS SVG_NS MML_NS XML_NS XMLNS_NS ATOM_NS ATOM_THREAD_NS);
@@ -433,13 +435,13 @@ sub node ($$) {
       $class = $ElementClass->{$$ns}->{${$data->{local_name}}} ||
           $ElementClass->{$$ns}->{'*'} ||
           'Web::DOM::Element';
+      $module = $ClassToModule->{$class} || $class;
     } elsif ($nt == 9) {
-      $class = $data->{is_XMLDocument}
+      $module = $class = $data->{is_XMLDocument}
           ? 'Web::DOM::XMLDocument' : 'Web::DOM::Document';
     } else {
-      $class = $NodeClassByNodeType->{$nt};
+      $module = $class = $NodeClassByNodeType->{$nt};
     }
-    $module = $ClassToModule->{$class} || $class;
   } else {
     if ($data->{rule_type} eq 'sheet') {
       $class = $module = 'Web::DOM::CSSStyleSheet';
@@ -449,8 +451,9 @@ sub node ($$) {
       $module = 'Web::DOM::CSSRule';
     }
   }
-  if (not $ModuleLoaded->{$module}++) {
+  unless ($ModuleLoaded->{$module}) {
     eval qq{ require $module } or die $@;
+    $ModuleLoaded->{$module}++;
   }
   my $node = bless \[$self, $id, $data], $class;
   weaken ($self->{nodes}->[$id] = $node);

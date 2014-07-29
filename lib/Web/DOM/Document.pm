@@ -611,8 +611,8 @@ sub create_element ($$) {
 
   # 3.
   my $data = {node_type => ELEMENT_NODE,
-              namespace_uri => Web::DOM::Internal->text (HTML_NS),
-              local_name => Web::DOM::Internal->text ($ln)};
+              namespace_uri => $Web::DOM::Internal::Text->{(HTML_NS)},
+              local_name => ($Web::DOM::Internal::Text->{$ln} ||= \$ln)};
   my $id = $$self->[0]->add_data ($data);
   my $node = $$self->[0]->node ($id);
   if ($ln eq 'template') {
@@ -712,14 +712,17 @@ sub create_element_ns {
 
   # 9.
   my $data = {node_type => ELEMENT_NODE,
-              prefix => Web::DOM::Internal->text ($prefix),
-              namespace_uri => Web::DOM::Internal->text ($nsurl),
-              local_name => Web::DOM::Internal->text ($ln)};
+              local_name => ($Web::DOM::Internal::Text->{$ln} ||= \$ln)};
+  $data->{namespace_uri} = ($Web::DOM::Internal::Text->{$nsurl} ||= \$nsurl)
+      if defined $nsurl;
+  $data->{prefix} = ($Web::DOM::Internal::Text->{$prefix} ||= \$prefix)
+      if defined $prefix;
   my $id = $$self->[0]->add_data ($data);
   my $node = $$self->[0]->node ($id);
-  if (defined $nsurl and $nsurl eq HTML_NS and $ln eq 'template') {
+  if ($ln eq 'template' and defined $nsurl and $nsurl eq HTML_NS) {
     my $tmpl_doc = $$self->[0]->template_doc;
-    my $df_id = $$tmpl_doc->[0]->add_data ({node_type => DOCUMENT_FRAGMENT_NODE});
+    my $df_id = $$tmpl_doc->[0]->add_data
+        ({node_type => DOCUMENT_FRAGMENT_NODE});
     $$self->[0]->set_template_content ($id => $$tmpl_doc->[0]->node ($df_id));
   }
   return $node;

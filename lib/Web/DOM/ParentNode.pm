@@ -279,10 +279,9 @@ sub manakai_append_text ($$) {
         .= ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
     # XXX MutationObserver
   } else {
-    my $data = {node_type => TEXT_NODE};
     my $text = ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
     $text = ''.$text if ref $_[1];
-    $data->{data} = \$text;
+    my $data = {node_type => TEXT_NODE, data => \$text};
     my $id = $int->add_data ($data);
 
     ## Pre-insert (simplified)
@@ -319,7 +318,7 @@ sub manakai_append_text ($$) {
       # return
     } # pre-insert
   } # no last child text node
-  return $_[0];
+  return $self;
 } # manakai_append_text
 
 sub children ($) {
