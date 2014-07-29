@@ -73,7 +73,7 @@ sub new ($) {
     # data nodes rc
 
     ## Trees
-    # tree_id tree_data
+    # tree_id
 
     ## Lists
     # cols tokens strmap
@@ -97,9 +97,6 @@ sub new ($) {
 ##
 ## The tree ID (|tree_id|) of a node is same as the node ID of the
 ## root node of the tree to which the node belongs.
-##
-## A tree can have a set of associated data, referred to as "tree
-## data" (|tree_data|).
 
 ## Node
 ##
@@ -1013,8 +1010,6 @@ sub connect ($$$) {
         if defined $data->{content_df} and
            not ref $data->{content_df};
   }
-  ## Note that the caller should remove $self->{tree_data}->[$id], if
-  ## necessary.
 } # connect
 
 sub disconnect ($$) {
@@ -1055,7 +1050,6 @@ sub adopt ($$) {
   my $old_int = $$node->[0];
   return if $old_int eq $new_int;
 
-  delete $old_int->{tree_data}->[$$node->[1]];
   my @old_id = ($$node->[1]);
   my $new_templ_doc;
   my %id_map;
@@ -1183,7 +1177,6 @@ sub gc ($$) {
   for (@id) {
     delete $self->{data}->[$_];
     delete $self->{tree_id}->[$_];
-    delete $self->{tree_data}->[$_];
     delete $self->{rc}->[$_];
     delete $self->{cols}->[$_];
   }
