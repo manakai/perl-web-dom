@@ -1,11 +1,12 @@
 use strict;
 use warnings;
 no warnings 'utf8';
-use Path::Class;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
+use Path::Tiny;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps', 'modules', '*', 'lib')->stringify;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps', 'lib')->stringify;
 use Test::X1;
 use Test::More;
+use Test::Differences;
 use Test::DOM::Exception;
 use Web::DOM::Document;
 
@@ -2100,11 +2101,127 @@ test {
   done $c;
 } n => 5, name => 'remove_attribute_node not attr';
 
+for my $test (
+  [[] => ''],
+  [[['abc', 42, 55]] => 'abc'],
+  [[['abc', 42, 55], ['x', 4, 51]] => 'abcx'],
+) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ('a');
+
+    $el->manakai_set_attribute_indexed_string_ns
+        (undef, foo => $test->[0]);
+    is $el->get_attribute_ns (undef, 'foo'), $test->[1];
+    eq_or_diff $el->manakai_get_attribute_indexed_string_ns (undef, 'foo'),
+        $test->[0];
+
+    done $c;
+  } n => 2, name => ['manakai_set_attribute_indexed_string_ns', @$test];
+}
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+
+  is $el->manakai_get_attribute_indexed_string_ns (undef, 'aa'), undef;
+  is $el->manakai_get_attribute_indexed_string_ns ('http://foo/', 'aa'), undef;
+  is $el->manakai_get_attribute_indexed_string_ns (undef, '12:aa'), undef;
+
+  done $c;
+} n => 3, name => ['manakai_get_attribute_indexed_string_ns', 'not found'];
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('foo');
+
+  dies_here_ok {
+    $el->manakai_set_attribute_indexed_string_ns
+        (undef, 'foo:bar' => [['ab', 4, 5]]);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'NamespaceError';
+  is $@->message, 'Namespace prefix cannot be bound to the null namespace';
+
+  is $el->attributes->length, 0;
+
+  done $c;
+} n => 5, name => ['manakai_set_attribute_indexed_string_ns', 'bad name'];
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->strict_error_checking (0);
+  my $el = $doc->create_element ('foo');
+
+  is $el->manakai_set_attribute_indexed_string_ns
+      (undef, [undef, '35foo!bar'] => [['ab', 4, 5]]), undef;
+  is $el->get_attribute_ns (undef, '35foo!bar'), 'ab';
+
+  is $el->attributes->length, 1;
+  is $el->attributes->[0]->prefix, undef;
+  is $el->attributes->[0]->local_name, '35foo!bar';
+  is $el->attributes->[0]->value, 'ab';
+
+  done $c;
+} n => 6, name => ['manakai_set_attribute_indexed_string_ns', 'bad name not strict'];
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('aa');
+  $el->manakai_set_attribute_indexed_string_ns
+      ('http://a/b', ['foo', 'baz'] => [['aaa', 32, 44], ['e', 4, 66]]);
+  is $el->get_attribute_ns ('http://a/b', 'baz'), 'aaae';
+  eq_or_diff $el->manakai_get_attribute_indexed_string_ns
+      ('http://a/b', 'baz'), [['aaa', 32, 44], ['e', 4, 66]];
+  done $c;
+} n => 2, name => 'manakai_set_attribute_indexed_string_ns namespaced';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('aa');
+  dies_here_ok {
+    $el->manakai_set_attribute_indexed_string_ns (undef, 'aaa' => 'abc');
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->message, 'The argument is not an IndexedString';
+  is $el->attributes->length, 0;
+  done $c;
+} n => 4, name => 'manakai_set_attribute_indexed_string_ns bad value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('aa');
+  dies_here_ok {
+    $el->manakai_set_attribute_indexed_string_ns (undef, 'aaa' => ['abc']);
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->message, 'The argument is not an IndexedString';
+  is $el->attributes->length, 0;
+  done $c;
+} n => 4, name => 'manakai_set_attribute_indexed_string_ns bad value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('aa');
+  $el->set_attribute_ns ('http://foo', 'a:bar' => 'abc');
+  eq_or_diff $el->manakai_get_attribute_indexed_string_ns
+      ('http://foo', 'bar'), [['abc', -1, 0]];
+  done $c;
+} n => 1, name => 'manakai_get_attribute_indexed_string_ns complex attr';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::Element - The DOM |Element| object
+Web::DOM::Element - DOM |Element| object
 
 =head1 DESCRIPTION
 
@@ -52,6 +52,14 @@ C<undef> is returned.  [DOM]
 Return the L<Web::DOM::Attr> object for the specified attribute.  If
 there is no attribute with the specified name, C<undef> is returned.
 [DOM3CORE] [MANAKAI]
+
+=item $indexed = $el->manakai_get_attribute_indexed_string_ns ($nsurl, $local_name)
+
+Return the IndexedString
+<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>
+representation of the attribute with the specified namespace URL and
+local name.  If there is no attribute with the specified name,
+C<undef> is returned.  [MANAKAIINDEX]
 
 =item $attr = $el->get_attribute_node_ns ($nsurl, $local_name)
 
@@ -176,6 +184,20 @@ The qualified name can be represented as an array reference, where the
 first item is the prefix (or C<undef> for the null namespace) and the
 second item is the local name.  [DOMPERL]
 
+=item $el->manakai_set_attribute_indexed_string_ns ($nsurl, $qname => $value)
+
+=item $el->manakai_set_attribute_indexed_string_ns ($nsurl, [$prefix, $local_name] => $value)
+
+Set the attribute with the specified namespace URL, qualified name,
+and value represented as an IndexedString
+<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>.
+If there is already the attribute with the same namespace URL / local
+name pair, its value is replaced by the new one.  [MANAKAIINDEX]
+
+The qualified name can be represented as an array reference, where the
+first item is the prefix (or C<undef> for the null namespace) and the
+second item is the local name.  [DOMPERL]
+
 =item $old_attr = $el->set_attribute_node ($new_attr)
 
 =item $old_attr = $el->set_attribute_node_ns ($new_attr)
@@ -211,7 +233,7 @@ In addition, the obsolete C<manakai_base_uri> method is available.
 
 =item DOM
 
-DOM Living Standard <http://dom.spec.whatwg.org/#interface-element>.
+DOM Standard <http://dom.spec.whatwg.org/#interface-element>.
 
 =item DOMNODEEXODUS
 
@@ -247,6 +269,11 @@ manakai's DOM Perl Binding
 manakai DOM Extensions
 <http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
+=item MANAKAIINDEX
+
+manakai index data structures
+<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures>.
+
 =back
 
 =head1 SEE ALSO
@@ -259,7 +286,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

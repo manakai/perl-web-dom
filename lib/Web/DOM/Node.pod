@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::Node - The DOM |Node| object
+Web::DOM::Node - DOM |Node| object
 
 =head1 DESCRIPTION
 
@@ -27,7 +27,13 @@ Otherwise, it is appended to the context object.  [MANAKAI]
 
 =item $node = $node->manakai_append_text ($string)
 
-Append the string to the C<text_content> of the node.  [MANAKAI]
+Append a string to the C<text_content> of the node.  [MANAKAI]
+
+=item $node->manakai_append_indexed_string ($indexed)
+
+Append an IndexedString
+<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>
+to the C<text_content> of the node.  [MANAKAIINDEX]
 
 =item $string = $node->base_uri
 
@@ -81,6 +87,20 @@ For example:
      'http://www.w3.org/1999/xhtml';
   is $el->manakai_get_child_namespace_uri ('svg'),
      'http://www.w3.org/2000/svg';
+
+=item $indexed = $node->manakai_get_indexed_string
+
+Return an IndexedString
+<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>
+representation of the C<text_content> of the node.  [MANAKAIINDEX]
+
+=item ['', $di, $ci] = $node->manakai_get_source_location
+
+Return an array reference containing document and character index
+values, which might be able to use to find the location in the source
+text from which the node is created, if any.  If they are not known,
+an array reference C<< ['', -1, 0] >> is returned instead.  The first
+(zeroth) item is always the empty string.  [MANAKAIINDEX]
 
 =item $data = $node->get_user_data ($key)
 
@@ -196,6 +216,15 @@ Remove a node from the list of child nodes of the node.  [DOM]
 Replace the specified child node by a new node.  The first argument is
 the new child node.  The second argument is the current child node,
 which is to be replaced.  The new child node is returned.  [DOM]
+
+=item $node->manakai_set_source_location (['', $di, $ci])
+
+Set an array reference containing document and character index values,
+which might be able to use to find the location in the source text
+from which the node is created.  The first (zeroth) item in the array
+reference is ignored.  If the node is not associated with any source
+text (e.g. created by a DOM method), or the actual source location is
+known, values C<-1> and C<0> should be used.  [MANAKAIINDEX]
 
 =item $node->set_user_data ($key, $value, $handler)
 
@@ -324,6 +353,11 @@ DOM Document Type Definition Module
 
 manakai DOM Extensions
 <http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
+
+=item MANAKAIINDEX
+
+manakai index data structures
+<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures>.
 
 =back
 

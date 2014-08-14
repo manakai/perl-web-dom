@@ -268,6 +268,22 @@ sub text_content ($;$) {
   return join '', map { $_->data } @text;
 } # text_content
 
+sub manakai_get_indexed_string ($) {
+  my @text = ($_[0]->manakai_get_source_location); # IndexedString
+  my @node = $_[0]->child_nodes->to_list;
+  while (@node) {
+    my $node = shift @node;
+    my $nt = $node->node_type;
+    if ($nt == TEXT_NODE) {
+      push @text, @{$node->manakai_get_indexed_string};
+    } elsif ($nt == ELEMENT_NODE) {
+      unshift @node, $node->child_nodes->to_list;
+    }
+  }
+  return \@text; # IndexedString
+} # manakai_get_indexed_string
+
+## See also |Web::DOM::Document::manakai_append_text|.
 sub manakai_append_text ($$) {
   my $self = $_[0];
 
@@ -282,10 +298,10 @@ sub manakai_append_text ($$) {
 
   if (defined $last_child_id and
       $int->{data}->[$last_child_id]->{node_type} == TEXT_NODE) {
-    push @{$int->{data}->[$last_child_id]->{data}}, $segment;
+    push @{$int->{data}->[$last_child_id]->{data}}, $segment; # IndexedString
     # XXX MutationObserver
   } else {
-    my $data = {node_type => TEXT_NODE, data => [$segment]};
+    my $data = {node_type => TEXT_NODE, data => [$segment]}; # IndexedString
     my $id = $int->add_data ($data);
 
     ## Pre-insert (simplified)
@@ -324,6 +340,67 @@ sub manakai_append_text ($$) {
   } # no last child text node
   return $self;
 } # manakai_append_text
+
+## See also |Web::DOM::Document::manakai_append_indexed_string|.
+sub manakai_append_indexed_string ($$) {
+  my $self = $_[0];
+
+  # IndexedStringSegment
+  _throw Web::DOM::TypeError 'The argument is not an IndexedString'
+      if not ref $_[1] eq 'ARRAY' or
+         grep { not ref $_ eq 'ARRAY' } @{$_[1]}; # IndexedString
+
+  my $int = $$self->[0];
+  my $last_child_id = $$self->[2]->{child_nodes}->[-1];
+
+  if (defined $last_child_id and
+      $int->{data}->[$last_child_id]->{node_type} == TEXT_NODE) {
+    push @{$int->{data}->[$last_child_id]->{data}}, map {
+      [''.$_->[0], 0+$_->[1], 0+$_->[2]]; # string copy
+    } @{$_[1]}; # IndexedString
+    # XXX MutationObserver
+  } else {
+    my $data = {node_type => TEXT_NODE, data => [map {
+      [''.$_->[0], 0+$_->[1], 0+$_->[2]]; # string copy
+    } @{$_[1]}]}; # IndexedString
+    my $id = $int->add_data ($data);
+
+    ## Pre-insert (simplified)
+    {
+      ## 1. Check validity
+      #
+      
+      ## 4. Adopt
+      #
+
+      ## 2., 3., 5. Insert (simplified)
+      {
+        ## 1.-2.
+        # XXX range
+
+        ## 4.-5. If document fragment
+        #
+
+        ## 6.
+        # XXX mutation
+        
+        ## 3., 7.
+        push @{$$self->[2]->{child_nodes}}, $id;
+        $int->{revision}++;
+        $data->{parent_node} = $$self->[1];
+        $data->{i_in_parent} = $#{$$self->[2]->{child_nodes}};
+        $$self->[0]->connect ($id => $$self->[1]);
+
+        ## 8.
+        # node is inserted
+      } # insert
+
+      ## 6.
+      # return
+    } # pre-insert
+  } # no last child text node
+  return;
+} # manakai_append_indexed_string
 
 sub children ($) {
   my $self = shift;

@@ -310,6 +310,13 @@ sub manakai_append_text ($$) {
   return $_[0];
 } # manakai_append_text
 
+sub manakai_append_indexed_string ($$) {
+  if (${$_[0]}->[0]->{config}->{not_manakai_strict_document_children}) {
+    $_[0]->SUPER::manakai_append_indexed_string ($_[1]);
+  }
+  return undef;
+} # manakai_append_indexed_string
+
 sub doctype ($) {
   for ($_[0]->child_nodes->to_list) {
     if ($_->node_type == DOCUMENT_TYPE_NODE) {
@@ -865,7 +872,8 @@ sub create_text_node ($) {
   $segment->[0] = ''.$segment->[0] if ref $segment->[0];
 
   my $id = ${$_[0]}->[0]->add_data
-      ({node_type => TEXT_NODE, data => [$segment]});
+      ({node_type => TEXT_NODE,
+        data => length $segment->[0] ? [$segment] : []});
   return ${$_[0]}->[0]->node ($id);
 } # create_text_node
 
@@ -880,7 +888,8 @@ sub create_comment ($) {
   $segment->[0] = ''.$segment->[0] if ref $segment->[0];
 
   my $id = ${$_[0]}->[0]->add_data
-      ({node_type => COMMENT_NODE, data => [$segment]});
+      ({node_type => COMMENT_NODE,
+        data => length $segment->[0] ? [$segment] : []});
   return ${$_[0]}->[0]->node ($id);
 } # create_comment
 
@@ -917,7 +926,7 @@ sub create_processing_instruction ($$$) {
   my $id = $$self->[0]->add_data
       ({node_type => PROCESSING_INSTRUCTION_NODE,
         target => Web::DOM::Internal->text ($target),
-        data => [[$data, -1, 0]]}); # IndexedString
+        data => length $data ? [[$data, -1, 0]] : []}); # IndexedString
   return $$self->[0]->node ($id);
 } # create_processing_instruction
 
