@@ -72,8 +72,16 @@ use Web::DOM::Document;
         is $node->child_nodes->length, 3;
         is $node->text_content, 'hogefooabc';
 
+        my $obj = {};
+        $node->manakai_append_text ($obj);
+        is $node->text_content, 'hogefooabc' . $obj;
+
+        $node->text_content ('');
+        $node->manakai_append_text ($obj);
+        is $node->text_content, '' . $obj;
+
         done $c;
-      } n => 10, name => ['manakai_append_text', $node->node_type];
+      } n => 12, name => ['manakai_append_text', $node->node_type];
     }
     {
       my $node = $code->();
@@ -149,9 +157,13 @@ use Web::DOM::Document;
       
       $node->manakai_append_content ('foo');
       is $node->text_content, 'hogefoo';
+      
+      my $obj = [];
+      $node->manakai_append_content ($obj);
+      is $node->text_content, 'hogefoo' . $obj;
 
       done $c;
-    } n => 4, name => ['manakai_append_content', $node->node_type];
+    } n => 5, name => ['manakai_append_content', $node->node_type];
   }
 }
 

@@ -137,7 +137,8 @@ sub base_uri ($) {
   my $nt = $self->node_type;
   if ($nt == DOCUMENT_NODE) {
     return $$self->[0]->{document_base_url}
-        if defined $$self->[0]->{document_base_url};
+        if defined $$self->[0]->{document_base_url} and
+           $$self->[0]->{document_base_url_revision} == $$self->[0]->{revision};
 
     # 1. document base URL
     # XXX <http://html5.org/tools/web-apps-tracker?from=7961&to=7962> is not applied yet
@@ -168,9 +169,11 @@ sub base_uri ($) {
       my $result = _resolve_url $url, $fallback_base_url;
 
       # 4.
+      $$self->[0]->{document_base_url_revision} = $$self->[0]->{revision};
       return $$self->[0]->{document_base_url}
           = defined $result ? $result : $fallback_base_url;
     } else {
+      $$self->[0]->{document_base_url_revision} = $$self->[0]->{revision};
       return $$self->[0]->{document_base_url} = $fallback_base_url;
     }
   } elsif ($nt == ATTRIBUTE_NODE) {
@@ -631,7 +634,7 @@ sub _pre_insert ($$;$$) {
       
       # Insert 7.
       splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, @node;
-      $$parent->[0]->children_changed ($$parent->[1], ELEMENT_NODE);
+      $$parent->[0]->{revision}++;
       for my $node_id (@node) {
         $$node->[0]->{data}->[$node_id]->{parent_node} = $$parent->[1];
         $$parent->[0]->connect ($node_id => $$parent->[1]);
@@ -650,8 +653,7 @@ sub _pre_insert ($$;$$) {
       
       # Insert 3., 7.
       splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, $$node->[1];
-      $$parent->[0]->children_changed
-          ($$parent->[1], $$node->[2]->{node_type});
+      $$parent->[0]->{revision}++;
       $$node->[2]->{parent_node} = $$parent->[1];
       {
         for ($insert_position..$#{$$parent->[2]->{child_nodes}}) {
@@ -738,11 +740,8 @@ sub normalize ($) {
       # 1.
       $node_id = shift @text_id;
 
-      # 2.
-      my $length = length ${$int->{data}->[$node_id]->{data}};
-
-      # 3.
-      if ($length == 0) {
+      # 2.-3.
+      unless (grep { length $_->[0] } @{$int->{data}->[$node_id]->{data}}) { # IndexedString
         $int->remove_node ($parent_id, $node_id, 0);
         return unless @text_id;
         next;
@@ -753,8 +752,8 @@ sub normalize ($) {
 
     # 4., 5. Replace data (simplified)
     # XXX mutation
-    ${$int->{data}->[$node_id]->{data}}
-        .= join '', map { ${$int->{data}->[$_]->{data}} } @text_id;
+    push @{$int->{data}->[$node_id]->{data}},
+        map { @{$int->{data}->[$_]->{data}} } @text_id;
     # XXX range
 
     # 6.-7.

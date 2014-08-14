@@ -116,6 +116,7 @@ sub manakai_is_srcdoc ($;$) {
       delete ${$_[0]}->[2]->{is_srcdoc};
     }
     delete ${$_[0]}->[0]->{document_base_url};
+    delete ${$_[0]}->[0]->{document_base_url_revision};
   }
   return ${$_[0]}->[2]->{is_srcdoc};
 } # manakai_is_srcdoc
@@ -178,6 +179,7 @@ sub manakai_set_url ($$) {
   # 3.
   ${$_[0]}->[2]->{url} = $url;
   delete ${$_[0]}->[0]->{document_base_url};
+  delete ${$_[0]}->[0]->{document_base_url_revision};
   return;
 } # manakai_set_url
 
@@ -611,8 +613,8 @@ sub create_element ($$) {
 
   # 3.
   my $data = {node_type => ELEMENT_NODE,
-              namespace_uri => Web::DOM::Internal->text (HTML_NS),
-              local_name => Web::DOM::Internal->text ($ln)};
+              namespace_uri => $Web::DOM::Internal::Text->{(HTML_NS)},
+              local_name => ($Web::DOM::Internal::Text->{$ln} ||= \$ln)};
   my $id = $$self->[0]->add_data ($data);
   my $node = $$self->[0]->node ($id);
   if ($ln eq 'template') {
@@ -712,14 +714,17 @@ sub create_element_ns {
 
   # 9.
   my $data = {node_type => ELEMENT_NODE,
-              prefix => Web::DOM::Internal->text ($prefix),
-              namespace_uri => Web::DOM::Internal->text ($nsurl),
-              local_name => Web::DOM::Internal->text ($ln)};
+              local_name => ($Web::DOM::Internal::Text->{$ln} ||= \$ln)};
+  $data->{namespace_uri} = ($Web::DOM::Internal::Text->{$nsurl} ||= \$nsurl)
+      if defined $nsurl;
+  $data->{prefix} = ($Web::DOM::Internal::Text->{$prefix} ||= \$prefix)
+      if defined $prefix;
   my $id = $$self->[0]->add_data ($data);
   my $node = $$self->[0]->node ($id);
-  if (defined $nsurl and $nsurl eq HTML_NS and $ln eq 'template') {
+  if ($ln eq 'template' and defined $nsurl and $nsurl eq HTML_NS) {
     my $tmpl_doc = $$self->[0]->template_doc;
-    my $df_id = $$tmpl_doc->[0]->add_data ({node_type => DOCUMENT_FRAGMENT_NODE});
+    my $df_id = $$tmpl_doc->[0]->add_data
+        ({node_type => DOCUMENT_FRAGMENT_NODE});
     $$self->[0]->set_template_content ($id => $$tmpl_doc->[0]->node ($df_id));
   }
   return $node;
@@ -854,8 +859,13 @@ sub create_document_fragment ($) {
 
 sub create_text_node ($) {
   ## See also ParentNode::manakai_append_text
+
+  # IndexedStringSegment
+  my $segment = [ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1], -1, 0];
+  $segment->[0] = ''.$segment->[0] if ref $segment->[0];
+
   my $id = ${$_[0]}->[0]->add_data
-      ({node_type => TEXT_NODE, data => \(ref $_[1] eq 'SCALAR' ? ''.${$_[1]} : ''.$_[1])});
+      ({node_type => TEXT_NODE, data => [$segment]});
   return ${$_[0]}->[0]->node ($id);
 } # create_text_node
 
@@ -865,8 +875,12 @@ sub create_cdata_section ($) {
 } # create_cdata_section
 
 sub create_comment ($) {
+  # IndexedStringSegment
+  my $segment = [ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1], -1, 0];
+  $segment->[0] = ''.$segment->[0] if ref $segment->[0];
+
   my $id = ${$_[0]}->[0]->add_data
-      ({node_type => COMMENT_NODE, data => \(ref $_[1] eq 'SCALAR' ? ''.${$_[1]} : ''.$_[1])});
+      ({node_type => COMMENT_NODE, data => [$segment]});
   return ${$_[0]}->[0]->node ($id);
 } # create_comment
 
@@ -902,7 +916,8 @@ sub create_processing_instruction ($$$) {
   # 3.
   my $id = $$self->[0]->add_data
       ({node_type => PROCESSING_INSTRUCTION_NODE,
-        target => Web::DOM::Internal->text ($target), data => \$data});
+        target => Web::DOM::Internal->text ($target),
+        data => [[$data, -1, 0]]}); # IndexedString
   return $$self->[0]->node ($id);
 } # create_processing_instruction
 

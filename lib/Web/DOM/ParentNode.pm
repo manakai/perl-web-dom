@@ -240,7 +240,7 @@ sub text_content ($;$) {
         $$node->[2]->{i_in_parent} = 0;
         @{$$self->[2]->{child_nodes} ||= []} = ($$node->[1]);
         $int->connect ($$node->[1] => $$self->[1]);
-        #$int->children_changed ($$self->[1], TEXT_NODE); # redundant
+        #$int->{revision}++; # redundant
       }
     }
 
@@ -248,7 +248,7 @@ sub text_content ($;$) {
     # XXXmutation
 
     # 6.
-    $int->children_changed ($$self->[1], ELEMENT_NODE);
+    $int->{revision}++;
     # XXX node is removed
 
     return unless defined wantarray;
@@ -270,19 +270,22 @@ sub text_content ($;$) {
 
 sub manakai_append_text ($$) {
   my $self = $_[0];
-  return $self unless length (ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1]);
+
+  # IndexedStringSegment
+  my $segment = [ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1], -1, 0];
+  $segment->[0] = ''.$segment->[0] if ref $segment->[0];
+
+  return $self unless length $segment->[0];
+
   my $int = $$self->[0];
   my $last_child_id = $$self->[2]->{child_nodes}->[-1];
+
   if (defined $last_child_id and
       $int->{data}->[$last_child_id]->{node_type} == TEXT_NODE) {
-    ${$int->{data}->[$last_child_id]->{data}}
-        .= ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
+    push @{$int->{data}->[$last_child_id]->{data}}, $segment;
     # XXX MutationObserver
   } else {
-    my $data = {node_type => TEXT_NODE};
-    my $text = ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
-    $text = ''.$text if ref $_[1];
-    $data->{data} = \$text;
+    my $data = {node_type => TEXT_NODE, data => [$segment]};
     my $id = $int->add_data ($data);
 
     ## Pre-insert (simplified)
@@ -306,7 +309,7 @@ sub manakai_append_text ($$) {
         
         ## 3., 7.
         push @{$$self->[2]->{child_nodes}}, $id;
-        $int->children_changed ($$self->[1], TEXT_NODE);
+        $int->{revision}++;
         $data->{parent_node} = $$self->[1];
         $data->{i_in_parent} = $#{$$self->[2]->{child_nodes}};
         $$self->[0]->connect ($id => $$self->[1]);
@@ -319,7 +322,7 @@ sub manakai_append_text ($$) {
       # return
     } # pre-insert
   } # no last child text node
-  return $_[0];
+  return $self;
 } # manakai_append_text
 
 sub children ($) {

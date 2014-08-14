@@ -63,7 +63,7 @@ sub remove_attribute_definition_node ($$) {
   delete $$node->[2]->{attribute_definitions}->{${$$obj->[2]->{node_name}}};
   delete $$obj->[2]->{owner};
   $$node->[0]->disconnect ($$obj->[1]);
-  $$node->[0]->children_changed ($$node->[1], 0);
+  $$node->[0]->{revision}++;
 
   # 4.
   return $obj;

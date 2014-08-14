@@ -63,6 +63,19 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   
+  my $ref = {};
+  my $comment = $doc->create_text_node ($ref);
+  isa_ok $comment, 'Web::DOM::Text';
+  is $comment->node_type, $comment->TEXT_NODE;
+  is $comment->data, ''.$ref;
+  is $comment->owner_document, $doc;
+  done $c;
+} n => 4, name => 'create_text_node ref';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  
   my $comment = $doc->create_comment ('hoge');
   isa_ok $comment, 'Web::DOM::Comment';
   is $comment->node_type, $comment->COMMENT_NODE;
@@ -98,6 +111,19 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  
+  my $ref = {};
+  my $comment = $doc->create_comment ($ref);
+  isa_ok $comment, 'Web::DOM::Comment';
+  is $comment->node_type, $comment->COMMENT_NODE;
+  is $comment->data, ''.$ref;
+  is $comment->owner_document, $doc;
+  done $c;
+} n => 4, name => 'create_comment ref';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $pi = $doc->create_processing_instruction ('hoge', 'fuga');
   isa_ok $pi, 'Web::DOM::ProcessingInstruction';
   is $pi->node_type, $pi->PROCESSING_INSTRUCTION_NODE;
@@ -127,6 +153,18 @@ test {
   is $pi->data, '';
   done $c;
 } n => 4, name => 'create_processing_instruction empty value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $ref = \'';
+  my $pi = $doc->create_processing_instruction ('aaa', $ref);
+  isa_ok $pi, 'Web::DOM::ProcessingInstruction';
+  is $pi->node_type, $pi->PROCESSING_INSTRUCTION_NODE;
+  is $pi->target, 'aaa';
+  is $pi->data, ''.$ref;
+  done $c;
+} n => 4, name => 'create_processing_instruction ref value';
 
 test {
   my $c = shift;

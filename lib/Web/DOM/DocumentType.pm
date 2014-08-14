@@ -138,7 +138,7 @@ sub _set_node ($$$) {
   $$node->[2]->{$key}->{$obj_name} = $$obj->[1];
   $$obj->[2]->{owner} = $$node->[1];
   $$node->[0]->connect ($$obj->[1] => $$node->[1]);
-  $$node->[0]->children_changed ($$node->[1], 0);
+  $$node->[0]->{revision}++;
 
   # 7.
   if (defined $old_node_id) {
@@ -169,7 +169,7 @@ sub remove_element_type_definition_node ($$) {
   delete $$node->[2]->{element_types}->{${$$obj->[2]->{node_name}}};
   delete $$obj->[2]->{owner};
   $$node->[0]->disconnect ($$obj->[1]);
-  $$node->[0]->children_changed ($$node->[1], 0);
+  $$node->[0]->{revision}++;
 
   # 4.
   return $obj;
@@ -196,7 +196,7 @@ sub remove_general_entity_node ($$) {
   delete $$node->[2]->{general_entities}->{${$$obj->[2]->{name}}};
   delete $$obj->[2]->{owner};
   $$node->[0]->disconnect ($$obj->[1]);
-  $$node->[0]->children_changed ($$node->[1], 0);
+  $$node->[0]->{revision}++;
 
   # 4.
   return $obj;
@@ -223,7 +223,7 @@ sub remove_notation_node ($$) {
   delete $$node->[2]->{notations}->{${$$obj->[2]->{name}}};
   delete $$obj->[2]->{owner};
   $$node->[0]->disconnect ($$obj->[1]);
-  $$node->[0]->children_changed ($$node->[1], 0);
+  $$node->[0]->{revision}++;
 
   # 4.
   return $obj;

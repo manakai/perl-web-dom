@@ -9,8 +9,24 @@ use Carp;
 
 our @EXPORT;
 
+sub import ($;@) {
+  my $from_class = shift;
+  my ($to_class, $file, $line) = caller;
+  no strict 'refs';
+  for (@_ ? @_ : @{$from_class . '::EXPORT'}) {
+    my $code = $from_class->can ($_)
+        or croak qq{"$_" is not exported by the $from_class module at $file line $line};
+    *{$to_class . '::' . $_} = $code;
+  }
+} # import
+
 ## "Interned" string
-my $Text = {};
+##
+## Used to represent namespace URLs and node names.
+##
+## Note that |$Web::DOM::Internal::Text| is directly accessed from
+## |Web::DOM::Document| for performance reason.
+our $Text = {};
 sub text ($$) {
   return defined $_[1] ? $Text->{$_[1]} ||= \(''.$_[1]) : undef;
 } # text
@@ -24,18 +40,23 @@ sub XML_NS () { q<http://www.w3.org/XML/1998/namespace> }
 sub XMLNS_NS () { q<http://www.w3.org/2000/xmlns/> }
 sub ATOM_NS () { q<http://www.w3.org/2005/Atom> }
 sub ATOM_THREAD_NS () { q<http://purl.org/syndication/thread/1.0> }
+$Text->{(HTML_NS)} = \HTML_NS;
 
-sub import ($;@) {
-  my $from_class = shift;
-  my ($to_class, $file, $line) = caller;
-  no strict 'refs';
-  for (@_ ? @_ : @{$from_class . '::EXPORT'}) {
-    my $code = $from_class->can ($_)
-        or croak qq{"$_" is not exported by the $from_class module at $file line $line};
-    *{$to_class . '::' . $_} = $code;
-  }
-} # import
+## Index-related data structures
+##
+## Following data structures are described in SuikaWiki:manakai index
+## data structure
+## <http://wiki.suikawiki.org/n/manakai%20index%20data%20structures>:
+##
+##   DocumentIndex CharacterIndex IndexedStringSegment IndexedString
+##
+## These are used by |Web::DOM::CharacterData| and |Web::DOM::Attr|,
+## as well as by |Web::DOM::Document|, |Web::DOM::ParentNode|, and
+## |Web::DOM::Node| methods related to them.
 
+## URLs
+##
+## URLs are internally saved as strings.
 push @EXPORT, qw(_resolve_url);
 sub _resolve_url ($$) {
   require Web::URL::Canonicalize;
@@ -49,7 +70,6 @@ sub _resolve_url ($$) {
 ##
 ## This module has no test by itself.  Tests for Node and its
 ## subclasses covers this module.
-
 package Web::DOM::Internal::Objects;
 use Scalar::Util qw(weaken refaddr);
 push our @CARP_NOT, qw(Web::DOM::Exception Web::DOM::StringArray);
@@ -84,11 +104,17 @@ sub new ($) {
     ## Other objects
     # impl
     # config config_obj config_hashref config_names
-    # xpath_results
     # template_doc
 
-    # document_base_url
+    # document_base_url document_base_url_revision
 
+    ## $internal->{revision} is a non-negative integer, incremented
+    ## when some mutation has occurred on some node such that cached
+    ## data should not be hornored.  It is incremented when, for
+    ## example, a node is appended to another node, an attribute is
+    ## set, or a CSS rule is inserted.  This value is used to discard
+    ## caches of, e.g., collections and document base URL, and to
+    ## invalidate |XPathResult| objects.
     revision => 1,
   }, $_[0];
 } # new
@@ -433,13 +459,13 @@ sub node ($$) {
       $class = $ElementClass->{$$ns}->{${$data->{local_name}}} ||
           $ElementClass->{$$ns}->{'*'} ||
           'Web::DOM::Element';
+      $module = $ClassToModule->{$class} || $class;
     } elsif ($nt == 9) {
-      $class = $data->{is_XMLDocument}
+      $module = $class = $data->{is_XMLDocument}
           ? 'Web::DOM::XMLDocument' : 'Web::DOM::Document';
     } else {
-      $class = $NodeClassByNodeType->{$nt};
+      $module = $class = $NodeClassByNodeType->{$nt};
     }
-    $module = $ClassToModule->{$class} || $class;
   } else {
     if ($data->{rule_type} eq 'sheet') {
       $class = $module = 'Web::DOM::CSSStyleSheet';
@@ -449,8 +475,9 @@ sub node ($$) {
       $module = 'Web::DOM::CSSRule';
     }
   }
-  if (not $ModuleLoaded->{$module}++) {
+  unless ($ModuleLoaded->{$module}) {
     eval qq{ require $module } or die $@;
+    $ModuleLoaded->{$module}++;
   }
   my $node = bless \[$self, $id, $data], $class;
   weaken ($self->{nodes}->[$id] = $node);
@@ -560,7 +587,7 @@ sub remove_node ($$$$) {
   for ($child_i..$#{$parent_data->{child_nodes}}) {
     $int->{data}->[$parent_data->{child_nodes}->[$_]]->{i_in_parent}--;
   }
-  $int->children_changed ($parent_id, $child_data->{node_type});
+  $int->{revision}++;
   $int->disconnect ($child_id);
 
   ## 9.
@@ -635,7 +662,7 @@ sub remove_children ($$$$) {
     $int->disconnect ($_);
   }
   @{$parent_data->{child_nodes}} = ();
-  $int->children_changed ($parent_id, 0);
+  $int->{revision}++;
 
   ## 9.
   # XXX node is removed
@@ -853,12 +880,6 @@ sub tokens ($$$$$) {
   return $nl;
 } # tokens
 
-sub children_changed ($$$) {
-  $_[0]->{revision}++;
-  delete $_[0]->{document_base_url};
-  $_->{invalid_iterator_state} = 1 for @{$_[0]->{xpath_results} or []};
-} # children_changed
-
 ## DOMStringMap
 sub strmap ($$) {
   my ($self, $el) = @_;
@@ -976,17 +997,6 @@ sub media ($$) {
     $list;
   };
 } # media
-
-sub xpath_result ($$) {
-  require Web::DOM::XPathResult;
-  my $result = bless $_[1], 'Web::DOM::XPathResult';
-  if ($result->{result_type} == 4 or # UNORDERED_NODE_ITERATOR_TYPE
-      $result->{result_type} == 5) { # ORDERED_NODE_ITERATOR_TYPE
-    push @{$_[0]->{xpath_results} ||= []}, $result;
-    weaken $_[0]->{xpath_results}->[-1];
-  }
-  return $result;
-} # xpath_result
 
 sub connect ($$$) {
   my ($self, $id => $parent_id) = @_;
@@ -1200,6 +1210,10 @@ sub DESTROY ($) {
   }
 } # DESTROY
 
+## Read-only hash
+##
+## Note that Perl's native read-only hash does not allow access to
+## undefined hash keys (thrown).
 package Web::DOM::Internal::ReadOnlyHash;
 use Carp;
 

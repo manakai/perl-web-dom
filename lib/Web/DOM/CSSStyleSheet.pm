@@ -136,7 +136,7 @@ sub insert_rule ($$$) {
     splice @{${$_[0]}->[2]->{rule_ids} or []}, $index, 0, ($new_id);
     ## New rule's |owner_sheet| is set by |import_parsed_ss|.
     ${$_[0]}->[0]->{data}->[$new_id]->{parent_id} = ${$_[0]}->[1];
-    ${$_[0]}->[0]->children_changed (${$_[0]}->[1], 0);
+    ${$_[0]}->[0]->{revision}++;
 
     if ($new_type eq 'namespace') {
       $_[0]->_rebuild_nsmap; # $_[0] is always style sheet
@@ -192,7 +192,7 @@ sub delete_rule ($$) {
     $$old_rule->[0]->disconnect ($old_rule_id); # parent CSS style sheet
     my $new_int = ref ($$old_rule->[0])->new;
     $new_int->adopt ($old_rule);
-    ${$_[0]}->[0]->children_changed (${$_[0]}->[1], 0);
+    ${$_[0]}->[0]->{revision}++;
     $new_int->{css_parser} = ${$_[0]}->[0]->css_parser;
     $new_int->{css_serializer} = ${$_[0]}->[0]->css_serializer;
 
