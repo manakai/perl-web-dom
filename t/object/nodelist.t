@@ -218,7 +218,7 @@ test {
   is $nl->item (1), undef;
   is $nl->item (2), undef;
   is $nl->item (0+"inf"), $el;
-  is $nl->item (0+"-inf"), [$el]->["-inf"];
+  is $nl->item (0+"-inf"), $el;
   is $nl->item (0+"nan"), $el;
   is $nl->item (+0**1), $el;
   is $nl->item (-0**1), $el;
