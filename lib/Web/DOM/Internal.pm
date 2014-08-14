@@ -169,10 +169,10 @@ sub new ($) {
 ## |Node|
 ##   all_declarations_processed     boolean   [all declarations processed]
 ##   allowed_tokens                 [string]  Allowed tokens
-##   attributes                     [attr]    Attributes by index
+##   attributes                     [AttrNameRef] Attributes by index
 ##   attribute_definitions          {node_id} Attribute definitions
 ##   attribute_type                 integer   [attribute type]
-##   attrs                          {{attr}}  Attributes by name
+##   attrs                          {{AttrValueRef}} Attributes by name
 ##   child_nodes                    [node_id] Child nodes
 ##   class_list                     [string]  Classes
 ##   compat_mode                    string    Quirksness
@@ -1014,7 +1014,7 @@ sub connect ($$$) {
       push @id, @{$data->{rule_ids}} if defined $data->{rule_ids};
       push @id, $data->{sheet} if defined $data->{sheet};
     } elsif ($nt == 1) { # ELEMENT_NODE
-      push @id, grep { not ref $_ } @{$data->{attributes} or []};
+      push @id, grep { not ref $_ } @{$data->{attributes} or []}; # AttrNameRef
       push @id, @{$data->{child_nodes}} if defined $data->{child_nodes};
       push @id, $data->{content_df}
           if defined $data->{content_df} and not ref $data->{content_df};
@@ -1043,7 +1043,7 @@ sub disconnect ($$) {
     my $id = shift @id;
     $self->{tree_id}->[$id] = $tree_id;
     my $data = $self->{data}->[$id];
-    push @id, grep { not ref $_ } @{$data->{attributes} or []};
+    push @id, grep { not ref $_ } @{$data->{attributes} or []}; # AttrNameRef
     push @id,
         @{$data->{child_nodes} or []},
         @{$data->{rule_ids} or []},
@@ -1098,7 +1098,7 @@ sub adopt ($$) {
       push @template, [$new_id => $df];
     }
 
-    push @old_id, grep { not ref $_ } @{$data->{attributes} or []};
+    push @old_id, grep { not ref $_ } @{$data->{attributes} or []}; # AttrNameRef
     push @old_id,
         @{$data->{child_nodes} or []},
         @{$data->{rule_ids} or []},
@@ -1129,11 +1129,11 @@ sub adopt ($$) {
 
   for my $data (@data) {
     @{$data->{attributes}} = map {
-      ref $_ ? $_ : $id_map{$_};
+      ref $_ ? $_ : $id_map{$_}; # AttrNameRef
     } @{$data->{attributes}} if $data->{attributes};
     for (values %{$data->{attrs} or {}}) {
       for my $ln (keys %$_) {
-        if (defined $_->{$ln} and not ref $_->{$ln}) {
+        if (defined $_->{$ln} and not ref $_->{$ln}) { # AttrValueRef
           $_->{$ln} = $id_map{$_->{$ln}};
         }
       }

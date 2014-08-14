@@ -69,38 +69,54 @@ sub manakai_element_type_match ($$$) {
 ##
 ## A content attribute is represented as either:
 ##
-##   - The reference to a string, or
-##   - An |Attr| object.
+##   - A pair of attribute name and value, or
+##   - An |Attr| node.
 ##
-## The string reference represents an attribute whose value is the
-## referenced character string.  It can only be used to represent a
-## null-namespace attribute.
+## An attribute can be represented as a pair when it does not have any
+## additional data (e.g. namespace, user data, or attribute type) and
+## there is no reference to the |Attr| object.  The |$InflateAttr|
+## operation below converts an attribute represented as a pair into
+## |Attr|-object form.
 ##
-## $$node->[2]->{attrs}->{$ns // ''}->{$ln} = (\value or attribute node ID)
-## $$node->[2]->{attributes} = [array of (\name or attribute node ID)]
+## Any content attribute of an element is stored in the node data of
+## the element in BOTH of following forms:
 ##
-## The |attrs| hashref contains the attributes of the node.  The
-## |attributes| arrayref, which is used to preserve the order of
-## attributes, contains strings and/or |Attr| objects.  Strings refer
-## null-namespace attributes in the |attrs| hashref by its local name.
+##   $$node->[2]->{attrs}->{$ns // ''}->{$ln} = AttrValueRef
+##   $$node->[2]->{attributes} = [array of AttrNameRef]
+##
+## Note that the |attributes| hash reference is used to preserve the
+## order of the attributes in the element.
+##
+## An AttrNameRef is either a scalar reference to a string
+## representing the attribute name (a character string) or the node ID
+## of an |Attr| object.
+##
+## An AttrValueRef is either an IndexedString (i.e. an array
+## reference) representing the attribute value or the node ID of an
+## |Attr| object.
+##
+## If an attribute is represented as an |Attr| node, both AttrNameRef
+## and AttrValueRef for the attribute are the same node ID.
+## Otherwise, AttrNameRef must be a scalar reference and AttrValueRef
+## must be an IndexedString.
 
-my $InflateAttr = sub ($) {
-  my $node = $_[0];
+my $InflateAttr = sub ($$) {
+  my ($node, $nameref) = @_; # AttrNameRef
   my $data = {node_type => ATTRIBUTE_NODE,
-              local_name => Web::DOM::Internal->text ($$_),
-              data => [[${$$node->[2]->{attrs}->{''}->{$$_}}, -1, 0]], # IndexedString
+              local_name => Web::DOM::Internal->text ($$nameref),
+              data => $$node->[2]->{attrs}->{''}->{$$nameref}, # AttrValueRef/IndexedString
               owner => $$node->[1]};
   my $attr_id = $$node->[0]->add_data ($data);
-  $$node->[2]->{attrs}->{''}->{$$_} = $attr_id;
+  $$node->[2]->{attrs}->{''}->{$$nameref} = $attr_id; # AttrValueRef
   $$node->[0]->connect ($attr_id => $$node->[1]);
-  $_ = $attr_id;
+  return $attr_id; # new AttrNameRef
 }; # $InflateAttr
 
 sub attributes ($) {
   return ${$_[0]}->[0]->collection ('attributes', $_[0], sub {
     my $node = $_[0];
     for (@{$$node->[2]->{attributes} or []}) {
-      $InflateAttr->($node) if ref $_; # $_
+      $_ = $InflateAttr->($node, $_) if ref $_; # AttrNameRef
     }
     return @{$$node->[2]->{attributes} or []};
   });
@@ -121,9 +137,9 @@ sub has_attribute ($$) {
   }
 
   # 2.
-  return 1 if ref ($$node->[2]->{attrs}->{''}->{$name} || '');
+  return 1 if ref ($$node->[2]->{attrs}->{''}->{$name} || ''); # AttrValueRef
   for (@{$$node->[2]->{attributes} or []}) {
-    if (ref $_) {
+    if (ref $_) { # AttrNameRef
       return 1 if $$_ eq $name;
     } else { # node ID
       return 1 if $$node->[0]->node ($_)->name eq $name;
@@ -149,9 +165,9 @@ sub get_attribute ($$) {
 
   # 2.
   for (@{$$node->[2]->{attributes} or []}) {
-    if (ref $_) {
+    if (ref $_) { # AttrNameRef
       if ($$_ eq $name) {
-        return ${$$node->[2]->{attrs}->{''}->{$name}};
+        return join '', map { $_->[0] } @{$$node->[2]->{attrs}->{''}->{$name}}; # AttrValueRef/IndexedString
       }
     } else { # node ID
       my $attr_node = $$node->[0]->node ($_);
@@ -169,10 +185,10 @@ sub get_attribute_ns ($$$) {
   my $ln = ''.$_[2];
 
   # 1., 2. / Get an attribute 1., 2.
-  my $attr_id = $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln};
+  my $attr_id = $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln}; # AttrValueRef
   if (defined $attr_id) {
     if (ref $attr_id) {
-      return $$attr_id;
+      return join '', map { $_->[0] } @$attr_id; # AttrValueRef/IndexedString
     } else {
       return join '', map { $_->[0] } @{$$node->[0]->{data}->[$attr_id]->{data}}; # IndexedString
     }
@@ -193,10 +209,10 @@ sub get_attribute_node ($$) {
 
   # 2.
   for (@{$$node->[2]->{attributes} or []}) {
-    if (ref $_) {
+    if (ref $_) { # AttrNameRef
       if ($$_ eq $name) {
-        $InflateAttr->($node);
-        return $$node->[0]->node ($_);
+        $_ = $InflateAttr->($node, $_);
+        return $$node->[0]->node ($_); # node ID
       }
     } else { # node ID
       my $attr_node = $$node->[0]->node ($_);
@@ -214,14 +230,12 @@ sub get_attribute_node_ns ($$$) {
   my $ln = ''.$_[2];
 
   # 1., 2. / Get an attribute 1., 2.
-  my $attr_id = $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln};
+  my $attr_id = $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln}; # AttrValueRef
   if (defined $attr_id) {
     if (ref $attr_id) {
-      local $_ = \$ln;
-      $InflateAttr->($node);
-      $attr_id = $_;
+      $attr_id = $InflateAttr->($node, \$ln);
       @{$$node->[2]->{attributes}} = map {
-        ref $_ && $$_ eq $ln ? $attr_id : $_;
+        ref $_ && $$_ eq $ln ? $attr_id : $_; # AttrNameRef
       } @{$$node->[2]->{attributes}};
       return $$node->[0]->node ($attr_id);
     } else {
@@ -260,7 +274,7 @@ sub set_attribute ($$$) {
 
   # 3.
   for (@{$$node->[2]->{attributes} or []}) {
-    if (ref $_) {
+    if (ref $_) { # AttrNameRef
       if ($$_ eq $name) {
         # 5.
         {
@@ -268,7 +282,7 @@ sub set_attribute ($$$) {
           # XXX mutation
 
           # Change 2.
-          $$node->[2]->{attrs}->{''}->{$name} = \$value;
+          $$node->[2]->{attrs}->{''}->{$name} = [[$value, -1, 0]]; # AttrValueRef/IndexedString
 
           # Change 3.
           $node->_attribute_is (undef, \$name, set => 1, changed => 1);
@@ -304,8 +318,8 @@ sub set_attribute ($$$) {
 
     # Append 2.
     push @{$$node->[2]->{attributes} ||= []},
-        Web::DOM::Internal->text ($name);
-    $$node->[2]->{attrs}->{''}->{$name} = \$value;
+        Web::DOM::Internal->text ($name); # AttrNameRef
+    $$node->[2]->{attrs}->{''}->{$name} = [[$value, -1, 0]]; # AttrValueRef/IndexedString
 
     # Append 3.
     $node->_attribute_is (undef, \$name, set => 1, added => 1);
@@ -407,7 +421,7 @@ sub set_attribute_ns ($$$$) {
   # 9. Set an attribute
   {
     # Set 1.-4.
-    my $attr_id = $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln};
+    my $attr_id = $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln}; # AttrValueRef
     if (defined $attr_id) {
       # 6.
       {
@@ -416,7 +430,7 @@ sub set_attribute_ns ($$$$) {
 
         # Change 2.
         if (ref $attr_id) {
-          $$attr_id = $value;
+          @$attr_id = ([$value, -1, 0]); # AttrValueRef/IndexedString
         } else {
           $$node->[0]->{data}->[$attr_id]->{data} = [[$value, -1, 0]]; # IndexedString
         }
@@ -440,14 +454,14 @@ sub set_attribute_ns ($$$$) {
                       data => [[$value, -1, 0]], # IndexedString
                       owner => $$node->[1]};
           my $attr_id = $$node->[0]->add_data ($data);
-          push @{$$node->[2]->{attributes} ||= []}, $attr_id;
+          push @{$$node->[2]->{attributes} ||= []}, $attr_id; # AttrNameRef
           $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln}
-              = $attr_id;
+              = $attr_id; # AttrValueRef
           $$node->[0]->connect ($attr_id => $$node->[1]);
         } else {
           push @{$$node->[2]->{attributes} ||= []},
-              Web::DOM::Internal->text ($ln);
-          $$node->[2]->{attrs}->{''}->{$ln} = \$value;
+              Web::DOM::Internal->text ($ln); # AttrNameRef
+          $$node->[2]->{attrs}->{''}->{$ln} = [[$value, -1, 0]]; # AttrValueRef/IndexedString
         }
 
         # Append 3.
@@ -487,12 +501,10 @@ sub set_attribute_node ($$) {
   # 4.
   my $nsurl = ${$$attr->[2]->{namespace_uri} || \''};
   my $ln = ${$$attr->[2]->{local_name}};
-  my $old_attr_id = $$node->[2]->{attrs}->{$nsurl}->{$ln};
+  my $old_attr_id = $$node->[2]->{attrs}->{$nsurl}->{$ln}; # AttrValueRef
   my $old_attr_id_ref = (defined $old_attr_id and ref $old_attr_id);
   if ($old_attr_id_ref and defined wantarray) {
-    local $_ = \$ln;
-    $InflateAttr->($node);
-    $old_attr_id = $_;
+    $old_attr_id = $InflateAttr->($node, \$ln);
   }
   if (defined $old_attr_id and not ref $old_attr_id) {
     delete $$node->[0]->{data}->[$old_attr_id]->{owner};
@@ -503,18 +515,18 @@ sub set_attribute_node ($$) {
     # 6.
     if ($old_attr_id_ref) {
       @{$$node->[2]->{attributes}} = map {
-        (ref $_ && $$_ eq $ln) ? $$attr->[1] : $_;
+        (ref $_ && $$_ eq $ln) ? $$attr->[1] : $_; # AttrNameRef
       } @{$$node->[2]->{attributes}};
     } else {
       @{$$node->[2]->{attributes}} = map {
-        (not ref $_ && $_ == $old_attr_id) ? $$attr->[1] : $_;
+        (not ref $_ && $_ == $old_attr_id) ? $$attr->[1] : $_; # AttrNameRef
       } @{$$node->[2]->{attributes}};
     }
   } else {
     # 5.
-    push @{$$node->[2]->{attributes} ||= []}, $$attr->[1];
+    push @{$$node->[2]->{attributes} ||= []}, $$attr->[1]; # AttrNameRef
   }
-  $$node->[2]->{attrs}->{$nsurl}->{$ln} = $$attr->[1];
+  $$node->[2]->{attrs}->{$nsurl}->{$ln} = $$attr->[1]; # AttrValueRef
 
   # 7.
   $$attr->[2]->{owner} = $$node->[1];
@@ -558,14 +570,14 @@ sub remove_attribute ($$) {
     my $found;
     my $nsref;
     my $lnref;
-    @{$$node->[2]->{attributes} or []} = map {
+    @{$$node->[2]->{attributes} or []} = map { # AttrNameRef
       if ($found) {
         $_;
       } elsif (ref $_) {
         if ($$_ eq $name) {
           $found = 1;
           ($nsref, $lnref) = (undef, $_);
-          delete $$node->[2]->{attrs}->{''}->{$name};
+          delete $$node->[2]->{attrs}->{''}->{$name}; # AttrValueRef
           ();
         } else {
           $_;
@@ -577,7 +589,7 @@ sub remove_attribute ($$) {
           ($nsref, $lnref) = ($$attr_node->[2]->{namespace_uri},
                               $$attr_node->[2]->{local_name});
           delete $$node->[2]->{attrs}
-              ->{defined $nsref ? $$nsref : ''}->{$$lnref};
+              ->{defined $nsref ? $$nsref : ''}->{$$lnref}; # AttrValueRef
           $$node->[0]->disconnect ($_);
           ();
         } else {
@@ -603,7 +615,7 @@ sub remove_attribute_ns ($$$) {
   # 1., 2.
   my $nsurl = defined $_[1] ? ''.$_[1] : undef;
   $nsurl = undef if defined $nsurl and not length $nsurl;
-  my $attr_id = $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln};
+  my $attr_id = $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln}; # AttrValueRef
   if (defined $attr_id) {
     # Remove 1.
     # XXX mutation if found
@@ -611,13 +623,13 @@ sub remove_attribute_ns ($$$) {
     $$node->[0]->{revision}++;
 
     # Remove 2.
-    if (ref $attr_id) {
-      @{$$node->[2]->{attributes}} = grep { not ref $_ or $$_ ne $ln } @{$$node->[2]->{attributes}};
-    } else {
+    if (ref $attr_id) { # AttrValueRef
+      @{$$node->[2]->{attributes}} = grep { not ref $_ or $$_ ne $ln } @{$$node->[2]->{attributes}}; # AttrNameRef
+    } else { # node ID
       $$node->[0]->disconnect ($attr_id);
-      @{$$node->[2]->{attributes}} = grep { $_ ne $attr_id } @{$$node->[2]->{attributes}};
+      @{$$node->[2]->{attributes}} = grep { $_ ne $attr_id } @{$$node->[2]->{attributes}}; # AttrNameRef
     }
-    delete $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln};
+    delete $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln}; # AttrValueRef
 
     # Remove 3.
     $node->_attribute_is
@@ -645,10 +657,10 @@ sub remove_attribute_node ($$) {
 
   $$node->[0]->{revision}++;
   
-  delete $$node->[2]->{attrs}->{${$$attr->[2]->{namespace_uri} || \''}}->{${$$attr->[2]->{local_name}}};
+  delete $$node->[2]->{attrs}->{${$$attr->[2]->{namespace_uri} || \''}}->{${$$attr->[2]->{local_name}}}; # AttrValueRef
   @{$$node->[2]->{attributes}} = grep {
     $_ != $$attr->[1];
-  } @{$$node->[2]->{attributes}};
+  } @{$$node->[2]->{attributes}}; # AttrNameRef
   delete $$attr->[2]->{owner};
   $$node->[0]->disconnect ($$attr->[1]);
 

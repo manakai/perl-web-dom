@@ -514,7 +514,7 @@ sub links ($) {
       next unless ${$data->[$id]->{local_name}} eq 'a' or
                   ${$data->[$id]->{local_name}} eq 'area';
       next unless ${$data->[$id]->{namespace_uri} || \''} eq HTML_NS;
-      next unless defined $data->[$id]->{attrs}->{''}->{href};
+      next unless defined $data->[$id]->{attrs}->{''}->{href}; # AttrValueRef
       push @id, $id;
     }
     return @id;
@@ -534,7 +534,7 @@ sub anchors ($) {
       unshift @node_id, @{$data->[$id]->{child_nodes} or []};
       next unless ${$data->[$id]->{local_name}} eq 'a';
       next unless ${$data->[$id]->{namespace_uri} || \''} eq HTML_NS;
-      next unless defined $data->[$id]->{attrs}->{''}->{name};
+      next unless defined $data->[$id]->{attrs}->{''}->{name}; # AttrValueRef
       push @id, $id;
     }
     return @id;
@@ -554,9 +554,9 @@ sub get_elements_by_name ($$) {
       next unless $data->[$id]->{node_type} == ELEMENT_NODE;
       unshift @node_id, @{$data->[$id]->{child_nodes} or []};
       next unless ${$data->[$id]->{namespace_uri} || \''} eq HTML_NS;
-      next unless defined (my $value = $data->[$id]->{attrs}->{''}->{name});
+      next unless defined (my $value = $data->[$id]->{attrs}->{''}->{name}); # AttrValueRef
       if (ref $value) {
-        next unless $$value eq $name;
+        next unless $name eq join '', map { $_->[0] } @$value; # AttrValueRef/IndexedString
       } else {
         next unless $name eq join '', map { $_->[0] } @{$data->[$value]->{data}}; # IndexedString
       }
