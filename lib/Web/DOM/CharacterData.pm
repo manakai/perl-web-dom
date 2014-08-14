@@ -6,6 +6,7 @@ our $VERSION = '2.0';
 use Web::DOM::Node;
 use Web::DOM::ChildNode;
 push our @ISA, qw(Web::DOM::Node Web::DOM::ChildNode);
+use Web::DOM::TypeError;
 
 *node_value = \&data;
 *text_content = \&data;
@@ -19,6 +20,12 @@ sub data ($;$) {
   }
   return join '', map { $_->[0] } @{${$_[0]}->[2]->{data}}; # IndexedString
 } # data
+
+sub manakai_get_indexed_string ($) {
+  return [map {
+    [$_->[0], $_->[1], $_->[2]]; # string copy
+  } @{${$_[0]}->[2]->{data}}]; # IndexedString
+} # manakai_get_indexed_string
 
 sub length ($) {
   my $data = $_[0]->data;
@@ -45,6 +52,19 @@ sub manakai_append_text ($$) {
 
   return $_[0];
 } # manakai_append_text
+
+sub manakai_append_indexed_string ($$) {
+  # IndexedStringSegment
+  _throw Web::DOM::TypeError 'The argument is not an IndexedString'
+      if not ref $_[1] eq 'ARRAY' or
+         grep { not ref $_ eq 'ARRAY' } @{$_[1]};
+
+  push @{${$_[0]}->[2]->{data}}, map {
+    [''.$_->[0], 0+$_->[1], 0+$_->[2]]; # string copy
+  } @{$_[1]};
+
+  return;
+} # manakai_append_indexed_string
 
 sub substring_data ($$$) {
   # WebIDL: unsigned long

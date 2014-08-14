@@ -5,7 +5,7 @@ Web::DOM::Attr - DOM |Attr| object
 =head1 DESCRIPTION
 
 The C<Web::DOM::Attr> class implements the DOM C<Attr> interface.  An
-C<Attr> object represents a content attribute of element.
+C<Attr> object represents a content attribute of an element.
 
 =head1 METHODS
 
@@ -14,11 +14,27 @@ are available on a C<Attr> object, as well as following methods:
 
 =over 4
 
+=item $node = $node->manakai_append_text ($string)
+
+Append a string to the C<value> of the attribute.  [MANAKAI]
+
+=item $attr->manakai_append_indexed_string ($indexed)
+
+Append an IndexedString
+<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>
+to the C<value> of the attribute.  [MANAKAIINDEX]
+
 =item $code = $attr->manakai_attribute_type
 
 =item $attr->manakai_attribute_type ($code)
 
 Return or set the DTD attribute type for the attribute.  [MANAKAI]
+
+=item $indexed = $attr->manakai_get_indexed_string
+
+Return an IndexedString
+<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>
+representation of the C<value> of the attribute.  [MANAKAIINDEX]
 
 =item $bool = $attr->is_id
 
@@ -102,6 +118,11 @@ DOM Document Type Definitions
 
 manakai DOM Extensions
 <http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
+
+=item MANAKAIINDEX
+
+manakai index data structures
+<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures>.
 
 =back
 

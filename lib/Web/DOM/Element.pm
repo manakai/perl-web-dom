@@ -197,6 +197,24 @@ sub get_attribute_ns ($$$) {
   }
 } # get_attribute_ns
 
+sub manakai_get_attribute_indexed_string_ns ($$$) {
+  my $node = $_[0];
+  my $nsurl = defined $_[1] ? ''.$_[1] : undef; # can be empty
+  my $ln = ''.$_[2];
+
+  # 1., 2. / Get an attribute 1., 2.
+  my $attr_id = $$node->[2]->{attrs}->{defined $nsurl ? $nsurl : ''}->{$ln}; # AttrValueRef
+  if (defined $attr_id) {
+    if (ref $attr_id) {
+      return [map { [$_->[0], $_->[1], $_->[2]] } @$attr_id]; # AttrValueRef/IndexedString
+    } else {
+      return [map { [$_->[0], $_->[1], $_->[2]] } @{$$node->[0]->{data}->[$attr_id]->{data}}]; # IndexedString
+    }
+  } else {
+    return undef;
+  }
+} # manakai_get_attribute_indexed_string_ns
+
 sub get_attribute_node ($$) {
   my $node = $_[0];
   my $name = ''.$_[1];
@@ -328,6 +346,11 @@ sub set_attribute ($$$) {
 } # set_attribute
 
 sub set_attribute_ns ($$$$) {
+  return $_[0]->manakai_set_attribute_indexed_string_ns
+      ($_[1], $_[2], [[$_[3], -1, 0]]);
+} # set_attribute_ns
+
+sub manakai_set_attribute_indexed_string_ns ($$$$) {
   my $node = $_[0];
   my $qname;
   my $prefix;
@@ -347,7 +370,11 @@ sub set_attribute_ns ($$$$) {
     $qname = ''.$_[2];
   }
 
-  my $value = ''.$_[3];
+  # IndexedStringSegment
+  _throw Web::DOM::TypeError 'The argument is not an IndexedString'
+      if not ref $_[3] eq 'ARRAY' or
+         grep { not ref $_ eq 'ARRAY' } @{$_[3]};
+  my $value = [map { [''.$_->[0], 0+$_->[1], 0+$_->[2]] } @{$_[3]}];
 
   if ($not_strict) {
     unless (length $qname) {
@@ -430,9 +457,9 @@ sub set_attribute_ns ($$$$) {
 
         # Change 2.
         if (ref $attr_id) {
-          @$attr_id = ([$value, -1, 0]); # AttrValueRef/IndexedString
+          @$attr_id = @$value; # AttrValueRef/IndexedString
         } else {
-          $$node->[0]->{data}->[$attr_id]->{data} = [[$value, -1, 0]]; # IndexedString
+          $$node->[0]->{data}->[$attr_id]->{data} = $value; # IndexedString
         }
 
         # Change 3.
@@ -451,7 +478,7 @@ sub set_attribute_ns ($$$$) {
                       namespace_uri => Web::DOM::Internal->text ($nsurl),
                       prefix => Web::DOM::Internal->text ($prefix),
                       local_name => Web::DOM::Internal->text ($ln),
-                      data => [[$value, -1, 0]], # IndexedString
+                      data => $value, # IndexedString
                       owner => $$node->[1]};
           my $attr_id = $$node->[0]->add_data ($data);
           push @{$$node->[2]->{attributes} ||= []}, $attr_id; # AttrNameRef
@@ -461,7 +488,7 @@ sub set_attribute_ns ($$$$) {
         } else {
           push @{$$node->[2]->{attributes} ||= []},
               Web::DOM::Internal->text ($ln); # AttrNameRef
-          $$node->[2]->{attrs}->{''}->{$ln} = [[$value, -1, 0]]; # AttrValueRef/IndexedString
+          $$node->[2]->{attrs}->{''}->{$ln} = $value; # AttrValueRef/IndexedString
         }
 
         # Append 3.
@@ -471,7 +498,7 @@ sub set_attribute_ns ($$$$) {
     }
   }
   return;
-} # set_attribute_ns
+} # manakai_set_attribute_indexed_string_ns
 
 sub set_attribute_node ($$) {
   # WebIDL

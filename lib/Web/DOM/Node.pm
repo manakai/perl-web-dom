@@ -714,9 +714,22 @@ sub text_content ($;$) {
   return undef;
 } # text_content
 
+sub manakai_get_indexed_string ($) {
+  return undef;
+} # manakai_get_indexed_string
+
 sub manakai_append_text ($$) {
+  my $dummy = ''.$_[1];
   return $_[0];
 } # manakai_append_text
+
+sub manakai_append_indexed_string ($$) {
+  # IndexedStringSegment
+  _throw Web::DOM::TypeError 'The argument is not an IndexedString'
+      if not ref $_[1] eq 'ARRAY' or
+         grep { not ref $_ eq 'ARRAY' } @{$_[1]}; # IndexedString
+  return;
+} # manakai_append_indexed_string
 
 ## Overridden by |HTMLTemplateElement|.
 sub manakai_append_content ($$) {
@@ -1548,6 +1561,33 @@ sub manakai_get_child_namespace_uri ($) {
 sub is_supported ($$;$) {
   return 1;
 } # is_supported
+
+sub manakai_get_source_location ($) {
+  my $data = ${$_[0]}->[2];
+  if (defined $data->{di}) {
+    return ['', $data->{di}, $data->{ci} || 0]; # IndexedStringSegment
+  } elsif (defined $data->{data} and @{$data->{data}}) { # IndexedString
+    my $first_segment = $data->{data}->[0];
+    return ['', $first_segment->[1], $first_segment->[2]]; # IndexedStringSegment
+  } else {
+    return ['', -1, 0]; # IndexedStringSegment
+  }
+} # manakai_get_source_location
+
+sub manakai_set_source_location ($$) {
+  my $data = ${$_[0]}->[2];
+  if (not defined $_[1]) {
+    delete $data->{di};
+    delete $data->{ci};
+  } elsif (ref $_[1] eq 'ARRAY') { # IndexedStringSegment
+    my $dummy = ''.$_[1]->[0]; # DOMPERL
+    $data->{di} = 0+$_[1]->[1];
+    $data->{ci} = 0+$_[1]->[2];
+  } else {
+    _throw Web::DOM::TypeError 'The argument is not an IndexedStringSegment';
+  }
+  return;
+} # manakai_set_source_location
 
 sub get_user_data ($$) {
   return ${$_[0]}->[2]->{user_data}->{$_[1]};

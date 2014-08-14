@@ -4,6 +4,7 @@ use warnings;
 our $VERSION = '2.0';
 use Web::DOM::Node;
 push our @ISA, qw(Web::DOM::Node);
+use Web::DOM::TypeError;
 
 our @EXPORT;
 
@@ -42,6 +43,12 @@ sub value ($;$) {
 *node_value = \&value;
 *text_content = \&value;
 
+sub manakai_get_indexed_string ($) {
+  return [map {
+    [$_->[0], $_->[1], $_->[2]]; # string copy
+  } @{${$_[0]}->[2]->{data}}]; # IndexedString
+} # manakai_get_indexed_string
+
 sub manakai_append_text ($$) {
   # XXX mutation?
 
@@ -58,6 +65,27 @@ sub manakai_append_text ($$) {
   }
   return $_[0];
 } # manakai_append_text
+
+sub manakai_append_indexed_string ($$) {
+  # XXX mutation?
+
+  # IndexedString
+  _throw Web::DOM::TypeError 'The argument is not an IndexedString'
+      if not ref $_[1] eq 'ARRAY' or
+         grep { not ref $_ eq 'ARRAY' } @{$_[1]};
+
+  push @{${$_[0]}->[2]->{data}}, map {
+    [''.$_->[0], 0+$_->[1], 0+$_->[2]]; # string copy
+  } @{$_[1]};
+
+  if (my $oe = $_[0]->owner_element) {
+    $oe->_attribute_is
+        (${$_[0]}->[2]->{namespace_uri}, ${$_[0]}->[2]->{local_name},
+         set => 1, changed => 1);
+  }
+
+  return;
+} # manakai_append_indexed_string
 
 sub specified ($) { 1 }
 
