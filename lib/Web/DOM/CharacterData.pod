@@ -1,16 +1,17 @@
 =head1 NAME
 
-Web::DOM::CharacterData - The DOM |CharacterData| object
+Web::DOM::CharacterData - DOM |CharacterData| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::CharacterData> class implements the DOM
-C<CharacterData> interface.
+C<CharacterData> interface, which is inherited by L<Web::DOM::Text>,
+L<Web::DOM::Comment>, and L<Web::DOM::ProcessingInstruction>.
 
 =head1 METHODS
 
 In addition to the methods of classes L<Web::DOM::EventTarget>,
-L<Web::DOM::Node> and L<Web::DOM::ChildNode>, following methods are
+L<Web::DOM::Node>, and L<Web::DOM::ChildNode>, following methods are
 available:
 
 =over 4
@@ -66,13 +67,14 @@ $offset, $count >>.
 
 =back
 
-Most of methods are deprecated in favor of Perl standard string
-functions.  As DOM methods are defined in terms of UTF-16 code units
-while Perl strings are sequence of utf8 characters, and as WebIDL and
-Perl have different rules on interpretation of negative offset/count
-values, these methods are not implemented in efficient ways and are
-confusing when mixed with Perl string functions.  Moreover, these
-method can break surrogate pairs.
+Most of methods are deprecated in favor of Perl's standard string
+operations.  As DOM methods are defined in terms of UTF-16 code units
+while Perl strings are sequences of utf8 characters, and as Web IDL
+and Perl have different rules on interpretation of negative
+offset/count values, they exhibits inconsistent behaviors with Perl's
+standard string operations and they are not implemented in efficient
+ways.  Moreover, these method can break surrogate pairs.  B<HOW THEY
+INTERACT WITH CHARACTERS GREATER THAN U+FFFF IS SUBJECT TO CHANGE!>
 
 Any C<CharacterData> object is an instance of one of its subclasses.
 For example, a C<CharacterData> object whose C<node_type> is
@@ -108,7 +110,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

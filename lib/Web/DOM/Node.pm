@@ -740,11 +740,8 @@ sub normalize ($) {
       # 1.
       $node_id = shift @text_id;
 
-      # 2.
-      my $length = length ${$int->{data}->[$node_id]->{data}};
-
-      # 3.
-      if ($length == 0) {
+      # 2.-3.
+      unless (grep { length $_->[0] } @{$int->{data}->[$node_id]->{data}}) { # IndexedString
         $int->remove_node ($parent_id, $node_id, 0);
         return unless @text_id;
         next;
@@ -755,8 +752,8 @@ sub normalize ($) {
 
     # 4., 5. Replace data (simplified)
     # XXX mutation
-    ${$int->{data}->[$node_id]->{data}}
-        .= join '', map { ${$int->{data}->[$_]->{data}} } @text_id;
+    push @{$int->{data}->[$node_id]->{data}},
+        map { @{$int->{data}->[$_]->{data}} } @text_id;
     # XXX range
 
     # 6.-7.

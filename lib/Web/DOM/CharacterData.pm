@@ -2,7 +2,7 @@ package Web::DOM::CharacterData;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Node;
 use Web::DOM::ChildNode;
 push our @ISA, qw(Web::DOM::Node Web::DOM::ChildNode);
@@ -14,39 +14,35 @@ sub data ($;$) {
   if (@_ > 1) {
     ## "Replace data" steps (simplified)
     # XXX mutation record
-    ${${$_[0]}->[2]->{data}} = defined $_[1] ? ''.$_[1] : ''; # WebIDL
+    @{${$_[0]}->[2]->{data}} = ([defined $_[1] ? ''.$_[1] : '', -1, 0]); # WebIDL; IndexedStringSegment
     # XXX range
   }
-  return ${${$_[0]}->[2]->{data}};
+  return join '', map { $_->[0] } @{${$_[0]}->[2]->{data}}; # IndexedString
 } # data
 
 sub length ($) {
-  my $length = CORE::length ${${$_[0]}->[2]->{data}};
-  if (${${$_[0]}->[2]->{data}} =~ /[\x{10000}-\x{10FFFF}]/) {
-    $length += ${${$_[0]}->[2]->{data}} =~ tr/\x{10000}-\x{10FFFF}/\x{10000}-\x{10FFFF}/;
+  my $data = $_[0]->data;
+  my $length = CORE::length $data;
+  if ($data =~ /[\x{10000}-\x{10FFFF}]/) {
+    $length += $data =~ tr/\x{10000}-\x{10FFFF}/\x{10000}-\x{10FFFF}/;
   }
   return $length;
 } # length
 
 sub append_data ($$) {
-  #my $has_trail = ${${$_[0]}->[2]->{data}} =~ /[\x{D800}-\x{DBFF}]\z/;
-  #if ($has_trail) {
-  #  my $old_length = CORE::length ${${$_[0]}->[2]->{data}};
-  #  ${${$_[0]}->[2]->{data}} .= $_[1];
-  #  my $boundary = substr ${${$_[0]}->[2]->{data}}, $old_length - 1, 2;
-  #  if ($boundary =~ /\A([\x{D800}-\x{DBFF}])([\x{DC00}-\x{DFFF}])\z/) {
-  #    substr (${${$_[0]}->[2]->{data}}, $old_length - 1, 2)
-  #        = chr (2**16 + ((ord $1) & 0x3FF) * 2**10 + ((ord $2) & 0x3FF));
-  #  }
-  #} else {
-    ${${$_[0]}->[2]->{data}} .= $_[1];
-  #}
+  push @{${$_[0]}->[2]->{data}}, [''.$_[1], -1, 0]; # IndexedStringSegment
   return;
 } # append_data
 
 sub manakai_append_text ($$) {
   ## See also ParentNode::manakai_append_text
-  $_[0]->append_data (ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1]);
+
+  # IndexedStringSegment
+  my $segment = [ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1], -1, 0];
+  $segment->[0] = ''.$segment->[0] if ref $_[1];
+
+  push @{${$_[0]}->[2]->{data}}, $segment;
+
   return $_[0];
 } # manakai_append_text
 
@@ -56,10 +52,11 @@ sub substring_data ($$$) {
   my $count = $_[2] % 2**32;
 
   # Substring data
-  if (${${$_[0]}->[2]->{data}} =~ /[\x{10000}-\x{10FFFF}]/ or
+  my $data = $_[0]->data;
+  if ($data =~ /[\x{10000}-\x{10FFFF}]/ or
       $offset >= 2**31 or $count >= 2**31) {
     # 1.-4.
-    my @data = split //, ${${$_[0]}->[2]->{data}};
+    my @data = split //, $data;
     my @result;
     my $i = 0;
     for (@data) {
@@ -87,13 +84,13 @@ sub substring_data ($$$) {
     return join '', @result;
   } else {
     # 1.-2.
-    if ($offset > CORE::length ${${$_[0]}->[2]->{data}}) {
+    if ($offset > CORE::length $data) {
       _throw Web::DOM::Exception 'IndexSizeError',
           'Offset is greater than the length';
     }
 
     # 3.-4.
-    return substr ${${$_[0]}->[2]->{data}}, $offset, $count;
+    return substr $data, $offset, $count;
   }
 } # substring_data
 
@@ -111,14 +108,22 @@ sub replace_data ($$$$) {
   my $count = $_[2] % 2**32;
   my $s = ''.$_[3];
 
+  # IndexedString
+  if (@{${$_[0]}->[2]->{data}} != 1) {
+    @{${$_[0]}->[2]->{data}} = ([$_[0]->data, -1, 0]);
+  } else {
+    ${$_[0]}->[2]->{data}->[0]->[1] = -1;
+    ${$_[0]}->[2]->{data}->[0]->[2] = 0;
+  }
+
   # Replace data
-  if (${${$_[0]}->[2]->{data}} =~ /[\x{D800}-\x{DFFF}\x{10000}-\x{10FFFF}]/ or
+  if (${$_[0]}->[2]->{data}->[0]->[0] =~ /[\x{D800}-\x{DFFF}\x{10000}-\x{10FFFF}]/ or # IndexedString
       $s =~ /[\x{D800}-\x{DFFF}]/ or
       $offset >= 2**31 or $count >= 2**31) {
     # XXX 4. mutation
 
     # 1.-3., 5.
-    my @data = split //, ${${$_[0]}->[2]->{data}};
+    my @data = split //, ${$_[0]}->[2]->{data}->[0]->[0]; # IndexedString
     my @before;
     my @after;
     my $i = 0;
@@ -147,32 +152,10 @@ sub replace_data ($$$$) {
       _throw Web::DOM::Exception 'IndexSizeError',
           'Offset is greater than the length';
     }
-    #if (@before and $before[-1] =~ /[\x{D800}-\x{DBFF}]\z/ and
-    #    $s =~ /\A([\x{DC00}-\x{DFFF}])/) {
-    #  ${${$_[0]}->[2]->{data}} = join '',
-    #      @before[0..($#before-1)],
-    #      chr (2**16
-    #           + ((ord $before[-1]) & 0x3FF) * 2**10
-    #           + ((ord $1) & 0x3FF)),
-    #      (substr $s, 1),
-    #      @after;
-    #} elsif (@after and $after[0] =~ /\A[\x{DC00}-\x{DFFF}]/ and
-    #         $s =~ /([\x{D800}-\x{DBFF}])\z/) {
-    #  ${${$_[0]}->[2]->{data}} = join '',
-    #      @before,
-    #      (substr $s, 0, -1 + length $s),
-    #      chr (2**16
-    #           + ((ord $1) & 0x3FF) * 2**10
-    #           + ((ord $after[0]) & 0x3FF)),
-    #      @after[1..$#after];
-    #} elsif ($s eq '' and ... $before[-1] $after[0] ...) {
-    #  ...
-    #} else {
-      ${${$_[0]}->[2]->{data}} = join '', @before, $s, @after;
-    #}
+    ${$_[0]}->[2]->{data}->[0]->[0] = join '', @before, $s, @after; # IndexedString
   } else {
     # 1.-2.
-    if ($offset > CORE::length ${${$_[0]}->[2]->{data}}) {
+    if ($offset > CORE::length ${$_[0]}->[2]->{data}->[0]->[0]) { # IndexedString
       _throw Web::DOM::Exception 'IndexSizeError',
           'Offset is greater than the length';
     }
@@ -180,7 +163,7 @@ sub replace_data ($$$$) {
     # XXX 4. mutation
 
     # 3., 5.
-    substr (${${$_[0]}->[2]->{data}}, $offset, $count) = $s;
+    substr (${$_[0]}->[2]->{data}->[0]->[0], $offset, $count) = $s; # IndexedString
   }
 
   # XXX 6.-11. range
@@ -191,7 +174,7 @@ sub replace_data ($$$$) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

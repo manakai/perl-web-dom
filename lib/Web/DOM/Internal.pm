@@ -9,26 +9,6 @@ use Carp;
 
 our @EXPORT;
 
-## "Interned" string
-our $Text = {};
-sub text ($$) {
-  return defined $_[1] ? $Text->{$_[1]} ||= \(''.$_[1]) : undef;
-} # text
-## Note that |$Web::DOM::Internal::Text| is directly accessed from
-## |Web::DOM::Document| for performance reason.
-
-## Namespace URLs
-push @EXPORT, qw(HTML_NS SVG_NS MML_NS XML_NS XMLNS_NS ATOM_NS ATOM_THREAD_NS);
-sub HTML_NS () { q<http://www.w3.org/1999/xhtml> }
-sub SVG_NS () { q<http://www.w3.org/2000/svg> }
-sub MML_NS () { q<http://www.w3.org/1998/Math/MathML> }
-sub XML_NS () { q<http://www.w3.org/XML/1998/namespace> }
-sub XMLNS_NS () { q<http://www.w3.org/2000/xmlns/> }
-sub ATOM_NS () { q<http://www.w3.org/2005/Atom> }
-sub ATOM_THREAD_NS () { q<http://purl.org/syndication/thread/1.0> }
-
-$Text->{(HTML_NS)} = \HTML_NS;
-
 sub import ($;@) {
   my $from_class = shift;
   my ($to_class, $file, $line) = caller;
@@ -40,6 +20,43 @@ sub import ($;@) {
   }
 } # import
 
+## "Interned" string
+##
+## Used to represent namespace URLs and node names.
+##
+## Note that |$Web::DOM::Internal::Text| is directly accessed from
+## |Web::DOM::Document| for performance reason.
+our $Text = {};
+sub text ($$) {
+  return defined $_[1] ? $Text->{$_[1]} ||= \(''.$_[1]) : undef;
+} # text
+
+## Namespace URLs
+push @EXPORT, qw(HTML_NS SVG_NS MML_NS XML_NS XMLNS_NS ATOM_NS ATOM_THREAD_NS);
+sub HTML_NS () { q<http://www.w3.org/1999/xhtml> }
+sub SVG_NS () { q<http://www.w3.org/2000/svg> }
+sub MML_NS () { q<http://www.w3.org/1998/Math/MathML> }
+sub XML_NS () { q<http://www.w3.org/XML/1998/namespace> }
+sub XMLNS_NS () { q<http://www.w3.org/2000/xmlns/> }
+sub ATOM_NS () { q<http://www.w3.org/2005/Atom> }
+sub ATOM_THREAD_NS () { q<http://purl.org/syndication/thread/1.0> }
+$Text->{(HTML_NS)} = \HTML_NS;
+
+## Index-related data structures
+##
+## Following data structures are described in SuikaWiki:manakai index
+## data structure
+## <http://wiki.suikawiki.org/n/manakai%20index%20data%20structures>:
+##
+##   DocumentIndex CharacterIndex IndexedStringSegment IndexedString
+##
+## These are used by |Web::DOM::CharacterData| and |Web::DOM::Attr|,
+## as well as by |Web::DOM::Document|, |Web::DOM::ParentNode|, and
+## |Web::DOM::Node| methods related to them.
+
+## URLs
+##
+## URLs are internally saved as strings.
 push @EXPORT, qw(_resolve_url);
 sub _resolve_url ($$) {
   require Web::URL::Canonicalize;
@@ -53,7 +70,6 @@ sub _resolve_url ($$) {
 ##
 ## This module has no test by itself.  Tests for Node and its
 ## subclasses covers this module.
-
 package Web::DOM::Internal::Objects;
 use Scalar::Util qw(weaken refaddr);
 push our @CARP_NOT, qw(Web::DOM::Exception Web::DOM::StringArray);
@@ -1194,6 +1210,10 @@ sub DESTROY ($) {
   }
 } # DESTROY
 
+## Read-only hash
+##
+## Note that Perl's native read-only hash does not allow access to
+## undefined hash keys (thrown).
 package Web::DOM::Internal::ReadOnlyHash;
 use Carp;
 

@@ -270,18 +270,22 @@ sub text_content ($;$) {
 
 sub manakai_append_text ($$) {
   my $self = $_[0];
-  return $self unless length (ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1]);
+
+  # IndexedStringSegment
+  my $segment = [ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1], -1, 0];
+  $segment->[0] = ''.$segment->[0] if ref $segment->[0];
+
+  return $self unless length $segment->[0];
+
   my $int = $$self->[0];
   my $last_child_id = $$self->[2]->{child_nodes}->[-1];
+
   if (defined $last_child_id and
       $int->{data}->[$last_child_id]->{node_type} == TEXT_NODE) {
-    ${$int->{data}->[$last_child_id]->{data}}
-        .= ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
+    push @{$int->{data}->[$last_child_id]->{data}}, $segment;
     # XXX MutationObserver
   } else {
-    my $text = ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
-    $text = ''.$text if ref $_[1];
-    my $data = {node_type => TEXT_NODE, data => \$text};
+    my $data = {node_type => TEXT_NODE, data => [$segment]};
     my $id = $int->add_data ($data);
 
     ## Pre-insert (simplified)
