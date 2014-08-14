@@ -2,7 +2,7 @@ package Web::DOM::Element;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Internal;
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
@@ -65,17 +65,17 @@ sub manakai_element_type_match ($$$) {
 } # manakai_element_type_match
 
 
-## Attributes
+## Content attributes
 ##
-## An attribute is represented as either:
+## A content attribute is represented as either:
 ##
 ##   - The reference to a string, or
 ##   - An |Attr| object.
 ##
 ## The string reference represents an attribute whose value is the
-## referenced string.  It can only be used to represent a
+## referenced character string.  It can only be used to represent a
 ## null-namespace attribute.
-## 
+##
 ## $$node->[2]->{attrs}->{$ns // ''}->{$ln} = (\value or attribute node ID)
 ## $$node->[2]->{attributes} = [array of (\name or attribute node ID)]
 ##
@@ -88,7 +88,7 @@ my $InflateAttr = sub ($) {
   my $node = $_[0];
   my $data = {node_type => ATTRIBUTE_NODE,
               local_name => Web::DOM::Internal->text ($$_),
-              value => ${$$node->[2]->{attrs}->{''}->{$$_}},
+              data => [[${$$node->[2]->{attrs}->{''}->{$$_}}, -1, 0]], # IndexedString
               owner => $$node->[1]};
   my $attr_id = $$node->[0]->add_data ($data);
   $$node->[2]->{attrs}->{''}->{$$_} = $attr_id;
@@ -174,7 +174,7 @@ sub get_attribute_ns ($$$) {
     if (ref $attr_id) {
       return $$attr_id;
     } else {
-      return $$node->[0]->{data}->[$attr_id]->{value};
+      return join '', map { $_->[0] } @{$$node->[0]->{data}->[$attr_id]->{data}}; # IndexedString
     }
   } else {
     return undef;
@@ -284,7 +284,7 @@ sub set_attribute ($$$) {
           # XXX mutation
 
           # Change 2.
-          $$attr_node->[2]->{value} = $value;
+          $$attr_node->[2]->{data} = [[$value, -1, 0]]; # IndexedString
 
           # Change 3.
           $node->_attribute_is
@@ -418,7 +418,7 @@ sub set_attribute_ns ($$$$) {
         if (ref $attr_id) {
           $$attr_id = $value;
         } else {
-          $$node->[0]->{data}->[$attr_id]->{value} = $value;
+          $$node->[0]->{data}->[$attr_id]->{data} = [[$value, -1, 0]]; # IndexedString
         }
 
         # Change 3.
@@ -437,7 +437,7 @@ sub set_attribute_ns ($$$$) {
                       namespace_uri => Web::DOM::Internal->text ($nsurl),
                       prefix => Web::DOM::Internal->text ($prefix),
                       local_name => Web::DOM::Internal->text ($ln),
-                      value => $value,
+                      data => [[$value, -1, 0]], # IndexedString
                       owner => $$node->[1]};
           my $attr_id = $$node->[0]->add_data ($data);
           push @{$$node->[2]->{attributes} ||= []}, $attr_id;

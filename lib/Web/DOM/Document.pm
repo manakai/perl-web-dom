@@ -558,7 +558,7 @@ sub get_elements_by_name ($$) {
       if (ref $value) {
         next unless $$value eq $name;
       } else {
-        next unless $data->[$value]->{value} eq $name;
+        next unless $name eq join '', map { $_->[0] } @{$data->[$value]->{data}}; # IndexedString
       }
       push @id, $id;
     }

@@ -1,7 +1,7 @@
 package Web::DOM::Attr;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Node;
 push our @ISA, qw(Web::DOM::Node);
 
@@ -26,14 +26,17 @@ sub is_id ($) {
 sub value ($;$) {
   if (@_ > 1) {
     # XXX mutation?
-    ${$_[0]}->[2]->{value} = defined $_[1] ? ''.$_[1] : '';
+
+    # IndexedString
+    ${$_[0]}->[2]->{data} = [[defined $_[1] ? ''.$_[1] : '', -1, 0]];
+
     if (my $oe = $_[0]->owner_element) {
       $oe->_attribute_is
           (${$_[0]}->[2]->{namespace_uri}, ${$_[0]}->[2]->{local_name},
            set => 1, changed => 1);
     }
   }
-  return ${$_[0]}->[2]->{value};
+  return join '', map { $_->[0] } @{${$_[0]}->[2]->{data}}; # IndexedString
 } # value
 
 *node_value = \&value;
@@ -41,7 +44,13 @@ sub value ($;$) {
 
 sub manakai_append_text ($$) {
   # XXX mutation?
-  ${$_[0]}->[2]->{value} .= ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
+
+  # IndexedStringSegment
+  my $segment = [ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1], -1, 0];
+  $segment->[0] = ''.$segment->[0] if ref $_[1];
+
+  push @{${$_[0]}->[2]->{data}}, $segment;
+
   if (my $oe = $_[0]->owner_element) {
     $oe->_attribute_is
         (${$_[0]}->[2]->{namespace_uri}, ${$_[0]}->[2]->{local_name},
@@ -91,7 +100,7 @@ sub manakai_attribute_type ($;$) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

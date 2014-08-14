@@ -51,8 +51,9 @@ $Text->{(HTML_NS)} = \HTML_NS;
 ##   DocumentIndex CharacterIndex IndexedStringSegment IndexedString
 ##
 ## These are used by |Web::DOM::CharacterData| and |Web::DOM::Attr|,
-## as well as by |Web::DOM::Document|, |Web::DOM::ParentNode|, and
-## |Web::DOM::Node| methods related to them.
+## as well as by |Web::DOM::Element|, |Web::DOM::Document|,
+## |Web::DOM::ParentNode|, and |Web::DOM::Node| methods related to
+## them.
 
 ## URLs
 ##
@@ -177,7 +178,7 @@ sub new ($) {
 ##   compat_mode                    string    Quirksness
 ##   content_df                     scalar    Template content
 ##   content_type                   string    MIME type
-##   data                           \string   Data
+##   data                           IndexedString Data
 ##   declared_type                  integer   Declared type
 ##   default_type                   integer   Default type
 ##   element_types                  {node_id} Element types
@@ -214,7 +215,6 @@ sub new ($) {
 ##   target                         \string   Target
 ##   url                            string    Document URL
 ##   user_data                      {object}  User data
-##   value                          string    Value
 ##   xml_encoding                   string    XML encoding=""
 ##   xml_standalone                 boolean   XML standalone=""
 ##   xml_version                    string    XML version
@@ -228,6 +228,9 @@ sub new ($) {
 ##   owner_sheet                    node_id   Owner style sheet
 ##   parent_style_sheet             node_id   Parent style sheet
 ##   sheet                          node_id   Style sheet (for |@import|)
+
+## Data structures for element's content attributs are described in
+## |Element.pm|.
 
 ## Create a node with no parent or child, in this document.
 sub add_data ($$) {

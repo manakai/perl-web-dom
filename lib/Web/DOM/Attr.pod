@@ -87,7 +87,7 @@ ENUMERATION_ATTR UNKNOWN_ATTR
 
 =item DOM
 
-DOM Living Standard <http://dom.spec.whatwg.org/#interface-attr>.
+DOM Standard <http://dom.spec.whatwg.org/#interface-attr>.
 
 =item DOMATTREXODUS, DOMNODEEXODUS
 
@@ -96,18 +96,18 @@ DOM Standard <view-source:http://dom.spec.whatwg.org/>.
 =item DOMDTDEF
 
 DOM Document Type Definitions
-<http://suika.fam.cx/www/markup/xml/domdtdef/domdtdef>.
+<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
+<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
 
 =back
 
 =head1 SEE ALSO
 
-L<Web::DOM::Node>, L<Web::DOM::NamedNodeMap>.
+L<Web::DOM::Node>, L<Web::DOM::Element>, L<Web::DOM::NamedNodeMap>.
 
 =head1 AUTHOR
 
