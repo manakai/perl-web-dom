@@ -211,6 +211,8 @@ sub new ($) {
 ##   return_value                   string    Return value
 ##   serialize_as_cdata             boolean   CDATA section?
 ##   sheet                          node_id   Style sheet
+##   source_di                      DocumentIndex Source document index
+##   source_index                   CharacterIndex Source character index
 ##   system_id                      \string   System ID
 ##   target                         \string   Target
 ##   url                            string    Document URL
