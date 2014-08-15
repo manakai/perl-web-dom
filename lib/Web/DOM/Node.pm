@@ -1564,8 +1564,8 @@ sub is_supported ($$;$) {
 
 sub manakai_get_source_location ($) {
   my $data = ${$_[0]}->[2];
-  if (defined $data->{di}) {
-    return ['', $data->{di}, $data->{ci} || 0]; # IndexedStringSegment
+  if (defined $data->{source_di}) {
+    return ['', $data->{source_di}, $data->{source_index} || 0]; # IndexedStringSegment
   } elsif (defined $data->{data} and @{$data->{data}}) { # IndexedString
     my $first_segment = $data->{data}->[0];
     return ['', $first_segment->[1], $first_segment->[2]]; # IndexedStringSegment
@@ -1577,12 +1577,12 @@ sub manakai_get_source_location ($) {
 sub manakai_set_source_location ($$) {
   my $data = ${$_[0]}->[2];
   if (not defined $_[1]) {
-    delete $data->{di};
-    delete $data->{ci};
+    delete $data->{source_di};
+    delete $data->{source_index};
   } elsif (ref $_[1] eq 'ARRAY') { # IndexedStringSegment
     my $dummy = ''.$_[1]->[0]; # DOMPERL
-    $data->{di} = 0+$_[1]->[1];
-    $data->{ci} = 0+$_[1]->[2];
+    $data->{source_di} = 0+$_[1]->[1];
+    $data->{source_index} = 0+$_[1]->[2];
   } else {
     _throw Web::DOM::TypeError 'The argument is not an IndexedStringSegment';
   }
