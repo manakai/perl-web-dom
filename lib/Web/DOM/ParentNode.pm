@@ -360,6 +360,13 @@ sub manakai_append_indexed_string ($$) {
     } @{$_[1]}; # IndexedString
     # XXX MutationObserver
   } else {
+    LENGTH: {
+      for (@{$_[1]}) {
+        last LENGTH if length $_->[0];
+      }
+      return;
+    }
+
     my $data = {node_type => TEXT_NODE, data => [map {
       [''.$_->[0], 0+$_->[1], 0+$_->[2]]; # string copy
     } @{$_[1]}]}; # IndexedString

@@ -432,6 +432,33 @@ test {
   }
 }
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->manakai_append_indexed_string ([['', 3, 12]]);
+  is $el->first_child, undef;
+  done $c;
+} n => 1, name => 'manakai_append_indexed_string empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->manakai_append_indexed_string ([['', 3, 12], ['', 4, 12]]);
+  is $el->first_child, undef;
+  done $c;
+} n => 1, name => 'manakai_append_indexed_string empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->manakai_append_indexed_string ([['', 3, 12], ['aa', 4, 5], ['', 4, 12]]);
+  ok $el->first_child;
+  done $c;
+} n => 1, name => 'manakai_append_indexed_string not empty';
+
 run_tests;
 
 =head1 LICENSE
