@@ -4,7 +4,7 @@ use warnings;
 no warnings 'utf8';
 use Web::DOM::Error;
 push our @ISA, qw(Web::DOM::Error);
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Internal;
 
 our @EXPORT;
@@ -56,6 +56,7 @@ my $NameToCode = {
   "NoModificationAllowedError" => NO_MODIFICATION_ALLOWED_ERR,
   "NotFoundError" => NOT_FOUND_ERR,
   "NotSupportedError" => NOT_SUPPORTED_ERR,
+  "InUseAttributeError" => INUSE_ATTRIBUTE_ERR,
   "InvalidStateError" => INVALID_STATE_ERR,
   "SyntaxError" => SYNTAX_ERR,
   "InvalidModificationError" => INVALID_MODIFICATION_ERR,
@@ -95,7 +96,7 @@ sub code ($) {
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

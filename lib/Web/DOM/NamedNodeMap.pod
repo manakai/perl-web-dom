@@ -1,11 +1,12 @@
 =head1 NAME
 
-Web::DOM::NamedNodeMap - The DOM |NamedNodeMap| object
+Web::DOM::NamedNodeMap - DOM |NamedNodeMap| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::NamedNodeMap> class implements the DOM C<NamedNodeMap>
-interface.
+interface, i.e. it represents the list of the content attributes of an
+element.
 
 =head1 METHODS
 
@@ -18,12 +19,12 @@ Following methods are available:
 =item $node = $col->get_named_item ($name)
 
 Return the first node in the list whose name is equal to the argument.
-[DOMATTREXODUS] [DOM3CORE] [DOMPERL]
+[DOM] [DOMPERL]
 
 =item $node = $col->get_named_item_ns ($nsurl, $local_name)
 
 Return the node in the list whose namespace URL and local name are
-equal to the arguments.  [DOMATTREXODUS] [DOM3CORE]
+equal to the arguments.  [DOM]
 
 This method is only applicable to the C<attributes> collection.
 [DOMDTDEF]
@@ -32,8 +33,8 @@ This method is only applicable to the C<attributes> collection.
 
 =item $node = $col->item ($index)
 
-Return the node in the collection, specified by its index.
-[DOMATTREXODUS] [DOM3CORE] [DOMPERL]
+Return the node in the collection, specified by its index.  [DOM]
+[DOMPERL]
 
 Use of the C<item> method is discouraged as it doesn't support Perlish
 ways to access items, such as negative indexing, while C<< $col->[-1]
@@ -45,19 +46,17 @@ ways to access items, such as negative indexing, while C<< $col->[-1]
 
 =item $number = $col->length
 
-Return the number of the nodes in the collection.  [DOMATTREXODUS]
-[DOM3CORE] [DOMPERL]
+Return the number of the nodes in the collection.  [DOM] [DOMPERL]
 
 =item $node = $col->remove_named_item ($name)
 
 Remove the first node in the list whose name is equal to the argument.
-The removed node is returned.  [DOMATTREXODUS] [DOM3CORE]
+The removed node is returned.  [DOM]
 
 =item $node = $col->remove_named_item_ns ($nsurl, $local_name)
 
 Remove the node in the list whose namespace URL and local name are
-equal to the arguments.  The removed node is returned.
-[DOMATTREXODUS] [DOM3CORE]
+equal to the arguments.  The removed node is returned.  [DOM]
 
 This method is only applicable to the C<attributes> collection.
 [DOMDTDEF]
@@ -68,8 +67,7 @@ This method is only applicable to the C<attributes> collection.
 
 Add the specified node to the list.  If there is already a node with
 same name in the list, the node is removed from the list and is
-returned.  Otherwise C<undef> is returned.  [DOMATTREXODUS] [DOM3CORE]
-[MANAKAI]
+returned.  Otherwise C<undef> is returned.  [DOM]
 
 The C<set_named_item_ns> method is only applicable to the
 C<attributes> collection.  [DOMDTDEF]
@@ -95,9 +93,9 @@ e.g. C<< exists $col->{class} >>.  [DOMPERL]
 
 =over 4
 
-=item DOMATTREXODUS
+=item DOM
 
-DOM Standard <view-source:http://dom.spec.whatwg.org/>.
+DOM Standard <http://dom.spec.whatwg.org/>.
 
 =item DOM3CORE
 
@@ -131,7 +129,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

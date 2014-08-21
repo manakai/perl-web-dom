@@ -38,6 +38,24 @@ test {
   my $c = shift;
 
   dies_here_ok { _throw Web::DOM::Exception
+             'InUseAttributeError', 'Something timeouted' };
+  my $e = $@;
+  isa_ok $e, 'Web::DOM::Exception';
+  is $e->name, 'InUseAttributeError';
+  is $e->code, 10;
+  is $e->message, 'Something timeouted';
+  is $e->file_name, __FILE__;
+  is $e->line_number, __LINE__ - 8;
+  is $e . '', "Something timeouted at " . __FILE__ . ' line ' .
+      (__LINE__ - 10) . ".\n";
+
+  done $c;
+} n => 8, name => 'throw and basic attributes';
+
+test {
+  my $c = shift;
+
+  dies_here_ok { _throw Web::DOM::Exception
              'EncodingError', 'Some encoding error' };
   my $e = $@;
   is $e->name, 'EncodingError';

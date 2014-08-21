@@ -2,6 +2,7 @@ package Web::DOM::Element;
 use strict;
 use warnings;
 no warnings 'utf8';
+use warnings FATAL => 'recursion';
 our $VERSION = '2.0';
 use Web::DOM::Internal;
 use Web::DOM::Node;
@@ -506,10 +507,9 @@ sub set_attribute_node ($$) {
     _throw Web::DOM::TypeError 'The argument is not an Attr';
   }
 
-  # 1.
   my ($node, $attr) = @_;
 
-  # 2.
+  # 1.
   if (defined $$attr->[2]->{owner} and
       not ($$attr->[0] eq $$node->[0] and
            $$attr->[2]->{owner} == $$node->[1])) {
@@ -517,66 +517,76 @@ sub set_attribute_node ($$) {
         'The specified attribute has already attached to another node';
   }
 
-  # XXX MutationObserver
+  # Not in spec (both Gecko and Blink are really broken...)
+  my $old_attr = $node->get_attribute_node_ns
+      ($attr->namespace_uri, $attr->local_name);
 
-  # 3. Adopt (simplified)
-  $$node->[0]->adopt ($attr);
-  # XXX Adopting steps??
+  # 2.-4.
+  $old_attr ||= $node->get_attribute_node ($attr->name);
 
-  $$node->[0]->{revision}++;
+  # 5.
+  return $attr if defined $old_attr and $attr eq $old_attr;
 
-  # 4.
-  my $nsurl = ${$$attr->[2]->{namespace_uri} || \''};
-  my $ln = ${$$attr->[2]->{local_name}};
-  my $old_attr_id = $$node->[2]->{attrs}->{$nsurl}->{$ln}; # AttrValueRef
-  my $old_attr_id_ref = (defined $old_attr_id and ref $old_attr_id);
-  if ($old_attr_id_ref and defined wantarray) {
-    $old_attr_id = $InflateAttr->($node, \$ln);
-  }
-  if (defined $old_attr_id and not ref $old_attr_id) {
-    delete $$node->[0]->{data}->[$old_attr_id]->{owner};
-    $$node->[0]->disconnect ($old_attr_id);
-  }
-
-  if (defined $old_attr_id) {
-    # 6.
-    if ($old_attr_id_ref) {
-      @{$$node->[2]->{attributes}} = map {
-        (ref $_ && $$_ eq $ln) ? $$attr->[1] : $_; # AttrNameRef
-      } @{$$node->[2]->{attributes}};
-    } else {
-      @{$$node->[2]->{attributes}} = map {
-        (not ref $_ && $_ == $old_attr_id) ? $$attr->[1] : $_; # AttrNameRef
-      } @{$$node->[2]->{attributes}};
-    }
-  } else {
-    # 5.
-    push @{$$node->[2]->{attributes} ||= []}, $$attr->[1]; # AttrNameRef
-  }
-  $$node->[2]->{attrs}->{$nsurl}->{$ln} = $$attr->[1]; # AttrValueRef
+  # 6.
+  $node->remove_attribute_node ($old_attr) if defined $old_attr;
 
   # 7.
+  $$node->[0]->adopt ($attr);
+  my $nsurl = ${$$attr->[2]->{namespace_uri} || \''};
+  my $ln = ${$$attr->[2]->{local_name}};
+  push @{$$node->[2]->{attributes} ||= []}, $$attr->[1]; # AttrNameRef
+  $$node->[2]->{attrs}->{$nsurl}->{$ln} = $$attr->[1]; # AttrValueRef
   $$attr->[2]->{owner} = $$node->[1];
   $$node->[0]->connect ($$attr->[1] => $$node->[1]);
+  $node->_attribute_is
+      ($$attr->[2]->{namespace_uri}, $$attr->[2]->{local_name},
+       set => 1, added => 1);
 
-  if (defined $old_attr_id) {
-    # 9.
-    $node->_attribute_is
-        ($$attr->[2]->{namespace_uri}, $$attr->[2]->{local_name},
-         set => 1, changed => 1);
-  } else {
-    # 8.
-    $node->_attribute_is
-        ($$attr->[2]->{namespace_uri}, $$attr->[2]->{local_name},
-         set => 1, added => 1);
-  }
-  
-  return $$node->[0]->node ($old_attr_id)
-      if defined $old_attr_id and not ref $old_attr_id;
-  return undef;
+  # 8.
+  return $old_attr; # or undef
 } # set_attribute_node
 
-*set_attribute_node_ns = \&set_attribute_node;
+sub set_attribute_node_ns ($$) {
+  # WebIDL
+  unless (UNIVERSAL::isa ($_[1], 'Web::DOM::Attr')) {
+    _throw Web::DOM::TypeError 'The argument is not an Attr';
+  }
+
+  my ($node, $attr) = @_;
+
+  # 1.
+  if (defined $$attr->[2]->{owner} and
+      not ($$attr->[0] eq $$node->[0] and
+           $$attr->[2]->{owner} == $$node->[1])) {
+    _throw Web::DOM::Exception 'InUseAttributeError',
+        'The specified attribute has already attached to another node';
+  }
+
+  # 2.-4.
+  my $old_attr = $node->get_attribute_node_ns
+      ($attr->namespace_uri, $attr->local_name);
+
+  # 5.
+  return $attr if defined $old_attr and $attr eq $old_attr;
+
+  # 6.
+  $node->remove_attribute_node ($old_attr) if defined $old_attr;
+
+  # 7.
+  $$node->[0]->adopt ($attr);
+  my $nsurl = ${$$attr->[2]->{namespace_uri} || \''};
+  my $ln = ${$$attr->[2]->{local_name}};
+  push @{$$node->[2]->{attributes} ||= []}, $$attr->[1]; # AttrNameRef
+  $$node->[2]->{attrs}->{$nsurl}->{$ln} = $$attr->[1]; # AttrValueRef
+  $$attr->[2]->{owner} = $$node->[1];
+  $$node->[0]->connect ($$attr->[1] => $$node->[1]);
+  $node->_attribute_is
+      ($$attr->[2]->{namespace_uri}, $$attr->[2]->{local_name},
+       set => 1, added => 1);
+
+  # 8.
+  return $old_attr; # or undef
+} # set_attribute_node_ns
 
 sub remove_attribute ($$) {
   my $node = $_[0];

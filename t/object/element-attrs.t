@@ -1916,6 +1916,38 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $el = $doc->create_element ('a');
+  my $attr = $doc->create_attribute ('hRef');
+  $el->set_attribute (href => 12);
+  my $old_attr = $el->get_attribute_node ('href');
+  my $old = $el->set_attribute_node ($attr);
+  is $old, $old_attr;
+  is $old->owner_element, undef;
+  is $old->local_name, 'href';
+  is $attr->owner_element, $el;
+  done $c;
+} n => 4, name => 'set_attribute_node HTML matching';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $el = $doc->create_element ('a');
+  my $attr = $doc->create_attribute ('hRef');
+  $el->set_attribute (href => 12);
+  my $old_attr = $el->get_attribute_node ('href');
+  my $old = $el->set_attribute_node_ns ($attr);
+  is $old, undef;
+  is $old_attr->owner_element, $el;
+  is $old_attr->local_name, 'href';
+  is $attr->owner_element, $el;
+  done $c;
+} n => 4, name => 'set_attribute_node_ns HTML matching';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
 
   my $el = $doc->create_element ('a');
   $el->set_attribute (hoge => 4);

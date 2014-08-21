@@ -54,7 +54,7 @@ belong to any namespace, C<undef> is returned.  [DOM]
 =item $el = $attr->owner_element
 
 Return the element to which the attribute is set.  If there is no such
-an element, C<undef> is returned.  [DOMATTREXODUS]
+an element, C<undef> is returned.  [DOM]
 
 =item $name = $attr->name
 
@@ -79,7 +79,11 @@ Return true for backward compatibility.  [DOM]
 
 =item $value = $attr->value
 
+=item $value = $attr->text_content
+
 =item $attr->value ($value)
+
+=item $attr->text_content ($value)
 
 Return or set the attribute value.  [DOM]
 
@@ -105,7 +109,7 @@ ENUMERATION_ATTR UNKNOWN_ATTR
 
 DOM Standard <http://dom.spec.whatwg.org/#interface-attr>.
 
-=item DOMATTREXODUS, DOMNODEEXODUS
+=item DOMNODEEXODUS
 
 DOM Standard <view-source:http://dom.spec.whatwg.org/>.
 
