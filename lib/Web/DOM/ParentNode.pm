@@ -249,7 +249,7 @@ sub text_content ($;$) {
 
     # 6.
     $int->{revision}++;
-    # XXX node is removed
+    # XXX removing steps
 
     return unless defined wantarray;
   } # setter
@@ -330,8 +330,8 @@ sub manakai_append_text ($$) {
         $data->{i_in_parent} = $#{$$self->[2]->{child_nodes}};
         $$self->[0]->connect ($id => $$self->[1]);
 
-        ## 8.
-        # node is inserted
+        ## 8. insertion steps
+        # XXX
       } # insert
 
       ## 6.
@@ -398,8 +398,8 @@ sub manakai_append_indexed_string ($$) {
         $data->{i_in_parent} = $#{$$self->[2]->{child_nodes}};
         $$self->[0]->connect ($id => $$self->[1]);
 
-        ## 8.
-        # node is inserted
+        ## 8. insertion steps
+        # XXX
       } # insert
 
       ## 6.

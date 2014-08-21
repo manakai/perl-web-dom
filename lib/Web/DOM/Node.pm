@@ -646,7 +646,7 @@ sub _pre_insert ($$;$$) {
       }
       
       # Insert 8.
-      # XXX node is inserted
+      # XXX insertion steps
     } else {
       # Insert 6.
       # XXX mutation
@@ -662,8 +662,8 @@ sub _pre_insert ($$;$$) {
       }
       $$parent->[0]->connect ($$node->[1] => $$parent->[1]);
 
-      # Insert 8.
-      # XXX node is inserted
+      # Insert 8. insertion steps
+      # XXX
     }
   } # insert
 
@@ -675,7 +675,7 @@ sub _pre_insert ($$;$$) {
     # XXX mutation
 
     # Replace 14.
-    # XXX node is removed / node is inserted
+    # XXX removing steps / insertion steps
   }
 
   # Pre-insert 11. / Replace 15.
