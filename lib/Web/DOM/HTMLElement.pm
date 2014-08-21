@@ -330,7 +330,7 @@ sub sheet ($) {
 } # sheet
 
 # XXX <style> -> StyleSheet reflection
-# XXX sheet should be cleared by "node is removed"
+# XXX sheet should be cleared by removing steps
   # XXX test: appendChild, removeChild, adoptNode
 
 ## Test: cssstylesheet.t
@@ -609,7 +609,7 @@ package Web::DOM::HTMLEmbedElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
-# XXX plugin-specific interface
+# XXX plugin-specific interface getSVGDocument
 
 _define_reflect_url src => 'src';
 _define_reflect_string type => 'type';

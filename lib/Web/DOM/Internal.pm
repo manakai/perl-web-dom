@@ -536,6 +536,7 @@ sub set_template_content ($$$) {
 sub remove_node ($$$$) {
   my ($int, $parent_id, $child_id, $suppress_observers) = @_;
 
+  ## 9. removing steps
   ## Before a node is removed from the iterator collection
   ## <http://dom.spec.whatwg.org/#iterator-collection>
   {
@@ -595,8 +596,8 @@ sub remove_node ($$$$) {
   $int->{revision}++;
   $int->disconnect ($child_id);
 
-  ## 9.
-  # XXX node is removed
+  ## 9. removing steps
+  # XXX
 
   ## Create a Node object such that the node data is GCed if it is no
   ## longer referenced.  Return the object such that if the callee
@@ -613,6 +614,7 @@ sub remove_children ($$$$) {
   my @removed = @{$parent_data->{child_nodes} or []};
   return unless @removed;
 
+  ## 9. removing steps
   ## Before a node is removed from the iterator collection
   ## <http://dom.spec.whatwg.org/#iterator-collection>
   {
@@ -669,8 +671,8 @@ sub remove_children ($$$$) {
   @{$parent_data->{child_nodes}} = ();
   $int->{revision}++;
 
-  ## 9.
-  # XXX node is removed
+  ## 9. removing steps
+  # XXX
 
   ## Create a Node object such that the node data is GCed if it is no
   ## longer referenced.  Return the object such that if the callee
