@@ -18,7 +18,7 @@ L<Web::DOM::ChildNode>, following methods are available:
 =item $map = $el->attributes
 
 Return the L<Web::DOM::NamedNodeMap> object containing the content
-attributes for the element.  [DOM] [DOMATTREXODUS]
+attributes for the element.  [DOM]
 
 =item $tokens = $el->class_list
 
@@ -51,7 +51,7 @@ C<undef> is returned.  [DOM]
 
 Return the L<Web::DOM::Attr> object for the specified attribute.  If
 there is no attribute with the specified name, C<undef> is returned.
-[DOM3CORE] [MANAKAI]
+[DOM]
 
 =item $indexed = $el->manakai_get_attribute_indexed_string_ns ($nsurl, $local_name)
 
@@ -65,7 +65,7 @@ C<undef> is returned.  [MANAKAIINDEX]
 
 Return the L<Web::DOM::Attr> object for the attribute with the
 specified namespace URL and local name.  If there is no attribute with
-the specified name, C<undef> is returned.  [DOM3CORE]
+the specified name, C<undef> is returned.  [DOM]
 
 =item $bool = $el->has_attribute ($name)
 
@@ -75,6 +75,10 @@ Return whether there is the specified attribute or not.  [DOM]
 
 Return whether there is the attribute with the specified namespace URL
 and local name or not.  [DOM]
+
+=item $bool = $el->has_attributes
+
+Return whether the element has any content attribute or not.  [DOM]
 
 =item $string = $el->id
 
@@ -164,7 +168,7 @@ If no attribute is found, the method does nothing.  [DOM]
 =item $attr = $el->remove_attribute_node ($attr)
 
 Remove the specified attribute from the element.  The removed
-attribute is returned.  [MANAKAI]
+attribute is returned.  [DOM]
 
 =item $el->set_attribute ($name => $value)
 
@@ -205,7 +209,7 @@ second item is the local name.  [DOMPERL]
 Append (or replace, if exists) the attribute node to the list of
 attributes for the element.  If there is already the attribute with
 same namespace URL / local name pair, the attribute is removed from
-the list and is returned by the method.  [MANAKAI]
+the list and is returned by the method.  [DOM]
 
 =item $name = $el->tag_name
 
@@ -248,11 +252,6 @@ DOM Parsing and Serialization <http://domparsing.spec.whatwg.org/>.
 
 HTML Standard
 <http://www.whatwg.org/specs/web-apps/current-work/#htmlelement>.
-
-=item DOM3CORE
-
-Document Object Model (DOM) Level 3 Core Specification
-<http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/DOM3-Core.html#core-ID-745549614>.
 
 =item DOMDTDEF
 

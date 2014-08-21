@@ -200,7 +200,7 @@ test {
   my $el = $doc->create_element ('aa');
   $el->set_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://def/');
-  my $attr = $doc->create_attribute ('xml:base');
+  my $attr = $doc->create_attribute ('xml_base');
   $el->set_attribute_node ($attr);
   is $attr->base_uri, 'http://def/';
   done $c;

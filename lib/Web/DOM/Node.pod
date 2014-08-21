@@ -109,11 +109,6 @@ any, or C<undef>.  [DOM3CORE]
 
 See L</USER DATA>.
 
-=item $bool = $node->has_attributes
-
-Return whether the node has any content attribute or not.
-[DOMATTREXODUS]
-
 =item $bool = $node->has_child_nodes
 
 Return whether the node has children or not.  [DOM]
@@ -255,9 +250,9 @@ Otherwise, the method returns C<undef> and the setter has no effect.
 
 =back
 
-Following methods are also available: C<attributes>, C<prefix>,
-C<namespace_uri>, C<local_name>, and C<manakai_local_name>.
-[DOMATTREXODUS] [DOMNODEEXODUS] [MANAKAI]
+Following methods are also available: C<attributes>,
+C<has_attributes>, C<prefix>, C<namespace_uri>, C<local_name>, and
+C<manakai_local_name>.  [DOMNODEEXODUS] [MANAKAI]
 
 Any C<Node> object is an instance of one of its subclasses.  For
 example, a C<Node> object whose C<node_type> is C<ELEMENT_NODE> is an

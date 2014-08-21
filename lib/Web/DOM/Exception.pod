@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::Exception - The DOM |DOMException| object
+Web::DOM::Exception - DOM |DOMException| object
 
 =head1 DESCRIPTION
 
@@ -9,8 +9,8 @@ interface.
 
 =head1 METHODS
 
-The C<Web::DOM::Exception> class inherits from C<Web::DOM::Error>.  In
-addition, it defines following method:
+In addition to the methods of the class C<Web::DOM::Error>, the
+following method is available:
 
 =over 4
 
@@ -24,8 +24,8 @@ C<name> method should be used instead.  [DOM]
 =head1 CONSTANTS
 
 This class exports several constants for error codes, but they are now
-considered useless in favor of C<name> method taking string error
-names.
+deprecated in favor of the C<name> method returning string error names
+(see L<Web::DOM::Error>).
 
 =head1 SPECIFICATION
 
@@ -33,10 +33,13 @@ names.
 
 =item DOM
 
-DOM Living Standard - Exception C<DOMException>
-<http://dom.spec.whatwg.org/#exception-domexception>.
+DOM Standard <http://dom.spec.whatwg.org/>.
 
 =back
+
+=head1 SEE ALSO
+
+L<Web::DOM::Error>.
 
 =head1 AUTHOR
 
@@ -44,7 +47,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

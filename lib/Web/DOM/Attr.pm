@@ -29,7 +29,7 @@ sub value ($;$) {
     # XXX mutation?
 
     # IndexedString
-    ${$_[0]}->[2]->{data} = [[defined $_[1] ? ''.$_[1] : '', -1, 0]];
+    ${$_[0]}->[2]->{data} = [[''.$_[1], -1, 0]];
 
     if (my $oe = $_[0]->owner_element) {
       $oe->_attribute_is

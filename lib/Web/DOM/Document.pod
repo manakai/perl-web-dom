@@ -1,11 +1,11 @@
 =head1 NAME
 
-Web::DOM::Document - The DOM |Document| object
+Web::DOM::Document - DOM |Document| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::Document> class implements the DOM C<Document>
-interface, which represents the document (either HTML or XML).
+interface, which represents an HTML or XML document.
 
 =head1 METHODS
 
@@ -52,14 +52,15 @@ element or the C<frameset> element).  [HTML]
 
 =item $doc->input_encoding ($string)
 
-Return or set the encoding of the document.  [DOM] [MANAKAI]
+Return or set the canonical encoding label of the document.  [DOM]
+[MANAKAI]
 
 =item $string = $doc->manakai_charset
 
 =item $doc->manakai_charset ($string)
 
 Return or set the C<charset> parameter value of the C<Content-Type>
-metadata.  [MANAKAI]
+metadata, if any.  [MANAKAI]
 
 =item $string = $doc->compat_mode
 
@@ -80,14 +81,14 @@ Return the MIME type of the document.  [DOM]
 =item $attr = $doc->create_attribute ($local_name)
 
 Create a new attribute (L<Web::DOM::Attr>) with the specified name and
-empty value.  [MANAKAI]
+empty value.  [DOM]
 
 =item $attr = $doc->create_attribute_ns ($nsurl, $qname)
 
 =item $attr = $doc->create_attribute_ns ($nsurl, [$prefix, $local_name])
 
 Create a new attribute (L<Web::DOM::Attr>) with the specified
-namespace URL and qualified name.  [MANAKAI]
+namespace URL and qualified name.  [DOM]
 
 The qualified name can be represented as an array reference, where the
 first item is the prefix (or C<undef> for the null namespace) and the
@@ -318,13 +319,14 @@ See also L<Web::DOM/DEPENDENCY>.
 
 =item $col = $doc->links
 
-Return the L<Web::DOM::HTMLCollection> object containing the C<a> or
-C<area> elements with the C<href> attribute in the document.  [HTML]
+Return the L<Web::DOM::HTMLCollection> object containing the HTML C<a>
+or C<area> elements with the C<href> attribute in the document.
+[HTML]
 
 =item $col = $doc->scripts
 
-Return the L<Web::DOM::HTMLCollection> object containing the C<script>
-elements in the document.  [HTML]
+Return the L<Web::DOM::HTMLCollection> object containing the HTML
+C<script> elements in the document.  [HTML]
 
 =item $bool = $doc->strict_error_checking
 
@@ -385,6 +387,10 @@ C<anchors>, C<applets>, and C<clear>.  [HTML]
 =item DOM
 
 DOM Standard <http://dom.spec.whatwg.org/#interface-document>.
+
+=item DOMATTREXODUS
+
+DOM Standard <view-source:http://dom.spec.whatwg.org/>.
 
 =item DOM3CORE
 
