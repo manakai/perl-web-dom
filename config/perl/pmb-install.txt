@@ -44,7 +44,7 @@ Time::Piece~1.27
 Test::NoWarnings~1.04
 List::Util~1.39
 DateTime::Locale~0.45
-Module::Implementation~0.07
+Module::Implementation~0.09
 Try::Tiny~0.22
 parent~0.228
 Term::ANSIColor~4.03
