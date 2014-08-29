@@ -13,7 +13,7 @@ Test::Differences~0.62
 Module::Build::Tiny~0.037
 Sub::Exporter::Progressive~0.001011
 ExtUtils::Config~0.008
-Path::Class~0.33
+Path::Class~0.34
 Variable::Magic~0.53
 Package::Stash::XS~0.28
 Test::Fatal~0.013
