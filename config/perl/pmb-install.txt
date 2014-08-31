@@ -39,7 +39,7 @@ B::Hooks::EndOfScope~0.13
 Class::Singleton~1.4
 Params::Validate~1.13
 Sub::Install~0.928
-DateTime~1.10
+DateTime~1.12
 Time::Piece~1.27
 Test::NoWarnings~1.04
 List::Util~1.40
