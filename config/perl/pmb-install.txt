@@ -56,7 +56,7 @@ Sub::Name~0.09
 Test::More~1.001006
 Text::Diff~1.41
 CPAN::Meta::Requirements~2.126
-Unicode::Stringprep~1.104
+Unicode::Stringprep~1.105
 Test::Requires~0.08
 Module::Metadata~1.000024
 File::Spec~3.47
