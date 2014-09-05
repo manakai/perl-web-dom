@@ -42,7 +42,7 @@ Sub::Install~0.928
 DateTime~1.12
 Time::Piece~1.29
 Test::NoWarnings~1.04
-List::Util~1.40
+List::Util~1.41
 DateTime::Locale~0.45
 Module::Implementation~0.09
 Try::Tiny~0.22
@@ -55,7 +55,7 @@ Dist::CheckConflicts~0.11
 Sub::Name~0.12
 Test::More~1.001006
 Text::Diff~1.41
-CPAN::Meta::Requirements~2.126
+CPAN::Meta::Requirements~2.127
 Unicode::Stringprep~1.105
 Test::Requires~0.08
 Module::Metadata~1.000024
