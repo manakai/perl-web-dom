@@ -275,8 +275,8 @@ _define_reflect_string rel => 'rel';
 _define_reflect_string media => 'media';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
-_define_reflect_enumerated crossorigin => 'crossorigin', {
-  '' => '', # anonymous
+_define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
+  '' => 'anonymous',
   anonymous => 'anonymous',
   'use-credentials' => 'use-credentials',
   # #missing => no cors
@@ -352,8 +352,8 @@ use Web::DOM::Element;
 _define_reflect_url src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string charset => 'charset';
-_define_reflect_enumerated crossorigin => 'crossorigin', {
-  '' => '', # anonymous
+_define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
+  '' => 'anonymous',
   anonymous => 'anonymous',
   'use-credentials' => 'use-credentials',
   # #missing => no cors
@@ -563,8 +563,8 @@ use Web::DOM::Element;
 _define_reflect_string alt => 'alt';
 _define_reflect_url src => 'src';
 _define_reflect_string srcset => 'srcset';
-_define_reflect_enumerated crossorigin => 'crossorigin', {
-  '' => '', # anonymous
+_define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
+  '' => 'anonymous',
   anonymous => 'anonymous',
   'use-credentials' => 'use-credentials',
   # #missing => no cors
@@ -663,8 +663,8 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-_define_reflect_enumerated crossorigin => 'crossorigin', {
-  '' => '', # anonymous
+_define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
+  '' => 'anonymous',
   anonymous => 'anonymous',
   'use-credentials' => 'use-credentials',
   # #missing => no cors
