@@ -861,6 +861,37 @@ sub _define_reflect_enumerated ($$$) {
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_enumerated
 
+push @EXPORT, qw(_define_reflect_nullable_enumerated);
+sub _define_reflect_nullable_enumerated ($$$) {
+  my ($perl_name, $content_name, $values) = @_;
+  my $class = caller;
+  eval sprintf q{
+    *%s::%s = sub ($;$) {
+      if (@_ > 1) {
+        if (defined $_[1]) {
+          $_[0]->set_attribute_ns (undef, '%s', $_[1]);
+        } else {
+          $_[0]->remove_attribute_ns (undef, '%s');
+        }
+        return unless defined wantarray;
+      }
+
+      my $v = $_[0]->get_attribute_ns (undef, '%s');
+      if (defined $v) {
+        $v =~ tr/A-Z/a-z/; ## ASCII case-insensitive.
+        if (defined $values->{$v} and not $v =~ /^\#/) {
+          return $values->{$v};
+        } else {
+          return defined $values->{'#invalid'} ? $values->{'#invalid'} : undef;
+        }
+      } else {
+        return undef;
+      }
+    };
+    1;
+  }, $class, $perl_name, $content_name, $content_name, $content_name or die $@;
+} # _define_reflect_enumerated
+
 push @EXPORT, qw(_define_reflect_boolean);
 sub _define_reflect_boolean ($$) {
   my ($perl_name, $content_name) = @_;

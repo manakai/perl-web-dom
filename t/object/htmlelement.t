@@ -1129,47 +1129,77 @@ for my $test (
      [popUp => 'popup'],
    ],
    invalid_values => [[''], ['0'], [undef], ['menu']]},
+) {
+  my $attr = $test->{attr};
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($test->{element});
+    is $el->$attr, $test->{default};
+    for (@{$test->{valid_values}}) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, $_->[1];
+      is $el->get_attribute ($test->{content_attr} || $attr), $_->[0];
+    }
+    for (
+      (map { [$_->[0].'  '] } @{$test->{valid_values}}),
+      @{$test->{invalid_values}},
+      ['#invalid'],
+      ['#missing'],
+    ) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, defined $test->{invalid_default} ? $test->{invalid_default} : $test->{default};
+      is $el->get_attribute ($test->{content_attr} || $attr), defined $_->[0] ? $_->[0] : '';
+    }
+    done $c;
+  } n => 3 + @{$test->{valid_values}}*2 +
+      (@{$test->{valid_values}} + @{$test->{invalid_values}} + 1)*2,
+      name => ['reflect enumerated attr', $test->{element}, $test->{attr}];
+
+}
+
+for my $test (
   {element => 'link',
    attr => 'crossorigin',
-   default => '',
+   default => undef,
    valid_values => [
-     ['' => ''],
+     ['' => 'anonymous'],
      [anonymoUs => 'anonymous'],
      ['USE-credentials' => 'use-credentials'],
    ],
    invalid_values => [['0'], [undef], ['menu']]},
   {element => 'script',
    attr => 'crossorigin',
-   default => '',
+   default => undef,
    valid_values => [
-     ['' => ''],
+     ['' => 'anonymous'],
      [anonymoUs => 'anonymous'],
      ['USE-credentials' => 'use-credentials'],
    ],
    invalid_values => [['0'], [undef], ['menu']]},
   {element => 'img',
    attr => 'crossorigin',
-   default => '',
+   default => undef,
    valid_values => [
-     ['' => ''],
+     ['' => 'anonymous'],
      [anonymoUs => 'anonymous'],
      ['USE-credentials' => 'use-credentials'],
    ],
    invalid_values => [['0'], [undef], ['menu']]},
   {element => 'video',
    attr => 'crossorigin',
-   default => '',
+   default => undef,
    valid_values => [
-     ['' => ''],
+     ['' => 'anonymous'],
      [anonymoUs => 'anonymous'],
      ['USE-credentials' => 'use-credentials'],
    ],
    invalid_values => [['0'], [undef], ['menu']]},
   {element => 'audio',
    attr => 'crossorigin',
-   default => '',
+   default => undef,
    valid_values => [
-     ['' => ''],
+     ['' => 'anonymous'],
      [anonymoUs => 'anonymous'],
      ['USE-credentials' => 'use-credentials'],
    ],
@@ -1194,7 +1224,7 @@ for my $test (
     ) {
       $el->$attr ($_->[0]);
       is $el->$attr, defined $test->{invalid_default} ? $test->{invalid_default} : $test->{default};
-      is $el->get_attribute ($test->{content_attr} || $attr), defined $_->[0] ? $_->[0] : '';
+      is $el->get_attribute ($test->{content_attr} || $attr), defined $_->[0] ? $_->[0] : undef;
     }
     done $c;
   } n => 3 + @{$test->{valid_values}}*2 +
