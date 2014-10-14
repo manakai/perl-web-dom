@@ -42,7 +42,7 @@ Params::Util~1.07
 Algorithm::Diff~1.1902
 Perl::OSType~1.007
 ExtUtils::CBuilder~0.280220
-Path::Tiny~0.058
+Path::Tiny~0.059
 Parse::CPAN::Meta~1.4414
 ExtUtils::Helpers~0.022
 version~0.9909
