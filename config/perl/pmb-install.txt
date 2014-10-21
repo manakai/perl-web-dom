@@ -30,7 +30,7 @@ CPAN::Meta::Requirements~2.128
 Sub::Exporter::Progressive~0.001011
 ExtUtils::Config~0.008
 Path::Class~0.35
-Variable::Magic~0.54
+Variable::Magic~0.55
 Unicode::Stringprep~1.105
 Module::Metadata~1.000024
 File::Spec~3.47
