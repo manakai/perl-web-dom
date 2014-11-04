@@ -1,5 +1,5 @@
 DateTime~1.12
-Capture::Tiny~0.25
+Capture::Tiny~0.26
 Time::Piece~1.29
 Test::NoWarnings~1.04
 Encode~2.64
