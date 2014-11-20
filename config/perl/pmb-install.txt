@@ -6,7 +6,7 @@ Encode~2.64
 DateTime::Locale~0.45
 List::Util~1.41
 Test::Builder~1.001009
-CPAN::Meta~2.142690
+CPAN::Meta~2.143240
 Module::Implementation~0.09
 Module::Build~0.4210
 List::MoreUtils~0.33
@@ -21,7 +21,7 @@ List::AllUtils~0.09
 Text::Diff~1.41
 Test::More~1.001009
 Test::Differences~0.62
-CPAN::Meta::Requirements~2.129
+CPAN::Meta::Requirements~2.130
 Path::Class~0.35
 Unicode::Stringprep~1.105
 Module::Metadata~1.000024
