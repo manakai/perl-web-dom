@@ -101,12 +101,12 @@ sub timestamp ($) { $_[0]->{timestamp} }
 
 sub _initialize ($;$$$) {
   my $self = $_[0];
+  return 0 if $self->{dispatch};
 
   ## Initialize
   ## <http://dom.spec.whatwg.org/#concept-event-initialize>.
 
   $self->{initialized} = 1;
-  return 0 if $self->{dispatch};
   delete $self->{stop_propagation};
   delete $self->{stop_immediate_propagation};
   delete $self->{canceled};
@@ -120,7 +120,7 @@ sub _initialize ($;$$$) {
 } # _initialize
 
 sub init_event ($$;$$) {
-  $_[0]->_initialize (''.$_[1], !!$_[2], !!$_[3]);
+  $_[0]->_initialize (''.$_[1], !!$_[2], !!$_[3]) or return undef;
   return undef;
 } # init_event
 
@@ -133,8 +133,7 @@ sub _init_members ($) { $_[0]->SUPER::_init_members, [detail => 'any'] }
 sub detail ($) { $_[0]->{detail} } # or undef
 
 sub init_custom_event ($$;$$$) {
-  $_[0]->_initialize (''.$_[1], !!$_[2], !!$_[3])
-      or return; ## Willful violation to DOM spec for browser compat.
+  $_[0]->_initialize (''.$_[1], !!$_[2], !!$_[3]) or return undef;
   $_[0]->{detail} = $_[4];
   return undef;
 } # init_custom_event
@@ -156,7 +155,7 @@ sub init_ui_event ($$$$$$) {
       if defined $_[4] and not UNIVERSAL::isa ($_[4], 'Web::DOM::WindowProxy');
   ## s/AbstractView/WindowProxy/, this is a willful violation to DOM3Events
   my $detail = unpack 'l', pack 'L', $_[5] % 2**32; # WebIDL long
-  $_[0]->_initialize ($type, $bubbles, $cancelable) or return;
+  $_[0]->_initialize ($type, $bubbles, $cancelable) or return undef;
   $_[0]->{view} = $_[4];
   $_[0]->{detail} = $detail;
   return undef;
@@ -230,7 +229,7 @@ sub init_mouse_event ($$$$$$$$$$$$$$$$) {
   _throw Web::DOM::TypeError 'The 16th argument is not an EventTarget'
       if defined $_[15] and
          not UNIVERSAL::isa ($_[15], 'Web::DOM::EventTarget');
-  $_[0]->_initialize ($type, $bubbles, $cancelable) or return;
+  $_[0]->_initialize ($type, $bubbles, $cancelable) or return undef;
   $_[0]->{view} = $_[4];
   $_[0]->{detail} = $detail;
   $_[0]->{screen_x} = $sx;
@@ -346,7 +345,7 @@ sub init_keyboard_event ($$$$$$$$$$$) {
   my $modifiers_list = ''.$_[8];
   my $repeat = !!$_[9];
   my $locale = ''.$_[10];
-  $_[0]->_initialize ($type, $bubbles, $cancelable) or return;
+  $_[0]->_initialize ($type, $bubbles, $cancelable) or return undef;
   $_[0]->{view} = $_[4];
   $_[0]->{char} = $char;
   $_[0]->{key} = $key;
@@ -391,7 +390,7 @@ sub init_composition_event ($$$$$$$) {
       if defined $_[4] and not UNIVERSAL::isa ($_[4], 'Web::DOM::Window');
   my $data = defined $_[5] ? ''.$_[5] : undef;
   my $locale = $_[6];
-  $_[0]->_initialize ($type, $bubbles, $cancelable) or return;
+  $_[0]->_initialize ($type, $bubbles, $cancelable) or return undef;
   $_[0]->{view} = $_[4];
   $_[0]->{data} = $data;
   $_[0]->{locale} = $locale;
