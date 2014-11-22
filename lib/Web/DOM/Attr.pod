@@ -81,9 +81,13 @@ Return true for backward compatibility.  [DOM]
 
 =item $value = $attr->text_content
 
+=item $value = $attr->node_value
+
 =item $attr->value ($value)
 
 =item $attr->text_content ($value)
+
+=item $attr->node_value ($value)
 
 Return or set the attribute value.  [DOM]
 
