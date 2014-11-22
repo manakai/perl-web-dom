@@ -1262,11 +1262,10 @@ sub SCALAR ($) {
 } # SCALAR
 
 sub DESTROY ($) {
-  {
-    local $@;
-    eval { die };
-    warn "Potential memory leak detected" if $@ =~ /during global destruction/;
-  }
+  local $@;
+  eval { die };
+  warn "Possible memory leak detected (Web::DOM::Internal)\n"
+      if $@ =~ /during global destruction/;
 } # DESTROY
 
 1;

@@ -587,7 +587,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-# XXX content_document content_window
+# XXX content_document content_window get_svg_document
 
 _define_reflect_string srcdoc => 'srcdoc';
 _define_reflect_string name => 'name';
@@ -625,8 +625,9 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 # XXX plugin-specific interface
 
-# XXX form content_document content_window will_validate
-# validity validation_message check_validity set_custom_validity
+# XXX form content_document content_window will_validate validity
+# validation_message check_validity set_custom_validity
+# get_svg_document
 
 _define_reflect_url data => 'data';
 _define_reflect_string type => 'type';
