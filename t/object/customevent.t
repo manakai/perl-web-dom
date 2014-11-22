@@ -7,6 +7,7 @@ use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
 use Web::DOM::CustomEvent;
+use Web::DOM::Document;
 
 test {
   my $c = shift;
@@ -97,11 +98,47 @@ test {
   done $c;
 } n => 9, name => 'constructor then init_custom_event';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $ev = $doc->create_event ('customevent');
+  $ev->init_custom_event ('foo', 1, 1, 55);
+  $doc->add_event_listener ('foo', sub {
+    $ev->init_custom_event ('bar', 0, -0, 146);
+    is $ev->type, 'foo';
+    is !!$ev->cancelable, !!1;
+    is !!$ev->bubbles, !!1;
+    is $ev->detail, 55;
+  });
+  $doc->dispatch_event ($ev);
+  is $ev->type, 'foo';
+  is !!$ev->cancelable, !!1;
+  is !!$ev->bubbles, !!1;
+  is $ev->detail, 55;
+  undef $ev;
+  done $c;
+} n => 8, name => 'init while dispatched';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $ev = $doc->create_event ('customevent');
+  $ev->init_custom_event ('foo', 1, 1, 55);
+  $doc->dispatch_event ($ev);
+  $ev->init_custom_event ('bar', 0, -0, 146);
+  is $ev->type, 'bar';
+  is !!$ev->cancelable, !!0;
+  is !!$ev->bubbles, !!0;
+  is $ev->detail, 146;
+  undef $ev;
+  done $c;
+} n => 4, name => 'init after dispatched';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
