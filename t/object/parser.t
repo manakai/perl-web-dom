@@ -21,7 +21,7 @@ test {
   is $doc->inner_html, '<html><head></head><body>hoge <p> fu&amp;&lt;&gt;</p></body></html>';
 
   is $doc->content_type, 'text/html';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   is $doc->url, 'about:blank';
 
   done $c;
@@ -42,7 +42,7 @@ for my $type (qw(text/xml application/xml application/xhtml+xml
     is $doc->inner_html, '<b xmlns="">hoge &lt;p&gt; fu&amp;&lt;&gt;<C></C></b>';
 
     is $doc->content_type, $type;
-    is $doc->character_set, 'utf-8';
+    is $doc->character_set, 'UTF-8';
     is $doc->url, 'about:blank';
 
     done $c;
@@ -63,7 +63,7 @@ for my $type (qw(text/xml application/xml application/xhtml+xml
     is $doc->document_element->local_name, 'parsererror';
 
     is $doc->content_type, $type;
-    is $doc->character_set, 'utf-8';
+    is $doc->character_set, 'UTF-8';
     is $doc->url, 'about:blank';
 
     #warn $doc->inner_html;

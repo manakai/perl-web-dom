@@ -24,7 +24,7 @@ test {
   is $doc->url, 'about:blank';
   is $doc->document_uri, $doc->url;
   is $doc->content_type, 'application/xml';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   is !!$doc->manakai_is_html, !!0;
   is $doc->compat_mode, 'CSS1Compat';
   is $doc->manakai_compat_mode, 'no quirks';
@@ -118,9 +118,9 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  is $doc->character_set, 'utf-8';
-  is $doc->charset, 'utf-8';
-  is $doc->input_encoding, 'utf-8';
+  is $doc->character_set, 'UTF-8';
+  is $doc->charset, 'UTF-8';
+  is $doc->input_encoding, 'UTF-8';
 
   done $c;
 } n => 3, name => 'charset';
@@ -128,23 +128,23 @@ test {
 for my $test (
   [undef, undef],
   ['' => undef],
-  ['UTF-8' => 'utf-8'],
-  ['UtF8' => 'utf-8'],
-  ['Shift_JIS' => 'shift_jis'],
-  ['csiso2022jp' => 'iso-2022-jp'],
+  ['UTF-8' => 'UTF-8'],
+  ['UtF8' => 'UTF-8'],
+  ['Shift_JIS' => 'Shift_JIS'],
+  ['csiso2022jp' => 'ISO-2022-JP'],
   ['CESU-8' => undef],
   ['X-User-Defined' => 'x-user-defined'],
-  ['utf-16BE' => 'utf-16be'],
+  ['utf-16BE' => 'UTF-16BE'],
   ['unicode' => undef],
   ['iso-2022-cn' => undef],
   ['replacement' => undef],
-  [" euc-JP\x09" => 'euc-jp'],
+  [" euc-JP\x09" => 'EUC-JP'],
 ) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->input_encoding ($test->[0]);
-    is $doc->input_encoding, $test->[1] || 'utf-8';
+    is $doc->input_encoding, $test->[1] || 'UTF-8';
     is $doc->charset, $doc->input_encoding;
     done $c;
   } n => 2, name => ['input_encoding', 'setter', $test->[0]];

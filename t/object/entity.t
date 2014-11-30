@@ -30,31 +30,31 @@ test {
   ok not $node->has_replacement_tree;
   $node->has_replacement_tree (1);
   ok not $node->has_replacement_tree;
-  is $node->input_encoding, 'utf-8';
+  is $node->input_encoding, 'UTF-8';
   done $c;
 } n => 14, name => 'basic node properties';
 
 for my $test (
   [undef, undef],
   ['' => undef],
-  ['UTF-8' => 'utf-8'],
-  ['UtF8' => 'utf-8'],
-  ['Shift_JIS' => 'shift_jis'],
-  ['csiso2022jp' => 'iso-2022-jp'],
+  ['UTF-8' => 'UTF-8'],
+  ['UtF8' => 'UTF-8'],
+  ['Shift_JIS' => 'Shift_JIS'],
+  ['csiso2022jp' => 'ISO-2022-JP'],
   ['CESU-8' => undef],
   ['X-User-Defined' => 'x-user-defined'],
-  ['utf-16BE' => 'utf-16be'],
+  ['utf-16BE' => 'UTF-16BE'],
   ['unicode' => undef],
   ['iso-2022-cn' => undef],
   ['replacement' => undef],
-  [" euc-JP\x09" => 'euc-jp'],
+  [" euc-JP\x09" => 'EUC-JP'],
 ) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     my $node = $doc->create_general_entity ('hoge');
     $node->input_encoding ($test->[0]);
-    is $node->input_encoding, $test->[1] || 'utf-8';
+    is $node->input_encoding, $test->[1] || 'UTF-8';
     done $c;
   } n => 1, name => ['input_encoding', 'setter', $test->[0]];
 }
