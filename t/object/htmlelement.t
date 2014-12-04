@@ -2846,6 +2846,18 @@ test {
 
 test {
   my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $opt = $doc->create_element ('option');
+  $opt->set_attribute (label => '');
+  $opt->text_content (13);
+  is $opt->label, '';
+  is $opt->text, '13';
+  is $opt->value, '13';
+  done $c;
+} n => 3, name => 'option.label empty label attribute';
+
+test {
+  my $c = shift;
 
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ('option');
