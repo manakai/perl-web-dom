@@ -40,6 +40,6 @@ Exporter~5.70
 Carp~1.3301
 Class::Singleton~1.5
 JSON::PP~2.27300
-DateTime::TimeZone~1.81
+DateTime::TimeZone~1.83
 Params::Validate~1.13
 Exporter::Tiny~0.042
