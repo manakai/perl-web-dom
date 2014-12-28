@@ -5,7 +5,7 @@ Test::NoWarnings~1.04
 Encode~2.67
 List::Util~1.41
 DateTime::Locale~0.45
-Test::Builder~1.001012
+Test::Builder~1.001014
 Module::Implementation~0.09
 CPAN::Meta~2.143240
 Module::Build~0.4210
@@ -19,7 +19,7 @@ Data::Dumper~2.154
 ExtUtils::ParseXS~3.24
 List::AllUtils~0.09
 Text::Diff~1.41
-Test::More~1.001012
+Test::More~1.001014
 Test::Differences~0.63
 CPAN::Meta::Requirements~2.131
 Path::Class~0.35
@@ -34,7 +34,7 @@ Path::Tiny~0.061
 ExtUtils::CBuilder~0.280220
 Parse::CPAN::Meta~1.4414
 version~0.9909
-Test::Tester~0.112
+Test::Tester~0.114
 CPAN::Meta::YAML~0.012
 Exporter~5.70
 Carp~1.3301
