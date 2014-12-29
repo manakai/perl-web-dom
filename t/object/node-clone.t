@@ -134,7 +134,7 @@ for my $ct (qw(text/html application/xml application/rss+xml
   } n => 1, name => ['document', 'content_type', $ct];
 }
 
-for my $ct (qw(utf-8 iso-2022-jp euc-jp windows-1252)) {
+for my $ct (qw(UTF-8 ISO-2022-JP EUC-JP windows-1252)) {
   test {
     my $c = shift;
     my $d1 = new Web::DOM::Document;

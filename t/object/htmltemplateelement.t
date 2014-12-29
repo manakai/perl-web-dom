@@ -68,7 +68,7 @@ test {
   my $doc2 = $el->content->owner_document;
 
   is $doc2->url, 'about:blank';
-  is $doc2->input_encoding, 'utf-8';
+  is $doc2->input_encoding, 'UTF-8';
   is $doc2->manakai_charset, undef;
   is $doc2->manakai_compat_mode, 'no quirks';
 

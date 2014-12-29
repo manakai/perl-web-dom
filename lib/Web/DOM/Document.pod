@@ -46,9 +46,9 @@ element or the C<frameset> element).  [HTML]
 
 =item $string = $doc->character_set
 
-=item $string = $doc->charset
-
 =item $string = $doc->input_encoding
+
+=item $string = $doc->charset
 
 =item $doc->input_encoding ($string)
 

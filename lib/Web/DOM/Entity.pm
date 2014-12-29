@@ -1,7 +1,7 @@
 package Web::DOM::Entity;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Node;
 push our @ISA, qw(Web::DOM::Node);
 use Web::DOM::Internal;
@@ -98,13 +98,14 @@ sub declaration_base_uri ($;$) {
 *manakai_declaration_base_uri = \&declaration_base_uri;
 
 sub input_encoding ($) {
+  require Web::Encoding;
   if (@_ > 1) {
-    require Web::Encoding;
     my $name = Web::Encoding::encoding_label_to_name (''.$_[1]);
     ${$_[0]}->[2]->{encoding} = $name
         if Web::Encoding::is_encoding_label ($name);
   }
-  return ${$_[0]}->[2]->{encoding} || 'utf-8';
+  return Web::Encoding::encoding_name_to_compat_name
+      (${$_[0]}->[2]->{encoding} || 'utf-8');
 } # input_encoding
 
 sub xml_version ($) {
@@ -202,7 +203,7 @@ sub has_replacement_tree ($) { 0 }
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

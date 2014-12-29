@@ -2,7 +2,7 @@ package Web::DOM::Document;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
 use Web::DOM::XPathEvaluator;
@@ -122,7 +122,9 @@ sub manakai_is_srcdoc ($;$) {
 } # manakai_is_srcdoc
 
 sub character_set ($) {
-  return ${$_[0]}->[2]->{encoding} || 'utf-8';
+  require Web::Encoding;
+  return Web::Encoding::encoding_name_to_compat_name
+      (${$_[0]}->[2]->{encoding} || 'utf-8');
 } # character_set
 
 *charset = \&character_set;

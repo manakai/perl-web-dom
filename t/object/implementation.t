@@ -106,7 +106,7 @@ test {
   is $doc->url, 'about:blank';
   is $doc->document_uri, $doc->url;
   is $doc->content_type, 'application/xml';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   is !!$doc->manakai_is_html, !!0;
   is $doc->compat_mode, 'CSS1Compat';
   is $doc->manakai_compat_mode, 'no quirks';
@@ -500,7 +500,7 @@ test {
   is $doc->url, 'about:blank';
   is $doc->document_uri, $doc->url;
   is $doc->content_type, 'text/html';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   is !!$doc->manakai_is_html, !!1;
   is $doc->compat_mode, 'CSS1Compat';
   is $doc->manakai_compat_mode, 'no quirks';
@@ -553,7 +553,7 @@ test {
   is $doc->url, 'about:blank';
   is $doc->document_uri, $doc->url;
   is $doc->content_type, 'text/html';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   is !!$doc->manakai_is_html, !!1;
   is $doc->compat_mode, 'CSS1Compat';
   is $doc->manakai_compat_mode, 'no quirks';
@@ -618,7 +618,7 @@ test {
   is $doc->url, 'about:blank';
   is $doc->document_uri, $doc->url;
   is $doc->content_type, 'text/html';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   is !!$doc->manakai_is_html, !!1;
   is $doc->compat_mode, 'CSS1Compat';
   is $doc->manakai_compat_mode, 'no quirks';
@@ -679,7 +679,7 @@ test {
 
   is $doc->url, 'about:blank';
   is $doc->content_type, 'application/atom+xml';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   ok not $doc->manakai_is_html;
   is $doc->compat_mode, 'CSS1Compat';
   is $doc->manakai_compat_mode, 'no quirks';
@@ -709,7 +709,7 @@ test {
 
   is $doc->url, 'about:blank';
   is $doc->content_type, 'application/atom+xml';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   ok not $doc->manakai_is_html;
   is $doc->compat_mode, 'CSS1Compat';
   is $doc->manakai_compat_mode, 'no quirks';
@@ -740,7 +740,7 @@ test {
 
   is $doc->url, 'about:blank';
   is $doc->content_type, 'application/atom+xml';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   ok not $doc->manakai_is_html;
   is $doc->compat_mode, 'CSS1Compat';
   is $doc->manakai_compat_mode, 'no quirks';
@@ -770,7 +770,7 @@ test {
 
   is $doc->url, 'about:blank';
   is $doc->content_type, 'application/atom+xml';
-  is $doc->character_set, 'utf-8';
+  is $doc->character_set, 'UTF-8';
   ok not $doc->manakai_is_html;
   is $doc->compat_mode, 'CSS1Compat';
   is $doc->manakai_compat_mode, 'no quirks';
