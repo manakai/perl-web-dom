@@ -16,6 +16,7 @@ use Web::DOM::Document;
     $doc,
     $doc->create_element ('a'),
     $doc->create_attribute ('b'),
+    $doc->create_attribute_definition ('b'),
     $doc->create_text_node ('c'),
     $doc->create_document_fragment,
   ) {
@@ -33,6 +34,7 @@ use Web::DOM::Document;
     $doc,
     $doc->create_element ('a'),
     $doc->create_attribute ('b'),
+    $doc->create_attribute_definition ('b'),
     $doc->create_text_node ('c'),
     $doc->create_document_fragment,
   ) {
@@ -361,7 +363,6 @@ test {
     $doc->create_general_entity ('aa'),
     $doc->create_notation ('aa'),
     $doc->create_element_type_definition ('aa'),
-    $doc->create_attribute_definition ('bb'),
   ) {
     test {
       my $c = shift;
@@ -402,6 +403,7 @@ test {
     $doc->create_comment ('aa'),
     $doc->create_processing_instruction ('b', 'aa'),
     do { $_ = $doc->create_attribute ('b'); $_->value ('aa'); $_ },
+    do { $_ = $doc->create_attribute_definition ('b'); $_->node_value ('aa'); $_ },
   ) {
     test {
       my $c = shift;

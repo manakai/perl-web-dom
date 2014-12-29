@@ -326,7 +326,7 @@ DOM Standard <view-source:http://dom.spec.whatwg.org/>.
 
 =item HTML
 
-HTML Living Standard
+HTML Standard
 <http://www.whatwg.org/specs/web-apps/current-work/>.
 
 =item DOM3CORE

@@ -1,7 +1,7 @@
 package Web::DOM::AttributeDefinition;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Node;
 push our @ISA, qw(Web::DOM::Node);
 
@@ -21,18 +21,42 @@ sub owner_element_type_definition ($) {
 
 sub node_value ($;$) {
   if (@_ > 1) {
-    ${$_[0]}->[2]->{node_value} = defined $_[1] ? ''.$_[1] : '';
+    # IndexedString
+    ${$_[0]}->[2]->{node_value} = defined $_[1] ? [[''.$_[1], -1, 0]] : [];
   }
-  return defined ${$_[0]}->[2]->{node_value}
-      ? ${$_[0]}->[2]->{node_value} : '';
+  return join '', map { $_->[0] } @{${$_[0]}->[2]->{node_value} or []}; # IndexedString
 } # node_value
 
 *text_content = \&node_value;
 
+sub manakai_get_indexed_string ($) {
+  return [map {
+    [$_->[0], $_->[1], $_->[2]]; # string copy
+  } @{${$_[0]}->[2]->{node_value} or []}]; # IndexedString
+} # manakai_get_indexed_string
+
 sub manakai_append_text ($$) {
-  ${$_[0]}->[2]->{node_value} .= ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1];
+  # IndexedStringSegment
+  my $segment = [ref $_[1] eq 'SCALAR' ? ${$_[1]} : $_[1], -1, 0];
+  $segment->[0] = ''.$segment->[0] if ref $_[1];
+
+  push @{${$_[0]}->[2]->{node_value} ||= []}, $segment;
+
   return $_[0];
 } # manakai_append_text
+
+sub manakai_append_indexed_string ($$) {
+  # IndexedString
+  _throw Web::DOM::TypeError 'The argument is not an IndexedString'
+      if not ref $_[1] eq 'ARRAY' or
+         grep { not ref $_ eq 'ARRAY' } @{$_[1]};
+
+  push @{${$_[0]}->[2]->{node_value} ||= []}, map {
+    [''.$_->[0], 0+$_->[1], 0+$_->[2]]; # string copy
+  } @{$_[1]};
+
+  return;
+} # manakai_append_indexed_string
 
 ## |DeclaredValueType|
 sub NO_TYPE_ATTR () { 0 }
@@ -106,7 +130,7 @@ sub default_type ($;$) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
