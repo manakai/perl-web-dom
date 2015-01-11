@@ -1,11 +1,12 @@
 package Web::DOM::ElementTypeDefinition;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Node;
 push our @ISA, qw(Web::DOM::Node);
 use Web::DOM::DocumentType;
 push our @CARP_NOT, qw(Web::DOM::DocumentType);
+use Web::DOM::Exception;
 
 sub node_name ($) {
   return ${${$_[0]}->[2]->{node_name}};
@@ -69,11 +70,28 @@ sub remove_attribute_definition_node ($$) {
   return $obj;
 } # remove_attribute_definition_node
 
+my $XMLS = qr/[\x09\x0A\x0D\x20]/;
+my $GITEM; {
+  use re 'eval';
+  $GITEM = qr/(?>[^()*+?|,\x09\x0A\x0D\x20]+|\($XMLS*(??{$GITEM})$XMLS*(?>[|,]$XMLS*(??{$GITEM})$XMLS*)*\))(?>[*+?]|)/;
+}
+
 sub content_model_text ($;$) {
   if (@_ > 1) {
     if (defined $_[1]) {
-      # XXX normalization
-      ${$_[0]}->[2]->{content_model_text} = ''.$_[1];
+      my $text = ''.$_[1];
+      $text =~ s/\A$XMLS+//o;
+      $text =~ s/$XMLS+\z//o;
+      if (not $text =~ /\A$GITEM\z/o or
+          not $text =~ /\A(?>EMPTY\z|ANY\z|\()/o) {
+        _throw Web::DOM::Exception 'SyntaxError',
+            'The specified text is not a valid content model';
+      }
+      $text =~ s/\($XMLS+/(/go;
+      $text =~ s/$XMLS+\)/)/go;
+      $text =~ s/$XMLS*,$XMLS*/, /g;
+      $text =~ s/$XMLS*\|$XMLS*/ | /g;
+      ${$_[0]}->[2]->{content_model_text} = $text;
     } else {
       delete ${$_[0]}->[2]->{content_model_text};
     }
@@ -85,7 +103,7 @@ sub content_model_text ($;$) {
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
