@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::ElementTypeDefinition - The DOM |ElementTypeDefinition| object
+Web::DOM::ElementTypeDefinition - DOM |ElementTypeDefinition| object
 
 =head1 DESCRIPTION
 
@@ -25,10 +25,6 @@ definitions.  [DOMDTDEF]
 
 Return or set the textual representation of the content model of the
 element type.  [DOMDTDEF]
-
-!CAUTION!  The exact processing model of this method is not defined
-yet.  It is subject to change in the later revision of the DOMDTDEF
-specification and this implementation.
 
 =item $adef = $et->get_attribute_definition_node ($name)
 
@@ -63,7 +59,7 @@ method.
 =item DOMDTDEF
 
 DOM Document Type Definitions
-<http://suika.fam.cx/www/markup/xml/domdtdef/domdtdef>.
+<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =back
 
@@ -77,7 +73,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
