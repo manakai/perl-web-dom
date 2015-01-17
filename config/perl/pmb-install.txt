@@ -24,7 +24,7 @@ Test::Differences~0.63
 CPAN::Meta::Requirements~2.131
 Path::Class~0.35
 Unicode::Stringprep~1.105
-Module::Metadata~1.000025
+Module::Metadata~1.000026
 File::Spec~3.47
 Module::Runtime~0.014
 Unicode::Normalize~1.18
@@ -33,13 +33,13 @@ Perl::OSType~1.007
 Path::Tiny~0.061
 ExtUtils::CBuilder~0.280220
 Parse::CPAN::Meta~1.4414
-version~0.9909
+version~0.991
 Test::Tester~0.114
 CPAN::Meta::YAML~0.012
 Exporter~5.70
 Carp~1.3301
 Class::Singleton~1.5
 JSON::PP~2.27300
-DateTime::TimeZone~1.83
+DateTime::TimeZone~1.84
 Params::Validate~1.17
 Exporter::Tiny~0.042
