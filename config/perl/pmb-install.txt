@@ -8,7 +8,7 @@ DateTime::Locale~0.45
 Test::Builder~1.001014
 Module::Implementation~0.09
 CPAN::Meta~2.143240
-Module::Build~0.4210
+Module::Build~0.4211
 List::MoreUtils~0.402
 Try::Tiny~0.22
 Term::ANSIColor~4.03
