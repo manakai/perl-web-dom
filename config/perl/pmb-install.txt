@@ -21,7 +21,7 @@ List::AllUtils~0.09
 Text::Diff~1.41
 Test::More~1.001014
 Test::Differences~0.63
-CPAN::Meta::Requirements~2.132
+CPAN::Meta::Requirements~2.133
 Path::Class~0.35
 Unicode::Stringprep~1.105
 Module::Metadata~1.000026
