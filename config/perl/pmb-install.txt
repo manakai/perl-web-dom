@@ -30,7 +30,7 @@ Module::Runtime~0.014
 Unicode::Normalize~1.18
 Algorithm::Diff~1.1903
 Perl::OSType~1.008
-Path::Tiny~0.061
+Path::Tiny~0.065
 ExtUtils::CBuilder~0.280220
 Parse::CPAN::Meta~1.4414
 version~0.9912
