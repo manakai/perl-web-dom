@@ -12,7 +12,7 @@ Module::Build~0.4211
 List::MoreUtils~0.406
 Try::Tiny~0.22
 Term::ANSIColor~4.03
-parent~0.228
+parent~0.229
 AnyEvent~7.08
 Exporter::Lite~0.06
 Data::Dumper~2.154
