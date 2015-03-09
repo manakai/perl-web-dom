@@ -7,12 +7,12 @@ List::Util~1.41
 DateTime::Locale~0.45
 Test::Builder~1.001014
 Module::Implementation~0.09
-CPAN::Meta~2.143240
+CPAN::Meta~2.150001
 Module::Build~0.4211
 List::MoreUtils~0.406
 Try::Tiny~0.22
 Term::ANSIColor~4.03
-parent~0.229
+parent~0.231
 AnyEvent~7.08
 Exporter::Lite~0.06
 Data::Dumper~2.154
