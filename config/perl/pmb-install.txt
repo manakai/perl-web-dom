@@ -35,7 +35,7 @@ ExtUtils::CBuilder~0.280220
 Parse::CPAN::Meta~1.4414
 version~0.9912
 Test::Tester~0.114
-CPAN::Meta::YAML~0.012
+CPAN::Meta::YAML~0.013
 Exporter~5.70
 Carp~1.35
 Class::Singleton~1.5
