@@ -9,7 +9,7 @@ Test::Builder~1.001014
 Module::Implementation~0.09
 CPAN::Meta~2.150001
 Module::Build~0.4211
-List::MoreUtils~0.406
+List::MoreUtils~0.408
 Try::Tiny~0.22
 Term::ANSIColor~4.03
 parent~0.231
@@ -35,7 +35,7 @@ ExtUtils::CBuilder~0.280220
 Parse::CPAN::Meta~1.4414
 version~0.9912
 Test::Tester~0.114
-CPAN::Meta::YAML~0.013
+CPAN::Meta::YAML~0.014
 Exporter~5.70
 Carp~1.35
 Class::Singleton~1.5
