@@ -9,7 +9,7 @@ Test::Builder~1.001014
 Module::Implementation~0.09
 List::MoreUtils~0.412
 Try::Tiny~0.22
-parent~0.232
+parent~0.233
 Term::ANSIColor~4.03
 AnyEvent~7.09
 Exporter::Lite~0.06
