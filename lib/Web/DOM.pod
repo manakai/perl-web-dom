@@ -137,8 +137,6 @@ Following classes have the constructor (i.e. the C<new> method):
 
 =item L<Web::DOM::Document>
 
-=item L<Web::DOM::DOMError>
-
 =item L<Web::DOM::Event> and its subclasses
 
 =item L<Web::DOM::Implementation>
@@ -376,14 +374,15 @@ DOMImplementationList, DOM features, DOMStringList, StringExtended,
 read-only nodes, EntityReference, CDATASection, replaceWholeText,
 isElementContentWhitespace, specified setter, hasReplacementTree
 setter, DOM3 configuration parameters, configuration parameters for
-DOM3 spec compatible DTD-based node operations, DOM3 DOMError,
-DOMErrorHandler, UserDataHandler, DOMLocator, isId and family,
-internalSubset, TypeInfo and schemaTypeInfo, DOM3 LS, namespaces for
-DOM3 events, EventException, MutationEvent, MutationNameEvent,
-TextEvent, DocumentEvent->canDispatch, DocumentType->implementation,
-Document->createXHTMLDocument, URIReference, InternetMediaType,
-MANAKAI_FILTER_OPAQUE, Document->manakaiCreateSerialWalker,
-SerialWalker.  HTMLElement->irrelevant, HTMLAnchorElement->media,
+DOM3 spec compatible DTD-based node operations, DOM3 DOMError, DOM
+Standard DOMError, DOMErrorHandler, UserDataHandler, DOMLocator, isId
+and family, internalSubset, TypeInfo and schemaTypeInfo, DOM3 LS,
+namespaces for DOM3 events, EventException, MutationEvent,
+MutationNameEvent, TextEvent, DocumentEvent->canDispatch,
+DocumentType->implementation, Document->createXHTMLDocument,
+URIReference, InternetMediaType, MANAKAI_FILTER_OPAQUE,
+Document->manakaiCreateSerialWalker, SerialWalker.
+HTMLElement->irrelevant, HTMLAnchorElement->media,
 HTMLAreaElement->media, HTMLCommandElement, HTMLDataGridElement,
 HTMLEventSourceElement, HTMLIsIndexElement, HTMLLegendElement->form,
 HTMLMenuElement->autosubmit, HTMLBlockquoteElement,
@@ -500,7 +499,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2007-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

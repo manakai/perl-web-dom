@@ -6,6 +6,8 @@ use Web::DOM::NodeFilter;
 
 push our @CARP_NOT, qw(Web::DOM::NodeFilter);
 
+## See also Web::DOM::Internal.
+
 sub root ($) {
   return $_[0]->{root};
 } # root
