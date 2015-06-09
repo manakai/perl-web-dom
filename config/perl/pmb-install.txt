@@ -27,7 +27,7 @@ Unicode::Normalize~1.18
 Algorithm::Diff~1.1903
 Path::Tiny~0.068
 Test::Tester~0.114
-Exporter~5.70
+Exporter~5.72
 Carp~1.36
 DateTime::TimeZone~1.90
 Class::Singleton~1.5
