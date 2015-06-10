@@ -7,7 +7,7 @@ DateTime::Locale~0.46
 List::Util~1.42
 Test::Builder~1.001014
 Module::Implementation~0.09
-List::MoreUtils~0.412
+List::MoreUtils~0.413
 Try::Tiny~0.22
 parent~0.234
 Term::ANSIColor~4.03
