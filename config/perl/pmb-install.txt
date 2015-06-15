@@ -29,7 +29,7 @@ Path::Tiny~0.068
 Test::Tester~0.114
 Exporter~5.72
 Carp~1.36
-DateTime::TimeZone~1.90
+DateTime::TimeZone~1.91
 Class::Singleton~1.5
-Params::Validate~1.18
+Params::Validate~1.19
 Exporter::Tiny~0.042
