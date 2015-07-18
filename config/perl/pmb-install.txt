@@ -31,5 +31,5 @@ Exporter~5.72
 Carp~1.36
 DateTime::TimeZone~1.92
 Class::Singleton~1.5
-Params::Validate~1.20
+Params::Validate~1.21
 Exporter::Tiny~0.042
