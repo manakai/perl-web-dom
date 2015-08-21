@@ -15,7 +15,7 @@ parent~0.234
 Exporter::Lite~0.06
 Data::Dumper~2.154
 Dist::CheckConflicts~0.11
-Text::Diff~1.42
+Text::Diff~1.43
 Test::More~1.001014
 Test::Differences~0.63
 Path::Class~0.35
