@@ -62,7 +62,7 @@ test {
 test {
   my $c = shift;
   my $css = from_style_el 'p{}', base_url => 'http://hoge.FOO/';
-  $css->owner_node->set_attribute_ns ('http://www.w3.org/XML/1998/namespace', 'xml:base' => 'http://fpoobar/');
+  $css->owner_node->owner_document->get_elements_by_tag_name ('base')->[0]->href ('http://fpoobar/');
   is $css->manakai_base_uri, 'http://hoge.foo/';
   done $c;
 } n => 1, name => 'base URL changed';

@@ -323,7 +323,7 @@ for (
     $el->append_child ($el3);
     is $el->$cel_name, '';
     $el3->set_attribute_ns (XML_NS, 'base' => 'ftp://hoge');
-    is $el->$cel_name, 'ftp://hoge/fugaabcd';
+    is $el->$cel_name, '';
     $el->$cel_name ('abc<&');
     is $el3->inner_html, 'abc&lt;&amp;';
     done $c;
@@ -359,7 +359,7 @@ for (
     $el->$cel_name ('');
     is $el->attributes->[0]->value, '';
     $el->set_attribute_ns (XML_NS, 'xml:base' => 'hoge:');
-    is $el->$cel_name, 'hoge:';
+    is $el->$cel_name, 'about:blank';
     done $c;
   } n => 11, name => ['url attr setter', $el_name, $cel_name];
 } # $el_name, $cel_name

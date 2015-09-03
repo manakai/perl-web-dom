@@ -11,12 +11,15 @@ push @EXPORT, qw(from_style_el);
 sub from_style_el ($;%) {
   my (undef, %args) = @_;
   my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  $doc->inner_html (q{<!DOCTYPE HTML><base>});
   my $el = $doc->create_element ('style');
   $el->text_content ($_[0]);
   $el->type ($args{type}) if defined $args{type};
   $el->title ($args{title}) if defined $args{title};
   $el->media ($args{media}) if defined $args{media};
-  $el->set_attribute_ns ('http://www.w3.org/XML/1998/namespace', 'xml:base' => $args{base_url}) if defined $args{base_url};
+  $doc->get_elements_by_tag_name ('base')->[0]->href
+      ($args{base_url}) if defined $args{base_url};
 
   my $parser = Web::CSS::Parser->get_parser_of_document ($doc);
   $parser->media_resolver->set_supported (all => 1);

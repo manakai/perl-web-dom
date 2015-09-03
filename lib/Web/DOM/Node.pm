@@ -176,30 +176,8 @@ sub base_uri ($) {
       $$self->[0]->{document_base_url_revision} = $$self->[0]->{revision};
       return $$self->[0]->{document_base_url} = $fallback_base_url;
     }
-  } elsif ($nt == ATTRIBUTE_NODE) {
-    if (($self->namespace_uri || '') eq XML_NS and
-        $self->local_name eq 'base') {
-      # 2.
-      my $n = $self->owner_element;
-      $n = defined $n ? $n->parent_node : undef;
-      return $n->base_uri if defined $n;
-    } else {
-      # 3.
-      my $n = $self->owner_element;
-      return $n->base_uri if defined $n;
-    }
-  } elsif ($nt == ELEMENT_NODE and
-           my $attr = $self->get_attribute_node_ns (XML_NS, 'base')) {
-    # 4.
-    my $url = _resolve_url $attr->value, $attr->base_uri;
-    return $url if defined $url;
   }
   
-  # 5.
-  my $n = $self->parent_node;
-  return $n->base_uri if defined $n;
-
-  # 6.
   return $self->owner_document->base_uri;
 } # base_uri
 

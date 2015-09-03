@@ -322,7 +322,7 @@ for my $test (
     is $el->$attr, 'http://foo/bar/';
     is $el->get_attribute ($attr), '';
     $el->set_attribute_ns (XML_NS, 'base' => 'ftp://hoge');
-    is $el->$attr, 'ftp://hoge/';
+    is $el->$attr, 'http://foo/bar/';
     done $c;
   } n => 10, name => ['reflect url', $test->[0], $test->[1]];
 }
