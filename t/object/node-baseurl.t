@@ -169,7 +169,7 @@ test {
   $attr->value ('http://foo');
   $el->set_attribute_node ($attr);
   $el2->append_child ($el);
-  is $attr->base_uri, 'http://def/';
+  is $attr->base_uri, 'http://abc/';
   done $c;
 } n => 1, name => 'attr xml:base with owner and parent xml:base';
 
@@ -202,7 +202,7 @@ test {
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://def/');
   my $attr = $doc->create_attribute ('xml_base');
   $el->set_attribute_node ($attr);
-  is $attr->base_uri, 'http://def/';
+  is $attr->base_uri, 'http://foo/';
   done $c;
 } n => 1, name => 'attr with owner xml:base';
 
@@ -222,7 +222,7 @@ test {
   my $el = $doc->create_element ('aa');
   $el->set_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://def/');
-  is $el->base_uri, 'http://def/';
+  is $el->base_uri, 'http://abc/';
   done $c;
 } n => 1, name => 'element xml:base';
 
@@ -235,7 +235,7 @@ test {
   $el2->append_child ($el);
   $el2->set_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://def/');
-  is $el->base_uri, 'http://def/';
+  is $el->base_uri, 'http://abc/';
   done $c;
 } n => 1, name => 'element parent xml:base';
 
@@ -243,7 +243,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
