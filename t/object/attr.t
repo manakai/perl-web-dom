@@ -85,8 +85,25 @@ test {
   is $attr->node_value, '';
   is $attr->text_content, '';
 
+  $attr->text_content (undef);
+  is $attr->value, '';
+  is $attr->node_value, '';
+  is $attr->text_content, '';
+
+  $attr->text_content ('x');
+  $attr->node_value (undef);
+  is $attr->value, '';
+  is $attr->node_value, '';
+  is $attr->text_content, '';
+
+  $attr->text_content ('x');
+  $attr->value (undef);
+  is $attr->value, '';
+  is $attr->node_value, '';
+  is $attr->text_content, '';
+
   done $c;
-} n => 9, name => 'node_value setter';
+} n => 18, name => 'node_value setter';
 
 test {
   my $c = shift;
@@ -254,7 +271,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
