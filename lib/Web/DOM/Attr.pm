@@ -1,7 +1,7 @@
 package Web::DOM::Attr;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Node;
 push our @ISA, qw(Web::DOM::Node);
 use Web::DOM::TypeError;
@@ -29,7 +29,9 @@ sub value ($;$) {
     # XXX mutation?
 
     # IndexedString
-    ${$_[0]}->[2]->{data} = [[''.$_[1], -1, 0]];
+    ${$_[0]}->[2]->{data} = [[defined $_[1] ? ''.$_[1] : '', -1, 0]];
+    ## |textContent| and |nodeValue| do not have
+    ## [TreatNullAs=EmptyString], while |value| does not.
 
     if (my $oe = $_[0]->owner_element) {
       $oe->_attribute_is
@@ -128,7 +130,7 @@ sub manakai_attribute_type ($;$) {
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
