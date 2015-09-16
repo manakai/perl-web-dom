@@ -2,16 +2,16 @@ DateTime~1.20
 Capture::Tiny~0.30
 Time::Piece~1.30
 Test::NoWarnings~1.04
-Encode~2.76
+Encode~2.77
 List::Util~1.42
 DateTime::Locale~0.46
 Test::Builder~1.001014
 Module::Implementation~0.09
 List::MoreUtils~0.413
 Try::Tiny~0.22
+parent~0.234
 AnyEvent~7.11
 Term::ANSIColor~4.03
-parent~0.234
 Exporter::Lite~0.06
 Data::Dumper~2.154
 Dist::CheckConflicts~0.11
@@ -20,6 +20,7 @@ Test::More~1.001014
 Test::Differences~0.63
 Path::Class~0.35
 Unicode::Stringprep~1.105
+Scalar::Util~1.42
 File::Spec~3.47
 Module::Runtime~0.014
 Unicode::Normalize~1.19
