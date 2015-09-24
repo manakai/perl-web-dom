@@ -2,7 +2,7 @@ DateTime~1.20
 Capture::Tiny~0.30
 Time::Piece~1.30
 Test::NoWarnings~1.04
-Encode~2.77
+Encode~2.78
 List::Util~1.42
 DateTime::Locale~0.46
 Test::Builder~1.001014
