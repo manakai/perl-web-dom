@@ -4,7 +4,7 @@ Time::Piece~1.30
 Test::NoWarnings~1.04
 Encode~2.78
 List::Util~1.42
-DateTime::Locale~0.46
+DateTime::Locale~0.92
 Test::Builder~1.001014
 Module::Implementation~0.09
 List::MoreUtils~0.413
