@@ -26,7 +26,8 @@ test {
 
   my $nl = $doc->all;
   undef $doc;
-  isa_ok $nl, 'Web::DOM::HTMLCollection';
+  isa_ok $nl, 'Web::DOM::HTMLAllCollection';
+  ok !$nl->isa ('Web::DOM::HTMLCollection');
   is scalar @$nl, 0;
   is $nl->length, 0;
 
@@ -37,7 +38,7 @@ test {
   ok $called;
 
   done $c;
-} n => 5, name => 'children empty';
+} n => 6, name => 'children empty';
 
 test {
   my $c = shift;
@@ -53,7 +54,8 @@ test {
 
   my $nl = $doc->all;
   undef $doc;
-  isa_ok $nl, 'Web::DOM::HTMLCollection';
+  isa_ok $nl, 'Web::DOM::HTMLAllCollection';
+  ok !$nl->isa ('Web::DOM::HTMLCollection');
   is scalar @$nl, 3;
   is $nl->length, 3;
 
@@ -64,7 +66,7 @@ test {
   ok $called;
 
   done $c;
-} n => 5, name => 'children not empty';
+} n => 6, name => 'children not empty';
 
 test {
   my $c = shift;
@@ -626,7 +628,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
