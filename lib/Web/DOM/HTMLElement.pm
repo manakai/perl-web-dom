@@ -750,7 +750,7 @@ use Web::DOM::Element;
 
 _define_reflect_string name => 'name';
 
-# XXX areas images
+# XXX areas
 
 package Web::DOM::HTMLAreaElement;
 our $VERSION = '1.0';
@@ -1914,7 +1914,7 @@ sub manakai_append_content ($$) {
 
 =head1 LICENSE
 
-Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

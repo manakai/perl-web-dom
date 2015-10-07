@@ -76,7 +76,7 @@ For example:
 
 =item $el->itemid ($string)
 
-Return or set the C<itemid> attribute.  [HTML]
+Return or set the C<itemid> attribute.  [HTMLMD]
 
 =item $tokens = $el->itemprop
 
@@ -84,7 +84,7 @@ Return or set the C<itemid> attribute.  [HTML]
 
 Return the L<Web::DOM::SettableTokenList> object for the C<itemprop>
 attribute, or set the C<itemprop> attribute to the specified string
-value.  [HTML]
+value.  [HTMLMD]
 
 =item $tokens = $el->itemref
 
@@ -92,14 +92,14 @@ value.  [HTML]
 
 Return the L<Web::DOM::SettableTokenList> object for the C<itemref>
 attribute, or set the C<itemref> attribute to the specified string
-value.  [HTML]
+value.  [HTMLMD]
 
 =item $boolean = $el->itemscope
 
 =item $el->itemscope ($boolean)
 
 Return or set whether the C<itemscope> attribute is specified or not.
-[HTML]
+[HTMLMD]
 
 =item $tokens = $el->itemtype
 
@@ -107,14 +107,14 @@ Return or set whether the C<itemscope> attribute is specified or not.
 
 Return the L<Web::DOM::SettableTokenList> object for the C<itemtype>
 attribute, or set the C<itemtype> attribute to the specified string
-value.  [HTML]
+value.  [HTMLMD]
 
 =item $value = $el->itemvalue
 
 =item $el->itemvalue ($value)
 
 Get or set the value of the property of the item, represented by the
-element.  [HTML]
+element.  [HTMLMD]
 
 =item $string = $el->lang
 
@@ -249,6 +249,11 @@ HTML Standard
 
 CSSOM <http://dev.w3.org/csswg/cssom/#elementcssinlinestyle>.
 
+=item HTMLMD
+
+HTML Microdata API
+<https://github.com/whatwg/html/commit/2aaecb89900b875b9ee8357fa8bccf48477358bb>.
+
 =item MANAKAI
 
 manakai DOM Extensions
@@ -271,7 +276,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
