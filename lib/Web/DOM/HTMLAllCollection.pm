@@ -2,8 +2,8 @@ package Web::DOM::HTMLAllCollection;
 use strict;
 use warnings;
 use Web::DOM::HTMLCollection;
-push our @ISA, qw(Web::DOM::HTMLCollection);
-our $VERSION = '4.0';
+push our @ISA, qw(Web::DOM::Collection);
+our $VERSION = '5.0';
 use Web::DOM::Internal;
 use Web::DOM::_Defs;
 
@@ -74,11 +74,15 @@ sub item ($$) {
   }
 } # item
 
+sub named_item ($$) {
+  return $_[0]->{$_[1]};
+} # named_item
+
 1;
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
