@@ -566,6 +566,41 @@ test {
 
   my $col3 = $el->get_elements_by_tag_name ('p');
   my $col4 = $el->get_elements_by_tag_name ('p');
+  is $col3, $col2;
+  is $col4, $col3;
+  is $col1->[0], $el2;
+  is $col3->[0], $el2;
+
+  my $el3 = $doc2->create_element ('p');
+  $el->append_child ($el3);
+  is $col1->[1], $el3;
+  is $col3->[1], $el3;
+
+  $doc->adopt_node ($el);
+
+  my $col5 = $el->get_elements_by_tag_name ('p');
+  is $col5, $col2;
+
+  done $c;
+} n => 8, name => 'get_elements_by_tag_name reuse';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  my $el2 = $doc->create_element ('p');
+  $el->append_child ($el2);
+
+  my $col1 = $el->get_elements_by_tag_name ('p');
+  my $col2 = $el->get_elements_by_tag_name ('p');
+  is $col2, $col1;
+
+  my $doc2 = new Web::DOM::Document;
+  $doc2->manakai_is_html (1);
+  $doc2->adopt_node ($el);
+
+  my $col3 = $el->get_elements_by_tag_name ('p');
+  my $col4 = $el->get_elements_by_tag_name ('p');
   isnt $col3, $col2;
   is $col4, $col3;
   is $col1->[0], $el2;
