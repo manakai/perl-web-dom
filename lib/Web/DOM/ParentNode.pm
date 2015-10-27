@@ -15,7 +15,7 @@ use Web::DOM::Exception;
 sub get_elements_by_tag_name ($$) {
   my $self = $_[0];
   my $ln = ''.$_[1];
-  return $$self->[0]->collection (['by_tag_name', $$self->[0]->{data}, $ln], $self, sub {
+  return $$self->[0]->collection (['by_tag_name', $$self->[0]->{data}->[0]->{is_html}, $ln], $self, sub {
     my $node = $_[0];
     my $ln2 = $ln;
     my $is_html = $$self->[0]->{data}->[0]->{is_html};
