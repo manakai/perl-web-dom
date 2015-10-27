@@ -717,7 +717,7 @@ sub remove_children ($$$$) {
 ##   - {scripts}                  - $doc->scripts
 ##   - {tbodies}                  - $table->tbodies
 ##   - {"by_class_name$;$cls"}    - $node->get_elements_by_class_name ($cls)
-##   - {"by_tag_name$;$ln"}       - $node->get_elements_by_tag_name ($ln)
+##   - {"by_tag_name$;$od;$ln"}   - $node->get_elements_by_tag_name ($ln)
 ##   - {"by_tag_name_ns$;$n$;$l"} - $node->get_elements_by_tag_name_ns ($n, $l)
 ##   - {"by_name$;$name"}         - $doc->get_elements_by_name ($name)
 ##   - {"all$;$name$;..."}        - $doc->all->{$name}->...

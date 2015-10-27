@@ -553,6 +553,40 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  my $el2 = $doc->create_element ('p');
+  $el->append_child ($el2);
+
+  my $col1 = $el->get_elements_by_tag_name ('p');
+  my $col2 = $el->get_elements_by_tag_name ('p');
+  is $col2, $col1;
+
+  my $doc2 = new Web::DOM::Document;
+  $doc2->adopt_node ($el);
+
+  my $col3 = $el->get_elements_by_tag_name ('p');
+  my $col4 = $el->get_elements_by_tag_name ('p');
+  isnt $col3, $col2;
+  is $col4, $col3;
+  is $col1->[0], $el2;
+  is $col3->[0], $el2;
+
+  my $el3 = $doc2->create_element ('p');
+  $el->append_child ($el3);
+  is $col1->[1], $el3;
+  is $col3->[1], $el3;
+
+  $doc->adopt_node ($el);
+
+  my $col5 = $el->get_elements_by_tag_name ('p');
+  is $col5, $col2;
+
+  done $c;
+} n => 8, name => 'get_elements_by_tag_name reuse';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
 
   my $node = $doc->create_element ('a');
   my $col1 = $node->get_elements_by_tag_name_ns ('*', '*');
@@ -1434,7 +1468,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
