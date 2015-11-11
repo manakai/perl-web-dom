@@ -753,7 +753,7 @@ _define_reflect_string name => 'name';
 # XXX areas
 
 package Web::DOM::HTMLAreaElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
@@ -763,8 +763,6 @@ _define_reflect_string shape => 'shape';
 _define_reflect_string target => 'target';
 _define_reflect_string download => 'download';
 _define_reflect_string rel => 'rel';
-_define_reflect_string hreflang => 'hreflang';
-_define_reflect_string type => 'type';
 _define_reflect_url href => 'href';
 _define_reflect_settable_token_list ping => 'ping';
 

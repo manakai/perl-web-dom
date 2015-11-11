@@ -39,12 +39,6 @@ Return or set the C<download> attribute.  [HTML]
 
 Return or set the C<href> attribute.  [HTML]
 
-=item $string = $el->hreflang
-
-=item $el->hreflang ($string)
-
-Return or set the C<hreflang> attribute.  [HTML]
-
 =item $tokens = $el->ping
 
 =item $el->ping ($string)
@@ -70,15 +64,12 @@ Return the L<Web::DOM::TokenList> object for the C<rel> attribute.
 
 Return or set the C<shape> attribute.  [HTML]
 
-=item $string = $el->type
-
-=item $el->type ($string)
-
-Return or set the C<type> attribute.  [HTML]
-
 =back
 
 The obsolete C<nohref> method is also available.  [HTML]
+
+Methods C<hreflang> and C<type> are removed as they are removed from
+the HTML Standard and are not seemed to be used at all.
 
 =head1 SPECIFICATION
 
@@ -101,7 +92,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
