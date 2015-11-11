@@ -42,6 +42,8 @@ for my $test (
   ['style', 'media'],
   ['script', 'charset'],
   ['script', 'type'],
+  ['script', 'html_for', 'for'],
+  ['script', 'event'],
   ['ol', 'type'],
   ['a', 'target'],
   ['a', 'type'],
@@ -1765,32 +1767,6 @@ test {
   done $c;
 } n => 1, name => 'output type';
 
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('script');
-  is $el->event, '';
-  $el->event ('hoge');
-  is $el->event, '';
-  is $el->get_attribute ('event'), undef;
-  $el->set_attribute (event => 'foo');
-  is $el->event, '';
-  done $c;
-} n => 4, name => 'script.event';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('script');
-  is $el->html_for, '';
-  $el->html_for ('hoge');
-  is $el->html_for, '';
-  is $el->get_attribute ('for'), undef;
-  $el->set_attribute (for => 'foo');
-  is $el->html_for, '';
-  done $c;
-} n => 4, name => 'script.html_for';
-
 for my $name (qw(caption thead tfoot)) {
   test {
     my $c = shift;
@@ -3051,7 +3027,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

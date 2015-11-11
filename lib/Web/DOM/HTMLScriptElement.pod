@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::HTMLScriptElement - The DOM |HTMLScriptElement| object
+Web::DOM::HTMLScriptElement - DOM |HTMLScriptElement| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::HTMLScriptElement> class implements the DOM
-C<HTMLScriptElement> interface.  The class is used by the HTML C<script>
-element.
+C<HTMLScriptElement> interface.  The class is used by the HTML
+C<script> element.
 
 =head1 METHODS
 
@@ -54,6 +54,9 @@ Return or set the C<type> attribute.  [HTML]
 
 =back
 
+Additionally, the following obsolete methods are available: C<event>
+and C<html_for>.  [HTML]
+
 =head1 SPECIFICATION
 
 =over 4
@@ -75,7 +78,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

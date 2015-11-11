@@ -176,8 +176,6 @@ sub itemvalue ($;$) {
   }
 } # itemvalue
 
-# XXX command*
-
 # ElementCSSInlineStyle
 sub style ($;$) {
   my $style = ${$_[0]}->[0]->source_style ('attr', $_[0]);
@@ -344,7 +342,7 @@ sub disabled ($;$) {
 } # disabled
 
 package Web::DOM::HTMLScriptElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Node;
 use Web::DOM::Element;
@@ -359,6 +357,8 @@ _define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
   # #missing => no cors
 };
 _define_reflect_boolean defer => 'defer';
+_define_reflect_string event => 'event';
+_define_reflect_string html_for => 'for';
 
 # XXX async
 
@@ -371,9 +371,6 @@ sub text ($;$) {
       map { $_->data }
       grep { $_->node_type == TEXT_NODE } @{$_[0]->child_nodes};
 } # text
-
-sub event ($;$) { '' }
-sub html_for ($;$) { '' }
 
 package Web::DOM::HTMLBodyElement;
 our $VERSION = '1.0';
@@ -1771,8 +1768,6 @@ package Web::DOM::HTMLMenuItemElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
-
-# XXX command
 
 _define_reflect_enumerated type => 'type', {
   'command' => 'command',
