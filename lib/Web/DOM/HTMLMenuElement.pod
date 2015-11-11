@@ -1,11 +1,11 @@
 =head1 NAME
 
-Web::DOM::HTMLMenuElement - The DOM |HTMLMenuElement| object
+Web::DOM::HTMLMenuElement - DOM |HTMLMenuElement| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::HTMLMenuElement> class implements the DOM
-C<HTMLMenuElement> interface.  The class is used by the HTML C<menu>
+C<HTMLMenuElement> interface.  This class is used by the HTML C<menu>
 element.
 
 =head1 METHODS
@@ -52,7 +52,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

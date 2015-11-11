@@ -80,9 +80,7 @@ for my $test (
   ['area', 'coords'],
   ['area', 'shape'],
   ['area', 'target'],
-  ['area', 'type'],
   ['area', 'rel'],
-  ['area', 'hreflang'],
   ['area', 'download'],
   ['th', 'abbr'],
   ['th', 'sorted'],
@@ -1126,9 +1124,9 @@ for my $test (
    default => 'toolbar',
    valid_values => [
      [toolbar => 'toolbar'],
-     [popUp => 'popup'],
+     [ConteXt => 'context'],
    ],
-   invalid_values => [[''], ['0'], [undef], ['menu']]},
+   invalid_values => [[''], ['0'], [undef], ['menu'], ['Popup']]},
 ) {
   my $attr = $test->{attr};
   test {
@@ -1240,17 +1238,19 @@ test {
   $el1->append_child ($el2);
   is $el2->type, 'toolbar';
   $el1->type ('popup');
-  is $el2->type, 'popup';
+  is $el2->type, 'toolbar';
+  $el1->type ('context');
+  is $el2->type, 'context';
   $el1->set_attribute (type => 'hoge');
   is $el2->type, 'toolbar';
   $el1->set_attribute (type => 'Toolbar');
   is $el2->type, 'toolbar';
   $el2->set_attribute (type => '');
   is $el2->type, 'toolbar';
-  $el2->set_attribute (type => 'popup');
-  is $el2->type, 'popup';
+  $el2->set_attribute (type => 'ConText');
+  is $el2->type, 'context';
   done $c;
-} n => 6, name => 'menu.type parent is menu'; 
+} n => 7, name => 'menu.type parent is menu'; 
 
 test {
   my $c = shift;
@@ -1261,7 +1261,7 @@ test {
   $el1->append_child ($el2);
   $el2->append_child ($el3);
   is $el3->type, 'toolbar';
-  $el1->type ('popup');
+  $el1->type ('context');
   is $el3->type, 'toolbar';
   $el1->set_attribute (type => 'hoge');
   is $el3->type, 'toolbar';
@@ -1269,10 +1269,10 @@ test {
   is $el3->type, 'toolbar';
   $el2->set_attribute (type => '');
   is $el3->type, 'toolbar';
-  $el2->set_attribute (type => 'popup');
+  $el2->set_attribute (type => 'context');
   is $el3->type, 'toolbar';
-  $el3->set_attribute (type => 'popup');
-  is $el3->type, 'popup';
+  $el3->set_attribute (type => 'context');
+  is $el3->type, 'context';
   done $c;
 } n => 7, name => 'menu.type parent is not menu'; 
 
@@ -1285,9 +1285,9 @@ test {
   $el->type ('hoge');
   is $el->get_attribute ('type'), 'hoge';
   is $el->type, 'toolbar';
-  $el->type ('Popup');
-  is $el->get_attribute ('type'), 'Popup';
-  is $el->type, 'popup';
+  $el->type ('Context');
+  is $el->get_attribute ('type'), 'Context';
+  is $el->type, 'context';
   done $c;
 } n => 5, name => 'menu.type parent is document';
 

@@ -1733,14 +1733,14 @@ use Web::DOM::Element;
 _define_reflect_boolean open => 'open';
 
 package Web::DOM::HTMLMenuElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Internal;
 use Web::DOM::Node;
 use Web::DOM::Element;
 
 _define_reflect_enumerated _type => 'type', {
-  popup => 'popup',
+  context => 'context',
   toolbar => 'toolbar',
 };
 sub type ($;$) {
