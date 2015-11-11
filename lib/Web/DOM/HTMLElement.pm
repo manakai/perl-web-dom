@@ -319,6 +319,7 @@ use Web::DOM::Element;
 _define_reflect_string type => 'type';
 _define_reflect_string media => 'media';
 _define_reflect_boolean scoped => 'scoped';
+_define_reflect_string nonce => 'nonce';
 
 ## The |LinkStyle| interface [NoInterfaceObject]
 ## Test: linkstyle.t
@@ -359,6 +360,7 @@ _define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
 _define_reflect_boolean defer => 'defer';
 _define_reflect_string event => 'event';
 _define_reflect_string html_for => 'for';
+_define_reflect_string nonce => 'nonce';
 
 # XXX async
 

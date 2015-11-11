@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::HTMLStyleElement - The DOM |HTMLStyleElement| object
+Web::DOM::HTMLStyleElement - DOM |HTMLStyleElement| object
 
 =head1 DESCRIPTION
 
@@ -27,6 +27,12 @@ Return or set the disabled flag of the CSS style sheet of the element.
 =item $el->media ($string)
 
 Return or set the C<media> attribute.  [HTML]
+
+=item $string = $el->nonce
+
+=item $el->nonce ($string)
+
+Return or set the C<nonce> attribute.  [HTML]
 
 =item $boolean = $el->scoped
 
@@ -74,7 +80,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
