@@ -21,7 +21,7 @@ Test::Differences~0.63
 Path::Class~0.35
 Unicode::Stringprep~1.105
 Scalar::Util~1.42
-File::Spec~3.47
+File::Spec~3.59
 Module::Runtime~0.014
 Unicode::Normalize~1.23
 Algorithm::Diff~1.1903
