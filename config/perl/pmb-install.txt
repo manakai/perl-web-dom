@@ -25,7 +25,7 @@ File::Spec~3.59
 Module::Runtime~0.014
 Unicode::Normalize~1.23
 Algorithm::Diff~1.1903
-Path::Tiny~0.072
+Path::Tiny~0.076
 Test::Tester~0.114
 Exporter~5.72
 Carp~1.38
