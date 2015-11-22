@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::TokenList - The DOM |DOMTokenList| object
+Web::DOM::TokenList - DOM |DOMTokenList| object
 
 =head1 DESCRIPTION
 
@@ -71,12 +71,12 @@ e.g. C<< pop @$tokens >>.  [DOMPERL]
 
 =item DOM
 
-DOM Living Standard <http://dom.spec.whatwg.org/>.
+DOM Standard <https://dom.spec.whatwg.org/>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<http://wiki.suikawiki.org/n/manakai's%20DOM%20Perl%20Binding>.
 
 =back
 
@@ -90,7 +90,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

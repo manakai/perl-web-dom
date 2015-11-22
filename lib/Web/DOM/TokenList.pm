@@ -1,7 +1,7 @@
 package Web::DOM::TokenList;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Exception;
 use Carp;
 push our @CARP_NOT, qw(Web::DOM::Exception Web::DOM::StringArray);
@@ -56,8 +56,8 @@ sub add ($;@) {
 
 sub remove ($;@) {
   my $self = shift;
-  my %token = map { ''.$_ => 1 } @_;
-  for my $token (keys %token) {
+  my @token = map { ''.$_ } @_;
+  for my $token (@token) {
     if ($token eq '') {
       # 1.
       _throw Web::DOM::Exception 'SyntaxError',
@@ -68,6 +68,7 @@ sub remove ($;@) {
           'The token cannot contain any ASCII white space character';
     }
   }
+  my %token = map { $_ => 1 } @token;
   (tied @$self)->replace_by_bare (grep { not $token{$_} } @$self);
   return;
 } # remove
@@ -121,7 +122,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

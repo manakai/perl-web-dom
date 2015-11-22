@@ -225,6 +225,50 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  my $tokens = $el->class_list;
+
+  $tokens->add ('hoge,', 'fuga');
+  is_deeply [@{$tokens}], ['hoge,', 'fuga'];
+
+  dies_here_ok {
+    $tokens->add ('xx', '');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The token cannot be the empty string';
+
+  is $el->get_attribute ('class'), 'hoge, fuga';
+  is_deeply [@{$tokens}], ['hoge,', 'fuga'];
+
+  done $c;
+} n => 7, name => 'add';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  my $tokens = $el->class_list;
+
+  $tokens->add ('hoge,', 'fuga');
+  is_deeply [@{$tokens}], ['hoge,', 'fuga'];
+
+  dies_here_ok {
+    $tokens->add (' ', '');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'InvalidCharacterError';
+  is $@->message, 'The token cannot contain any ASCII white space character';
+
+  is $el->get_attribute ('class'), 'hoge, fuga';
+  is_deeply [@{$tokens}], ['hoge,', 'fuga'];
+
+  done $c;
+} n => 7, name => 'add';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ('f');
   my $tokens = $el->class_list;
   $tokens->add ('foo');
@@ -312,6 +356,46 @@ test {
 
   done $c;
 } n => 8, name => 'remove error';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->class_name ('ho eafe');
+  my $tokens = $el->class_list;
+
+  dies_here_ok {
+    $tokens->remove ('ho', '');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The token cannot be the empty string';
+
+  is $el->get_attribute ('class'), 'ho eafe';
+  is_deeply [@{$tokens}], ['ho', 'eafe'];
+
+  done $c;
+} n => 6, name => 'remove error';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->class_name ('ho eafe');
+  my $tokens = $el->class_list;
+
+  dies_here_ok {
+    $tokens->remove ('ho', ' ', '');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'InvalidCharacterError';
+  is $@->message, 'The token cannot contain any ASCII white space character';
+
+  is $el->get_attribute ('class'), 'ho eafe';
+  is_deeply [@{$tokens}], ['ho', 'eafe'];
+
+  done $c;
+} n => 6, name => 'remove error';
 
 test {
   my $c = shift;
@@ -441,7 +525,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
