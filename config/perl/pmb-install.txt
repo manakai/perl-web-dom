@@ -17,7 +17,7 @@ Data::Dumper~2.154
 Dist::CheckConflicts~0.11
 Text::Diff~1.43
 Test::More~1.001014
-Test::Differences~0.63
+Test::Differences~0.64
 Path::Class~0.35
 Unicode::Stringprep~1.105
 Scalar::Util~1.42
