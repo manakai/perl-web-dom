@@ -145,7 +145,7 @@ test {
   is $el->class_name, 'aaa';
 
   $el->set_attribute (class => 'bb  ccc  ');
-  is ''.$tokens, 'bb ccc';
+  is ''.$tokens, 'bb  ccc  ';
   is $el->get_attribute ('class'), 'bb  ccc  ';
   
   done $c;
