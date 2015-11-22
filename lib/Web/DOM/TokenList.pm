@@ -50,8 +50,7 @@ sub contains ($$) {
 
 sub add ($;@) {
   my %found = map { $_ => 1 } @{$_[0]};
-  (tied @{+shift})->append (grep { not $found{$_}++ } @_);
-  return;
+  return ((tied @{+shift})->append (grep { not $found{$_}++ } @_));
 } # add
 
 sub remove ($;@) {
@@ -88,25 +87,28 @@ sub toggle ($$;$) {
         'The token cannot contain any ASCII white space character';
   }
 
-  # 3.
   my $has_token = defined [grep { $_ eq $token } @$self]->[0];
   if ($has_token and not $force) {
+    # 3.1.
     (tied @$self)->replace_by_bare (grep { $_ ne $token } @$self);
     return 0;
   }
 
-  # 4.
   if ($has_token and $force) {
+    # 3.2.
     return 1;
   }
 
-  # 5.
   if (defined $force and not $force) {
+    # 4.1.
     return 0;
   }
 
-  # 6.
-  push @$self, $token;
+  # 4.2.
+  return 0 unless (tied @{$_[0]})->validate ($token);
+
+  # 4.3.
+  (tied @$self)->replace_by_bare (@$self, $token);
   return 1;
 } # toggle
 

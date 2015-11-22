@@ -192,13 +192,13 @@ test {
   my $el = $doc->create_element ('hoge');
   my $tokens = $el->class_list;
 
-  $tokens->add ('hoge,', 'fuga');
+  ok $tokens->add ('hoge,', 'fuga');
   is_deeply [@{$tokens}], ['hoge,', 'fuga'];
 
-  $tokens->add;
+  ok $tokens->add;
   is_deeply [@{$tokens}], ['hoge,', 'fuga'];
 
-  $tokens->add ('abc');
+  ok $tokens->add ('abc');
   is_deeply [@{$tokens}], ['hoge,', 'fuga', 'abc'];
   is $el->class_name, 'hoge, fuga abc';
 
@@ -220,7 +220,7 @@ test {
   is_deeply [@{$tokens}], ['hoge,', 'fuga', 'abc'];
 
   done $c;
-} n => 14, name => 'add';
+} n => 17, name => 'add';
 
 test {
   my $c = shift;
@@ -272,7 +272,7 @@ test {
   my $el = $doc->create_element ('f');
   my $tokens = $el->class_list;
   $tokens->add ('foo');
-  $tokens->add ('foo');
+  ok $tokens->add ('foo');
   is scalar @$tokens, 1;
   is $el->class_name, 'foo';
   push @$tokens, 'foo';
@@ -285,7 +285,24 @@ test {
   is scalar @$tokens, 3;
   is $el->class_name, 'foo bar baz';
   done $c;
-} n => 8, name => 'add unique';
+} n => 9, name => 'add unique';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('link');
+  my $tokens = $el->rel_list;
+  ok ! $tokens->add ('foo');
+  ok $tokens->add ('foo');
+  is scalar @$tokens, 1;
+  is $el->rel, 'foo';
+  is ''.$tokens, 'foo';
+  ok ! $tokens->add ('bar', 'bar');
+  is scalar @$tokens, 2;
+  is $el->rel, 'foo bar';
+  ok $tokens->add ('bar', 'bar');
+  done $c;
+} n => 9, name => 'add unique supportedness';
 
 test {
   my $c = shift;
@@ -293,7 +310,7 @@ test {
   my $el = $doc->create_element ('td');
   my $tokens = $el->headers;
   $tokens->add ('foo');
-  $tokens->add ('foo');
+  ok $tokens->add ('foo');
   is scalar @$tokens, 1;
   is $el->get_attribute ('headers'), 'foo';
   push @$tokens, 'foo';
@@ -306,7 +323,7 @@ test {
   is scalar @$tokens, 3;
   is $el->get_attribute ('headers'), 'foo bar baz';
   done $c;
-} n => 8, name => 'add unique DOMSettableTokenList';
+} n => 9, name => 'add unique DOMSettableTokenList';
 
 test {
   my $c = shift;
@@ -453,6 +470,43 @@ test {
 
   done $c;
 } n => 16, name => 'toggle';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('area');
+  my $tokens = $el->rel_list;
+
+  ok ! $tokens->toggle ('hoge');
+  is $el->rel, '';
+  $tokens->add ('hoge');
+
+  ok ! $tokens->toggle ('fuga');
+  is $el->rel, 'hoge';
+  $tokens->add ('fuga');
+
+  ok not $tokens->toggle ('hoge');
+  is $el->rel, 'fuga';
+
+  ok ! $tokens->toggle ('hoge');
+  is $el->rel, 'fuga';
+  $tokens->add ('hoge');
+
+  ok $tokens->toggle ('hoge', 1);
+  is $el->rel, 'fuga hoge';
+
+  ok not $tokens->toggle ('hoge', 0);
+  is $el->rel, 'fuga';
+
+  ok ! $tokens->toggle ('hoge', 1);
+  is $el->rel, 'fuga';
+  $tokens->add ('hoge');
+
+  ok not $tokens->toggle ('hoge2', 0);
+  is $el->rel, 'fuga hoge';
+
+  done $c;
+} n => 16, name => 'toggle supportedness';
 
 test {
   my $c = shift;

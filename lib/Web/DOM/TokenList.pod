@@ -18,7 +18,7 @@ Following methods are available:
 
 =item push @$tokens, $token1, $token2, ...
 
-=item $tokens->add ($token1, $token2, ...)
+=item $boolean = $tokens->add ($token1, $token2, ...)
 
 Append specified tokens to the list.  [DOM] [DOMPERL]
 

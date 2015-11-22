@@ -843,8 +843,8 @@ our $TokenListClass = {
   rel_list => 'Web::DOM::TokenList',
 };
 
-sub tokens ($$$$$) {
-  my ($self, $key, $node, $updater, $attr_name) = @_;
+sub tokens ($$$$$$) {
+  my ($self, $key, $node, $updater, $attr_name, $supported) = @_;
   my $id = $$node->[1];
   return $self->{tokens}->[$id]->{$key}
       if $self->{tokens}->[$id]->{$key};
@@ -875,6 +875,13 @@ sub tokens ($$$$$) {
     } elsif ($_[0] =~ /[\x09\x0A\x0C\x0D\x20]/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The token cannot contain any ASCII white space character';
+    }
+    if (defined $supported) { # validation steps / supported tokens
+      my $x = $_[0];
+      $x =~ tr/A-Z/a-z/; ## ASCII case-insensitive
+      if (not $supported->{$x}) {
+        ${$_[1]} = 0; # $_[1] = \($valid)
+      }
     }
     return $_[0];
   }, sub {

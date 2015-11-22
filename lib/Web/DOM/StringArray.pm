@@ -100,9 +100,18 @@ sub SPLICE {
 
 sub append ($;@) {
   my $self = shift;
-  push @{$self->[0]}, map { $self->[2]->(''.$_) } @_;
+  my $valid = 1;
+  push @{$self->[0]}, map { $self->[2]->(''.$_, \$valid) } @_;
   $self->[1]->($self);
+  return $valid;
 } # append
+
+sub validate ($;@) {
+  my $self = shift;
+  my $valid = 1;
+  $self->[2]->(''.$_[0], \$valid);
+  return $valid;
+} # validate
 
 sub replace_by_bare ($;@) {
   my $self = shift;

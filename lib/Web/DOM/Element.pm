@@ -1017,10 +1017,13 @@ sub _define_reflect_unsigned_long_positive ($$$) {
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_unsigned_long_positive
 
+my $SupportedTokensList = {sandbox => {}}; # XXX
+
 push @EXPORT, qw(_define_reflect_settable_token_list);
 sub _define_reflect_settable_token_list ($$) {
   my ($perl_name, $content_name) = @_;
   my $class = caller;
+  my $supported = $SupportedTokensList->{$content_name};
   eval sprintf q{
     *%s::%s = sub ($;$) {
       my $self = $_[0];
@@ -1033,7 +1036,7 @@ sub _define_reflect_settable_token_list ($$) {
         my $new = $$self->[2]->{%s} || [];
         $self->set_attribute_ns (undef, '%s' => join ' ', @$new)
             if @$new or $self->has_attribute_ns (undef, '%s');
-      }, '%s');
+      }, '%s', $supported);
     };
     1;
   }, $class, $perl_name, $perl_name,

@@ -1296,9 +1296,9 @@ test {
 } n => 5, name => 'menu.type parent is document';
 
 for my $test (
-  {element => 'a', attr => 'rel', method => 'rel_list'},
-  {element => 'area', attr => 'rel', method => 'rel_list'},
-  {element => 'link', attr => 'rel', method => 'rel_list'},
+  {element => 'a', attr => 'rel', method => 'rel_list', supported => {}},
+  {element => 'area', attr => 'rel', method => 'rel_list', supported => {}},
+  {element => 'link', attr => 'rel', method => 'rel_list', supported => {}},
   {element => 'td', attr => 'headers'},
   {element => 'th', attr => 'headers'},
   {element => 'em', attr => 'dropzone'},
@@ -1306,7 +1306,7 @@ for my $test (
   {element => 'em', attr => 'itemref'},
   {element => 'em', attr => 'itemtype'},
   {element => 'link', attr => 'sizes'},
-  {element => 'iframe', attr => 'sandbox'},
+  {element => 'iframe', attr => 'sandbox', supported => {}},
   {element => 'output', attr => 'for', method => 'html_for'},
   {element => 'a', attr => 'ping', method => 'ping'},
   {element => 'area', attr => 'ping', method => 'ping'},
@@ -1331,7 +1331,7 @@ for my $test (
     is $el->get_attribute ($test->{attr}), 'aaa';
 
     $el->set_attribute ($test->{attr} => 'bb  ccc  ');
-    is ''.$tokens, 'bb ccc';
+    is ''.$tokens, 'bb  ccc  ';
     is $el->get_attribute ($test->{attr}), 'bb  ccc  ';
     
     done $c;
@@ -1343,14 +1343,16 @@ for my $test (
     my $el = $doc->create_element ($el_name);
     $el->$method->remove ('foo');
     ok not $el->has_attribute ($test->{attr});
-    $el->$method->add;
+    ok $el->$method->add;
     ok not $el->has_attribute ($test->{attr});
-    $el->$method->add ('bar');
+    is !! $el->$method->add ('bar'), !$test->{supported};
     is $el->get_attribute ($test->{attr}), 'bar';
     $el->$method->remove ('bar');
     is $el->get_attribute ($test->{attr}), '';
+    is !! $el->$method->toggle ('baR'), !$test->{supported};
+    is $el->get_attribute ($test->{attr}), $test->{supported} ? '' : 'baR';
     done $c;
-  } n => 4, name => ['reflect DOMTokenList attribute existence', $el_name];
+  } n => 8, name => ['reflect DOMTokenList attribute existence', $el_name];
 
   if ($method ne 'rel_list') {
     test {
@@ -1369,6 +1371,30 @@ for my $test (
       done $c;
     } n => 3, name => ['reflect DOMSettableTokenList',
                        $el_name, $test->{attr}];
+  }
+
+  if ($test->{supported}) {
+    test {
+      my $c = shift;
+      my $doc = new Web::DOM::Document;
+      my $el = $doc->create_element ($el_name);
+
+      ok ! $el->$method->add ('hoge');
+      is $el->get_attribute ($test->{attr}), 'hoge';
+
+      ok ! $el->$method->add ('Fuga');
+      is $el->get_attribute ($test->{attr}), 'hoge Fuga';
+
+      ok ! $el->$method->toggle ('abc', 1);
+      is $el->get_attribute ($test->{attr}), 'hoge Fuga';
+
+      ok ! $el->$method->toggle ('abc');
+      is $el->get_attribute ($test->{attr}), 'hoge Fuga';
+
+      done $c;
+    } n => 8, name => ['reflect DOMSettableTokenList',
+                       $el_name, $test->{attr},
+                       'supported'];
   }
 }
 
