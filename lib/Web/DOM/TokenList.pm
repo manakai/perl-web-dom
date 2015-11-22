@@ -112,6 +112,45 @@ sub toggle ($$;$) {
   return 1;
 } # toggle
 
+sub replace ($$$) {
+  my $self = $_[0];
+  my $token = ''.$_[1];
+  my $new_token = ''.$_[2];
+
+  if ($token eq '' or $new_token eq '') {
+    # 1.
+    _throw Web::DOM::Exception 'SyntaxError',
+        'The token cannot be the empty string';
+  } elsif ($token =~ /[\x09\x0A\x0C\x0D\x20]/ or
+           $new_token =~ /[\x09\x0A\x0C\x0D\x20]/) {
+    # 2.
+    _throw Web::DOM::Exception 'InvalidCharacterError',
+        'The token cannot contain any ASCII white space character';
+  }
+
+  # 3.
+  return unless (tied @$self)->validate ($new_token);
+
+  my @new;
+  my $replaced = 0;
+  for (@$self) {
+    if ($_ eq $token) {
+      # 4.
+      push @new, $new_token;
+      $replaced = 1;
+    } else {
+      push @new, $_;
+    }
+  }
+
+  # 3.
+  return unless $replaced;
+
+  # 5.
+  (tied @$self)->replace_by_bare (@new);
+  return;
+} # replace
+
 sub DESTROY ($) {
   {
     local $@;

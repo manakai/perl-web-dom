@@ -46,6 +46,10 @@ Return the number of the tokens in the list.  [DOM] [DOMPERL]
 
 Remove the specified tokens from the list.  [DOM]
 
+=item $tokens->replace ($token, $new_token)
+
+Replace the token, if any, by a new token.  [DOM]
+
 =item $bool = $tokens->toggle ($token)
 
 =item $bool = $tokens->toggle ($token, $bool)

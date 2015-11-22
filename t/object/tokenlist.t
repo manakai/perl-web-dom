@@ -593,6 +593,174 @@ test {
   done $c;
 } n => 21, name => 'cmp';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  my $tokens = $el->class_list;
+  ok ! $tokens->replace ('hoge', 'fuga');
+  is ''.$tokens, '';
+  is $el->get_attribute ('class'), undef;
+  done $c;
+} n => 3, name => 'replace no attr';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hoge ss xs  ');
+  my $tokens = $el->class_list;
+  ok ! $tokens->replace ('hoge', 'fuga');
+  is ''.$tokens, 'ab fuga ss xs';
+  is $el->get_attribute ('class'), 'ab fuga ss xs';
+  done $c;
+} n => 3, name => 'replace a value found';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hoge ss xs hoge  ');
+  my $tokens = $el->class_list;
+  ok ! $tokens->replace ('hoge', 'fuga');
+  is ''.$tokens, 'ab fuga ss xs';
+  is $el->get_attribute ('class'), 'ab fuga ss xs';
+  done $c;
+} n => 3, name => 'replace multiple value found';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hoge ss xs Hoge   ');
+  my $tokens = $el->class_list;
+  ok ! $tokens->replace ('hoge', 'fuga');
+  is ''.$tokens, 'ab fuga ss xs Hoge';
+  is $el->get_attribute ('class'), 'ab fuga ss xs Hoge';
+  done $c;
+} n => 3, name => 'replace a value found, case sensitive';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hogE ss xs hoge  ');
+  my $tokens = $el->class_list;
+  ok ! $tokens->replace ('hogE', 'fuga');
+  is ''.$tokens, 'ab fuga ss xs hoge';
+  is $el->get_attribute ('class'), 'ab fuga ss xs hoge';
+  done $c;
+} n => 3, name => 'replace a value found, case-sensitive';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hoge ss xs fuga ');
+  my $tokens = $el->class_list;
+  ok ! $tokens->replace ('hoge', 'fuga');
+  is ''.$tokens, 'ab fuga ss xs';
+  is $el->get_attribute ('class'), 'ab fuga ss xs';
+  done $c;
+} n => 3, name => 'replace a value found, duplicate';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hoge ss xs  ');
+  my $tokens = $el->class_list;
+  dies_here_ok {
+    $tokens->replace ('', 'fuga');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The token cannot be the empty string';
+  is ''.$tokens, 'ab  hoge ss xs  ';
+  is $el->get_attribute ('class'), 'ab  hoge ss xs  ';
+  done $c;
+} n => 6, name => 'replace bad old value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hoge ss xs  ');
+  my $tokens = $el->class_list;
+  dies_here_ok {
+    $tokens->replace ('hoge', '');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The token cannot be the empty string';
+  is ''.$tokens, 'ab  hoge ss xs  ';
+  is $el->get_attribute ('class'), 'ab  hoge ss xs  ';
+  done $c;
+} n => 6, name => 'replace bad new value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hoge ss xs  ');
+  my $tokens = $el->class_list;
+  dies_here_ok {
+    $tokens->replace (' ', '');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'The token cannot be the empty string';
+  is ''.$tokens, 'ab  hoge ss xs  ';
+  is $el->get_attribute ('class'), 'ab  hoge ss xs  ';
+  done $c;
+} n => 6, name => 'replace bad new value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hoge ss xs  ');
+  my $tokens = $el->class_list;
+  dies_here_ok {
+    $tokens->replace (' ', 'fuga');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'InvalidCharacterError';
+  is $@->message, 'The token cannot contain any ASCII white space character';
+  is ''.$tokens, 'ab  hoge ss xs  ';
+  is $el->get_attribute ('class'), 'ab  hoge ss xs  ';
+  done $c;
+} n => 6, name => 'replace bad old value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('hoge');
+  $el->set_attribute (class => 'ab  hoge ss xs  ');
+  my $tokens = $el->class_list;
+  dies_here_ok {
+    $tokens->replace ('hoge', ' ');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'InvalidCharacterError';
+  is $@->message, 'The token cannot contain any ASCII white space character';
+  is ''.$tokens, 'ab  hoge ss xs  ';
+  is $el->get_attribute ('class'), 'ab  hoge ss xs  ';
+  done $c;
+} n => 6, name => 'replace bad new value';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->set_attribute (rel => 'ab  hoge ss xs Hoge   ');
+  my $tokens = $el->rel_list;
+  ok ! $tokens->replace ('hoge', 'fuga');
+  is ''.$tokens, 'ab  hoge ss xs Hoge   ';
+  is $el->get_attribute ('rel'), 'ab  hoge ss xs Hoge   ';
+  done $c;
+} n => 3, name => 'replace new unknown';
+
 run_tests;
 
 =head1 LICENSE
