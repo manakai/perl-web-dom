@@ -483,6 +483,24 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('b7ff');
+  $el->set_attribute (class => '  abc    def h');
+
+  my $tokens = $el->class_list;
+  is ''.$tokens, '  abc    def h';
+
+  push @$tokens, 'hoge';
+  is ''.$tokens, 'abc def h hoge';
+
+  $el->set_attribute (class => '  abc    def h hoge ');
+  is ''.$tokens, '  abc    def h hoge ';
+
+  done $c;
+} n => 3, name => 'stringifier';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ('hoge');
   my $tokens = $el->class_list;
   is $el->class_list, $tokens;

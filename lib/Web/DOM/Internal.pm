@@ -834,6 +834,8 @@ sub change_iterator_reference_node ($$$) {
 ##   ::DOMStringArray::                                             |
 ##   0 - classes arrayref                                           |
 ##   1 - update steps --------------------------------------------->+
+##   2 - token validator
+##   3 - serializer
 ## ], DOMTokenList
 
 our $TokenListClass = {
@@ -875,6 +877,9 @@ sub tokens ($$$$$) {
           'The token cannot contain any ASCII white space character';
     }
     return $_[0];
+  }, sub {
+    my $v = $node->get_attribute_ns (undef, $attr_name);
+    return defined $v ? $v : '';
   };
 
   my $class = $TokenListClass->{$key} || 'Web::DOM::SettableTokenList';
@@ -1272,7 +1277,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

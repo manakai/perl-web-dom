@@ -37,11 +37,32 @@ test {
   done $c;
 } n => 12, name => 'value';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('td');
+  my $tokens = $el->headers;
+  $el->set_attribute (headers => '  abc    def h');
+
+  is ''.$tokens, '  abc    def h';
+  is $tokens->value, '  abc    def h';
+
+  push @$tokens, 'hoge';
+  is ''.$tokens, 'abc def h hoge';
+  is $tokens->value, 'abc def h hoge';
+
+  $el->set_attribute (headers => '  abc    def h hoge ');
+  is ''.$tokens, '  abc    def h hoge ';
+  is $tokens->value, '  abc    def h hoge ';
+
+  done $c;
+} n => 6, name => 'stringifier';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -1,14 +1,14 @@
 package Web::DOM::TokenList;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Exception;
 use Carp;
 push our @CARP_NOT, qw(Web::DOM::Exception Web::DOM::StringArray);
 
 use overload
     '""' => sub {
-      return join ' ', @{$_[0]};
+      return ((tied @{$_[0]})->serialize);
     },
     bool => sub { 1 },
     cmp => sub {

@@ -1,15 +1,16 @@
 package Web::DOM::StringArray;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '3.0';
 use Carp;
 
 ## [0] - The data
 ## [1] - On change
 ## [2] - Token validator
+## [3] - Serializer
 
-sub TIEARRAY ($$$$) {
-  return bless [$_[1], $_[2], $_[3]], $_[0];
+sub TIEARRAY ($$$$$) {
+  return bless [$_[1], $_[2], $_[3], $_[4]], $_[0];
 } # TIEARRAY
 
 sub EXTEND { }
@@ -109,11 +110,15 @@ sub replace_by_bare ($;@) {
   $self->[1]->($self);
 } # replace_by_bare
 
+sub serialize ($) {
+  return $_[0]->[3]->($_[0]);
+} # serialize
+
 1;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

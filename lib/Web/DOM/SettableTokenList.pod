@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::SettableTokenList - The DOM |DOMSettableTokenList| object
+Web::DOM::SettableTokenList - DOM |DOMSettableTokenList| object
 
 =head1 DESCRIPTION
 
@@ -35,7 +35,7 @@ space-separeted list.  [DOM]
 
 =item DOM
 
-DOM Living Standard <http://dom.spec.whatwg.org/>.
+DOM Standard <https://dom.spec.whatwg.org/>.
 
 =back
 
@@ -49,7 +49,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
