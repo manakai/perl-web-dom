@@ -1934,7 +1934,7 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
   my $el = $doc->create_element ('a');
-  my $attr = $doc->create_attribute ('hRef');
+  my $attr = $doc->create_attribute_ns (undef, 'hRef');
   $el->set_attribute (href => 12);
   my $old_attr = $el->get_attribute_node ('href');
   my $old = $el->set_attribute_node_ns ($attr);
