@@ -625,11 +625,34 @@ test {
   done $c;
 } n => 3, name => 'manakai_dispatched';
 
+test {
+  my $c = shift;
+  my $et = create_event_target;
+
+  my @r;
+  my $code;
+  $et->add_event_listener (foo => sub {
+    push @r, 1;
+    $_[0]->remove_event_listener ('foo', $code);
+  });
+  $et->add_event_listener (foo => $code = sub {
+    push @r, 2;
+  });
+
+  my $ev = new Web::DOM::Event 'foo';
+  $et->dispatch_event ($ev);
+
+  is 0+@r, 1;
+  is $r[0], 1;
+
+  done $c;
+} n => 2, name => 'remove_event_listener in dispatch_event';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

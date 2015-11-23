@@ -1,12 +1,17 @@
 package Web::DOM::EventTarget;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
 use Web::DOM::Event;
 
 push our @CARP_NOT, qw(Web::DOM::TypeError Web::DOM::Exception);
+
+## event listener
+##   0 - CODE
+##   1 - capture flag
+##   2 - removed flag
 
 sub add_event_listener ($$;$$) {
   # WebIDL
@@ -39,7 +44,12 @@ sub remove_event_listener ($$;$$) {
   my $obj = $_[0]->isa ('Web::DOM::Node') ? ${$_[0]}->[2] : $_[0];
   my $list = $obj->{event_listeners}->{$type} ||= [];
   $obj->{event_listeners}->{$type} = [grep {
-    not ($_->[0] eq $_[2] and $_->[1] == $capture);
+    if ($_->[0] eq $_[2] and $_->[1] == $capture) {
+      $_->[2] = 1;
+      ();
+    } else {
+      $_;
+    }
   } @$list];
   return undef;
 } # remove_event_listener
@@ -132,6 +142,7 @@ sub _invoke_event_listeners ($$$) {
   # 4.
   for my $listener (@$listeners) {
     return if $event->{stop_immediate_propagation};
+    next if $listener->[2]; # removed
     next if not $listener->[1] and $event->event_phase == CAPTURING_PHASE;
     next if $listener->[1] and $event->event_phase == BUBBLING_PHASE;
 
@@ -156,7 +167,7 @@ sub _fire_simple_event ($$$) {
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
