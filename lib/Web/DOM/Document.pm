@@ -2,7 +2,7 @@ package Web::DOM::Document;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
 use Web::DOM::XPathEvaluator;
@@ -757,6 +757,11 @@ sub create_attribute ($$) {
   }
 
   # 2.
+  if ($$self->[2]->{is_html}) {
+    $ln =~ tr/A-Z/a-z/; ## ASCII lowercase
+  }
+
+  # 3.
   my $data = {node_type => ATTRIBUTE_NODE,
               local_name => Web::DOM::Internal->text ($ln),
               value => ''};
@@ -1200,7 +1205,7 @@ sub clear ($) { }
 
 =head1 LICENSE
 
-Copyright 2007-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -87,6 +87,41 @@ test {
 test {
   my $c = shift;
   my $doc = Web::DOM::Document->new;
+  $doc->manakai_is_html (1);
+
+  my $attr = $doc->create_attribute ("HoGe");
+  isa_ok $attr, 'Web::DOM::Attr';
+  is $attr->node_type, 2;
+  is $attr->prefix, undef;
+  is $attr->namespace_uri, undef;
+  is $attr->manakai_local_name, qq<hoge>;
+  is $attr->name, qq<hoge>;
+  is $attr->owner_document, $doc;
+  is $attr->attributes, undef;
+
+  done $c;
+} n => 8, name => 'create_attribute / HTML uppercase';
+
+test {
+  my $c = shift;
+  my $doc = Web::DOM::Document->new;
+
+  my $attr = $doc->create_attribute ("HoGe");
+  isa_ok $attr, 'Web::DOM::Attr';
+  is $attr->node_type, 2;
+  is $attr->prefix, undef;
+  is $attr->namespace_uri, undef;
+  is $attr->manakai_local_name, qq<HoGe>;
+  is $attr->name, qq<HoGe>;
+  is $attr->owner_document, $doc;
+  is $attr->attributes, undef;
+
+  done $c;
+} n => 8, name => 'create_attribute / XML uppercase';
+
+test {
+  my $c = shift;
+  my $doc = Web::DOM::Document->new;
 
   dies_here_ok {
     $doc->create_attribute ('1abc');
@@ -738,7 +773,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
