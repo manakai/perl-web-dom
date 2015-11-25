@@ -3,7 +3,7 @@ use strict;
 use warnings;
 no warnings 'utf8';
 use warnings FATAL => 'recursion';
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Internal;
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
@@ -517,12 +517,9 @@ sub set_attribute_node ($$) {
         'The specified attribute has already attached to another node';
   }
 
-  # Not in spec (both Gecko and Blink are really broken...)
+  # 2.-4.
   my $old_attr = $node->get_attribute_node_ns
       ($attr->namespace_uri, $attr->local_name);
-
-  # 2.-4.
-  $old_attr ||= $node->get_attribute_node ($attr->name);
 
   # 5.
   return $attr if defined $old_attr and $attr eq $old_attr;
@@ -545,48 +542,7 @@ sub set_attribute_node ($$) {
   # 8.
   return $old_attr; # or undef
 } # set_attribute_node
-
-sub set_attribute_node_ns ($$) {
-  # WebIDL
-  unless (UNIVERSAL::isa ($_[1], 'Web::DOM::Attr')) {
-    _throw Web::DOM::TypeError 'The argument is not an Attr';
-  }
-
-  my ($node, $attr) = @_;
-
-  # 1.
-  if (defined $$attr->[2]->{owner} and
-      not ($$attr->[0] eq $$node->[0] and
-           $$attr->[2]->{owner} == $$node->[1])) {
-    _throw Web::DOM::Exception 'InUseAttributeError',
-        'The specified attribute has already attached to another node';
-  }
-
-  # 2.-4.
-  my $old_attr = $node->get_attribute_node_ns
-      ($attr->namespace_uri, $attr->local_name);
-
-  # 5.
-  return $attr if defined $old_attr and $attr eq $old_attr;
-
-  # 6.
-  $node->remove_attribute_node ($old_attr) if defined $old_attr;
-
-  # 7.
-  $$node->[0]->adopt ($attr);
-  my $nsurl = ${$$attr->[2]->{namespace_uri} || \''};
-  my $ln = ${$$attr->[2]->{local_name}};
-  push @{$$node->[2]->{attributes} ||= []}, $$attr->[1]; # AttrNameRef
-  $$node->[2]->{attrs}->{$nsurl}->{$ln} = $$attr->[1]; # AttrValueRef
-  $$attr->[2]->{owner} = $$node->[1];
-  $$node->[0]->connect ($$attr->[1] => $$node->[1]);
-  $node->_attribute_is
-      ($$attr->[2]->{namespace_uri}, $$attr->[2]->{local_name},
-       set => 1, added => 1);
-
-  # 8.
-  return $old_attr; # or undef
-} # set_attribute_node_ns
+*set_attribute_node_ns = \&set_attribute_node;
 
 sub remove_attribute ($$) {
   my $node = $_[0];
@@ -1316,7 +1272,7 @@ sub _define_reflect_child_url ($$$) {
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
