@@ -41,6 +41,11 @@ specified values or not.  [MANAKAI]
 Return the value of the specified attribute.  If there is no attribute
 with the specified name, C<undef> is returned.  [DOM]
 
+=item $arrayref = $el->get_attribute_names
+
+Return a reference to a new array of the attribute names currently
+specified for the element.  [DOM]
+
 =item $value = $el->get_attribute_ns ($nsurl, $local_name)
 
 Return the value of the attribute with the specified namespace URL and
@@ -237,12 +242,12 @@ In addition, the obsolete C<manakai_base_uri> method is available.
 
 =item DOM
 
-DOM Standard <http://dom.spec.whatwg.org/#interface-element>.
+DOM Standard <https://dom.spec.whatwg.org/#interface-element>.
 
 =item DOMNODEEXODUS
 
 DOM Living Standard, commented out
-<view-source:http://dom.spec.whatwg.org/>.
+<view-source:https://dom.spec.whatwg.org/>.
 
 =item DOMPARSING
 
@@ -285,7 +290,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

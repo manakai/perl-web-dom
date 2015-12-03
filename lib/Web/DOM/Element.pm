@@ -3,7 +3,7 @@ use strict;
 use warnings;
 no warnings 'utf8';
 use warnings FATAL => 'recursion';
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Web::DOM::Internal;
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
@@ -126,6 +126,16 @@ sub attributes ($) {
 sub has_attributes ($) {
   return !!@{${$_[0]}->[2]->{attributes} or []};
 } # has_attributes
+
+sub get_attribute_names ($) {
+  return [map {
+    if (ref $_) { # AttrNameRef
+      $$_;
+    } else {
+      ${$_[0]}->[0]->node ($_)->name;
+    }
+  } @{${$_[0]}->[2]->{attributes} or []}];
+} # get_attribute_names
 
 sub has_attribute ($$) {
   my $node = $_[0];

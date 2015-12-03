@@ -2249,11 +2249,96 @@ test {
   done $c;
 } n => 1, name => 'manakai_get_attribute_indexed_string_ns complex attr';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  my $list = $el->get_attribute_names;
+  is ref $list, 'ARRAY';
+  is 0+@$list, 0;
+  done $c;
+} n => 2, name => 'get_attribute_names empty';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->set_attribute (foo => 1);
+  $el->set_attribute (hoge => 42);
+  my $list = $el->get_attribute_names;
+  is ref $list, 'ARRAY';
+  is 0+@$list, 2;
+  is $list->[0], 'foo';
+  is $list->[1], 'hoge';
+  done $c;
+} n => 4, name => 'get_attribute_names simple attrs';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->set_attribute (foo => 1);
+  $el->set_attribute_ns (q<about:blank>, hoge => 42);
+  my $list = $el->get_attribute_names;
+  is ref $list, 'ARRAY';
+  is 0+@$list, 2;
+  is $list->[0], 'foo';
+  is $list->[1], 'hoge';
+  done $c;
+} n => 4, name => 'get_attribute_names simple and complex attrs';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->set_attribute (foo => 1);
+  $el->set_attribute_ns (q<about:blank>, 'abc:hoge' => 42);
+  my $list = $el->get_attribute_names;
+  is ref $list, 'ARRAY';
+  is 0+@$list, 2;
+  is $list->[0], 'foo';
+  is $list->[1], 'abc:hoge';
+  done $c;
+} n => 4, name => 'get_attribute_names prefixed qname';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->set_attribute_ns (undef, hoge => 1);
+  $el->set_attribute_ns (q<about:blank>, hoge => 42);
+  my $list = $el->get_attribute_names;
+  is ref $list, 'ARRAY';
+  is 0+@$list, 2;
+  is $list->[0], 'hoge';
+  is $list->[1], 'hoge';
+  done $c;
+} n => 4, name => 'get_attribute_names duplicate names';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->set_attribute (foo => 1);
+  $el->set_attribute (hoge => 42);
+  my $list = $el->get_attribute_names;
+  $el->remove_attribute ('hoge');
+  is ref $list, 'ARRAY';
+  is 0+@$list, 2;
+  is $list->[0], 'foo';
+  is $list->[1], 'hoge';
+  my $list2 = $el->get_attribute_names;
+  isnt $list2, $list;
+  is 0+@$list2, 1;
+  is $list2->[0], 'foo';
+  done $c;
+} n => 7, name => 'get_attribute_names mutation';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
