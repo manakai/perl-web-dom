@@ -1795,7 +1795,7 @@ test {
   done $c;
 } n => 1, name => 'output type';
 
-for my $name (qw(caption thead tfoot)) {
+for my $name (qw(caption thead)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
@@ -1943,6 +1943,154 @@ for my $name (qw(caption thead tfoot)) {
   } n => 1, name => ['table', $delete_name, 'not found'];
 }
 
+for my $name (qw(tfoot)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    is $table->$name, undef;
+
+    my $cap1 = $doc->create_element ($name);
+    $table->$name ($cap1);
+    is $table->$name, $cap1;
+    is $cap1->parent_node, $table;
+
+    my $cap2 = $doc->create_element ($name);
+    $table->$name ($cap2);
+    is $table->$name, $cap2;
+    is $cap2->parent_node, $table;
+    is $cap1->parent_node, undef;
+
+    $table->append_child ($doc->create_element ('foo'));
+    $table->insert_before ($doc->create_element ('foo'), $cap2);
+    $table->$name ($cap2);
+    is $table->last_child, $cap2;
+    $table->append_child ($cap1);
+    $table->append_child ($cap2);
+
+    is $table->$name, $cap1;
+    my $cap3 = $doc->create_element ($name);
+    $table->$name ($cap3);
+    is $table->$name, $cap2;
+    is $cap1->parent_node, undef;
+    is $cap2->parent_node, $table;
+    is $cap3->parent_node, $table;
+    is $table->last_child, $cap3;
+
+    done $c;
+  } n => 13, name => ['table', $name];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    $table->$name (undef);
+    is $table->first_child, undef;
+    done $c;
+  } n => 1, name => ['table', $name, 'undef'];
+
+  my $create_name = "create_$name";
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    my $el = $table->$create_name;
+    $table->$name (undef);
+    is $table->first_child, undef;
+    is $el->parent_node, undef;
+    done $c;
+  } n => 2, name => ['table', $name, 'undef'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $table = $doc->create_element ('table');
+    dies_here_ok {
+      $table->$name ($doc->create_element_ns (undef, $name));
+    };
+    isa_ok $@, 'Web::DOM::TypeError';
+    is $@->name, 'TypeError';
+    is $@->message, "The new value is not a |$name| element";
+    is $table->first_child, undef;
+    done $c;
+  } n => 5, name => ['table', $name, 'not expected element'];
+
+  my $pfx = $name eq 'caption' ? '' : '<tr><td>';
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html ('<tr><th><td>hoge<tbody>');
+    my $cap = $table->$create_name;
+    is $table->child_nodes->length, 3;
+    is $table->last_child, $cap;
+    isa_ok $cap, 'Web::DOM::HTMLElement';
+    is $cap->namespace_uri, 'http://www.w3.org/1999/xhtml';
+    is $cap->local_name, $name;
+    is $cap->first_child, undef;
+    done $c;
+  } n => 6, name => ['table', $create_name, 'new'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name>");
+    my $caption = $table->last_child;
+    my $cap = $table->$create_name;
+    is $table->child_nodes->length, 3;
+    is $table->last_child, $cap;
+    isa_ok $cap, 'Web::DOM::HTMLElement';
+    is $cap, $caption;
+    is $cap->text_content, 'hoge';
+    done $c;
+  } n => 5, name => ['table', $create_name, 'existing'];
+
+  my $delete_name = "delete_$name";
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name>");
+    my $caption = $table->last_child;
+    $table->$delete_name;
+    is $table->child_nodes->length, 2;
+    is $caption->parent_node, undef;
+    done $c;
+  } n => 2, name => ['table', $delete_name, 'deleted'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html
+        ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name><$name>${pfx}hogefuga</$name>");
+    my $caption1 = $table->last_child;
+    my $caption2 = $caption1->previous_sibling;
+    $table->$delete_name;
+    is $table->child_nodes->length, 3;
+    is $caption2->parent_node, undef;
+    is $caption1->parent_node, $table;
+    is $table->last_child, $caption1;
+    done $c;
+  } n => 4, name => ['table', $delete_name, 'deleted multiple'];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    my $table = $doc->create_element ('table');
+    $table->inner_html ('<tr><th><td>hoge<tbody>');
+    $table->$delete_name;
+    is $table->child_nodes->length, 2;
+    done $c;
+  } n => 1, name => ['table', $delete_name, 'not found'];
+}
+
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
@@ -1990,7 +2138,7 @@ test {
   $table->inner_html ('<colgroup/><caption/><caption/><thead/><!----> <col/><tbody/>');
   my $tfoot = $doc->create_element ('tfoot');
   $table->tfoot ($tfoot);
-  is $table->child_nodes->[6], $tfoot;
+  is $table->child_nodes->[8], $tfoot;
   done $c;
 } n => 1, name => 'tfoot insertion point';
 
@@ -2000,7 +2148,7 @@ test {
   my $table = $doc->create_element ('table');
   $table->inner_html ('<colgroup/><caption/><thead/><caption/><!----> <col/><tbody/>');
   my $tfoot = $table->create_tfoot;
-  is $table->child_nodes->[6], $tfoot;
+  is $table->child_nodes->[8], $tfoot;
   done $c;
 } n => 1, name => 'create_tfoot insertion point';
 

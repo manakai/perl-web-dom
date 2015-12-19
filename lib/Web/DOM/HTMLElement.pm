@@ -899,18 +899,7 @@ sub tfoot ($;$) {
             if defined $_[1] and not $_[1]->local_name eq 'tfoot';
     my $current = $_[0]->tfoot; # recursive!
     $_[0]->remove_child ($current) if defined $current;
-    if (defined $_[1]) {
-      my $after;
-      for ($_[0]->child_nodes->to_list) {
-        next unless $_->node_type == ELEMENT_NODE;
-        next if $_->manakai_element_type_match (HTML_NS, 'caption');
-        next if $_->manakai_element_type_match (HTML_NS, 'colgroup');
-        next if $_->manakai_element_type_match (HTML_NS, 'thead');
-        $after = $_;
-        last;
-      }
-      $_[0]->insert_before ($_[1], $after);
-    }
+    $_[0]->append_child ($_[1]) if defined $_[1];
     return unless defined wantarray;
   }
 
