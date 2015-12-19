@@ -50,7 +50,8 @@ sub contains ($$) {
 
 sub add ($;@) {
   my %found = map { $_ => 1 } @{$_[0]};
-  return ((tied @{+shift})->append (grep { not $found{$_}++ } @_));
+  ((tied @{+shift})->append (grep { not $found{$_}++ } @_));
+  return undef;
 } # add
 
 sub remove ($;@) {
@@ -105,9 +106,6 @@ sub toggle ($$;$) {
   }
 
   # 4.2.
-  return 0 unless (tied @{$_[0]})->validate ($token);
-
-  # 4.3.
   (tied @$self)->replace_by_bare (@$self, $token);
   return 1;
 } # toggle
@@ -128,9 +126,6 @@ sub replace ($$$) {
         'The token cannot contain any ASCII white space character';
   }
 
-  # 3.
-  return unless (tied @$self)->validate ($new_token);
-
   my @new;
   my $replaced = 0;
   for (@$self) {
@@ -150,6 +145,10 @@ sub replace ($$$) {
   (tied @$self)->replace_by_bare (@new);
   return;
 } # replace
+
+sub supports ($$) {
+  return !!(tied @{$_[0]})->validate (''.$_[1]);
+} # supports
 
 sub DESTROY ($) {
   {

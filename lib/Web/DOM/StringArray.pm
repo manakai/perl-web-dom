@@ -3,14 +3,18 @@ use strict;
 use warnings;
 our $VERSION = '3.0';
 use Carp;
+use Web::DOM::TypeError;
+
+push our @CARP_NOT, qw(Web::DOM::TypeError);
 
 ## [0] - The data
 ## [1] - On change
 ## [2] - Token validator
 ## [3] - Serializer
+## [4] - Supportedness
 
 sub TIEARRAY ($$$$$) {
-  return bless [$_[1], $_[2], $_[3], $_[4]], $_[0];
+  return bless [$_[1], $_[2], $_[3], $_[4], $_[5]], $_[0];
 } # TIEARRAY
 
 sub EXTEND { }
@@ -106,11 +110,21 @@ sub append ($;@) {
   return $valid;
 } # append
 
-sub validate ($;@) {
-  my $self = shift;
-  my $valid = 1;
-  $self->[2]->(''.$_[0], \$valid);
-  return $valid;
+sub validate ($;$) {
+  my $self = $_[0];
+
+  ## Validation steps
+
+  ## 1.
+  _throw Web::DOM::TypeError 'Any token is supported'
+      if not defined $self->[4];
+
+  ## 2.
+  my $x = $_[1];
+  $x =~ tr/A-Z/a-z/; ## ASCII case-insensitive
+
+  ## 3.-4.
+  return $self->[4]->{$x};
 } # validate
 
 sub replace_by_bare ($;@) {

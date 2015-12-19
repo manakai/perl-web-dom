@@ -836,6 +836,7 @@ sub change_iterator_reference_node ($$$) {
 ##   1 - update steps --------------------------------------------->+
 ##   2 - token validator
 ##   3 - serializer
+##   4 - supportedness
 ## ], DOMTokenList
 
 our $TokenListClass = {
@@ -876,18 +877,11 @@ sub tokens ($$$$$$) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The token cannot contain any ASCII white space character';
     }
-    if (defined $supported) { # validation steps / supported tokens
-      my $x = $_[0];
-      $x =~ tr/A-Z/a-z/; ## ASCII case-insensitive
-      if (not $supported->{$x}) {
-        ${$_[1]} = 0; # $_[1] = \($valid)
-      }
-    }
     return $_[0];
   }, sub {
     my $v = $node->get_attribute_ns (undef, $attr_name);
     return defined $v ? $v : '';
-  };
+  }, $supported;
 
   my $class = $TokenListClass->{$key} || 'Web::DOM::SettableTokenList';
   if (not $ModuleLoaded->{$class}++) {

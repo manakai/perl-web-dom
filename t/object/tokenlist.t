@@ -192,13 +192,13 @@ test {
   my $el = $doc->create_element ('hoge');
   my $tokens = $el->class_list;
 
-  ok $tokens->add ('hoge,', 'fuga');
+  ok ! $tokens->add ('hoge,', 'fuga');
   is_deeply [@{$tokens}], ['hoge,', 'fuga'];
 
-  ok $tokens->add;
+  ok ! $tokens->add;
   is_deeply [@{$tokens}], ['hoge,', 'fuga'];
 
-  ok $tokens->add ('abc');
+  ok ! $tokens->add ('abc');
   is_deeply [@{$tokens}], ['hoge,', 'fuga', 'abc'];
   is $el->class_name, 'hoge, fuga abc';
 
@@ -272,7 +272,7 @@ test {
   my $el = $doc->create_element ('f');
   my $tokens = $el->class_list;
   $tokens->add ('foo');
-  ok $tokens->add ('foo');
+  ok ! $tokens->add ('foo');
   is scalar @$tokens, 1;
   is $el->class_name, 'foo';
   push @$tokens, 'foo';
@@ -293,14 +293,14 @@ test {
   my $el = $doc->create_element ('link');
   my $tokens = $el->rel_list;
   ok ! $tokens->add ('foo');
-  ok $tokens->add ('foo');
+  ok ! $tokens->add ('foo');
   is scalar @$tokens, 1;
   is $el->rel, 'foo';
   is ''.$tokens, 'foo';
   ok ! $tokens->add ('bar', 'bar');
   is scalar @$tokens, 2;
   is $el->rel, 'foo bar';
-  ok $tokens->add ('bar', 'bar');
+  ok ! $tokens->add ('bar', 'bar');
   done $c;
 } n => 9, name => 'add unique supportedness';
 
@@ -310,7 +310,7 @@ test {
   my $el = $doc->create_element ('td');
   my $tokens = $el->headers;
   $tokens->add ('foo');
-  ok $tokens->add ('foo');
+  ok ! $tokens->add ('foo');
   is scalar @$tokens, 1;
   is $el->get_attribute ('headers'), 'foo';
   push @$tokens, 'foo';
@@ -477,20 +477,17 @@ test {
   my $el = $doc->create_element ('area');
   my $tokens = $el->rel_list;
 
-  ok ! $tokens->toggle ('hoge');
-  is $el->rel, '';
-  $tokens->add ('hoge');
-
-  ok ! $tokens->toggle ('fuga');
+  ok $tokens->toggle ('hoge');
   is $el->rel, 'hoge';
-  $tokens->add ('fuga');
+
+  ok $tokens->toggle ('fuga');
+  is $el->rel, 'hoge fuga';
 
   ok not $tokens->toggle ('hoge');
   is $el->rel, 'fuga';
 
-  ok ! $tokens->toggle ('hoge');
-  is $el->rel, 'fuga';
-  $tokens->add ('hoge');
+  ok $tokens->toggle ('hoge');
+  is $el->rel, 'fuga hoge';
 
   ok $tokens->toggle ('hoge', 1);
   is $el->rel, 'fuga hoge';
@@ -498,9 +495,8 @@ test {
   ok not $tokens->toggle ('hoge', 0);
   is $el->rel, 'fuga';
 
-  ok ! $tokens->toggle ('hoge', 1);
-  is $el->rel, 'fuga';
-  $tokens->add ('hoge');
+  ok $tokens->toggle ('hoge', 1);
+  is $el->rel, 'fuga hoge';
 
   ok not $tokens->toggle ('hoge2', 0);
   is $el->rel, 'fuga hoge';
@@ -756,10 +752,57 @@ test {
   $el->set_attribute (rel => 'ab  hoge ss xs Hoge   ');
   my $tokens = $el->rel_list;
   ok ! $tokens->replace ('hoge', 'fuga');
-  is ''.$tokens, 'ab  hoge ss xs Hoge   ';
-  is $el->get_attribute ('rel'), 'ab  hoge ss xs Hoge   ';
+  is ''.$tokens, 'ab fuga ss xs Hoge';
+  is $el->get_attribute ('rel'), 'ab fuga ss xs Hoge';
   done $c;
 } n => 3, name => 'replace new unknown';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  my $tokens = $el->class_list;
+  dies_here_ok {
+    $tokens->supports ('canonical');
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->message, 'Any token is supported';
+  dies_here_ok {
+    $tokens->supports ('tag');
+  };
+  dies_here_ok {
+    $tokens->supports ('hoge');
+  };
+  dies_here_ok {
+    $tokens->supports ('');
+  };
+  done $c;
+} n => 6, name => 'supports';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  my $tokens = $el->rel_list;
+  ok ! $tokens->supports ('canonical');
+  ok ! $tokens->supports ('tag');
+  ok ! $tokens->supports ('Tag');
+  ok ! $tokens->supports ('hoge');
+  ok ! $tokens->supports ('');
+  done $c;
+} n => 5, name => 'supports';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('iframe');
+  my $tokens = $el->sandbox;
+  ok ! $tokens->supports ('');
+  ok ! $tokens->supports ('allow-plugins');
+  ok ! $tokens->supports ('Allow-Plugins');
+  ok ! $tokens->supports ('hoge');
+  done $c;
+} n => 4, name => 'supports';
 
 run_tests;
 
