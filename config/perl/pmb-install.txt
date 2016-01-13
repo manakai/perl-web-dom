@@ -12,7 +12,7 @@ Try::Tiny~0.24
 parent~0.234
 AnyEvent~7.11
 Term::ANSIColor~4.04
-Exporter::Lite~0.07
+Exporter::Lite~0.08
 Data::Dumper~2.154
 Dist::CheckConflicts~0.11
 Text::Diff~1.43
@@ -21,7 +21,7 @@ Test::Differences~0.64
 Path::Class~0.35
 Unicode::Stringprep~1.105
 Scalar::Util~1.42
-File::Spec~3.60
+File::Spec~3.62
 Module::Runtime~0.014
 Unicode::Normalize~1.25
 Algorithm::Diff~1.1903
