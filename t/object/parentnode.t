@@ -427,10 +427,9 @@ test {
   $el1->append_child ($el5);
 
   my $col1 = $doc->get_elements_by_tag_name ('aab');
-  is scalar @$col1, 3;
+  is scalar @$col1, 2;
   is $col1->[0], $el1;
   is $col1->[1], $el4;
-  is $col1->[2], $el5;
 
   my $col2 = $doc->get_elements_by_tag_name ('aAb');
   is scalar @$col2, 1;
@@ -444,7 +443,8 @@ test {
   is scalar @$col4, 0;
 
   my $col5 = $doc->get_elements_by_tag_name ('x:aab');
-  is scalar @$col5, 0;
+  is scalar @$col5, 1;
+  is $col5->[0], $el5;
 
   done $c;
 } n => 10, name => 'get_elements_by_tag_name xml';
@@ -467,11 +467,10 @@ test {
   $el1->append_child ($el5);
 
   my $col1 = $doc->get_elements_by_tag_name ('aab');
-  is scalar @$col1, 4;
+  is scalar @$col1, 3;
   is $col1->[0], $el1;
   is $col1->[1], $el2;
   is $col1->[2], $el4;
-  is $col1->[3], $el5;
 
   my $col2 = $doc->get_elements_by_tag_name ('aAb');
   is scalar @$col2, 2;
@@ -490,7 +489,8 @@ test {
   is $col4->[1], $el2;
 
   my $col5 = $doc->get_elements_by_tag_name ('x:aab');
-  is scalar @$col5, 0;
+  is scalar @$col5, 1;
+  is $col5->[0], $el5;
 
   done $c;
 } n => 16, name => 'get_elements_by_tag_name html';
@@ -1503,7 +1503,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -27,10 +27,13 @@ sub get_elements_by_tag_name ($$) {
       my $id = shift @node_id;
       next unless $data->[$id]->{node_type} == ELEMENT_NODE;
       unshift @node_id, @{$data->[$id]->{child_nodes} or []};
+      my $qn = (defined $data->[$id]->{prefix}
+                    ? ${$data->[$id]->{prefix}} . ':'
+                    : '').${$data->[$id]->{local_name}};
       next unless $ln eq '*' or
-          (${$data->[$id]->{local_name}} eq $ln2 and
+          ($qn eq $ln2 and
            ${$data->[$id]->{namespace_uri} || \''} eq HTML_NS) or
-          (${$data->[$id]->{local_name}} eq $ln and
+          ($qn eq $ln and
            (not $is_html or ${$data->[$id]->{namespace_uri} || \''} ne HTML_NS));
       push @id, $id;
     }
@@ -519,7 +522,7 @@ sub inner_html ($;$) {
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
