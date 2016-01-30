@@ -983,7 +983,7 @@ sub _define_reflect_unsigned_long_positive ($$$) {
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_unsigned_long_positive
 
-my $SupportedTokensList = {sandbox => {}}; # XXX
+my $SupportedTokensList = {sandbox => {}, dropzone => {}}; # XXX
 
 push @EXPORT, qw(_define_reflect_settable_token_list);
 sub _define_reflect_settable_token_list ($$) {

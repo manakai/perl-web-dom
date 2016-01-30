@@ -804,6 +804,18 @@ test {
   done $c;
 } n => 4, name => 'supports';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('iframe');
+  my $tokens = $el->dropzone;
+  ok ! $tokens->supports ('');
+  ok ! $tokens->supports ('allow-plugins');
+  ok ! $tokens->supports ('Allow-Plugins');
+  ok ! $tokens->supports ('hoge');
+  done $c;
+} n => 4, name => 'supports dropzone';
+
 run_tests;
 
 =head1 LICENSE
