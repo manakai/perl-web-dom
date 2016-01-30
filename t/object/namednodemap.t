@@ -646,6 +646,77 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $node = $doc->create_element ('hoge');
+  $node->set_attribute_ns (undef, 'hoge', 'bar');
+  $node->set_attribute_ns (undef, 'hoGe', 'foo');
+
+  my $map = $node->attributes;
+  my @keys = keys %$map;
+  is 0+@keys, 1;
+  is $keys[0], 'hoge';
+  is $map->{hoge}->value, 'bar';
+
+  done $c;
+} n => 3, name => '%{} uppercase HTML';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $node = $doc->create_element ('hoge');
+  $node->set_attribute_ns (undef, 'hoge', 'bar');
+  $node->set_attribute_ns ('https://foo/', 'hoGe', 'foo');
+
+  my $map = $node->attributes;
+  my @keys = keys %$map;
+  is 0+@keys, 1;
+  is $keys[0], 'hoge';
+  is $map->{hoge}->value, 'bar';
+
+  done $c;
+} n => 3, name => '%{} uppercase HTML';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $node = $doc->create_element_ns (undef, 'hoge');
+  $node->set_attribute_ns (undef, 'hoge', 'bar');
+  $node->set_attribute_ns (undef, 'hoGe', 'foo');
+
+  my $map = $node->attributes;
+  my @keys = keys %$map;
+  is 0+@keys, 2;
+  is $keys[0], 'hoge';
+  is $keys[1], 'hoGe';
+  is $map->{hoge}->value, 'bar';
+  is $map->{hoGe}->value, 'foo';
+
+  done $c;
+} n => 5, name => '%{} uppercase non-HTML element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $node = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
+  $node->set_attribute_ns (undef, 'hoge', 'bar');
+  $node->set_attribute_ns (undef, 'hoGe', 'foo');
+
+  my $map = $node->attributes;
+  my @keys = keys %$map;
+  is 0+@keys, 2;
+  is $keys[0], 'hoge';
+  is $keys[1], 'hoGe';
+  is $map->{hoge}->value, 'bar';
+  is $map->{hoGe}->value, 'foo';
+
+  done $c;
+} n => 5, name => '%{} uppercase non-HTML document';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
   my $node = $doc->create_element ('hoge');
   my $map = $node->attributes;
   $node->set_attribute_ns ('http://foo/', 'hoge', 'aa');
@@ -768,7 +839,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

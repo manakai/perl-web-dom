@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Web::DOM::Collection;
 push our @ISA, qw(Web::DOM::Collection);
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 push our @CARP_NOT, qw(
   Web::DOM::Element Web::DOM::DocumentType Web::DOM::ElementTypeDefinition
 );
@@ -20,6 +20,13 @@ use overload
       } else {
         return ${$_[0]}->[4] = do {
           my %data = map { $_->node_name => $_ } reverse $_[0]->to_list;
+          my $root = ${$_[0]}->[0];
+          if (defined $$root->[2]->{namespace_uri} and 
+              ${$$root->[2]->{namespace_uri}} eq 'http://www.w3.org/1999/xhtml' and
+              $$root->[0]->{data}->[0]->{is_html}) {
+            my @bad = grep { /[A-Z]/ } keys %data; ## ASCII case-insensitive
+            delete $data{$_} for @bad;
+          }
           tie my %hash, 'Web::DOM::Internal::ReadOnlyHash', \%data;
           delete ${$_[0]}->[2];
           ${$_[0]}->[5] = ${${$_[0]}->[0]}->[0]->{revision};
@@ -147,7 +154,7 @@ sub remove_named_item_ns ($$$) {
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
