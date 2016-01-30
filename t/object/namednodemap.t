@@ -686,10 +686,10 @@ test {
   $node->set_attribute_ns (undef, 'hoGe', 'foo');
 
   my $map = $node->attributes;
-  my @keys = keys %$map;
+  my @keys = sort { $a cmp $b } keys %$map;
   is 0+@keys, 2;
-  is $keys[0], 'hoge';
-  is $keys[1], 'hoGe';
+  is $keys[1], 'hoge';
+  is $keys[0], 'hoGe';
   is $map->{hoge}->value, 'bar';
   is $map->{hoGe}->value, 'foo';
 
@@ -704,10 +704,10 @@ test {
   $node->set_attribute_ns (undef, 'hoGe', 'foo');
 
   my $map = $node->attributes;
-  my @keys = keys %$map;
+  my @keys = sort { $a cmp $b } keys %$map;
   is 0+@keys, 2;
-  is $keys[0], 'hoge';
-  is $keys[1], 'hoGe';
+  is $keys[1], 'hoge';
+  is $keys[0], 'hoGe';
   is $map->{hoge}->value, 'bar';
   is $map->{hoGe}->value, 'foo';
 
