@@ -10,7 +10,7 @@ Module::Implementation~0.09
 List::MoreUtils~0.413
 Try::Tiny~0.24
 parent~0.234
-AnyEvent~7.11
+AnyEvent~7.12
 Term::ANSIColor~4.04
 Exporter::Lite~0.08
 Data::Dumper~2.154
@@ -29,7 +29,7 @@ Path::Tiny~0.076
 Test::Tester~0.114
 Exporter~5.72
 Carp~1.38
-DateTime::TimeZone~1.94
+DateTime::TimeZone~1.95
 Class::Singleton~1.5
 Params::Validate~1.21
 Exporter::Tiny~0.042
