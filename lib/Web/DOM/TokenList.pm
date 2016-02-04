@@ -1,7 +1,7 @@
 package Web::DOM::TokenList;
 use strict;
 use warnings;
-our $VERSION = '3.0';
+our $VERSION = '5.0';
 use Web::DOM::Exception;
 use Carp;
 push our @CARP_NOT, qw(Web::DOM::Exception Web::DOM::StringArray);
@@ -150,6 +150,14 @@ sub supports ($$) {
   return !!(tied @{$_[0]})->validate (''.$_[1]);
 } # supports
 
+sub value ($;$) {
+  if (@_ > 1) {
+    (tied @{$_[0]})->replace_by_bare (grep { length $_ }
+                                      split /[\x09\x0A\x0C\x0D\x20]+/, $_[1]);
+  }
+  return ''.$_[0];
+} # value
+
 sub DESTROY ($) {
   {
     local $@;
@@ -162,7 +170,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

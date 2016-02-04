@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::HTMLOutputElement - The DOM |HTMLOutputElement| object
+Web::DOM::HTMLOutputElement - DOM |HTMLOutputElement| object
 
 =head1 DESCRIPTION
 
@@ -19,9 +19,8 @@ and L<Web::DOM::HTMLElement>, the following method is available:
 
 =item $el->html_for ($string)
 
-Return the L<Web::DOM::SettableTokenList> object for the C<for>
-attribute, or set the C<for> attribute to the specified string value.
-[HTML]
+Return the L<Web::DOM::TokenList> object for the C<for> attribute, or
+set the C<for> attribute to the specified string value.  [HTML]
 
 =item $string = $el->name
 
@@ -42,7 +41,7 @@ Return the string C<output>.  [HTML]
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-output-element>.
+<https://www.whatwg.org/specs/web-apps/current-work/#the-output-element>.
 
 =back
 
@@ -56,7 +55,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

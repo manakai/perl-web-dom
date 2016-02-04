@@ -7,8 +7,9 @@ Web::DOM::TokenList - DOM |DOMTokenList| object
 The C<Web::DOM::TokenList> class implements the DOM C<DOMTokenList>
 interface.
 
-The C<DOMTokenList> object is used by the C<class_list> method of the
-elements and the C<rel_list> method of the HTML hyperlink elements.
+The C<DOMTokenList> object is used by, e.g., the C<class_list> method
+of the elements, the C<rel_list> method of the HTML hyperlink
+elements, and HTML C<sandbox>, C<dropzone>, and C<headers> attributes.
 
 =head1 METHODS
 
@@ -61,8 +62,15 @@ The method returns the new status.  [DOM]
 
 =item $string = '' . $tokens
 
+=item $string = $tokens->value
+
 Return the serialized representation of the tokens, joined by the
 space character.  [DOM] [DOMPERL]
+
+=item $tokens->value ($string)
+
+Replace the tokens in the list by the tokens specified as the
+space-separeted list.  [DOM]
 
 =back
 
@@ -80,7 +88,7 @@ DOM Standard <https://dom.spec.whatwg.org/>.
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://wiki.suikawiki.org/n/manakai's%20DOM%20Perl%20Binding>.
+<https://wiki.suikawiki.org/n/manakai's%20DOM%20Perl%20Binding>.
 
 =back
 
@@ -94,7 +102,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

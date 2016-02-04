@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::HTMLTableCellElement - The DOM |HTMLTableCellElement| object
+Web::DOM::HTMLTableCellElement - DOM |HTMLTableCellElement| object
 
 =head1 DESCRIPTION
 
@@ -34,9 +34,8 @@ Return or set the C<colspan> attribute.  [HTML]
 
 =item $el->headers ($string)
 
-Return the L<Web::DOM::SettableTokenList> object for the C<headers>
-attribute, or set the C<headers> attribute to the specified string
-value.  [HTML]
+Return the L<Web::DOM::TokenList> object for the C<headers> attribute,
+or set the C<headers> attribute to the specified string value.  [HTML]
 
 =item $integer = $el->rowspan
 
@@ -61,7 +60,7 @@ also implements the L<Web::DOM::HTMLTableHeaderCellElement> interface.
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#attributes-common-to-td-and-th-elements>.
+<https://www.whatwg.org/specs/web-apps/current-work/#attributes-common-to-td-and-th-elements>.
 
 =back
 
@@ -76,7 +75,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -1320,11 +1320,6 @@ for my $test (
     my $tokens = $el->$method;
 
     isa_ok $tokens, 'Web::DOM::TokenList';
-    if ($method eq 'rel_list') {
-      ok not $tokens->isa ('Web::DOM::SettableTokenList');
-    } else {
-      isa_ok $tokens, 'Web::DOM::SettableTokenList';
-    }
     is scalar @$tokens, 0;
 
     push @$tokens, 'aaa';
@@ -1335,7 +1330,7 @@ for my $test (
     is $el->get_attribute ($test->{attr}), 'bb  ccc  ';
     
     done $c;
-  } n => 6, name => ['reflect DOMTokenList', $el_name, $test->{attr}];
+  } n => 5, name => ['reflect DOMTokenList', $el_name, $test->{attr}];
 
   test {
     my $c = shift;
@@ -1354,24 +1349,22 @@ for my $test (
     done $c;
   } n => 8, name => ['reflect DOMTokenList attribute existence', $el_name];
 
-  if ($method ne 'rel_list') {
-    test {
-      my $c = shift;
-      my $doc = new Web::DOM::Document;
-      my $el = $doc->create_element ($el_name);
-      $el->$method ('');
-      ok not $el->has_attribute_ns (undef, $test->{attr});
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element ($el_name);
+    $el->$method ('');
+    ok not $el->has_attribute_ns (undef, $test->{attr});
 
-      $el->$method ("foo bar\x09\x0C");
-      is $el->get_attribute ($test->{attr}), 'foo bar';
+    $el->$method ("foo bar\x09\x0C");
+    is $el->get_attribute ($test->{attr}), 'foo bar';
 
-      $el->$method ("\x09\x0C");
-      is $el->get_attribute ($test->{attr}), '';
+    $el->$method ("\x09\x0C");
+    is $el->get_attribute ($test->{attr}), '';
 
-      done $c;
-    } n => 3, name => ['reflect DOMSettableTokenList',
-                       $el_name, $test->{attr}];
-  }
+    done $c;
+  } n => 3, name => ['reflect DOMSettableTokenList',
+                     $el_name, $test->{attr}];
 }
 
 for my $test (

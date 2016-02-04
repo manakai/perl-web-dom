@@ -54,7 +54,7 @@ Return or set whether the element is draggable or not.  [HTML]
 
 =item $el->dropzone ($string)
 
-Return the L<Web::DOM::SettableTokenList> object for the C<dropzone>
+Return the L<Web::DOM::TokenList> object for the C<dropzone>
 attribute, or set the C<dropzone> attribute to the specified string
 value.  [HTML]
 
@@ -82,7 +82,7 @@ Return or set the C<itemid> attribute.  [HTMLMD]
 
 =item $el->itemprop ($string)
 
-Return the L<Web::DOM::SettableTokenList> object for the C<itemprop>
+Return the L<Web::DOM::TokenList> object for the C<itemprop>
 attribute, or set the C<itemprop> attribute to the specified string
 value.  [HTMLMD]
 
@@ -90,9 +90,9 @@ value.  [HTMLMD]
 
 =item $el->itemref ($string)
 
-Return the L<Web::DOM::SettableTokenList> object for the C<itemref>
-attribute, or set the C<itemref> attribute to the specified string
-value.  [HTMLMD]
+Return the L<Web::DOM::TokenList> object for the C<itemref> attribute,
+or set the C<itemref> attribute to the specified string value.
+[HTMLMD]
 
 =item $boolean = $el->itemscope
 
@@ -105,7 +105,7 @@ Return or set whether the C<itemscope> attribute is specified or not.
 
 =item $el->itemtype ($string)
 
-Return the L<Web::DOM::SettableTokenList> object for the C<itemtype>
+Return the L<Web::DOM::TokenList> object for the C<itemtype>
 attribute, or set the C<itemtype> attribute to the specified string
 value.  [HTMLMD]
 
@@ -243,11 +243,11 @@ it is now dropped from the HTML Standard.
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#htmlelement>.
+<https://www.whatwg.org/specs/web-apps/current-work/#htmlelement>.
 
 =item CSSOM
 
-CSSOM <http://dev.w3.org/csswg/cssom/#elementcssinlinestyle>.
+CSSOM <https://dev.w3.org/csswg/cssom/#elementcssinlinestyle>.
 
 =item HTMLMD
 
@@ -257,12 +257,12 @@ HTML Microdata API
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =back
 
@@ -276,7 +276,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

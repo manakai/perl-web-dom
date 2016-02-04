@@ -284,17 +284,7 @@ _define_reflect_settable_token_list sizes => 'sizes';
 _define_reflect_string charset => 'charset';
 _define_reflect_string rev => 'rev';
 _define_reflect_string target => 'target';
-
-my $SupportedLinkRels = {}; # XXX
-
-sub rel_list ($) {
-  my $self = $_[0];
-  return $$self->[0]->tokens ('rel_list', $self, sub {
-    my $new = $$self->[2]->{rel_list} || [];
-    $self->set_attribute_ns (undef, rel => join ' ', @$new)
-        if @$new or $self->has_attribute_ns (undef, 'rel');
-  }, 'rel', $SupportedLinkRels);
-} # rel_list
+_define_reflect_settable_token_list rel_list => 'rel';
 
 # XXX LinkStyle
 
@@ -502,17 +492,7 @@ _define_reflect_string charset => 'charset';
 _define_reflect_string name => 'name';
 _define_reflect_string rev => 'rev';
 _define_reflect_string shape => 'shape';
-
-my $SupportedARels = {}; # XXX
-
-sub rel_list ($) {
-  my $self = $_[0];
-  return $$self->[0]->tokens ('rel_list', $self, sub {
-    my $new = $$self->[2]->{rel_list} || [];
-    $self->set_attribute_ns (undef, rel => join ' ', @$new)
-        if @$new or $self->has_attribute_ns (undef, 'rel');
-  }, 'rel', $SupportedARels);
-} # rel_list
+_define_reflect_settable_token_list rel_list => 'rel';
 
 sub text ($;$) {
   return shift->text_content (@_);
@@ -772,17 +752,7 @@ _define_reflect_settable_token_list ping => 'ping';
 # XXX URLUtils toString
 
 _define_reflect_boolean nohref => 'nohref';
-
-my $SupportedAreaRels = {}; # XXX
-
-sub rel_list ($) {
-  my $self = $_[0];
-  return $$self->[0]->tokens ('rel_list', $self, sub {
-    my $new = $$self->[2]->{rel_list} || [];
-    $self->set_attribute_ns (undef, rel => join ' ', @$new)
-        if @$new or $self->has_attribute_ns (undef, 'rel');
-  }, 'rel', $SupportedAreaRels);
-} # rel_list
+_define_reflect_settable_token_list rel_list => 'rel';
 
 package Web::DOM::HTMLTableElement;
 our $VERSION = '2.0';

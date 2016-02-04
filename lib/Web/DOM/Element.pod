@@ -29,6 +29,8 @@ Return the L<Web::DOM::TokenList> object for the C<class> attribute.
 
 =item $el->class_name ($string)
 
+=item $el->class_list ($string)
+
 Return or set the C<class> attribute.  [DOM]
 
 =item $bool = $el->manakai_element_type_match ($nsurl, $local_name)

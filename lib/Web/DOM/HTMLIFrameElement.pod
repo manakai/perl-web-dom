@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::HTMLIFrameElement - The DOM |HTMLIFrameElement| object
+Web::DOM::HTMLIFrameElement - DOM |HTMLIFrameElement| object
 
 =head1 DESCRIPTION
 
@@ -38,9 +38,8 @@ Return or set the C<name> attribute.  [HTML]
 
 =item $el->sandbox ($string)
 
-Return the L<Web::DOM::SettableTokenList> object for the C<sandbox>
-attribute, or set the C<sandbox> attribute to the specified string
-value.  [HTML]
+Return the L<Web::DOM::TokenList> object for the C<sandbox> attribute,
+or set the C<sandbox> attribute to the specified string value.  [HTML]
 
 =item $boolean = $el->seamless
 
@@ -80,7 +79,7 @@ C<scrolling>.  [HTML]
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-iframe-element>.
+<https://www.whatwg.org/specs/web-apps/current-work/#the-iframe-element>.
 
 =back
 
@@ -94,7 +93,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

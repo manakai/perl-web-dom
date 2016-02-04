@@ -151,11 +151,20 @@ test {
   done $c;
 } n => 5, name => 'class_list';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  $el->class_list ('ab cd ab AAA');
+  is $el->class_list->value, 'ab cd ab AAA';
+  done $c;
+} n => 1, name => 'class_list PutForwards';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

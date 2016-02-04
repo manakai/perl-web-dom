@@ -983,7 +983,7 @@ sub _define_reflect_unsigned_long_positive ($$$) {
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_unsigned_long_positive
 
-my $SupportedTokensList = {sandbox => {}, dropzone => {}}; # XXX
+my $SupportedTokensList = {rel => {}, sandbox => {}, dropzone => {}}; # XXX
 
 push @EXPORT, qw(_define_reflect_settable_token_list);
 sub _define_reflect_settable_token_list ($$) {
@@ -1063,6 +1063,10 @@ _define_reflect_string class_name => 'class';
 
 sub class_list ($) {
   my $self = $_[0];
+  if (@_ > 1) {
+    $self->class_name ($_[1]);
+    return unless defined wantarray;
+  }
   return $$self->[0]->tokens ('class_list', $self, sub {
     $self->set_attribute_ns
         (undef, class => join ' ', @{$$self->[2]->{class_list} ||= []});

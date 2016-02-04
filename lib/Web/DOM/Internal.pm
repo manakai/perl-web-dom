@@ -839,11 +839,6 @@ sub change_iterator_reference_node ($$$) {
 ##   4 - supportedness
 ## ], DOMTokenList
 
-our $TokenListClass = {
-  class_list => 'Web::DOM::TokenList',
-  rel_list => 'Web::DOM::TokenList',
-};
-
 sub tokens ($$$$$$) {
   my ($self, $key, $node, $updater, $attr_name, $supported) = @_;
   my $id = $$node->[1];
@@ -883,7 +878,7 @@ sub tokens ($$$$$$) {
     return defined $v ? $v : '';
   }, $supported;
 
-  my $class = $TokenListClass->{$key} || 'Web::DOM::SettableTokenList';
+  my $class = 'Web::DOM::TokenList';
   if (not $ModuleLoaded->{$class}++) {
     eval qq{ require $class } or die $@;
   }
