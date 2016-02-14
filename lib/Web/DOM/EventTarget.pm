@@ -1,7 +1,7 @@
 package Web::DOM::EventTarget;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
 use Web::DOM::Event;
@@ -12,13 +12,24 @@ push our @CARP_NOT, qw(Web::DOM::TypeError Web::DOM::Exception);
 ##   0 - CODE
 ##   1 - capture flag
 ##   2 - removed flag
+##   3 - passive flag
 
 sub add_event_listener ($$;$$) {
   # WebIDL
   my $type = ''.$_[1];
   _throw Web::DOM::TypeError 'The second argument is not a code reference'
       if defined $_[2] and not ref $_[2] eq 'CODE';
-  my $capture = $_[3] ? 1 : 0;
+
+  ## Flatten
+  my $capture = 0;
+  my $passive = 0;
+  if (defined $_[3] and ref $_[3] eq 'HASH') {
+    $capture = $_[3]->{capture} ? 1 : 0;
+    $passive = $_[3]->{passive} ? 1 : 0;
+  } elsif ($_[3]) {
+    $capture = 1;
+    $passive = 0;
+  }
 
   # 1.
   return undef unless defined $_[2];
@@ -27,9 +38,11 @@ sub add_event_listener ($$;$$) {
   my $obj = $_[0]->isa ('Web::DOM::Node') ? ${$_[0]}->[2] : $_[0];
   my $list = $obj->{event_listeners}->{$type} ||= [];
   for (@$list) {
-    return undef if $_->[0] eq $_[2] and $_->[1] == $capture;
+    return undef if $_->[0] eq $_[2] and
+                    $_->[1] == $capture and
+                    $_->[3] == $passive;
   }
-  push @$list, [$_[2], $capture];
+  push @$list, [$_[2], $capture, 0, $passive];
   return undef;
 } # add_event_listener
 
@@ -38,14 +51,24 @@ sub remove_event_listener ($$;$$) {
   my $type = ''.$_[1];
   _throw Web::DOM::TypeError 'The second argument is not a code reference'
       if defined $_[2] and not ref $_[2] eq 'CODE';
-  my $capture = $_[3] ? 1 : 0;
+
+  ## Flatten
+  my $capture = 0;
+  my $passive = 0;
+  if (defined $_[3] and ref $_[3] eq 'HASH') {
+    $capture = $_[3]->{capture} ? 1 : 0;
+    $passive = $_[3]->{passive} ? 1 : 0;
+  } elsif ($_[3]) {
+    $capture = 1;
+    $passive = 0;
+  }
 
   return undef unless defined $_[2];
   my $obj = $_[0]->isa ('Web::DOM::Node') ? ${$_[0]}->[2] : $_[0];
   my $list = $obj->{event_listeners}->{$type} ||= [];
   $obj->{event_listeners}->{$type} = [grep {
-    if ($_->[0] eq $_[2] and $_->[1] == $capture) {
-      $_->[2] = 1;
+    if ($_->[0] eq $_[2] and $_->[1] == $capture and $_->[3] == $passive) {
+      $_->[2] = 1; # removed
       ();
     } else {
       $_;
@@ -147,6 +170,7 @@ sub _invoke_event_listeners ($$$) {
     next if $listener->[1] and $event->event_phase == BUBBLING_PHASE;
 
     # XXX exception handling
+    local $event->{in_passive_listener} = $listener->[3]; # passive
     $listener->[0]->($event->current_target, $event);
   }
 } # _invoke_event_listeners
@@ -167,7 +191,7 @@ sub _fire_simple_event ($$$) {
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

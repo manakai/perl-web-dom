@@ -4,9 +4,9 @@ BEGIN {
   my $time = time;
   *CORE::GLOBAL::time = sub { return $time };
 }
-use Path::Class;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
+use Path::Tiny;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/modules/*/lib');
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/lib');
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
@@ -192,6 +192,8 @@ test {
   ok $ev->default_prevented;
   done $c;  
 } n => 2, name => 'prevent_default cancelable';
+
+## prevent_default passive flag tests are in eventtarget.t.
 
 test {
   my $c = shift;

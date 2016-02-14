@@ -1,7 +1,7 @@
 package Web::DOM::Event;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::Internal;
 use Web::DOM::TypeError;
 
@@ -93,7 +93,12 @@ sub manakai_immediate_propagation_stopped ($) {
 sub bubbles ($) { $_[0]->{bubbles} }
 sub cancelable ($) { $_[0]->{cancelable} }
 
-sub prevent_default ($) { $_[0]->{canceled} = 1 if $_[0]->{cancelable}; undef }
+sub prevent_default ($) {
+  $_[0]->{canceled} = 1 if $_[0]->{cancelable} and
+                           not $_[0]->{in_passive_listener};
+  return undef;
+} # prevent_default
+
 sub default_prevented ($) { $_[0]->{canceled} }
 
 sub is_trusted ($) { $_[0]->{is_trusted} }
@@ -104,7 +109,7 @@ sub _initialize ($;$$$) {
   return 0 if $self->{dispatch};
 
   ## Initialize
-  ## <http://dom.spec.whatwg.org/#concept-event-initialize>.
+  ## <https://dom.spec.whatwg.org/#concept-event-initialize>.
 
   $self->{initialized} = 1;
   delete $self->{stop_propagation};
@@ -446,7 +451,7 @@ sub ports ($) { $_[0]->{ports} }
 
 =head1 LICENSE
 
-Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

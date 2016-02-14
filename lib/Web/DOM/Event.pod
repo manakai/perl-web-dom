@@ -113,17 +113,17 @@ L<Web::DOM::MessageEvent>, and K<Web::DOM::UIEvent>.
 
 =item DOM
 
-DOM Standard <http://dom.spec.whatwg.org/#interface-event>.
+DOM Standard <https://dom.spec.whatwg.org/#interface-event>.
 
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =back
 
@@ -137,7 +137,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
