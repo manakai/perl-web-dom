@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-use Path::Class;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
+use Path::Tiny;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/modules/*/lib');
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/lib');
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
@@ -632,11 +632,173 @@ test {
   done $c;
 } n => 2, name => 'remove_event_listener in dispatch_event';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {};
+
+  $el1->add_event_listener (aa => sub {
+    is $_[1]->event_phase, $_[1]->CAPTURING_PHASE;
+  }, {passive => 1, capture => 1});
+  $el2->dispatch_event ($ev);
+
+  done $c;
+} n => 1, name => 'EventListenerOptions capture';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  $el1->add_event_listener (aa => sub {
+    is $_[1]->event_phase, $_[1]->BUBBLING_PHASE;
+  }, {passive => 1, capture => 0});
+  $el2->dispatch_event ($ev);
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  $el1->add_event_listener (aa => sub {
+    is $_[1]->event_phase, $_[1]->BUBBLING_PHASE;
+  }, {passive => 1});
+  $el2->dispatch_event ($ev);
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture (default)';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  my $invoked = 0;
+  $el1->add_event_listener (aa => my $code = sub {
+    $invoked++;
+  }, {passive => 0, capture => 0});
+  $el1->remove_event_listener (aa => $code);
+  $el2->dispatch_event ($ev);
+  is $invoked, 0;
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture, add -> remove';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  my $invoked = 0;
+  $el1->add_event_listener (aa => my $code = sub {
+    $invoked++;
+  }, {passive => 1, capture => 0});
+  $el1->remove_event_listener (aa => $code);
+  $el2->dispatch_event ($ev);
+  is $invoked, 1;
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture, add -> remove';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  my $invoked = 0;
+  $el1->add_event_listener (aa => my $code = sub {
+    $invoked++;
+  });
+  $el1->remove_event_listener (aa => $code, {capture => 1});
+  $el2->dispatch_event ($ev);
+  is $invoked, 1;
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture, add -> remove';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  my $invoked = 0;
+  $el1->add_event_listener (aa => my $code = sub {
+    $invoked++;
+  }, 'abc');
+  $el1->remove_event_listener (aa => $code, 'true');
+  $el2->dispatch_event ($ev);
+  is $invoked, 0;
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture, add -> remove';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  my $invoked = 0;
+  $el1->add_event_listener (aa => my $code = sub {
+    $invoked++;
+  }, 1);
+  $el1->remove_event_listener (aa => $code, {capture => 1});
+  $el2->dispatch_event ($ev);
+  is $invoked, 0;
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture, add -> remove';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  my $invoked = 0;
+  $el1->add_event_listener (aa => my $code = sub {
+    $invoked++;
+  }, {passive => 1, capture => 1});
+  $el1->remove_event_listener (aa => $code, []);
+  $el2->dispatch_event ($ev);
+  is $invoked, 1;
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture, add -> remove';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -14,14 +14,15 @@ Following methods are available:
 
 =over 4
 
-=item $et->add_event_listener ($type, $code, $is_capture)
+=item $et->add_event_listener ($type, $code, {capture => $boolean, passive => $boolean})
 
 Register a callback function as event listener for the event target.
 The first argument identifies the type of the event to listen,
 e.g. C<click> or C<resize>.  The second argument is a code reference,
 which is invoked when an event is dispatched.  The optional third
-argument specifies whether the code listens the capturing phase (true)
-or the bubbling phase (false, default).  [DOM] [DOMPERL]
+argument can specify whether the code listens the capturing phase
+(true) or the bubbling phase (false, default) and whether the listner
+is passive or not.  [DOM] [DOMPERL]
 
 When an event of the specified type is dispatched, the code of the
 second argument is invoked with two arguments: I<$self> and I<$event>.
@@ -44,7 +45,7 @@ cancelled.  [DOM]
 Note that the event is dispatched synchronously, such that any event
 listener callback is invoked synchronously.
 
-=item $et->remove_event_listener ($type, $code, $is_capture)
+=item $et->remove_event_listener ($type, $code, {capture => $boolean, passive => $boolean})
 
 Unregister a callback function as event listener, if it is registered.
 [DOM]
@@ -57,12 +58,12 @@ Unregister a callback function as event listener, if it is registered.
 
 =item DOM
 
-DOM Standard <http://dom.spec.whatwg.org/#interface-eventtarget>.
+DOM Standard <https://dom.spec.whatwg.org/#interface-eventtarget>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =back
 
@@ -76,7 +77,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

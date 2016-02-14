@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-use Path::Class;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
+use Path::Tiny;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/modules/*/lib');
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/lib');
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
@@ -648,11 +648,41 @@ test {
   done $c;
 } n => 2, name => 'remove_event_listener in dispatch_event';
 
+test {
+  my $c = shift;
+  my $et = create_event_target;
+  my $ev = new Web::DOM::Event 'aa', {cancelable => 1};
+
+  $et->add_event_listener (aa => sub {
+    $_[1]->prevent_default;
+    ok 1;
+  }, {passive => 0});
+  $et->dispatch_event ($ev);
+
+  ok $ev->default_prevented;
+  done $c;
+} n => 2, name => 'prevent_default in non-passive listener';
+
+test {
+  my $c = shift;
+  my $et = create_event_target;
+  my $ev = new Web::DOM::Event 'aa', {cancelable => 1};
+
+  $et->add_event_listener (aa => sub {
+    $_[1]->prevent_default;
+    ok 1;
+  }, {passive => 1});
+  $et->dispatch_event ($ev);
+
+  ok !$ev->default_prevented;
+  done $c;
+} n => 2, name => 'prevent_default in passive listener';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
