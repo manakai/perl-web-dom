@@ -41,13 +41,6 @@ Return or set the C<name> attribute.  [HTML]
 Return the L<Web::DOM::TokenList> object for the C<sandbox> attribute,
 or set the C<sandbox> attribute to the specified string value.  [HTML]
 
-=item $boolean = $el->seamless
-
-=item $el->seamless ($boolean)
-
-Return or set whether the C<seamless> attribute is specified or not.
-[HTML]
-
 =item $string = $el->src
 
 =item $el->src ($string)

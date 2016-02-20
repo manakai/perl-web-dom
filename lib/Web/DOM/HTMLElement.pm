@@ -575,7 +575,6 @@ use Web::DOM::Element;
 _define_reflect_string srcdoc => 'srcdoc';
 _define_reflect_string name => 'name';
 _define_reflect_url src => 'src';
-_define_reflect_boolean seamless => 'seamless';
 _define_reflect_boolean allowfullscreen => 'allowfullscreen';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
@@ -760,8 +759,6 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Internal;
 use Web::DOM::Node;
 use Web::DOM::Element;
-
-_define_reflect_boolean sortable => 'sortable';
 
 _define_reflect_string align => 'align';
 _define_reflect_string border => 'border';
@@ -1006,8 +1003,6 @@ sub delete_row ($$) {
   return;
 } # delete_row
 
-# XXX stop_sorting
-
 package Web::DOM::HTMLTableCaptionElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
@@ -1237,9 +1232,6 @@ _define_reflect_enumerated scope => 'scope', {
   # #missing => #auto
 };
 _define_reflect_string abbr => 'abbr';
-_define_reflect_string sorted => 'sorted';
-
-# XXX sort
 
 package Web::DOM::HTMLFormElement;
 our $VERSION = '1.0';

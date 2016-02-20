@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::HTMLTableHeaderCellElement - The DOM |HTMLTableHeaderCellElement| object
+Web::DOM::HTMLTableHeaderCellElement - DOM |HTMLTableHeaderCellElement| object
 
 =head1 DESCRIPTION
 
@@ -28,12 +28,6 @@ Return or set the C<abbr> attribute.  [HTML]
 
 Return or set the C<scope> attribute.  [HTML]
 
-=item $string = $el->sorted
-
-=item $el->sorted ($string)
-
-Return or set the C<sorted> attribute.  [HTML]
-
 =back
 
 =head1 SPECIFICATION
@@ -43,7 +37,7 @@ Return or set the C<sorted> attribute.  [HTML]
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-th-element>.
+<https://www.whatwg.org/specs/web-apps/current-work/#the-th-element>.
 
 =back
 
@@ -57,7 +51,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -71,13 +71,6 @@ table and return the element.  [HTML]
 Return the L<Web::DOM::HTMLCollection> containing the rows (C<tr>
 elements) of the table.  [HTML]
 
-=item $boolean = $el->sortable
-
-=item $el->sortable ($boolean)
-
-Return or set whether the C<sortable> attribute is specified or not.
-[HTML]
-
 =item $col = $el->tbodies
 
 Return the L<Web::DOM::HTMLCollection> containing the C<tbody>
@@ -122,7 +115,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
