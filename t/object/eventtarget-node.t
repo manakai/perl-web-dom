@@ -794,6 +794,68 @@ test {
   done $c;
 } n => 1, name => 'EventListenerOptions not capture, add -> remove';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'animationstart';
+
+  my $invoked = 0;
+  $el1->add_event_listener (webkitAnimationStart => sub {
+    $invoked++;
+  }, {capture => 1});
+  $el2->dispatch_event ($ev);
+  is $invoked, 1;
+
+  done $c;
+} n => 1, name => 'legacy event type';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'animationstart';
+
+  my $invoked = 0;
+  $el1->add_event_listener (webkitAnimationStart => sub {
+    $invoked++;
+  }, {capture => 1});
+  $el2->add_event_listener (animationstart => sub {
+    $invoked++;
+  }, {capture => 1});
+  $el2->dispatch_event ($ev);
+  is $invoked, 2;
+
+  done $c;
+} n => 1, name => 'legacy event type';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'animationstart';
+
+  my $invoked1 = 0;
+  my $invoked2 = 0;
+  $el1->add_event_listener (webkitAnimationStart => sub {
+    $invoked1++;
+  }, {capture => 1});
+  $el1->add_event_listener (animationstart => sub {
+    $invoked2++;
+  }, {capture => 0});
+  $el2->dispatch_event ($ev);
+  is $invoked1, 0;
+  is $invoked2, 0;
+
+  done $c;
+} n => 2, name => 'legacy event type';
+
 run_tests;
 
 =head1 LICENSE

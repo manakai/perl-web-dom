@@ -17,6 +17,12 @@ $Web::DOM::_Defs = {
                                                              'select' => 1,
                                                              'textarea' => 1
                                                            }
-                         }
+                         },
+          'legacy_event' => {
+                              'animationend' => 'webkitAnimationEnd',
+                              'animationiteration' => 'webkitAnimationIteration',
+                              'animationstart' => 'webkitAnimationStart',
+                              'transitionend' => 'webkitTransitionEnd'
+                            }
         };
 1;

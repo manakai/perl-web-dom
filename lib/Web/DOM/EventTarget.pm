@@ -1,10 +1,11 @@
 package Web::DOM::EventTarget;
 use strict;
 use warnings;
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
 use Web::DOM::Event;
+use Web::DOM::_Defs;
 
 push our @CARP_NOT, qw(Web::DOM::TypeError Web::DOM::Exception);
 
@@ -96,7 +97,7 @@ sub dispatch_event ($$) {
 } # dispatch_event
 
 sub _dispatch_event ($$) {
-  ## Dispatch <http://dom.spec.whatwg.org/#concept-event-dispatch>.
+  ## Dispatch <https://dom.spec.whatwg.org/#concept-event-dispatch>.
   
   # 1.-3.
   my $event = $_[1];
@@ -152,34 +153,46 @@ sub _dispatch_event ($$) {
 sub _invoke_event_listeners ($$$) {
   # 1.
   my $event = $_[1];
+  my $orig_type = $event->type;
+  my $legacy_type = $Web::DOM::_Defs->{legacy_event}->{$orig_type};
   
   # 2.
   my $obj = $_[2]->isa ('Web::DOM::Node') ? ${$_[2]}->[2] : $_[2];
-  my $listeners = $obj->{event_listeners}->{$event->type};
-  return unless $listeners;
-  $listeners = [@$listeners];
+  my $orig_listeners = [@{$obj->{event_listeners}->{$orig_type} || []}];
+  my $legacy_listeners = defined $legacy_type
+      ? [@{$obj->{event_listeners}->{$legacy_type} || []}] : [];
 
   # 3.
   $event->{current_target} = $_[2];
 
   # 4.
-  for my $listener (@$listeners) {
-    return if $event->{stop_immediate_propagation};
-    next if $listener->[2]; # removed
-    next if not $listener->[1] and $event->event_phase == CAPTURING_PHASE;
-    next if $listener->[1] and $event->event_phase == BUBBLING_PHASE;
+  my $inner = sub {
+    my $found = 0;
+    for my $listener (@{$_[0]}) {
+      return if $event->{stop_immediate_propagation};
+      next if $listener->[2]; # removed
+      $found = 1;
+      next if not $listener->[1] and $event->event_phase == CAPTURING_PHASE;
+      next if $listener->[1] and $event->event_phase == BUBBLING_PHASE;
 
-    # XXX exception handling
-    local $event->{in_passive_listener} = $listener->[3]; # passive
-    $listener->[0]->($event->current_target, $event);
+      # XXX exception handling
+      local $event->{in_passive_listener} = $listener->[3]; # passive
+      $listener->[0]->($event->current_target, $event);
+    }
+    return $found;
+  }; # $inner
+  my $found = $inner->($orig_listeners);
+  if (not $found and @$legacy_listeners) {
+    local $event->{type} = $legacy_type;
+    $inner->($legacy_listeners);
   }
 } # _invoke_event_listeners
 
 sub _fire_simple_event ($$$) {
   ## Fire an event named e
-  ## <http://dom.spec.whatwg.org/#concept-event-fire>.
+  ## <https://dom.spec.whatwg.org/#concept-event-fire>.
   ## Fire a simple event named e
-  ## <http://www.whatwg.org/specs/web-apps/current-work/#fire-a-simple-event>.
+  ## <https://www.whatwg.org/specs/web-apps/current-work/#fire-a-simple-event>.
 
   require Web::DOM::Event;
   my $ev = Web::DOM::Event->new ($_[1], $_[2]);

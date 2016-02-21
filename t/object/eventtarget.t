@@ -678,6 +678,41 @@ test {
   done $c;
 } n => 2, name => 'prevent_default in passive listener';
 
+test {
+  my $c = shift;
+  my $et = create_event_target;
+  my $ev = new Web::DOM::Event 'animationend';
+
+  my $invoked = 0;
+  $et->add_event_listener (webkitAnimationEnd => sub {
+    $invoked++;
+  });
+  $et->dispatch_event ($ev);
+
+  is $invoked, 1;
+  done $c;
+} n => 1, name => 'legacy event type';
+
+test {
+  my $c = shift;
+  my $et = create_event_target;
+  my $ev = new Web::DOM::Event 'animationend';
+
+  my $invoked1 = 0;
+  my $invoked2 = 0;
+  $et->add_event_listener (webkitAnimationEnd => sub {
+    $invoked1++;
+  });
+  $et->add_event_listener (animationend => sub {
+    $invoked2++;
+  });
+  $et->dispatch_event ($ev);
+
+  is $invoked1, 0;
+  is $invoked2, 1;
+  done $c;
+} n => 2, name => 'legacy event type';
+
 run_tests;
 
 =head1 LICENSE
