@@ -1105,7 +1105,6 @@ sub create_event ($$) {
     events => 'Event',
     htmlevents => 'Event',
     keyboardevent => 'KeyboardEvent',
-    keyevents => 'KeyboardEvent',
     messageevent => 'MessageEvent',
     mouseevent => 'MouseEvent',
     mouseevents => 'MouseEvent',
@@ -1205,7 +1204,7 @@ sub clear ($) { }
 
 =head1 LICENSE
 
-Copyright 2007-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

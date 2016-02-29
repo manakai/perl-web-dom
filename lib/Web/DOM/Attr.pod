@@ -58,6 +58,8 @@ an element, C<undef> is returned.  [DOM]
 
 =item $name = $attr->name
 
+=item $name = $attr->node_name
+
 =item $name = $attr->manakai_name [DEPRECATED]
 
 Return the attribute name.  [DOM] [MANAKAI]
@@ -111,26 +113,26 @@ ENUMERATION_ATTR UNKNOWN_ATTR
 
 =item DOM
 
-DOM Standard <http://dom.spec.whatwg.org/#interface-attr>.
+DOM Standard <https://dom.spec.whatwg.org/#interface-attr>.
 
 =item DOMNODEEXODUS
 
-DOM Standard <view-source:http://dom.spec.whatwg.org/>.
+DOM Standard <view-source:https://dom.spec.whatwg.org/>.
 
 =item DOMDTDEF
 
 DOM Document Type Definitions
-<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
+<https://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%20DOM%20Extensions>.
 
 =item MANAKAIINDEX
 
 manakai index data structures
-<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures>.
+<https://wiki.suikawiki.org/n/manakai%20index%20data%20structures>.
 
 =back
 
@@ -144,7 +146,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

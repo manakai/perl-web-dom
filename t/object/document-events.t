@@ -23,7 +23,7 @@ test {
 for my $if (
   undef, 'HogeEvent', 'Document', 'CustomEvents', 'CloseEvent', 'HTMLEvent',
   'MutationEvent', 'Mutationevents', 'MutationNameEvent', 'TextEvent',
-  'CompositionEvent', 'Keyevent', 'ProgRESSevent', 'FocusEvent',
+  'CompositionEvent', 'Keyevent', 'keyevents', 'ProgRESSevent', 'FocusEvent',
 ) {
   test {
     my $c = shift;
@@ -49,7 +49,6 @@ for my $test (
   [uiEvent => 'Web::DOM::UIEvent'],
   [UiEvents => 'Web::DOM::UIEvent'],
   [Keyboardevent => 'Web::DOM::KeyboardEvent'],
-  [keyevents => 'Web::DOM::KeyboardEvent'],
   [MessageEvent => 'Web::DOM::MessageEvent'],
 ) {
   test {
@@ -105,7 +104,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
