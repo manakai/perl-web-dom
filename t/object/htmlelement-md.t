@@ -207,12 +207,12 @@ test {
   my $el = $doc->create_element ('time');
   $el->set_attribute (itemprop => '');
   is $el->itemvalue, '';
-  $el->inner_html (q{<span>aa</span>});
-  is $el->itemvalue, 'aa';
+  $el->inner_html (q{x<span>aa</span>y});
+  is $el->itemvalue, 'xy';
   $el->itemvalue ('ahoge');
   is $el->get_attribute ('datetime'), 'ahoge';
   is $el->itemvalue, 'ahoge';
-  is $el->text_content, 'aa';
+  is $el->text_content, 'xaay';
   done $c;
 } n => 5, name => ['itemvalue', 'time'];
 
@@ -235,7 +235,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2014-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

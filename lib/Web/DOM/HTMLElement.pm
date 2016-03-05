@@ -170,7 +170,14 @@ sub itemvalue ($;$) {
       $self->datetime ($_[0]);
     }
     my $value = $self->get_attribute_ns (undef, 'datetime');
-    return defined $value ? $value : $self->text_content;
+    return $value if defined $value;
+    my $s = '';
+    for ($self->child_nodes->to_list) {
+      if ($_->node_type == 3) { # TEXT_NODE
+        $s .= $_->data;
+      }
+    }
+    return $s;
   } else {
     return $self->text_content (@_);
   }
@@ -1866,7 +1873,7 @@ sub manakai_append_content ($$) {
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
