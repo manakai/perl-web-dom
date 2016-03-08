@@ -193,6 +193,12 @@ sub has_attributes ($) {
   return 0;
 } # has_attributes
 
+sub root_node ($) {
+  my $self = $_[0];
+  my $root_node_id = $$self->[0]->{tree_id}->[$$self->[1]];
+  return $$self->[0]->node ($root_node_id);
+} # root_node
+
 sub parent_node ($) {
   my $self = shift;
   my $pid = $$self->[2]->{parent_node};
@@ -1614,7 +1620,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2007-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

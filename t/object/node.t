@@ -1,9 +1,9 @@
 use strict;
 use warnings;
 no warnings 'utf8';
-use Path::Class;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
+use Path::Tiny;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/modules/*/lib')->stringify;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/lib')->stringify;
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
@@ -980,11 +980,72 @@ test {
   done $c;
 } n => 3, name => 'manakai_expanded_uri';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  is $doc->root_node, $doc;
+  done $c;
+} n => 1, name => 'root_node Document';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('a');
+  is $el->root_node, $el;
+  done $c;
+} n => 1, name => 'root_node Element with no parent';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $df = $doc->create_document_fragment;
+  is $df->root_node, $df;
+  done $c;
+} n => 1, name => 'root_node DocumentFragment';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $node = $doc->create_attribute ('b');
+  is $node->root_node, $node;
+  done $c;
+} n => 1, name => 'root_node Attr';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $node = $doc->create_text_node ('b');
+  is $node->root_node, $node;
+  done $c;
+} n => 1, name => 'root_node Text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $node = $doc->create_element ('b');
+  my $node2 = $doc->create_element ('c');
+  $node->append_child ($node2);
+  is $node2->root_node, $node;
+  done $c;
+} n => 1, name => 'root_node Element parent';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $node = $doc->create_element ('b');
+  my $node2 = $doc->create_element ('c');
+  my $node3 = $doc->create_element ('d');
+  $node->append_child ($node2);
+  $node2->append_child ($node3);
+  is $node3->root_node, $node;
+  done $c;
+} n => 1, name => 'root_node Element ancestor';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

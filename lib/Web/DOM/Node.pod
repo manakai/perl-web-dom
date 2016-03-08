@@ -212,6 +212,10 @@ Replace the specified child node by a new node.  The first argument is
 the new child node.  The second argument is the current child node,
 which is to be replaced.  The new child node is returned.  [DOM]
 
+=item $root_node = $node->root_node
+
+Return the root node of the tree the node belongs to.  [DOM]
+
 =item $node->manakai_set_source_location (['', $di, $ci])
 
 Set an array reference containing document and character index values,
@@ -367,7 +371,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
