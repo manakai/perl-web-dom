@@ -234,7 +234,7 @@ test {
   is $nl->item (0+"nan"), $el;
   is $nl->item (+0**1), $el;
   if ((0/"-inf") eq '-0') {
-    is $nl->item (0/"-inf"), $el;
+    is $nl->item (0/"-inf"), undef;
   } else {
     is $nl->item (0/"-inf"), $el;
   }
