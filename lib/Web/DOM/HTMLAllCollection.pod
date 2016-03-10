@@ -1,11 +1,14 @@
 =head1 NAME
 
-Web::DOM::HTMLAllCollection - The DOM |HTMLAllCollection| object
+Web::DOM::HTMLAllCollection - DOM |HTMLAllCollection| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::HTMLAllCollection> class implements the DOM
 C<HTMLAllCollection> interface.
+
+Note that the C<document.all> attribute is obsolete.  You MUST NOT use
+it.
 
 =head1 METHODS
 
@@ -45,18 +48,17 @@ them is returned instead.  [DOM] [HTML] [DOMPERL]
 
 =item DOM
 
-DOM Living Standard
-<http://dom.spec.whatwg.org/#interface-htmlcollection>.
+DOM Standard <https://dom.spec.whatwg.org/#interface-htmlcollection>.
 
 =item HTML
 
-HTML Living Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#htmlallcollection>.
+HTML Standard
+<https://www.whatwg.org/specs/web-apps/current-work/#htmlallcollection>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =back
 
@@ -70,7 +72,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

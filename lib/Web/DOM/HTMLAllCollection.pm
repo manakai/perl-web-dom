@@ -65,9 +65,11 @@ use overload
     },
     fallback => 1;
 
-sub item ($$) {
+sub item ($;$) {
+  return undef unless defined $_[1];
   my $index = ''.$_[1];
-  if ($index =~ /\A[0-9]+\z/) {
+  my $i = '' . do { no warnings; 0+$index };
+  if ($index eq $i) {
     return $_[0]->SUPER::item ($index);
   } else {
     return $_[0]->named_item ($index);

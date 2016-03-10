@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 use Path::Tiny;
-use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps', 'lib')->stringify;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/modules/*/lib')->stringify;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/lib')->stringify;
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
@@ -229,17 +229,17 @@ test {
   is $nl->item (0), $el;
   is $nl->item (1), undef;
   is $nl->item (2), undef;
-  is $nl->item (0+"inf"), undef;
-  is $nl->item (0+"-inf"), undef;
-  is $nl->item (0+"nan"), undef;
+  is $nl->item (0+"inf"), $el;
+  is $nl->item (0+"-inf"), $el;
+  is $nl->item (0+"nan"), $el;
   is $nl->item (+0**1), $el;
   if ((0/"-inf") eq '-0') {
-    is $nl->item (0/"-inf"), undef;
+    is $nl->item (0/"-inf"), $el;
   } else {
     is $nl->item (0/"-inf"), $el;
   }
-  is $nl->item (0.52), undef;
-  is $nl->item (-0.52), undef;
+  is $nl->item (0.52), $el;
+  is $nl->item (-0.52), $el;
   is $nl->item (1.42), undef;
   is $nl->item (-1.323), undef;
   is $nl->item (-1), undef;
@@ -628,7 +628,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
