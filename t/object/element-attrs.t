@@ -2334,11 +2334,119 @@ test {
   done $c;
 } n => 7, name => 'get_attribute_names mutation';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('e');
+  my $attr1 = $doc->create_attribute ('a1');
+  my $attr2 = $doc->create_attribute ('a2');
+  my $attr3 = $doc->create_attribute ('a2');
+  $el->set_attribute_node ($attr1);
+  $el->set_attribute_node ($attr2);
+  is $el->attributes->[0], $attr1;
+  is $el->attributes->[1], $attr2;
+  $el->set_attribute_node ($attr3);
+  is $el->attributes->[1], $attr3;
+  done $c;
+} n => 3, name => 'set_attribute_node append';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('e');
+  my $attr1 = $doc->create_attribute ('a1');
+  my $attr2 = $doc->create_attribute ('a2');
+  my $attr3 = $doc->create_attribute ('a1');
+  $el->set_attribute_node ($attr1);
+  $el->set_attribute_node ($attr2);
+  is $el->attributes->[0], $attr1;
+  is $el->attributes->[1], $attr2;
+  $el->set_attribute_node ($attr3);
+  is $el->attributes->[0], $attr3;
+  done $c;
+} n => 3, name => 'set_attribute_node replace';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('e');
+  my $attr1 = $doc->create_attribute ('a1');
+  my $attr2 = $doc->create_attribute ('a2');
+  my $attr3 = $doc->create_attribute ('a3');
+  my $attr4 = $doc->create_attribute ('a2');
+  $el->set_attribute_node ($attr1);
+  $el->set_attribute_node ($attr2);
+  $el->set_attribute_node ($attr3);
+  is $el->attributes->[0], $attr1;
+  is $el->attributes->[1], $attr2;
+  is $el->attributes->[2], $attr3;
+  $el->set_attribute_node ($attr4);
+  is $el->attributes->[1], $attr4;
+  done $c;
+} n => 4, name => 'set_attribute_node replace';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('e');
+  my $attr1 = $doc->create_attribute ('a1');
+  my $attr2 = $doc->create_attribute ('a2');
+  my $attr3 = $doc->create_attribute ('a3');
+  my $attr4 = $doc->create_attribute ('a2');
+  $el->set_attribute_node_ns ($attr1);
+  $el->set_attribute_node_ns ($attr2);
+  $el->set_attribute_node_ns ($attr3);
+  is $el->attributes->[0], $attr1;
+  is $el->attributes->[1], $attr2;
+  is $el->attributes->[2], $attr3;
+  $el->set_attribute_node_ns ($attr4);
+  is $el->attributes->[1], $attr4;
+  done $c;
+} n => 4, name => 'set_attribute_node_ns replace';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('e');
+  my $attr1 = $doc->create_attribute ('a1');
+  my $attr2 = $doc->create_attribute ('a2');
+  my $attr3 = $doc->create_attribute ('a3');
+  my $attr4 = $doc->create_attribute ('a2');
+  $el->set_attribute_node ($attr1);
+  $el->set_attribute_node ($attr2);
+  $el->set_attribute_node ($attr3);
+  is $el->attributes->[0], $attr1;
+  is $el->attributes->[1], $attr2;
+  is $el->attributes->[2], $attr3;
+  $el->attributes->set_named_item ($attr4);
+  is $el->attributes->[1], $attr4;
+  done $c;
+} n => 4, name => 'set_named_item replace';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('e');
+  my $attr1 = $doc->create_attribute ('a1');
+  my $attr2 = $doc->create_attribute ('a2');
+  my $attr3 = $doc->create_attribute ('a3');
+  my $attr4 = $doc->create_attribute ('a2');
+  $el->set_attribute_node ($attr1);
+  $el->set_attribute_node ($attr2);
+  $el->set_attribute_node ($attr3);
+  is $el->attributes->[0], $attr1;
+  is $el->attributes->[1], $attr2;
+  is $el->attributes->[2], $attr3;
+  $el->attributes->set_named_item_ns ($attr4);
+  is $el->attributes->[1], $attr4;
+  done $c;
+} n => 4, name => 'set_named_item replace';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -519,7 +519,9 @@ sub set_attribute_node ($$) {
 
   my ($node, $attr) = @_;
 
-  # 1.
+  ## Set an attribute
+
+  ## 1.
   if (defined $$attr->[2]->{owner} and
       not ($$attr->[0] eq $$node->[0] and
            $$attr->[2]->{owner} == $$node->[1])) {
@@ -527,29 +529,64 @@ sub set_attribute_node ($$) {
         'The specified attribute has already attached to another node';
   }
 
-  # 2.-4.
+  ## 2. Get an attribute by namespace and local name
   my $old_attr = $node->get_attribute_node_ns
       ($attr->namespace_uri, $attr->local_name);
 
-  # 5.
+  ## 3.
   return $attr if defined $old_attr and $attr eq $old_attr;
 
-  # 6.
-  $node->remove_attribute_node ($old_attr) if defined $old_attr;
+  if (defined $old_attr) {
+    ## 4. Replace
+    {
+      ## 1. Mutation
+      # XXX
 
-  # 7.
-  $$node->[0]->adopt ($attr);
-  my $nsurl = ${$$attr->[2]->{namespace_uri} || \''};
-  my $ln = ${$$attr->[2]->{local_name}};
-  push @{$$node->[2]->{attributes} ||= []}, $$attr->[1]; # AttrNameRef
-  $$node->[2]->{attrs}->{$nsurl}->{$ln} = $$attr->[1]; # AttrValueRef
-  $$attr->[2]->{owner} = $$node->[1];
-  $$node->[0]->connect ($$attr->[1] => $$node->[1]);
-  $node->_attribute_is
-      ($$attr->[2]->{namespace_uri}, $$attr->[2]->{local_name},
-       set => 1, added => 1);
+      ## 3.
+      delete $$node->[2]->{attrs}->{${$$old_attr->[2]->{namespace_uri} || \''}}->{${$$old_attr->[2]->{local_name}}}; # AttrValueRef
+      my $i = 0;
+      my $found = 0;
+      @{$$node->[2]->{attributes}} = grep {
+        if ($_ != $$old_attr->[1]) {
+          $i++ unless $found;
+          1;
+        } else {
+          $found = 1;
+          0;
+        }
+      } @{$$node->[2]->{attributes}}; # AttrNameRef
+      delete $$old_attr->[2]->{owner};
+      $$node->[0]->disconnect ($$old_attr->[1]);
 
-  # 8.
+      ## 4.
+      $$node->[0]->adopt ($attr);
+      my $nsurl = ${$$attr->[2]->{namespace_uri} || \''};
+      my $ln = ${$$attr->[2]->{local_name}};
+      splice @{$$node->[2]->{attributes}}, $i, 0, ($$attr->[1]); # AttrNameRef
+      $$node->[2]->{attrs}->{$nsurl}->{$ln} = $$attr->[1]; # AttrValueRef
+      $$attr->[2]->{owner} = $$node->[1];
+      $$node->[0]->connect ($$attr->[1] => $$node->[1]);
+
+      ## 5.
+      $node->_attribute_is
+          ($$attr->[2]->{namespace_uri}, $$attr->[2]->{local_name},
+           set => 1, changed => 1);
+    }
+  } else {
+    ## 5. Append
+    $$node->[0]->adopt ($attr);
+    my $nsurl = ${$$attr->[2]->{namespace_uri} || \''};
+    my $ln = ${$$attr->[2]->{local_name}};
+    push @{$$node->[2]->{attributes} ||= []}, $$attr->[1]; # AttrNameRef
+    $$node->[2]->{attrs}->{$nsurl}->{$ln} = $$attr->[1]; # AttrValueRef
+    $$attr->[2]->{owner} = $$node->[1];
+    $$node->[0]->connect ($$attr->[1] => $$node->[1]);
+    $node->_attribute_is
+        ($$attr->[2]->{namespace_uri}, $$attr->[2]->{local_name},
+         set => 1, added => 1);
+  }
+
+  ## 6.
   return $old_attr; # or undef
 } # set_attribute_node
 *set_attribute_node_ns = \&set_attribute_node;
