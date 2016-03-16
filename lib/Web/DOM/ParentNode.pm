@@ -478,6 +478,7 @@ sub inner_html ($;$) {
         $orig_onerror->(@_);
         if (($args{level} || 'm') eq 'm') {
           $parser->throw (sub {
+            undef $parser;
             _throw Web::DOM::Exception 'SyntaxError',
                 'The given string is ill-formed as XML';
           });
