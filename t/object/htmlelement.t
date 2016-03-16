@@ -272,34 +272,18 @@ for my $test (
 
 for my $test (
   ['hoge', 'itemid'],
-  ['link', 'href'],
-  ['script', 'src'],
   ['blockquote', 'cite'],
   ['q', 'cite'],
   ['a', 'href'],
   ['area', 'href'],
   ['ins', 'cite'],
   ['del', 'cite'],
-  ['img', 'src'],
   ['img', 'longdesc'],
   ['img', 'lowsrc'],
-  ['iframe', 'src'],
   ['iframe', 'longdesc'],
   ['frame', 'src'],
   ['frame', 'longdesc'],
-  ['embed', 'src'],
-  ['object', 'data'],
   ['object', 'codebase'],
-  ['audio', 'src'],
-  ['video', 'src'],
-  ['video', 'poster'],
-  ['source', 'src'],
-  ['track', 'src'],
-  ['form', 'action', 1],
-  ['input', 'src'],
-  ['input', 'formaction', 1],
-  ['button', 'formaction', 1],
-  ['menuitem', 'icon'],
   ['applet', 'object'],
   ['applet', 'codebase'],
 ) {
@@ -309,16 +293,16 @@ for my $test (
     my $doc = new Web::DOM::Document;
     $doc->manakai_set_url ('http://foo/bar/');
     my $el = $doc->create_element ($test->[0]);
-    is $el->$attr, $test->[2] ? 'http://foo/bar/' : '';
+    is $el->$attr, '';
     $el->$attr ('hoge');
     is $el->$attr, 'http://foo/bar/hoge';
     is $el->get_attribute ($attr), 'hoge';
     $el->$attr ('  http://ABC/ ');
     is $el->$attr, 'http://abc/';
     is $el->get_attribute ($attr), '  http://ABC/ ';
-    $el->$attr ('http://fo:a/');
-    is $el->$attr, '';
-    is $el->get_attribute ($attr), 'http://fo:a/';
+    $el->$attr ('htTp://fo:a');
+    is $el->$attr, 'htTp://fo:a';
+    is $el->get_attribute ($attr), 'htTp://fo:a';
     $el->$attr ('');
     is $el->$attr, 'http://foo/bar/';
     is $el->get_attribute ($attr), '';
@@ -329,7 +313,22 @@ for my $test (
 }
 
 for my $test (
-  (),
+  ['link', 'href'],
+  ['script', 'src'],
+  ['img', 'src'],
+  ['iframe', 'src'],
+  ['embed', 'src'],
+  ['object', 'data'],
+  ['audio', 'src'],
+  ['video', 'src'],
+  ['video', 'poster'],
+  ['source', 'src'],
+  ['track', 'src'],
+  ['form', 'action'],
+  ['input', 'src'],
+  ['input', 'formaction'],
+  ['button', 'formaction'],
+  ['menuitem', 'icon'],
 ) {
   my $attr = $test->[1];
   test {
@@ -344,18 +343,16 @@ for my $test (
     $el->$attr ('  http://ABC/ ');
     is $el->$attr, 'http://abc/';
     is $el->get_attribute ($attr), '  http://ABC/ ';
-    $el->$attr ('http://fo:a/');
-    is $el->$attr, '';
-    is $el->get_attribute ($attr), 'http://fo:a/';
-    $el->$attr ("http://foo http://BAR/abc hoge http://foo:bar ab \x09");
-    is $el->$attr, 'http://foo/ http://bar/abc http://foo/bar/hoge http://foo/bar/ab';
-    is $el->get_attribute ($attr),
-        "http://foo http://BAR/abc hoge http://foo:bar ab \x09";
+    $el->$attr ('htTp://fo:a');
+    is $el->$attr, 'htTp://fo:a';
+    is $el->get_attribute ($attr), 'htTp://fo:a';
     $el->$attr ('');
     is $el->$attr, '';
     is $el->get_attribute ($attr), '';
+    $el->set_attribute_ns (XML_NS, 'base' => 'ftp://hoge');
+    is $el->$attr, '';
     done $c;
-  } n => 11, name => ['reflect urls', $test->[0], $test->[1]];
+  } n => 10, name => ['reflect neurl', $test->[0], $test->[1]];
 }
 
 for my $attr (qw(itemscope hidden)) {

@@ -3,7 +3,7 @@ use strict;
 use warnings;
 no warnings 'utf8';
 use warnings FATAL => 'recursion';
-our $VERSION = '4.0';
+our $VERSION = '5.0';
 use Web::DOM::Internal;
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
@@ -769,32 +769,7 @@ sub _define_reflect_string ($$;$) {
 } # _define_reflect_string
 
 push @EXPORT, qw(_define_reflect_url);
-sub _define_reflect_url ($$;$) {
-  my ($perl_name, $content_name, $code) = @_;
-  my $class = caller;
-  eval sprintf q{
-    *%s::%s = sub ($;$) {
-      if (@_ > 1) {
-        $_[0]->set_attribute_ns (undef, '%s', $_[1]);
-        return unless defined wantarray;
-      }
-
-      my $v = $_[0]->get_attribute_ns (undef, '%s');
-      if (defined $v) {
-        $v = _resolve_url $v, $_[0]->base_uri;
-        return defined $v ? $v : '';
-      } else {
-        return $code ? $code->($_[0]) : '';
-      }
-    };
-    1;
-  }, $class, $perl_name, $content_name, $content_name or die $@;
-} # _define_reflect_url
-
-=for comment
-
-push @EXPORT, qw(_define_reflect_urls);
-sub _define_reflect_urls ($$) {
+sub _define_reflect_url ($$) {
   my ($perl_name, $content_name) = @_;
   my $class = caller;
   eval sprintf q{
@@ -806,17 +781,38 @@ sub _define_reflect_urls ($$) {
 
       my $v = $_[0]->get_attribute_ns (undef, '%s');
       if (defined $v) {
-        my $base = $_[0]->base_uri;
-        return join ' ', grep { defined $_ } map { _resolve_url $_, $base } grep { length } split /[\x09\x0A\x0C\x0D\x20]+/, $v;
+        my $w = _resolve_url $v, $_[0]->base_uri;
+        return defined $w ? $w : $v;
       } else {
-        return ''; # or default
+        return '';
       }
     };
     1;
   }, $class, $perl_name, $content_name, $content_name or die $@;
-} # _define_reflect_urls
+} # _define_reflect_url
 
-=cut
+push @EXPORT, qw(_define_reflect_neurl);
+sub _define_reflect_neurl ($$) {
+  my ($perl_name, $content_name) = @_;
+  my $class = caller;
+  eval sprintf q{
+    *%s::%s = sub ($;$) {
+      if (@_ > 1) {
+        $_[0]->set_attribute_ns (undef, '%s', $_[1]);
+        return unless defined wantarray;
+      }
+
+      my $v = $_[0]->get_attribute_ns (undef, '%s');
+      if (defined $v and length $v) {
+        my $w = _resolve_url $v, $_[0]->base_uri;
+        return defined $w ? $w : $v;
+      } else {
+        return '';
+      }
+    };
+    1;
+  }, $class, $perl_name, $content_name, $content_name or die $@;
+} # _define_reflect_neurl
 
 push @EXPORT, qw(_define_reflect_string_undef);
 sub _define_reflect_string_undef ($$) {
@@ -1323,7 +1319,7 @@ sub _define_reflect_child_url ($$$) {
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

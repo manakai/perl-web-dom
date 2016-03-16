@@ -275,7 +275,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-_define_reflect_url href => 'href';
+_define_reflect_neurl href => 'href';
 _define_reflect_string rel => 'rel';
 _define_reflect_string media => 'media';
 _define_reflect_string hreflang => 'hreflang';
@@ -347,7 +347,7 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Node;
 use Web::DOM::Element;
 
-_define_reflect_url src => 'src';
+_define_reflect_neurl src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string charset => 'charset';
 _define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
@@ -551,7 +551,7 @@ use Web::DOM::Element;
 # XXX constructor
 
 _define_reflect_string alt => 'alt';
-_define_reflect_url src => 'src';
+_define_reflect_neurl src => 'src';
 _define_reflect_string srcset => 'srcset';
 _define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
   '' => 'anonymous',
@@ -581,7 +581,7 @@ use Web::DOM::Element;
 
 _define_reflect_string srcdoc => 'srcdoc';
 _define_reflect_string name => 'name';
-_define_reflect_url src => 'src';
+_define_reflect_neurl src => 'src';
 _define_reflect_boolean allowfullscreen => 'allowfullscreen';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
@@ -600,7 +600,7 @@ push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 # XXX plugin-specific interface getSVGDocument
 
-_define_reflect_url src => 'src';
+_define_reflect_neurl src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
@@ -618,7 +618,7 @@ use Web::DOM::Element;
 # validation_message check_validity set_custom_validity
 # get_svg_document
 
-_define_reflect_url data => 'data';
+_define_reflect_neurl data => 'data';
 _define_reflect_string type => 'type';
 _define_reflect_boolean typemustmatch => 'typemustmatch';
 _define_reflect_string name => 'name';
@@ -663,7 +663,7 @@ _define_reflect_boolean autoplay => 'autoplay';
 _define_reflect_boolean loop => 'loop';
 _define_reflect_boolean controls => 'controls';
 _define_reflect_boolean default_muted => 'muted';
-_define_reflect_url src => 'src';
+_define_reflect_neurl src => 'src';
 
 # XXX and more
 
@@ -674,7 +674,7 @@ use Web::DOM::Element;
 
 _define_reflect_unsigned_long width => 'width', sub { 0 };
 _define_reflect_unsigned_long height => 'height', sub { 0 };
-_define_reflect_url poster => 'poster';
+_define_reflect_neurl poster => 'poster';
 
 # XXX video_width video_height
 
@@ -689,7 +689,7 @@ our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-_define_reflect_url src => 'src';
+_define_reflect_neurl src => 'src';
 _define_reflect_string type => 'type';
 _define_reflect_string media => 'media';
 _define_reflect_string srcset => 'srcset';
@@ -700,7 +700,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-_define_reflect_url src => 'src';
+_define_reflect_neurl src => 'src';
 _define_reflect_enumerated kind => 'kind', {
   'subtitles' => 'subtitles',
   'captions' => 'captions',
@@ -1275,7 +1275,7 @@ _define_reflect_enumerated method => 'method', {
 _define_reflect_string name => 'name';
 _define_reflect_boolean novalidate => 'novalidate';
 _define_reflect_string target => 'target';
-_define_reflect_url action => 'action', sub { $_[0]->owner_document->url };
+_define_reflect_neurl action => 'action';
 
 # XXX elements length getter request_autocomplete
 
@@ -1365,8 +1365,7 @@ _define_reflect_boolean autofocus => 'autofocus';
 _define_reflect_boolean default_checked => 'checked';
 _define_reflect_string dirname => 'dirname';
 _define_reflect_boolean disabled => 'disabled';
-_define_reflect_url formaction => 'formaction',
-    sub { $_[0]->owner_document->url };
+_define_reflect_neurl formaction => 'formaction';
 _define_reflect_enumerated formenctype => 'formenctype', {
   'application/x-www-form-urlencoded' => 'application/x-www-form-urlencoded',
   'multipart/form-data' => 'multipart/form-data',
@@ -1408,7 +1407,7 @@ _define_reflect_boolean readonly => 'readonly';
 _define_reflect_boolean required => 'required';
 _define_reflect_unsigned_long size => 'size', sub { 0 };
 _define_reflect_string step => 'step';
-_define_reflect_url src => 'src';
+_define_reflect_neurl src => 'src';
 _define_reflect_enumerated type => 'type', {
   hidden => 'hidden',
   text => 'text',
@@ -1468,8 +1467,7 @@ use Web::DOM::Element;
 
 _define_reflect_boolean autofocus => 'autofocus';
 _define_reflect_boolean disabled => 'disabled';
-_define_reflect_url formaction => 'formaction',
-    sub { $_[0]->owner_document->url };
+_define_reflect_neurl formaction => 'formaction';
 _define_reflect_enumerated formenctype => 'formenctype', {
   'application/x-www-form-urlencoded' => 'application/x-www-form-urlencoded',
   'multipart/form-data' => 'multipart/form-data',
@@ -1746,7 +1744,7 @@ _define_reflect_string radiogroup => 'radiogroup';
 _define_reflect_boolean disabled => 'disabled';
 _define_reflect_boolean checked => 'checked';
 _define_reflect_boolean default => 'default';
-_define_reflect_url icon => 'icon';
+_define_reflect_neurl icon => 'icon';
 
 package Web::DOM::HTMLDialogElement;
 our $VERSION = '1.0';
