@@ -1142,7 +1142,6 @@ sub outer_html ($;$) {
         $orig_onerror->(@_);
         if (($args{level} || 'm') eq 'm') {
           $parser->throw (sub {
-            $parser->onerror (undef);
             undef $parser;
             _throw Web::DOM::Exception 'SyntaxError',
                 'The given string is ill-formed as XML';
@@ -1200,7 +1199,6 @@ sub insert_adjacent_html ($$$) {
         $orig_onerror->(@_);
         if (($args{level} || 'm') eq 'm') {
           $parser->throw (sub {
-            $parser->onerror (undef);
             undef $parser;
             _throw Web::DOM::Exception 'SyntaxError',
                 'The given string is ill-formed as XML';
@@ -1211,7 +1209,6 @@ sub insert_adjacent_html ($$$) {
     # XXX errors should be redirected to the Console object.
     my $new_children = $parser->parse_char_string_with_context
         ($v, $context, new Web::DOM::Document);
-    $parser->onerror (undef);
     undef $parser;
 
     my $fragment = $self->owner_document->create_document_fragment;

@@ -38,6 +38,7 @@ sub parse_from_string ($$$) {
       $orig_onerror->(@_);
       if (($args{level} || 'm') eq 'm') {
         $parser->throw (sub {
+          undef $parser;
           die bless {%args}, 'Web::DOM::Parser::_ParseError';
         });
       }
