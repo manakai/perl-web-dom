@@ -63,7 +63,7 @@ there is no attribute with the specified name, C<undef> is returned.
 =item $indexed = $el->manakai_get_attribute_indexed_string_ns ($nsurl, $local_name)
 
 Return the IndexedString
-<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>
+<https://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>
 representation of the attribute with the specified namespace URL and
 local name.  If there is no attribute with the specified name,
 C<undef> is returned.  [MANAKAIINDEX]
@@ -201,7 +201,7 @@ second item is the local name.  [DOMPERL]
 
 Set the attribute with the specified namespace URL, qualified name,
 and value represented as an IndexedString
-<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>.
+<https://wiki.suikawiki.org/n/manakai%20index%20data%20structures#anchor-1>.
 If there is already the attribute with the same namespace URL / local
 name pair, its value is replaced by the new one.  [MANAKAIINDEX]
 
@@ -235,7 +235,8 @@ class.  Most HTML elements have more specific subclasses.  See
 L<Web::DOM::HTMLElement> for details.  Likewise, Atom elements use
 L<Web::DOM::AtomElement>.
 
-In addition, the obsolete C<manakai_base_uri> method is available.
+In addition, obsolete methods C<insert_adjacent_element>,
+C<insert_adjacent_text>, and C<manakai_base_uri> are available.  [DOM]
 [DOMDTDEF]
 
 =head1 SPECIFICATIONS
@@ -253,32 +254,32 @@ DOM Living Standard, commented out
 
 =item DOMPARSING
 
-DOM Parsing and Serialization <http://domparsing.spec.whatwg.org/>.
+DOM Parsing and Serialization <https://domparsing.spec.whatwg.org/>.
 
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#htmlelement>.
+<https://www.whatwg.org/specs/web-apps/current-work/#htmlelement>.
 
 =item DOMDTDEF
 
 DOM Document Type Definitions
-<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
+<https://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
 =item MANAKAIINDEX
 
 manakai index data structures
-<http://wiki.suikawiki.org/n/manakai%20index%20data%20structures>.
+<https://wiki.suikawiki.org/n/manakai%20index%20data%20structures>.
 
 =back
 
@@ -292,7 +293,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

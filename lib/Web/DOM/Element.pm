@@ -1222,6 +1222,28 @@ sub insert_adjacent_html ($$$) {
   return;
 } # insert_adjacent_html
 
+sub insert_adjacent_element ($$$) {
+  my $self = $_[0];
+  my $position = ''.$_[1];
+  my $el = $_[2];
+  unless (UNIVERSAL::isa ($el, 'Web::DOM::Element')) {
+    _throw Web::DOM::TypeError 'The argument is not an Element';
+  }
+  if ($self->_insert_adjacent ($position, sub { return $el }, 0)) {
+    return $el;
+  } else {
+    return undef;
+  }
+} # insert_adjacent_element
+
+sub insert_adjacent_text ($$$) {
+  my $self = $_[0];
+  my $position = ''.$_[1];
+  my $text = $self->owner_document->create_text_node (''.$_[2]);
+  $self->_insert_adjacent ($position, sub { return $text }, 0);
+  return undef;
+} # insert_adjacent_text
+
 sub _insert_adjacent ($$$$) {
   my ($self, $position, $code, $html) = @_;
   $position =~ tr/A-Z/a-z/;

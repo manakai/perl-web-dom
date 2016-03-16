@@ -539,11 +539,328 @@ test {
   done $c;
 } n => 4, name => 'manakai_base_uri';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el2 = $doc->create_element ('e2');
+  my $el3 = $doc->create_element ('e3');
+
+  $el1->append_child ($el2);
+
+  my $return = $el2->insert_adjacent_element ('beforebegin', $el3);
+  is $return, $el3;
+
+  is $el3->parent_node, $el1;
+  is $el3->previous_sibling, undef;
+  is $el3->next_sibling, $el2;
+
+  done $c;
+} n => 4, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el2 = $doc->create_element ('e2');
+  my $el3 = $doc->create_element ('e3');
+
+  $el1->append_child ($el2);
+
+  my $return = $el2->insert_adjacent_element ('AfterEND', $el3);
+  is $return, $el3;
+
+  is $el3->parent_node, $el1;
+  is $el3->previous_sibling, $el2;
+  is $el3->next_sibling, undef;
+
+  done $c;
+} n => 4, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el2 = $doc->create_element ('e2');
+  my $el3 = $doc->create_element ('e3');
+  my $el4 = $doc->create_element ('e4');
+
+  $el1->append_child ($el2);
+  $el2->append_child ($el4);
+
+  my $return = $el2->insert_adjacent_element ('afterbegin', $el3);
+  is $return, $el3;
+
+  is $el3->parent_node, $el2;
+  is $el3->previous_sibling, undef;
+  is $el3->next_sibling, $el4;
+
+  done $c;
+} n => 4, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el2 = $doc->create_element ('e2');
+  my $el3 = $doc->create_element ('e3');
+  my $el4 = $doc->create_element ('e4');
+
+  $el1->append_child ($el2);
+  $el2->append_child ($el4);
+
+  my $return = $el2->insert_adjacent_element ('BEFOREEND', $el3);
+  is $return, $el3;
+
+  is $el3->parent_node, $el2;
+  is $el3->previous_sibling, $el4;
+  is $el3->next_sibling, undef;
+
+  done $c;
+} n => 4, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el3 = $doc->create_element ('e3');
+
+  is $el1->insert_adjacent_element ('beforebegin', $el3), undef;
+  is $el3->parent_node, undef;
+
+  done $c;
+} n => 2, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el3 = $doc->create_element ('e3');
+
+  is $el1->insert_adjacent_element ('afterend', $el3), undef;
+  is $el3->parent_node, undef;
+
+  done $c;
+} n => 2, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el3 = $doc->create_element ('e3');
+
+  dies_here_ok {
+    $el1->insert_adjacent_element ('hoge', $el3);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'Unknown position is specified';
+  is $el3->parent_node, undef;
+
+  done $c;
+} n => 5, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  $doc->append_child ($el1);
+  my $el3 = $doc->create_element ('e3');
+
+  dies_here_ok {
+    $el1->insert_adjacent_element ('beforebegin', $el3);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  is $@->message, 'Document node cannot have two element children';
+  is $el3->parent_node, undef;
+
+  done $c;
+} n => 5, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  $doc->append_child ($el1);
+  my $el3 = $doc->create_element ('e3');
+
+  dies_here_ok {
+    $el1->insert_adjacent_element ('afterend', $el3);
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  is $@->message, 'Document node cannot have two element children';
+  is $el3->parent_node, undef;
+
+  done $c;
+} n => 5, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+
+  dies_here_ok {
+    $el1->insert_adjacent_element ('beforeend', 'hoge');
+  };
+  isa_ok $@, 'Web::DOM::TypeError';
+  is $@->message, 'The argument is not an Element';
+
+  done $c;
+} n => 3, name => 'insert_adjacent_element';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el2 = $doc->create_element ('e2');
+
+  $el1->append_child ($el2);
+
+  $el2->insert_adjacent_text ('beforebegin', 'foo');
+
+  is $el1->child_nodes->length, 2;
+  is $el1->first_child->node_type, 3;
+  is $el1->first_child->data, 'foo';
+
+  done $c;
+} n => 3, name => 'insert_adjacent_text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el2 = $doc->create_element ('e2');
+
+  $el1->append_child ($el2);
+
+  $el2->insert_adjacent_text ('afterend', 'foo');
+
+  is $el1->child_nodes->length, 2;
+  is $el1->last_child->node_type, 3;
+  is $el1->last_child->data, 'foo';
+
+  done $c;
+} n => 3, name => 'insert_adjacent_text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el2 = $doc->create_element ('e2');
+  my $el4 = $doc->create_element ('e4');
+
+  $el1->append_child ($el2);
+  $el2->append_child ($el4);
+
+  $el2->insert_adjacent_text ('afterbegin', 'foo');
+
+  is $el2->child_nodes->length, 2;
+  is $el2->first_child->node_type, 3;
+  is $el2->first_child->data, 'foo';
+
+  done $c;
+} n => 3, name => 'insert_adjacent_text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  my $el2 = $doc->create_element ('e2');
+  my $el4 = $doc->create_element ('e4');
+
+  $el1->append_child ($el2);
+  $el2->append_child ($el4);
+
+  $el2->insert_adjacent_text ('BEFOREEND', 'foo');
+
+  is $el2->child_nodes->length, 2;
+  is $el2->last_child->node_type, 3;
+  is $el2->last_child->data, 'foo';
+
+  done $c;
+} n => 3, name => 'insert_adjacent_text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+
+  is $el1->insert_adjacent_text ('beforebegin', 'abcde'), undef;
+  is $el1->child_nodes->length, 0;
+
+  done $c;
+} n => 2, name => 'insert_adjacent_text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+
+  is $el1->insert_adjacent_text ('afterend', 'abcde'), undef;
+  is $el1->child_nodes->length, 0;
+
+  done $c;
+} n => 2, name => 'insert_adjacent_text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+
+  dies_here_ok {
+    $el1->insert_adjacent_text ('hoge', 'foobar');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'SyntaxError';
+  is $@->message, 'Unknown position is specified';
+  is $el1->child_nodes->length, 0;
+
+  done $c;
+} n => 5, name => 'insert_adjacent_text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  $doc->append_child ($el1);
+  my $el3 = $doc->create_element ('e3');
+
+  dies_here_ok {
+    $el1->insert_adjacent_text ('beforebegin', 'foobar');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  is $@->message, 'Document node cannot contain this kind of node';
+  is $el3->parent_node, undef;
+
+  done $c;
+} n => 5, name => 'insert_adjacent_text';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('e1');
+  $doc->append_child ($el1);
+  my $el3 = $doc->create_element ('e3');
+
+  dies_here_ok {
+    $el1->insert_adjacent_text ('afterend', 'foobar');
+  };
+  isa_ok $@, 'Web::DOM::Exception';
+  is $@->name, 'HierarchyRequestError';
+  is $@->message, 'Document node cannot contain this kind of node';
+  is $el3->parent_node, undef;
+
+  done $c;
+} n => 5, name => 'insert_adjacent_text';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
