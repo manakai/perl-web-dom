@@ -1142,6 +1142,8 @@ sub outer_html ($;$) {
         $orig_onerror->(@_);
         if (($args{level} || 'm') eq 'm') {
           $parser->throw (sub {
+            $parser->onerror (undef);
+            undef $parser;
             _throw Web::DOM::Exception 'SyntaxError',
                 'The given string is ill-formed as XML';
           });
@@ -1170,73 +1172,93 @@ sub outer_html ($;$) {
 } # outer_html
 
 sub insert_adjacent_html ($$$) {
-  ## See also: ParentNode->inner_html, Element->outer_html
   my $self = $_[0];
-
-  # 1.
   my $position = ''.$_[1];
+  my $v = defined $_[2] ? ''.$_[2] : '';
+
+  my $code = sub {
+    ## See also: ParentNode->inner_html, Element->outer_html
+
+    my $context = $_[0];
+
+    if (not $context->node_type == ELEMENT_NODE or
+        ($$self->[0]->{data}->[0]->{is_html} and
+         $context->manakai_element_type_match (HTML_NS, 'html'))) {
+      $context = $self->owner_document->create_element ('body');
+    }
+
+    my $parser;
+    if ($$self->[0]->{data}->[0]->{is_html}) {
+      require Web::HTML::Parser;
+      $parser = Web::HTML::Parser->new;
+    } else {
+      require Web::XML::Parser;
+      $parser = Web::XML::Parser->new;
+      my $orig_onerror = $parser->onerror;
+      $parser->onerror (sub {
+        my %args = @_;
+        $orig_onerror->(@_);
+        if (($args{level} || 'm') eq 'm') {
+          $parser->throw (sub {
+            $parser->onerror (undef);
+            undef $parser;
+            _throw Web::DOM::Exception 'SyntaxError',
+                'The given string is ill-formed as XML';
+          });
+        }
+      });
+    }
+    # XXX errors should be redirected to the Console object.
+    my $new_children = $parser->parse_char_string_with_context
+        ($v, $context, new Web::DOM::Document);
+    $parser->onerror (undef);
+    undef $parser;
+
+    my $fragment = $self->owner_document->create_document_fragment;
+    $fragment->append_child ($_) for $new_children->to_list;
+
+    return $fragment;
+
+  }; # $code
+
+  $self->_insert_adjacent ($position, $code, 'html');
+  return;
+} # insert_adjacent_html
+
+sub _insert_adjacent ($$$$) {
+  my ($self, $position, $code, $html) = @_;
   $position =~ tr/A-Z/a-z/;
   my $context;
   if ($position eq 'beforebegin' or $position eq 'afterend') {
     $context = $self->parent_node;
-    if (not defined $context or $context->node_type == DOCUMENT_NODE) {
-      my $v = ''.$_[2];
-      _throw Web::DOM::Exception 'NoModificationAllowedError',
-          'Cannot insert before or after the root element';
+    if ($html) {
+      if (not defined $context or $context->node_type == DOCUMENT_NODE) {
+        _throw Web::DOM::Exception 'NoModificationAllowedError',
+            'Cannot insert before or after the root element';
+      }
+    } else {
+      return 0 if not defined $context;
     }
   } elsif ($position eq 'afterbegin' or $position eq 'beforeend') {
     $context = $self;
   } else {
-    my $v = ''.$_[2];
     _throw Web::DOM::Exception 'SyntaxError',
         'Unknown position is specified';
   }
 
-  # 2.
-  if (not $context->node_type == ELEMENT_NODE or
-      ($$self->[0]->{data}->[0]->{is_html} and
-       $context->manakai_element_type_match (HTML_NS, 'html'))) {
-    $context = $self->owner_document->create_element ('body');
-  }
+  my $node = $code->($context);
 
-  # 3.
-  my $parser;
-  if ($$self->[0]->{data}->[0]->{is_html}) {
-    require Web::HTML::Parser;
-    $parser = Web::HTML::Parser->new;
-  } else {
-    require Web::XML::Parser;
-    $parser = Web::XML::Parser->new;
-    my $orig_onerror = $parser->onerror;
-    $parser->onerror (sub {
-      my %args = @_;
-      $orig_onerror->(@_);
-      if (($args{level} || 'm') eq 'm') {
-        $parser->throw (sub {
-          _throw Web::DOM::Exception 'SyntaxError',
-              'The given string is ill-formed as XML';
-        });
-      }
-    });
-  }
-  # XXX errors should be redirected to the Console object.
-  my $new_children = $parser->parse_char_string_with_context
-      (defined $_[2] ? ''.$_[2] : '', $context, new Web::DOM::Document);
-  my $fragment = $self->owner_document->create_document_fragment;
-  $fragment->append_child ($_) for $new_children->to_list;
-
-  # 4.
   if ($position eq 'beforebegin') {
-    $self->parent_node->insert_before ($fragment, $self);
+    $self->parent_node->insert_before ($node, $self);
   } elsif ($position eq 'afterbegin') {
-    $self->insert_before ($fragment, $self->first_child);
+    $self->insert_before ($node, $self->first_child);
   } elsif ($position eq 'beforeend') {
-    $self->append_child ($fragment);
+    $self->append_child ($node);
   } elsif ($position eq 'afterend') {
-    $self->parent_node->insert_before ($fragment, $self->next_sibling);
+    $self->parent_node->insert_before ($node, $self->next_sibling);
   }
-  return;
-} # insert_adjacent_html
+  return 1;
+} # _insert_adjacent
 
 push @EXPORT, qw(_define_reflect_child_string);
 sub _define_reflect_child_string ($$$) {
