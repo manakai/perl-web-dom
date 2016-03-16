@@ -129,7 +129,7 @@ Return whether two nodes are equal or not.  [DOM] [DOMATTREXODUS]
 
 =item $bool = $node1->is_same_node ($node2)
 
-Return whether two nodes are same or not.  [DOM3CORE] [MANAKAI]
+Return whether two nodes are same or not.  [DOM]
 
 =item $bool = $node->is_supported ($feature, $version)
 
