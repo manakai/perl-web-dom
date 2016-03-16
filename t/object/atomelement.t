@@ -355,7 +355,7 @@ for (
     is $el->attributes->[0]->value, 'http://hoge/';
     $el->$cel_name ('fuga');
     is $el->attributes->[0]->value, 'fuga';
-    is $el->$cel_name, '';
+    is $el->$cel_name, 'fuga';
     $el->$cel_name ('');
     is $el->attributes->[0]->value, '';
     $el->set_attribute_ns (XML_NS, 'xml:base' => 'hoge:');
