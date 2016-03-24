@@ -2,7 +2,7 @@ DateTime~1.26
 Capture::Tiny~0.36
 Time::Piece~1.31
 Test::NoWarnings~1.04
-Encode~2.82
+Encode~2.83
 List::Util~1.44
 DateTime::Locale~1.02
 Test::Builder~1.001014
@@ -41,6 +41,6 @@ TAP::Harness~3.36
 Carp~1.38
 Class::Singleton~1.5
 JSON::PP~2.27300
-DateTime::TimeZone~1.96
+DateTime::TimeZone~1.97
 Params::Validate~1.22
 Exporter::Tiny~0.042
