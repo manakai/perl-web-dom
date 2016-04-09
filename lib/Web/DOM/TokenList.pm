@@ -33,18 +33,6 @@ sub item ($$) {
 
 sub contains ($$) {
   my $token = ''.$_[1];
-
-  if ($token eq '') {
-    # 1.
-    _throw Web::DOM::Exception 'SyntaxError',
-        'The token cannot be the empty string';
-  } elsif ($token =~ /[\x09\x0A\x0C\x0D\x20]/) {
-    # 2.
-    _throw Web::DOM::Exception 'InvalidCharacterError',
-        'The token cannot contain any ASCII white space character';
-  }
-
-  # 3.
   return defined [grep { $_ eq $token } @{$_[0]}]->[0];
 } # contains
 

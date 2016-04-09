@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-use Path::Class;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
+use Path::Tiny;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/modules/*/lib')->stringify;
+use lib glob path (__FILE__)->parent->parent->parent->child ('t_deps/lib')->stringify;
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
@@ -133,25 +133,15 @@ test {
   ok not $tokens->contains ('0');
 
   for (undef, '') {
-    dies_here_ok {
-      $tokens->contains ($_);
-    };
-    isa_ok $@, 'Web::DOM::Exception';
-    is $@->name, 'SyntaxError';
-    is $@->message, 'The token cannot be the empty string';
+    ok ! $tokens->contains ($_);
   }
 
   for ('ho ge', "\x09", "fu\x0C") {
-    dies_here_ok {
-      $tokens->contains ($_);
-    };
-    isa_ok $@, 'Web::DOM::Exception';
-    is $@->name, 'InvalidCharacterError';
-    is $@->message, 'The token cannot contain any ASCII white space character';
+    ok ! $tokens->contains ($_);
   }
 
   done $c;
-} n => 24, name => 'contains empty list';
+} n => 9, name => 'contains empty list';
 
 test {
   my $c = shift;
@@ -166,25 +156,15 @@ test {
   ok $tokens->contains ('0');
 
   for (undef, '') {
-    dies_here_ok {
-      $tokens->contains ($_);
-    };
-    isa_ok $@, 'Web::DOM::Exception';
-    is $@->name, 'SyntaxError';
-    is $@->message, 'The token cannot be the empty string';
+    ok ! $tokens->contains ($_);
   }
 
   for ('ho ge', "\x09", "fu\x0C", 'hoge 0') {
-    dies_here_ok {
-      $tokens->contains ($_);
-    };
-    isa_ok $@, 'Web::DOM::Exception';
-    is $@->name, 'InvalidCharacterError';
-    is $@->message, 'The token cannot contain any ASCII white space character';
+    ok ! $tokens->contains ($_);
   }
 
   done $c;
-} n => 28, name => 'contains not empty list';
+} n => 10, name => 'contains not empty list';
 
 test {
   my $c = shift;
