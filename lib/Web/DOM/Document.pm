@@ -1111,6 +1111,7 @@ sub create_event ($$) {
     touchevent => 'TouchEvent',
     uievent => 'UIEvent',
     uievents => 'UIEvent',
+    # XXX and more keywords from the DOM spec
   }->{$str}
       or _throw Web::DOM::Exception 'NotSupportedError',
           'Unknown event interface';

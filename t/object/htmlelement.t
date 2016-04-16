@@ -1,8 +1,10 @@
 use strict;
 use warnings;
-use Path::Class;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
+use Path::Tiny;
+use lib glob path (__FILE__)->parent->parent->parent->child
+    ('t_deps/modules/*/lib')->stringify;
+use lib glob path (__FILE__)->parent->parent->parent->child
+    ('t_deps/lib')->stringify;
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
@@ -115,7 +117,6 @@ for my $test (
   ['keygen', 'name'],
   ['output', 'name'],
   ['menu', 'label'],
-  ['menuitem', 'label'],
   ['menuitem', 'radiogroup'],
   ['applet', 'align'],
   ['applet', 'alt'],
@@ -3162,11 +3163,86 @@ test {
   done $c;
 } n => 1, name => 'style setter';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('menuitem');
+  is $el->label, '';
+  $el->label ('abc');
+  is $el->label, 'abc';
+  $el->label ("   ");
+  is $el->label, '   ';
+  $el->label ("\x09\x20abc\x0A");
+  is $el->label, "\x09\x20abc\x0A";
+  $el->label ('');
+  is $el->label, '';
+  $el->label ('0');
+  is $el->label, '0';
+  done $c;
+} n => 6, name => '<menuitem label>';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('menuitem');
+  $el->inner_html (q{  });
+  is $el->label, '';
+  $el->label ('abc');
+  is $el->label, 'abc';
+  $el->label ("   ");
+  is $el->label, '   ';
+  $el->label ("\x09\x20abc\x0A");
+  is $el->label, "\x09\x20abc\x0A";
+  $el->label ('');
+  is $el->label, '';
+  $el->label ('0');
+  is $el->label, '0';
+  done $c;
+} n => 6, name => '<menuitem label>';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('menuitem');
+  $el->inner_html (qq{  <p>xy</p>\x09});
+  is $el->label, '';
+  $el->label ('abc');
+  is $el->label, 'abc';
+  $el->label ("   ");
+  is $el->label, '   ';
+  $el->label ("\x09\x20abc\x0A");
+  is $el->label, "\x09\x20abc\x0A";
+  $el->label ('');
+  is $el->label, '';
+  $el->label ('0');
+  is $el->label, '0';
+  done $c;
+} n => 6, name => '<menuitem label>';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el = $doc->create_element ('menuitem');
+  $el->inner_html (q{  a  b  c  });
+  is $el->label, 'a b c';
+  $el->label ('abc');
+  is $el->label, 'abc';
+  $el->label ("   ");
+  is $el->label, '   ';
+  $el->label ("\x09\x20abc\x0A");
+  is $el->label, "\x09\x20abc\x0A";
+  $el->label ('');
+  is $el->label, '';
+  $el->label ('0');
+  is $el->label, '0';
+  done $c;
+} n => 6, name => '<menuitem label>';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

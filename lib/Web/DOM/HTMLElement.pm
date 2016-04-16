@@ -1729,7 +1729,7 @@ _define_reflect_string label => 'label';
 _define_reflect_boolean compact => 'compact';
 
 package Web::DOM::HTMLMenuItemElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
@@ -1739,12 +1739,30 @@ _define_reflect_enumerated type => 'type', {
   'radio' => 'radio',
   '#missing' => 'command',
 };
-_define_reflect_string label => 'label';
 _define_reflect_string radiogroup => 'radiogroup';
 _define_reflect_boolean disabled => 'disabled';
 _define_reflect_boolean checked => 'checked';
 _define_reflect_boolean default => 'default';
 _define_reflect_neurl icon => 'icon';
+
+sub label ($;$) {
+  if (@_ > 1) {
+    $_[0]->set_attribute_ns (undef, 'label', $_[1]);
+    return unless defined wantarray;
+  }
+  my $attr = $_[0]->get_attribute_ns (undef, 'label');
+  return $attr if defined $attr;
+  my $v = '';
+  for ($_[0]->child_nodes->to_list) {
+    if ($_->node_type == 3) { # TEXT_NODE
+      $v .= $_->data;
+    }
+  }
+  $v =~ s/\A[\x09\x0A\x0C\x0D\x20]+//g;
+  $v =~ s/[\x09\x0A\x0C\x0D\x20]+\z//g;
+  $v =~ s/[\x09\x0A\x0C\x0D\x20]+/ /g;
+  return $v;
+} # label
 
 package Web::DOM::HTMLDialogElement;
 our $VERSION = '1.0';
