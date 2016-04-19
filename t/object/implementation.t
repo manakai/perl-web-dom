@@ -337,6 +337,24 @@ test {
   done $c;
 } n => 5, name => 'create_document arrayref qname invalid';
 
+for (
+  [undef, 'application/xml'],
+  ['http://www.w3.org/1999/xhtml', 'application/xhtml+xml'],
+  ['http://www.w3.org/2000/svg', 'image/svg+xml'],
+  ['hoge', 'application/xml'],
+) {
+  my ($ns, $mime) = @$_;
+  test {
+    my $c = shift;
+    my $doc0 = new Web::DOM::Document;
+    my $impl = $doc0->implementation;
+
+    my $doc = $impl->create_document ($ns, 'hoge');
+    is $doc->content_type, $mime;
+    done $c;
+  } n => 1;
+}
+
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
@@ -832,7 +850,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

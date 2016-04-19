@@ -2,7 +2,7 @@ package Web::DOM::Implementation;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Carp;
 our @CARP_NOT = qw(Web::DOM::Document Web::DOM::TypeError);
 use Web::DOM::Node;
@@ -41,53 +41,61 @@ sub create_document ($;$$$) {
     $qn->[1] = ''.$qn->[1];
   }
 
-  # WebIDL
+  ## WebIDL
   if (defined $doctype and
       not UNIVERSAL::isa ($doctype, 'Web::DOM::DocumentType')) {
     _throw Web::DOM::TypeError 'Third argument is not a DocumentType';
   }
 
-  # 1.
+  ## 1.
   my $data = {node_type => DOCUMENT_NODE, is_XMLDocument => 1};
   my $objs = Web::DOM::Internal::Objects->new;
   my $id = $objs->add_data ($data);
   $objs->{rc}->[$id]++;
   my $doc = $objs->node ($id);
 
-  # 2.
+  ## 2.
   my $el;
 
-  # WebIDL, 3.
+  ## WebIDL, 3.
   if (defined $qn and length $qn) {
     $el = $doc->create_element_ns ($ns, $qn); # or throw
   }
 
-  # 4.
+  ## 4.
   $doc->append_child ($doctype) if defined $doctype;
 
-  # 5.
+  ## 5.
   $doc->append_child ($el) if defined $el;
 
-  # 6.
+  ## 6.
   # XXX origin
 
-  # 7.
+  ## 7.
+  if (defined $ns) {
+    if ($ns eq HTML_NS) {
+      $doc->_set_content_type ('application/xhtml+xml');
+    } elsif ($ns eq SVG_NS) {
+      $doc->_set_content_type ('image/svg+xml');
+    }
+  }
+
+  ## 8.
   return $doc;
 } # create_document
 
 sub create_html_document ($;$) {
-  # 1.
+  ## 1., 2.
   require Web::DOM::Document;
   my $doc = Web::DOM::Document->new;
-
-  # 2.
   $doc->manakai_is_html (1);
+  #$doc->_set_content_type ('text/html');
 
-  # 3.
+  ## 3.
   my $dt = $doc->implementation->create_document_type ('html', '', '');
   $doc->append_child ($dt);
 
-  # 4.
+  ## 4.
   my $html = $doc->create_element_ns (HTML_NS, 'html');
   $doc->append_child ($html);
 
