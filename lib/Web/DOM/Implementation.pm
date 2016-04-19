@@ -2,7 +2,7 @@ package Web::DOM::Implementation;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Carp;
 our @CARP_NOT = qw(Web::DOM::Document Web::DOM::TypeError);
 use Web::DOM::Node;
@@ -88,17 +88,17 @@ sub create_html_document ($;$) {
   $doc->append_child ($dt);
 
   # 4.
-  my $html = $doc->create_element ('html');
+  my $html = $doc->create_element_ns (HTML_NS, 'html');
   $doc->append_child ($html);
 
   # 5.
-  my $head = $doc->create_element ('head');
+  my $head = $doc->create_element_ns (HTML_NS, 'head');
   $html->append_child ($head);
 
   # 6.
   if (defined $_[1]) {
     # 1.
-    my $title = $doc->create_element ('title');
+    my $title = $doc->create_element_ns (HTML_NS, 'title');
     $head->append_child ($title);
 
     # 2.
@@ -107,7 +107,7 @@ sub create_html_document ($;$) {
   }
 
   # 7.
-  my $body = $doc->create_element ('body');
+  my $body = $doc->create_element_ns (HTML_NS, 'body');
   $html->append_child ($body);
   
   # 8.
@@ -226,7 +226,7 @@ sub has_feature ($) { 1 }
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

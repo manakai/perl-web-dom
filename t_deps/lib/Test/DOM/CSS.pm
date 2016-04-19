@@ -13,7 +13,7 @@ sub from_style_el ($;%) {
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
   $doc->inner_html (q{<!DOCTYPE HTML><base>});
-  my $el = $doc->create_element ('style');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'style');
   $el->text_content ($_[0]);
   $el->type ($args{type}) if defined $args{type};
   $el->title ($args{title}) if defined $args{title};
@@ -33,7 +33,7 @@ push @EXPORT, qw(from_style_attr);
 sub from_style_attr ($;%) {
   my (undef, %args) = @_;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('p');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'p');
   $el->set_attribute_ns (undef, style => $_[0]) if defined $_[0];
   $el->set_attribute_ns ('http://www.w3.org/XML/1998/namespace', 'xml:base' => $args{base_url}) if defined $args{base_url};
 

@@ -11,7 +11,7 @@ use Web::DOM::Document;
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
 
   my $props = $el->manakai_get_properties;
   is ref $props, 'HASH';
@@ -33,7 +33,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (itemscope => '');
   $el->set_attribute (itemprop => '');
   $el->inner_html (q{<p itemproP=a>?<p itemprop=b>});
@@ -61,7 +61,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $doc->append_child ($el);
   $el->inner_html (q{<p id=a itemprop=foo><p itemscope id=b itemref="a c"><br itemprop=foo><div id=c><br itemprop=foo></div>});
   my $el2 = $el->child_nodes->[1];
@@ -78,7 +78,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $doc->append_child ($el);
   $el->inner_html (q{<p id=a itemprop=foo><p id=b itemref="a c"><br itemprop=foo><div id=c><br itemprop=foo></div>});
   my $el2 = $el->child_nodes->[1];
@@ -90,7 +90,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   is $el->itemvalue, undef;
   dies_here_ok {
     $el->itemvalue ('foo');
@@ -105,7 +105,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (itemprop => '');
   $el->set_attribute (itemscope => '');
   is $el->itemvalue, $el;
@@ -122,7 +122,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('meta');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'meta');
   $el->set_attribute (itemprop => '');
   is $el->itemvalue, '';
   $el->itemvalue ('hoge');
@@ -136,7 +136,7 @@ for my $ln (qw(audio embed iframe img source track video)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_set_url ('http://hoge/f');
-    my $el = $doc->create_element ($ln);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $ln);
     $el->set_attribute (itemprop => '');
     is $el->itemvalue, '';
     $el->itemvalue ('ahoge');
@@ -151,7 +151,7 @@ for my $ln (qw(a area link)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_set_url ('http://hoge/f');
-    my $el = $doc->create_element ($ln);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $ln);
     $el->set_attribute (itemprop => '');
     is $el->itemvalue, '';
     $el->itemvalue ('ahoge');
@@ -165,7 +165,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://hoge/f');
-  my $el = $doc->create_element ('object');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'object');
   $el->set_attribute (itemprop => '');
   is $el->itemvalue, '';
   $el->itemvalue ('ahoge');
@@ -178,7 +178,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://hoge/f');
-  my $el = $doc->create_element ('data');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'data');
   $el->set_attribute (itemprop => '');
   is $el->itemvalue, '';
   $el->itemvalue ('ahoge');
@@ -191,7 +191,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://hoge/f');
-  my $el = $doc->create_element ('meter');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'meter');
   $el->set_attribute (itemprop => '');
   is $el->itemvalue, '';
   $el->itemvalue ('ahoge');
@@ -204,7 +204,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://hoge/f');
-  my $el = $doc->create_element ('time');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'time');
   $el->set_attribute (itemprop => '');
   is $el->itemvalue, '';
   $el->inner_html (q{x<span>aa</span>y});
@@ -220,7 +220,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://hoge/f');
-  my $el = $doc->create_element ('fuga');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'fuga');
   $el->set_attribute (itemprop => '');
   is $el->itemvalue, '';
   $el->inner_html (q{<span>aa</span>});

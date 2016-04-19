@@ -40,7 +40,7 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
   my $el = $doc->create_element_ns (undef, 'aa');
-  my $df = $doc->create_element ('div');
+  my $df = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'div');
   $el->append_child ($df);
   $df->inner_html (q{<p itemscope>hoge<p itemscope>fuga<svg><sp itemscope>aa</sp></svg><br itemscope itemprop=aa>});
   my $items = $df->get_items;
@@ -73,7 +73,7 @@ http://abc/  ')->length, 1;
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute ('itemscope', '');
   is $el->get_items->length, 1;
   done $c;

@@ -801,7 +801,7 @@ sub caption ($;$) {
 sub create_caption ($) {
   my $caption = $_[0]->caption;
   unless (defined $caption) {
-    $caption = $_[0]->owner_document->create_element ('caption');
+    $caption = $_[0]->owner_document->create_element_ns (HTML_NS, 'caption');
     $_[0]->insert_before ($caption, $_[0]->first_child);
   }
   return $caption;
@@ -850,7 +850,7 @@ sub thead ($;$) {
 sub create_thead ($) {
   my $current = $_[0]->thead;
   unless (defined $current) {
-    $current = $_[0]->owner_document->create_element ('thead');
+    $current = $_[0]->owner_document->create_element_ns (HTML_NS, 'thead');
     $_[0]->thead ($current);
   }
   return $current;
@@ -889,7 +889,7 @@ sub tfoot ($;$) {
 sub create_tfoot ($) {
   my $current = $_[0]->tfoot;
   unless (defined $current) {
-    $current = $_[0]->owner_document->create_element ('tfoot');
+    $current = $_[0]->owner_document->create_element_ns (HTML_NS, 'tfoot');
     $_[0]->tfoot ($current);
   }
   return $current;
@@ -922,7 +922,7 @@ sub create_tbody ($) {
       last;
     }
   }
-  my $new = $_[0]->owner_document->create_element ('tbody');
+  my $new = $_[0]->owner_document->create_element_ns (HTML_NS, 'tbody');
   $_[0]->insert_before ($new, $tbody ? $tbody->next_sibling : undef);
   return $new;
 } # create_tbody
@@ -970,20 +970,20 @@ sub insert_row ($;$) {
     my $tbodies = $_[0]->tbodies;
     if ($tbodies->length == 0) {
       my $doc = $_[0]->owner_document;
-      my $tbody = $doc->create_element ('tbody');
-      my $tr = $doc->create_element ('tr');
+      my $tbody = $doc->create_element_ns (HTML_NS, 'tbody');
+      my $tr = $doc->create_element_ns (HTML_NS, 'tr');
       $tbody->append_child ($tr);
       $_[0]->append_child ($tbody);
       return $tr;
     } else {
-      my $tr = $_[0]->owner_document->create_element ('tr');
+      my $tr = $_[0]->owner_document->create_element_ns (HTML_NS, 'tr');
       return $tbodies->[-1]->append_child ($tr);
     }
   } elsif ($index == -1 or $index == $row_count) {
-    my $tr = $_[0]->owner_document->create_element ('tr');
+    my $tr = $_[0]->owner_document->create_element_ns (HTML_NS, 'tr');
     return $rows->[-1]->parent_node->append_child ($tr);
   } else {
-    my $tr = $_[0]->owner_document->create_element ('tr');
+    my $tr = $_[0]->owner_document->create_element_ns (HTML_NS, 'tr');
     my $after = $rows->[$index];
     return $after->parent_node->insert_before ($tr, $after);
   }
@@ -1064,10 +1064,10 @@ sub insert_row ($;$) {
     _throw Web::DOM::Exception 'IndexSizeError',
         'The specified row index is invalid';
   } elsif ($index == -1 or $index == $row_count) {
-    my $tr = $_[0]->owner_document->create_element ('tr');
+    my $tr = $_[0]->owner_document->create_element_ns (HTML_NS, 'tr');
     return $_[0]->append_child ($tr);
   } else {
-    my $tr = $_[0]->owner_document->create_element ('tr');
+    my $tr = $_[0]->owner_document->create_element_ns (HTML_NS, 'tr');
     my $after = $rows->[$index];
     return $_[0]->insert_before ($tr, $after);
   }
@@ -1163,10 +1163,10 @@ sub insert_cell ($;$) {
     _throw Web::DOM::Exception 'IndexSizeError',
         'The specified cell index is invalid';
   } elsif ($index == -1 or $index == $cell_count) {
-    my $td = $_[0]->owner_document->create_element ('td');
+    my $td = $_[0]->owner_document->create_element_ns (HTML_NS, 'td');
     return $_[0]->append_child ($td);
   } else {
-    my $td = $_[0]->owner_document->create_element ('td');
+    my $td = $_[0]->owner_document->create_element_ns (HTML_NS, 'td');
     my $after = $cells->[$index];
     return $_[0]->insert_before ($td, $after);
   }

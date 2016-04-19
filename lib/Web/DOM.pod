@@ -23,7 +23,8 @@ The L<Web::DOM::Document> module provides the C<new> method returning
 a new document object, which corresponds to the C<new Document ()>
 constructor in JavaScript Web browser environment.
 
-  my $doc = new Web::DOM::Document;
+  my $doc = new Web::DOM::Document; # XML document by default
+  $doc->manakai_is_html (1); # Change to HTML document
 
 Using the document object, the application can create various DOM
 object, using standard DOM methods:
@@ -499,7 +500,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2007-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

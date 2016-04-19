@@ -125,7 +125,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('style');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'style');
 
   is $el->sheet, undef;
   ok not $el->disabled;

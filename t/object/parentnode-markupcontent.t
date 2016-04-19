@@ -12,7 +12,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
 
   is $el->inner_html, '';
 
@@ -32,7 +32,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('table');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
 
   is $el->inner_html, '';
 
@@ -114,7 +114,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
 
   is $el->inner_html, '';
 
@@ -241,7 +241,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('template');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'template');
   $el->inner_html ('<P>abc</P>aaa');
   is $el->first_child, undef;
   is $el->content->child_nodes->length, 2;
@@ -258,7 +258,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('template');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'template');
   $el->inner_html ('<P>abc</P>aaa');
   is $el->first_child, undef;
   is $el->content->child_nodes->length, 2;

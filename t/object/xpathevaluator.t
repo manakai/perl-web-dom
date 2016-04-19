@@ -83,7 +83,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el2 = $doc->create_element ('aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->set_attribute_ns ('http://www.w3.org/2000/xmlns/', 'xmlns:hpge', 'http://a/');
   my $resolver = $eval->create_ns_resolver ($el2);
   my $expr = $eval->create_expression ('hpge:fuga', $resolver);
@@ -142,7 +142,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   my $resolver = $eval->create_ns_resolver ($el);
   isa_ok $resolver, 'Web::DOM::XPathNSResolver';
   is $resolver->lookup_namespace_uri ('hpoge'), undef;
@@ -156,7 +156,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $doc->append_child ($el);
   my $result = $eval->evaluate ('child::*', $doc);
   isa_ok $result, 'Web::DOM::XPathResult';
@@ -245,7 +245,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $doc->append_child ($el);
   my $self;
   my $prefix;
@@ -272,7 +272,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $doc->append_child ($el);
   my $el2 = $doc->create_element_ns (undef, 'aaga');
   $el2->set_attribute (hoge => '');
@@ -318,7 +318,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $doc->append_child ($el);
   my $self;
   my $prefix;
@@ -344,7 +344,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $doc->append_child ($el);
   my $el2 = $doc->create_element_ns (undef, 'aaga');
   $el2->set_attribute (hoge => '');
@@ -364,7 +364,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $doc->append_child ($el);
   my $result = $eval->evaluate ('child::*', $doc, undef, 2**16+9);
   isa_ok $result, 'Web::DOM::XPathResult';
@@ -413,11 +413,11 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('template');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'template');
 
-  my $el2 = $doc->create_element ('p');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'p');
   $el->content->append_child ($el2);
-  my $el3 = $doc->create_element ('p');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'p');
   $el->append_child ($el3);
 
   my $result = $doc->evaluate ('.//p', $el);

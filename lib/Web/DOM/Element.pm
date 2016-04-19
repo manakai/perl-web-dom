@@ -1125,7 +1125,7 @@ sub outer_html ($;$) {
           'Cannot set outer_html of the document element';
     } elsif ($parent_nt == DOCUMENT_FRAGMENT_NODE) {
       # 4.
-      $context = $parent->owner_document->create_element ('body');
+      $context = $parent->owner_document->create_element_ns (HTML_NS, 'body');
     }
 
     # 5.
@@ -1183,7 +1183,7 @@ sub insert_adjacent_html ($$$) {
     if (not $context->node_type == ELEMENT_NODE or
         ($$self->[0]->{data}->[0]->{is_html} and
          $context->manakai_element_type_match (HTML_NS, 'html'))) {
-      $context = $self->owner_document->create_element ('body');
+      $context = $self->owner_document->create_element_ns (HTML_NS, 'body');
     }
 
     my $parser;
