@@ -16,7 +16,7 @@ for my $attr (qw(title lang accesskey)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('strong');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'strong');
     is $el->$attr, '';
     $el->$attr ('hoge ');
     is $el->$attr, 'hoge ';
@@ -250,7 +250,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->[0]);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->[0]);
     is $el->$attr, '';
     $el->$attr ('hoge ');
     is $el->$attr, 'hoge ';
@@ -293,7 +293,7 @@ for my $test (
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_set_url ('http://foo/bar/');
-    my $el = $doc->create_element ($test->[0]);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->[0]);
     is $el->$attr, '';
     $el->$attr ('hoge');
     is $el->$attr, 'http://foo/bar/hoge';
@@ -336,7 +336,7 @@ for my $test (
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_set_url ('http://foo/bar/');
-    my $el = $doc->create_element ($test->[0]);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->[0]);
     is $el->$attr, '';
     $el->$attr ('hoge');
     is $el->$attr, 'http://foo/bar/hoge';
@@ -360,7 +360,7 @@ for my $attr (qw(itemscope hidden)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('strong');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'strong');
     ok not $el->$attr;
     $el->$attr (1);
     ok $el->$attr;
@@ -438,7 +438,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->[0]);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->[0]);
     ok not $el->$attr;
     $el->$attr (1);
     ok $el->$attr;
@@ -458,11 +458,11 @@ for my $el_name (qw(title script)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($el_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $el_name);
     is $el->text, '';
     $el->text ('hoge');
     is $el->text, 'hoge';
-    $el->append_child ($doc->create_element ('foo'))->text_content ('abc');
+    $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo'))->text_content ('abc');
     my $node1 = $el->append_child ($doc->create_text_node ('ahq'));
     is $el->text, 'hogeahq';
     $el->text ('');
@@ -485,11 +485,11 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->[0]);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->[0]);
     is $el->$attr, '';
     $el->$attr ('hoge');
     is $el->$attr, 'hoge';
-    $el->append_child ($doc->create_element ('foo'))->text_content ('abc');
+    $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo'))->text_content ('abc');
     my $node1 = $el->append_child ($doc->create_text_node ('ahq'));
     is $el->$attr, 'hogeabcahq';
     $el->$attr ('');
@@ -512,7 +512,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->[0]);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->[0]);
     my $attr = $test->[1];
     is $el->$attr, $test->[2];
     for (
@@ -582,18 +582,18 @@ for my $test (
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('ol');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ol');
   $el->reversed (1);
   is $el->start, 0;
-  $el->append_child ($doc->create_element ('li'));
+  $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'li'));
   is $el->start, 1;
   $el->append_child ($doc->create_element_ns (undef, 'li'));
   $el->append_child ($doc->create_comment ('foo'));
   is $el->start, 1;
-  $el->append_child ($doc->create_element ('li'));
-  $el->append_child ($doc->create_element ('ul'))
-      ->append_child ($doc->create_element ('li'));
-  $el->append_child ($doc->create_element ('li'));
+  $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'li'));
+  $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ul'))
+      ->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'li'));
+  $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'li'));
   is $el->start, 3;
   $el->start (4);
   is $el->start, 4;
@@ -609,7 +609,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->[0]);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->[0]);
     my $attr = $test->[1];
     is $el->$attr, $test->[2];
     for (
@@ -721,7 +721,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->[0]);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->[0]);
     my $attr = $test->[1];
     is $el->$attr, $test->[2];
     for (
@@ -802,7 +802,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->[0]);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->[0]);
     my $attr = $test->[1];
     is $el->$attr, $test->[2];
     for (
@@ -1131,7 +1131,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->{element});
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{element});
     is $el->$attr, $test->{default};
     for (@{$test->{valid_values}}) {
       $el->$attr ($_->[0]);
@@ -1206,7 +1206,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->{element});
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{element});
     is $el->$attr, $test->{default};
     for (@{$test->{valid_values}}) {
       $el->$attr ($_->[0]);
@@ -1232,8 +1232,8 @@ for my $test (
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('menu');
-  my $el2 = $doc->create_element ('menu');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
   $el1->append_child ($el2);
   is $el2->type, 'toolbar';
   $el1->type ('popup');
@@ -1254,9 +1254,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('menu');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
   my $el2 = $doc->create_element_ns (undef, 'menu');
-  my $el3 = $doc->create_element ('menu');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
   $el1->append_child ($el2);
   $el2->append_child ($el3);
   is $el3->type, 'toolbar';
@@ -1278,7 +1278,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('menu');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
   $doc->append_child ($el);
   is $el->type, 'toolbar';
   $el->type ('hoge');
@@ -1311,7 +1311,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($el_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $el_name);
     my $tokens = $el->$method;
 
     isa_ok $tokens, 'Web::DOM::TokenList';
@@ -1330,7 +1330,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($el_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $el_name);
     $el->$method->remove ('foo');
     ok not $el->has_attribute ($test->{attr});
     ok ! $el->$method->add;
@@ -1347,7 +1347,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($el_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $el_name);
     $el->$method ('');
     ok not $el->has_attribute_ns (undef, $test->{attr});
 
@@ -1370,16 +1370,16 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->{element});
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{element});
     is $el->$attr, undef;
 
-    my $el2 = $doc->create_element ($test->{target_element});
+    my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{target_element});
     $el2->set_attribute (id => 'abc');
     $doc->append_child ($el2);
-    my $el5 = $doc->create_element ('hoge');
+    my $el5 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
     $el5->set_attribute (id => 'abc');
     $el2->append_child ($el5);
-    my $el3 = $doc->create_element ($test->{target_element});
+    my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{target_element});
     $el3->set_attribute (id => 'abc');
     $el2->append_child ($el3);
 
@@ -1392,7 +1392,7 @@ for my $test (
     is $el->get_attribute ($attr), '';
 
     $el->remove_attribute ($attr);
-    my $el4 = $doc->create_element ($test->{target_element});
+    my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{target_element});
     $el4->set_attribute (id => 'abc');
     $el->$attr ($el4);
     is $el->$attr, undef;
@@ -1427,9 +1427,9 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ($test->{element});
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{element});
     $el->set_attribute ($attr => 'aa');
-    my $e = $doc->create_element ('foo');
+    my $e = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
     dies_here_ok {
       $el->$attr ($e);
     };
@@ -1455,7 +1455,7 @@ for (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('xmp');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'xmp');
     $code->($doc, $el);
     ok $el->translate;
     $el->translate (1);
@@ -1479,8 +1479,8 @@ for (
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('a');
-  my $el2 = $doc->create_element ('b');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
   $el1->append_child ($el2);
 
   ok $el2->translate;
@@ -1507,7 +1507,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $el1 = $doc->create_element_ns (undef, 'a');
-  my $el2 = $doc->create_element ('b');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
   $el1->append_child ($el2);
 
   ok $el2->translate;
@@ -1533,9 +1533,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('a');
-  my $el0 = $doc->create_element ('c');
-  my $el2 = $doc->create_element ('b');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
+  my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'c');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
   $el1->append_child ($el0);
   $el0->append_child ($el2);
 
@@ -1562,9 +1562,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('a');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   my $el0 = $doc->create_element_ns (undef, 'c');
-  my $el2 = $doc->create_element ('b');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
   $el1->append_child ($el0);
   $el0->append_child ($el2);
 
@@ -1591,7 +1591,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('small');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'small');
   ok not $el->draggable;
   $el->draggable (1);
   ok $el->draggable;
@@ -1611,7 +1611,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('img');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'img');
   ok $el->draggable;
   $el->draggable (1);
   ok $el->draggable;
@@ -1631,7 +1631,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   ok not $el->draggable;
   $el->draggable (1);
   ok $el->draggable;
@@ -1651,7 +1651,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (href => '');
   ok $el->draggable;
   $el->draggable (1);
@@ -1672,7 +1672,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('strike');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'strike');
   is $el->contenteditable, 'inherit';
   for my $value (qw(true TruE false FalSE FALSE)) {
     $el->contenteditable ($value);
@@ -1697,7 +1697,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->contenteditable ('false');
 
   dies_here_ok {
@@ -1713,7 +1713,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('fieldset');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'fieldset');
   is $el->type, 'fieldset';
   done $c;
 } n => 1, name => 'fieldset type';
@@ -1721,7 +1721,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('select');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'select');
   is $el->type, 'select-one';
   done $c;
 } n => 1, name => 'select-one type';
@@ -1729,7 +1729,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('select');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'select');
   $el->multiple (1);
   is $el->type, 'select-multiple';
   done $c;
@@ -1738,7 +1738,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('textarea');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'textarea');
   is $el->type, 'textarea';
   done $c;
 } n => 1, name => 'textarea type';
@@ -1746,7 +1746,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('keygen');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'keygen');
   is $el->type, 'keygen';
   done $c;
 } n => 1, name => 'keygen type';
@@ -1754,7 +1754,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('output');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'output');
   is $el->type, 'output';
   done $c;
 } n => 1, name => 'output type';
@@ -1763,29 +1763,29 @@ for my $name (qw(caption thead)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     is $table->$name, undef;
 
-    my $cap1 = $doc->create_element ($name);
+    my $cap1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $name);
     $table->$name ($cap1);
     is $table->$name, $cap1;
     is $cap1->parent_node, $table;
 
-    my $cap2 = $doc->create_element ($name);
+    my $cap2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $name);
     $table->$name ($cap2);
     is $table->$name, $cap2;
     is $cap2->parent_node, $table;
     is $cap1->parent_node, undef;
 
-    $table->append_child ($doc->create_element ('foo'));
-    $table->insert_before ($doc->create_element ('foo'), $cap2);
+    $table->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo'));
+    $table->insert_before ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo'), $cap2);
     $table->$name ($cap2);
     is $table->first_child, $cap2;
     $table->append_child ($cap1);
     $table->append_child ($cap2);
 
     is $table->$name, $cap1;
-    my $cap3 = $doc->create_element ($name);
+    my $cap3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $name);
     $table->$name ($cap3);
     is $table->$name, $cap3;
     is $cap1->parent_node, undef;
@@ -1799,7 +1799,7 @@ for my $name (qw(caption thead)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->$name (undef);
     is $table->first_child, undef;
     done $c;
@@ -1809,7 +1809,7 @@ for my $name (qw(caption thead)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     my $el = $table->$create_name;
     $table->$name (undef);
     is $table->first_child, undef;
@@ -1820,7 +1820,7 @@ for my $name (qw(caption thead)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     dies_here_ok {
       $table->$name ($doc->create_element_ns (undef, $name));
     };
@@ -1836,7 +1836,7 @@ for my $name (qw(caption thead)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ('<tr><th><td>hoge<tbody>');
     my $cap = $table->$create_name;
     is $table->child_nodes->length, 3;
@@ -1852,7 +1852,7 @@ for my $name (qw(caption thead)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name>");
     my $caption = $table->last_child;
     my $cap = $table->$create_name;
@@ -1869,7 +1869,7 @@ for my $name (qw(caption thead)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name>");
     my $caption = $table->last_child;
     $table->$delete_name;
@@ -1882,7 +1882,7 @@ for my $name (qw(caption thead)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html
         ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name><$name>${pfx}hogefuga</$name>");
     my $caption1 = $table->last_child;
@@ -1899,7 +1899,7 @@ for my $name (qw(caption thead)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ('<tr><th><td>hoge<tbody>');
     $table->$delete_name;
     is $table->child_nodes->length, 2;
@@ -1911,29 +1911,29 @@ for my $name (qw(tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     is $table->$name, undef;
 
-    my $cap1 = $doc->create_element ($name);
+    my $cap1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $name);
     $table->$name ($cap1);
     is $table->$name, $cap1;
     is $cap1->parent_node, $table;
 
-    my $cap2 = $doc->create_element ($name);
+    my $cap2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $name);
     $table->$name ($cap2);
     is $table->$name, $cap2;
     is $cap2->parent_node, $table;
     is $cap1->parent_node, undef;
 
-    $table->append_child ($doc->create_element ('foo'));
-    $table->insert_before ($doc->create_element ('foo'), $cap2);
+    $table->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo'));
+    $table->insert_before ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo'), $cap2);
     $table->$name ($cap2);
     is $table->last_child, $cap2;
     $table->append_child ($cap1);
     $table->append_child ($cap2);
 
     is $table->$name, $cap1;
-    my $cap3 = $doc->create_element ($name);
+    my $cap3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $name);
     $table->$name ($cap3);
     is $table->$name, $cap2;
     is $cap1->parent_node, undef;
@@ -1947,7 +1947,7 @@ for my $name (qw(tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->$name (undef);
     is $table->first_child, undef;
     done $c;
@@ -1957,7 +1957,7 @@ for my $name (qw(tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     my $el = $table->$create_name;
     $table->$name (undef);
     is $table->first_child, undef;
@@ -1968,7 +1968,7 @@ for my $name (qw(tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     dies_here_ok {
       $table->$name ($doc->create_element_ns (undef, $name));
     };
@@ -1984,7 +1984,7 @@ for my $name (qw(tfoot)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ('<tr><th><td>hoge<tbody>');
     my $cap = $table->$create_name;
     is $table->child_nodes->length, 3;
@@ -2000,7 +2000,7 @@ for my $name (qw(tfoot)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name>");
     my $caption = $table->last_child;
     my $cap = $table->$create_name;
@@ -2017,7 +2017,7 @@ for my $name (qw(tfoot)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name>");
     my $caption = $table->last_child;
     $table->$delete_name;
@@ -2030,7 +2030,7 @@ for my $name (qw(tfoot)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html
         ("<tr><th><td>hoge<tbody><$name>${pfx}hoge</$name><$name>${pfx}hogefuga</$name>");
     my $caption1 = $table->last_child;
@@ -2047,7 +2047,7 @@ for my $name (qw(tfoot)) {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html (1);
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ('<tr><th><td>hoge<tbody>');
     $table->$delete_name;
     is $table->child_nodes->length, 2;
@@ -2058,9 +2058,9 @@ for my $name (qw(tfoot)) {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html ('<colgroup/><caption/><caption/><!----> <col/><tbody/>');
-  my $thead = $doc->create_element ('thead');
+  my $thead = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'thead');
   $table->thead ($thead);
   is $table->child_nodes->[5], $thead;
   done $c;
@@ -2069,7 +2069,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html ('<colgroup/><caption/><caption/><!----> <col/><tbody/>');
   my $thead = $table->create_thead;
   is $table->child_nodes->[5], $thead;
@@ -2080,9 +2080,9 @@ for my $name (qw(tbody tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ('<colgroup/><caption/><caption/><!----> <col/><tbody/>');
-    my $tbody = $doc->create_element ($name);
+    my $tbody = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $name);
     dies_here_ok {
       $table->thead ($tbody);
     };
@@ -2098,9 +2098,9 @@ for my $name (qw(tbody tfoot)) {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html ('<colgroup/><caption/><caption/><thead/><!----> <col/><tbody/>');
-  my $tfoot = $doc->create_element ('tfoot');
+  my $tfoot = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'tfoot');
   $table->tfoot ($tfoot);
   is $table->child_nodes->[8], $tfoot;
   done $c;
@@ -2109,7 +2109,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html ('<colgroup/><caption/><thead/><caption/><!----> <col/><tbody/>');
   my $tfoot = $table->create_tfoot;
   is $table->child_nodes->[8], $tfoot;
@@ -2120,9 +2120,9 @@ for my $name (qw(thead tbody)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ('table');
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
     $table->inner_html ('<colgroup/><caption/><caption/><!----> <col/><tbody/>');
-    my $tbody = $doc->create_element ($name);
+    my $tbody = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $name);
     dies_here_ok {
       $table->tfoot ($tbody);
     };
@@ -2138,7 +2138,7 @@ for my $name (qw(thead tbody)) {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   my $tbody = $table->create_tbody;
   isa_ok $tbody, 'Web::DOM::HTMLTableSectionElement';
   is $tbody->namespace_uri, q<http://www.w3.org/1999/xhtml>;
@@ -2152,7 +2152,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html (q{<tbody/><!----><tfoot/><a/><!---->});
   my $tbody = $table->create_tbody;
   isa_ok $tbody, 'Web::DOM::HTMLTableSectionElement';
@@ -2167,7 +2167,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html (q{<tbody xmlns=""/><!----><tfoot/><a/><!---->});
   my $tbody = $table->create_tbody;
   isa_ok $tbody, 'Web::DOM::HTMLTableSectionElement';
@@ -2182,7 +2182,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html (q{<tbody/><tfoot><tbody/></tfoot><tbody/><tbody/><caption/><tbody xmlns=""/> <!----><tbody/>});
   my $col1 = $table->tbodies;
   isa_ok $col1, 'Web::DOM::HTMLCollection';
@@ -2191,19 +2191,19 @@ test {
   is $col1->[1], $table->child_nodes->[2];
   is $col1->[2], $table->child_nodes->[3];
   is $col1->[3], $table->child_nodes->[-1];
-  my $el1 = $doc->create_element ('tbody');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'tbody');
   $table->insert_before ($el1, $table->first_child);
   is $col1->length, 5;
   is $col1->[0], $el1;
   is $table->tbodies, $col1;
-  isnt $doc->create_element ('table')->tbodies, $col1;
+  isnt $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table')->tbodies, $col1;
   done $c;
 } n => 10, name => 'tbodies';
 
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   my $col1 = $table->rows;
   isa_ok $col1, 'Web::DOM::HTMLCollection';
   is $col1->length, 0;
@@ -2232,7 +2232,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html (q{<!----> hoge <td/> <thead/>});
   my $tr = $table->insert_row (0);
   is $tr->namespace_uri, $table->namespace_uri;
@@ -2253,12 +2253,12 @@ test {
   is $tr3->local_name, 'tr';
   is $tr3->parent_node, $tbody;
 
-  my $tr4 = $doc->create_element ('tr');
+  my $tr4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'tr');
   $table->append_child ($tr4);
   my $tr5 = $table->insert_row (-1);
   is $tr5->previous_sibling, $tr4;
 
-  my $tfoot = $doc->create_element ('tfoot');
+  my $tfoot = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'tfoot');
   $tfoot->inner_html (q{<tr/>});
   my $tr6 = $tfoot->first_child;
 
@@ -2277,7 +2277,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html (q{<tbody><tr/></tbody><tr/>});
   for my $index (-6, -51, 3, 12, 21, 2**32+3, 2**31) {
     dies_here_ok {
@@ -2295,7 +2295,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html (q{<tbody><tr/></tbody><tr/>});
   
   $table->insert_row (0+'nan')->set_attribute (id => 1);
@@ -2310,7 +2310,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->insert_row->set_attribute (id => 1);
   $table->insert_row->set_attribute (id => 2);
   is $table->outer_html, q{<table xmlns="http://www.w3.org/1999/xhtml"><tbody><tr id="1"></tr><tr id="2"></tr></tbody></table>};
@@ -2320,7 +2320,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html (q{<tbody><tr/><tr/></tbody><tr/>});
   $table->delete_row (-1);
   is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr></tr><tr></tr></tbody>};
@@ -2334,7 +2334,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html (q{<tbody><tr/><tr/></tbody><tr/>});
   for (2**32-2, -50.12, 100.21, 3, -2) {
     dies_here_ok {
@@ -2352,7 +2352,7 @@ for my $section (qw(tbody thead tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     my $col1 = $table->rows;
     isa_ok $col1, 'Web::DOM::HTMLCollection';
     is $col1->length, 0;
@@ -2374,7 +2374,7 @@ for my $section (qw(tbody thead tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<!----> hoge <td/> <thead/>});
     my $tr = $table->insert_row (0);
     is $tr->namespace_uri, $table->namespace_uri;
@@ -2387,12 +2387,12 @@ for my $section (qw(tbody thead tfoot)) {
     is $tr2->previous_sibling, $tr;
     is $tr2->local_name, 'tr';
 
-    my $tr4 = $doc->create_element ('tr');
+    my $tr4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'tr');
     $table->append_child ($tr4);
     my $tr5 = $table->insert_row (-1);
     is $tr5->previous_sibling, $tr4;
 
-    my $tfoot = $doc->create_element ('tfoot');
+    my $tfoot = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'tfoot');
     $tfoot->inner_html (q{<tr/>});
     my $tr6 = $tfoot->first_child;
 
@@ -2408,7 +2408,7 @@ for my $section (qw(tbody thead tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><tr/></tbody><tr/>});
     for my $index (-6, -51, 3, 12, 21, 2**32+3, 2**31) {
       dies_here_ok {
@@ -2426,7 +2426,7 @@ for my $section (qw(tbody thead tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><tr/></tbody><tr/>});
     
     $table->insert_row (0+'nan')->set_attribute (id => 1);
@@ -2441,7 +2441,7 @@ for my $section (qw(tbody thead tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->insert_row->set_attribute (id => 1);
     $table->insert_row->set_attribute (id => 2);
     is $table->outer_html, qq{<$section xmlns="http://www.w3.org/1999/xhtml"><tr id="1"></tr><tr id="2"></tr></$section>};
@@ -2451,7 +2451,7 @@ for my $section (qw(tbody thead tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><tr/><tr/></tbody><tr/><tr/><tr/>});
     $table->delete_row (2);
     is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><tr></tr><tr></tr></tbody><tr xmlns="http://www.w3.org/1999/xhtml"></tr><tr xmlns="http://www.w3.org/1999/xhtml"></tr>};
@@ -2465,7 +2465,7 @@ for my $section (qw(tbody thead tfoot)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><tr/><tr/></tbody><tr/>});
     for (2**32-2, -50.12, 100.21, 3, -2, -1, 1) {
       dies_here_ok {
@@ -2483,7 +2483,7 @@ for my $section (qw(tbody thead tfoot)) {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $table = $doc->create_element ('table');
+  my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
 
   $table->inner_html (q{<caption><tr n="1"/></caption><thead
 ><tr n="2"/><tr n="3"/>
@@ -2517,18 +2517,18 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('tr');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'tr');
   is $el->row_index, -1;
   is $el->section_row_index, -1;
   $doc->append_child ($el);
   is $el->row_index, -1;
   is $el->section_row_index, -1;
-  my $el2 = $doc->create_element ('div');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'div');
   $el2->append_child ($el);
   is $el->row_index, -1;
   is $el->section_row_index, -1;
   for my $section (qw(thead tbody tfoot)) {
-    my $el3 = $doc->create_element ($section);
+    my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $el3->append_child ($el);
     is $el->row_index, -1;
     is $el->section_row_index, 0;
@@ -2540,7 +2540,7 @@ for my $section (qw(tr)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     my $col1 = $table->cells;
     isa_ok $col1, 'Web::DOM::HTMLCollection';
     is $col1->length, 0;
@@ -2562,7 +2562,7 @@ for my $section (qw(tr)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<!----> hoge <tr/> <thead/>});
     my $tr = $table->insert_cell (0);
     is $tr->namespace_uri, $table->namespace_uri;
@@ -2575,12 +2575,12 @@ for my $section (qw(tr)) {
     is $tr2->previous_sibling, $tr;
     is $tr2->local_name, 'td';
 
-    my $tr4 = $doc->create_element ('th');
+    my $tr4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'th');
     $table->append_child ($tr4);
     my $tr5 = $table->insert_cell (-1);
     is $tr5->previous_sibling, $tr4;
 
-    my $tfoot = $doc->create_element ('tfoot');
+    my $tfoot = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'tfoot');
     $tfoot->inner_html (q{<td/>});
     my $tr6 = $tfoot->first_child;
 
@@ -2596,7 +2596,7 @@ for my $section (qw(tr)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><th/></tbody><th/>});
     for my $index (-6, -51, 3, 12, 21, 2**32+3, 2**31) {
       dies_here_ok {
@@ -2614,7 +2614,7 @@ for my $section (qw(tr)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><td/></tbody><td/>});
     
     $table->insert_cell (0+'nan')->set_attribute (id => 1);
@@ -2629,7 +2629,7 @@ for my $section (qw(tr)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->insert_cell->set_attribute (id => 1);
     $table->insert_cell->set_attribute (id => 2);
     is $table->outer_html, qq{<$section xmlns="http://www.w3.org/1999/xhtml"><td id="1"></td><td id="2"></td></$section>};
@@ -2639,7 +2639,7 @@ for my $section (qw(tr)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><td/><td/></tbody><td/><th/><td/>});
     $table->delete_cell (2);
     is $table->inner_html, q{<tbody xmlns="http://www.w3.org/1999/xhtml"><td></td><td></td></tbody><td xmlns="http://www.w3.org/1999/xhtml"></td><th xmlns="http://www.w3.org/1999/xhtml"></th>};
@@ -2653,7 +2653,7 @@ for my $section (qw(tr)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $table = $doc->create_element ($section);
+    my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><td/><td/></tbody><td/>});
     for (2**32-2, -50.12, 100.21, 3, -2, -1, 1) {
       dies_here_ok {
@@ -2671,15 +2671,15 @@ for my $section (qw(tr)) {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $td = $doc->create_element ('td');
+  my $td = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'td');
   is $td->cell_index, -1;
-  my $th = $doc->create_element ('th');
+  my $th = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'th');
   is $th->cell_index, -1;
   $doc->append_child ($td);
   is $td->cell_index, -1;
   $doc->replace_child ($th, $td);
   is $th->cell_index, -1;
-  my $el = $doc->create_element ('table');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $el->append_child ($td);
   $el->append_child ($th);
   is $td->cell_index, -1;
@@ -2690,11 +2690,11 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $tr = $doc->create_element ('tr');
-  my $td = $doc->create_element ('td');
+  my $tr = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'tr');
+  my $td = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'td');
   $tr->append_child ($td);
   is $td->cell_index, 0;
-  my $th = $doc->create_element ('th');
+  my $th = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'th');
   $tr->append_child ($th);
   is $th->cell_index, 1;
   done $c;
@@ -2706,10 +2706,10 @@ for my $control_name (qw(input button keygen meter output progress select
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->inner_html (q{<hoge/>});
-    my $label = $doc->create_element ('label');
+    my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
     $label->html_for ('hofe');
 
-    my $el = $doc->create_element ($control_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $control_name);
     $doc->document_element->append_child ($el);
     $el->id ('hofe');
     
@@ -2721,13 +2721,13 @@ for my $control_name (qw(input button keygen meter output progress select
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->inner_html (q{<hoge/>});
-    my $label = $doc->create_element ('label');
+    my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
     $label->html_for ('hofe');
 
     my $el0 = $doc->create_element_ns (undef, $control_name);
     $el0->set_attribute (id => 'hofe');
     $doc->document_element->append_child ($el0);
-    my $el = $doc->create_element ($control_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $control_name);
     $doc->document_element->append_child ($el);
     $el->id ('hofe');
     
@@ -2738,10 +2738,10 @@ for my $control_name (qw(input button keygen meter output progress select
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $label = $doc->create_element ('label');
+    my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
 
-    my $el0 = $doc->create_element (uc $control_name);
-    my $el = $doc->create_element ($control_name);
+    my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', uc $control_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $control_name);
     $label->append_child ($el0);
     $el0->append_child ($el);
     
@@ -2752,11 +2752,11 @@ for my $control_name (qw(input button keygen meter output progress select
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $label = $doc->create_element ('label');
+    my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
 
-    my $el0 = $doc->create_element (uc $control_name);
-    my $el = $doc->create_element ($control_name);
-    my $el2 = $doc->create_element ($control_name);
+    my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', uc $control_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $control_name);
+    my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $control_name);
     $label->append_child ($el0);
     $el0->append_child ($el);
     $el0->append_child ($el2);
@@ -2768,12 +2768,12 @@ for my $control_name (qw(input button keygen meter output progress select
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $label = $doc->create_element ('label');
+    my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
     $label->html_for ('aa');
 
-    my $el0 = $doc->create_element (uc $control_name);
-    my $el = $doc->create_element ($control_name);
-    my $el2 = $doc->create_element ($control_name);
+    my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', uc $control_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $control_name);
+    my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $control_name);
     $label->append_child ($el0);
     $el0->append_child ($el);
     $el0->append_child ($el2);
@@ -2787,12 +2787,12 @@ for my $control_name (qw(input button keygen meter output progress select
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $label = $doc->create_element ('label');
+    my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
     $label->html_for ('aa');
 
-    my $el0 = $doc->create_element (uc $control_name);
-    my $el = $doc->create_element ($control_name);
-    my $el2 = $doc->create_element ($control_name);
+    my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', uc $control_name);
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $control_name);
+    my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $control_name);
     $label->append_child ($el0);
     $el0->append_child ($el);
     $el0->append_child ($el2);
@@ -2807,14 +2807,14 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->inner_html (q{<hoge/>});
-  my $label = $doc->create_element ('label');
+  my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
   $label->html_for ('hofe');
 
-  my $el0 = $doc->create_element ('input');
+  my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'input');
   $el0->set_attribute (id => 'hofe');
   $el0->type ('HiDDEn');
   $doc->document_element->append_child ($el0);
-  my $el = $doc->create_element ('input');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'input');
   $doc->document_element->append_child ($el);
   $el->id ('hofe');
   
@@ -2826,9 +2826,9 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->inner_html (q{<hoge/>});
-  my $label = $doc->create_element ('label');
+  my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
 
-  my $el0 = $doc->create_element ('input');
+  my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'input');
   $el0->type ('HiDDEn');
   $label->append_child ($el0);
   
@@ -2840,12 +2840,12 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->inner_html (q{<hoge/>});
-  my $label = $doc->create_element ('label');
+  my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
 
-  my $el0 = $doc->create_element ('input');
+  my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'input');
   $el0->type ('HiDDEn');
   $label->append_child ($el0);
-  my $el = $doc->create_element ('select');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'select');
   $label->append_child ($el);
   
   is $label->control, $el;
@@ -2856,12 +2856,12 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->inner_html (q{<hoge/>});
-  my $label = $doc->create_element ('label');
+  my $label = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'label');
 
-  my $el0 = $doc->create_element ('input');
+  my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'input');
   $el0->type ('hidden');
   $label->append_child ($el0);
-  my $el = $doc->create_element ('input');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'input');
   $label->append_child ($el);
   
   is $label->control, $el;
@@ -2871,11 +2871,11 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $input = $doc->create_element ('input');
+  my $input = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'input');
   is $input->list, undef;
   $input->set_attribute (list => 'hoge');
   is $input->list, undef;
-  my $el = $doc->create_element ('datalist');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'datalist');
   $el->id ('hoge');
   $input->append_child ($el);
   is $input->list, undef;
@@ -2890,20 +2890,20 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $root = $doc->create_element ('datalist');
+  my $root = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'datalist');
   my $col1 = $root->options;
   isa_ok $col1, 'Web::DOM::HTMLCollection';
   is $col1->length, 0;
   is $root->options, $col1;
 
-  my $el1 = $doc->create_element ('option');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'option');
   $root->append_child ($el1);
 
   is $root->options->length, 1;
   is $col1->length, 1;
   is $col1->[0], $el1;
 
-  my $el2 = $doc->create_element ('option');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'option');
   $el1->append_child ($el2);
 
   is $col1->length, 2;
@@ -2915,7 +2915,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('option');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'option');
   is $el->text, '';
   is $el->label, '';
   is $el->value, '';
@@ -2926,7 +2926,7 @@ test {
   is $el->value, "hoge fuga aa";
   is $el->text_content, "hoge  fuga \x0D\x0C aa\x09\x0A";
 
-  $el->append_child ($doc->create_element ('foo'))->text_content ('0');
+  $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo'))->text_content ('0');
   $el->manakai_append_text ("\x09");
 
   is $el->text, "hoge fuga aa 0";
@@ -2963,7 +2963,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $opt = $doc->create_element ('option');
+  my $opt = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'option');
   $opt->set_attribute (label => '');
   $opt->text_content (13);
   is $opt->label, '';
@@ -2976,9 +2976,9 @@ test {
   my $c = shift;
 
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('option');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'option');
   $el->append_child ($doc->create_text_node ('hoge'));
-  $el->append_child ($doc->create_element ('script'))
+  $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'script'))
      ->append_child ($doc->create_text_node ('abc'));
   $el->append_child ($doc->create_text_node ('fuga'));
   is $el->text, 'hogefuga';
@@ -2999,7 +2999,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('dialog');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'dialog');
   is $el->return_value, '';
   $el->return_value (my $value = {});
   is $el->return_value, ''.$value;
@@ -3011,12 +3011,12 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('xmp');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'xmp');
   my $ds = $el->dataset;
   isa_ok $ds, 'Web::DOM::StringMap';
   is $el->dataset, $ds;
 
-  my $el2 = $doc->create_element ('xmp');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'xmp');
   isnt  $el2->dataset, $ds;
 
   done $c;
@@ -3026,7 +3026,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://foo');
-  my $base = $doc->create_element ('base');
+  my $base = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   is $base->href, 'http://foo/';
   done $c;
 } n => 1, name => 'base.href no href';
@@ -3035,7 +3035,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://foo');
-  my $base = $doc->create_element ('base');
+  my $base = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $base->set_attribute (href => 'http://ABC');
   is $base->href, 'http://abc/';
   done $c;
@@ -3045,7 +3045,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://foo');
-  my $base = $doc->create_element ('base');
+  my $base = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $base->set_attribute (href => ' ba/./r  ');
   is $base->href, 'http://foo/ba/r';
   done $c;
@@ -3055,7 +3055,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://foo');
-  my $base = $doc->create_element ('base');
+  my $base = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $base->set_attribute (href => ' http://ho:fe/ ');
   is $base->href, '';
   done $c;
@@ -3064,7 +3064,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('base');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el->href ('hoge');
   is $el->get_attribute_ns (undef, 'href'), 'hoge';
   $el->href ('http://foo');
@@ -3077,7 +3077,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   my $mr = Web::CSS::Parser->get_parser_of_document ($doc)->media_resolver;
   $mr->{prop}->{display} = 1;
   $mr->{prop_value}->{display}->{block} = 1;
@@ -3099,7 +3099,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->set_attribute (style => 'display: inline; hoge: fuga');
   my $mr = Web::CSS::Parser->get_parser_of_document ($doc)->media_resolver;
   $mr->{prop}->{display} = 1;
@@ -3125,7 +3125,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->set_attribute (style => 'display: inline; hoge: fuga');
   my $mr = Web::CSS::Parser->get_parser_of_document ($doc)->media_resolver;
   $mr->{prop}->{display} = 1;
@@ -3150,7 +3150,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   my $mr = Web::CSS::Parser->get_parser_of_document ($doc)->media_resolver;
   $mr->{prop}->{display} = 1;
   $mr->{prop_value}->{display}->{block} = 1;
@@ -3166,7 +3166,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('menuitem');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menuitem');
   is $el->label, '';
   $el->label ('abc');
   is $el->label, 'abc';
@@ -3184,7 +3184,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('menuitem');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menuitem');
   $el->inner_html (q{  });
   is $el->label, '';
   $el->label ('abc');
@@ -3203,7 +3203,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('menuitem');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menuitem');
   $el->inner_html (qq{  <p>xy</p>\x09});
   is $el->label, '';
   $el->label ('abc');
@@ -3222,7 +3222,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('menuitem');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menuitem');
   $el->inner_html (q{  a  b  c  });
   is $el->label, 'a b c';
   $el->label ('abc');

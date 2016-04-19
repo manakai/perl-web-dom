@@ -1,7 +1,7 @@
 package Web::DOM::AtomElement;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::Element);
 use Web::DOM::Element;
 use Web::DOM::Internal;
@@ -102,7 +102,7 @@ sub container ($) {
       }
     }
     if (${$_[0]}->[0]->{config}->{manakai_create_child_element}) {
-      my $el = $self->owner_document->create_element ('div');
+      my $el = $self->owner_document->create_element_ns (HTML_NS, 'div');
       return $self->append_child ($el);
     } else {
       return undef;
@@ -378,7 +378,7 @@ sub container ($) {
       }
     }
     if (${$_[0]}->[0]->{config}->{manakai_create_child_element}) {
-      my $el = $self->owner_document->create_element ('div');
+      my $el = $self->owner_document->create_element_ns (HTML_NS, 'div');
       return $self->append_child ($el);
     } else {
       return undef;
@@ -514,7 +514,7 @@ sub value ($;$) {
 
 =head1 LICENSE
 
-Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

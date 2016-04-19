@@ -26,7 +26,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('base');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el->set_attribute (href => 'http://hoge');
   $doc->append_child ($el);
   is $doc->base_uri, 'http://hoge/';
@@ -36,12 +36,12 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el2 = $doc->create_element ('foo');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $doc->append_child ($el2);
-  my $el = $doc->create_element ('base');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el->set_attribute (href => 'http://hoge');
   $el2->append_child ($el);
-  my $el3 = $doc->create_element ('base');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el3->set_attribute (href => 'http://fuga');
   $el2->append_child ($el3);
   is $doc->base_uri, 'http://hoge/';
@@ -51,14 +51,14 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el2 = $doc->create_element ('foo');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $doc->append_child ($el2);
-  my $el4 = $doc->create_element ('base');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el2->append_child ($el4);
-  my $el = $doc->create_element ('base');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el->set_attribute (href => 'http://hoge');
   $el2->append_child ($el);
-  my $el3 = $doc->create_element ('base');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el3->set_attribute (href => 'http://fuga');
   $el2->append_child ($el3);
   is $doc->base_uri, 'http://hoge/';
@@ -69,14 +69,14 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://abc/');
-  my $el2 = $doc->create_element ('foo');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el2->set_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://ac/');
   $doc->append_child ($el2);
-  my $el = $doc->create_element ('base');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el->set_attribute (href => 'hoge');
   $el2->append_child ($el);
-  my $el3 = $doc->create_element ('base');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el3->set_attribute (href => 'http://fuga');
   $el2->append_child ($el3);
   is $doc->base_uri, 'http://abc/hoge';
@@ -87,14 +87,14 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://abc/');
-  my $el2 = $doc->create_element ('foo');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el2->set_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://ac/');
   $doc->append_child ($el2);
-  my $el = $doc->create_element ('base');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el->set_attribute (href => 'http://ab:hoge');
   $el2->append_child ($el);
-  my $el3 = $doc->create_element ('base');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $el3->set_attribute (href => 'http://fuga');
   $el2->append_child ($el3);
   is $doc->base_uri, 'http://abc/';
@@ -109,7 +109,7 @@ test {
   is $doc->base_uri, 'hoge'; # cached!
   $doc->manakai_set_url ('http://hoge/fuga#');
   is $doc->base_uri, 'http://hoge/fuga#';
-  my $base = $doc->create_element ('base');
+  my $base = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'base');
   $doc->append_child ($base);
   is $doc->base_uri, 'http://hoge/fuga#';
   $base->href ('http://foo/bar');
@@ -132,7 +132,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://abc/');
-  my $el = $doc->create_element ('ff');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ff');
   my $attr = $doc->create_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'base');
   $attr->value ('http://foo');
@@ -145,8 +145,8 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://abc/');
-  my $el2 = $doc->create_element ('ff');
-  my $el = $doc->create_element ('ff');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ff');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ff');
   my $attr = $doc->create_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'base');
   $attr->value ('http://foo');
@@ -160,10 +160,10 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://abc/');
-  my $el2 = $doc->create_element ('ff');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ff');
   $el2->set_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://def/');
-  my $el = $doc->create_element ('ff');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ff');
   my $attr = $doc->create_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'base');
   $attr->value ('http://foo');
@@ -186,7 +186,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://foo/');
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $attr = $doc->create_attribute ('xml:base');
   is $attr->base_uri, 'http://foo/';
   $el->set_attribute_node ($attr);
@@ -197,7 +197,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://foo/');
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://def/');
   my $attr = $doc->create_attribute ('xml_base');
@@ -210,7 +210,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://abc/');
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   is $el->base_uri, 'http://abc/';
   done $c;
 } n => 1, name => 'element';
@@ -219,7 +219,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://abc/');
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://def/');
   is $el->base_uri, 'http://abc/';
@@ -230,8 +230,8 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_set_url ('http://abc/');
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('b');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
   $el2->append_child ($el);
   $el2->set_attribute_ns
       ('http://www.w3.org/XML/1998/namespace', 'xml:base', 'http://def/');

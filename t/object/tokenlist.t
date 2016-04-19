@@ -18,7 +18,7 @@ use Web::DOM::Document;
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hh');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hh');
 
   my $tokens = $el->class_list;
 
@@ -33,7 +33,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hh');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hh');
   $el->set_attribute (class => "\x0Ahoge\x09fuga\x0C");
 
   my $tokens = $el->class_list;
@@ -49,7 +49,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $called;
   $el->set_user_data (destroy => bless sub {
                         $called = 1;
@@ -70,7 +70,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $tokens = $el->class_list;
 
   is scalar @$tokens, 0;
@@ -124,7 +124,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   my $tokens = $el->class_list;
 
   ok not $tokens->contains ('hoge');
@@ -146,7 +146,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => "hoge \x09 fuga \x0Cfaa hoge 0  aaa \x{5000}");
   my $tokens = $el->class_list;
 
@@ -169,7 +169,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   my $tokens = $el->class_list;
 
   ok ! $tokens->add ('hoge,', 'fuga');
@@ -205,7 +205,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   my $tokens = $el->class_list;
 
   $tokens->add ('hoge,', 'fuga');
@@ -227,7 +227,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   my $tokens = $el->class_list;
 
   $tokens->add ('hoge,', 'fuga');
@@ -249,7 +249,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('f');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'f');
   my $tokens = $el->class_list;
   $tokens->add ('foo');
   ok ! $tokens->add ('foo');
@@ -270,7 +270,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('link');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'link');
   my $tokens = $el->rel_list;
   ok ! $tokens->add ('foo');
   ok ! $tokens->add ('foo');
@@ -287,7 +287,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('td');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'td');
   my $tokens = $el->headers;
   $tokens->add ('foo');
   ok ! $tokens->add ('foo');
@@ -308,7 +308,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hhe');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hhe');
   my $tokens = $el->class_list;
   $el->set_attribute (class => 'abc def   aa abc Def');
 
@@ -333,7 +333,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->class_name ('ho eafe');
   my $tokens = $el->class_list;
 
@@ -357,7 +357,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->class_name ('ho eafe');
   my $tokens = $el->class_list;
 
@@ -377,7 +377,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->class_name ('ho eafe');
   my $tokens = $el->class_list;
 
@@ -397,7 +397,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->class_name ('ho eafe');
   my $tokens = $el->class_list;
 
@@ -421,7 +421,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   my $tokens = $el->class_list;
 
   ok $tokens->toggle ('hoge');
@@ -454,7 +454,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('area');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'area');
   my $tokens = $el->rel_list;
 
   ok $tokens->toggle ('hoge');
@@ -487,7 +487,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('b7ff');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b7ff');
   my $tokens = $el->class_list;
   is ''.$tokens, '';
   is 0+$tokens, 0;
@@ -513,7 +513,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('b7ff');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b7ff');
   $el->set_attribute (class => '  abc    def h');
 
   my $tokens = $el->class_list;
@@ -531,13 +531,13 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   my $tokens = $el->class_list;
   is $el->class_list, $tokens;
   push @$tokens, 'hoge';
   is $el->class_list, $tokens;
 
-  my $el2 = $doc->create_element ('fuga');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'fuga');
   isnt $el2->class_list, $tokens;
   push @$tokens, 'hoge';
   isnt $el2->class_list, $tokens;
@@ -572,7 +572,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   my $tokens = $el->class_list;
   ok ! $tokens->replace ('hoge', 'fuga');
   is ''.$tokens, '';
@@ -583,7 +583,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs  ');
   my $tokens = $el->class_list;
   ok ! $tokens->replace ('hoge', 'fuga');
@@ -595,7 +595,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs hoge  ');
   my $tokens = $el->class_list;
   ok ! $tokens->replace ('hoge', 'fuga');
@@ -607,7 +607,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs Hoge   ');
   my $tokens = $el->class_list;
   ok ! $tokens->replace ('hoge', 'fuga');
@@ -619,7 +619,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hogE ss xs hoge  ');
   my $tokens = $el->class_list;
   ok ! $tokens->replace ('hogE', 'fuga');
@@ -631,7 +631,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs fuga ');
   my $tokens = $el->class_list;
   ok ! $tokens->replace ('hoge', 'fuga');
@@ -643,7 +643,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs  ');
   my $tokens = $el->class_list;
   dies_here_ok {
@@ -660,7 +660,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs  ');
   my $tokens = $el->class_list;
   dies_here_ok {
@@ -677,7 +677,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs  ');
   my $tokens = $el->class_list;
   dies_here_ok {
@@ -694,7 +694,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs  ');
   my $tokens = $el->class_list;
   dies_here_ok {
@@ -711,7 +711,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs  ');
   my $tokens = $el->class_list;
   dies_here_ok {
@@ -728,7 +728,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (rel => 'ab  hoge ss xs Hoge   ');
   my $tokens = $el->rel_list;
   ok ! $tokens->replace ('hoge', 'fuga');
@@ -740,7 +740,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   my $tokens = $el->class_list;
   dies_here_ok {
     $tokens->supports ('canonical');
@@ -762,7 +762,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   my $tokens = $el->rel_list;
   ok ! $tokens->supports ('canonical');
   ok ! $tokens->supports ('tag');
@@ -775,7 +775,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('iframe');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'iframe');
   my $tokens = $el->sandbox;
   ok ! $tokens->supports ('');
   ok ! $tokens->supports ('allow-plugins');
@@ -787,7 +787,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('iframe');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'iframe');
   my $tokens = $el->dropzone;
   ok ! $tokens->supports ('');
   ok ! $tokens->supports ('allow-plugins');
@@ -799,7 +799,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('td');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'td');
   my $list = $el->headers;
   is $list->value, '';
   
@@ -828,7 +828,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('td');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'td');
   my $tokens = $el->headers;
   $el->set_attribute (headers => '  abc    def h');
 

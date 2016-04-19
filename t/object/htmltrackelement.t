@@ -30,7 +30,7 @@ test {
   my $c = shift;
   require Web::DOM::Document;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('track');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'track');
   is $el->NONE, 0;
   is $el->LOADING, 1;
   is $el->LOADED, 2;

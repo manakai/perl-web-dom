@@ -146,7 +146,7 @@ for my $el_name (qw(rights subtitle summary title content)) {
     my $el = $doc->create_element_ns (ATOM_NS, $el_name);
     my $el2 = $el->container;
     is $el2, $el;
-    my $el3 = $doc->create_element ('div');
+    my $el3 = $doc->create_element_ns (HTML_NS, 'div');
     $el->append_child ($el3);
     is $el->container, $el;
     done $c;
@@ -160,7 +160,7 @@ for my $el_name (qw(rights subtitle summary title content)) {
       $el->set_attribute (type => $type);
       my $el2 = $el->container;
       is $el2, $el;
-      my $el3 = $doc->create_element ('div');
+      my $el3 = $doc->create_element_ns (HTML_NS, 'div');
       $el->append_child ($el3);
       is $el->container, $el;
       done $c;
@@ -174,7 +174,7 @@ for my $el_name (qw(rights subtitle summary title content)) {
     $el->set_attribute (type => 'xhtml');
     my $el2 = $el->container;
     is $el2, undef;
-    my $el3 = $doc->create_element ('div');
+    my $el3 = $doc->create_element_ns (HTML_NS, 'div');
     $el->append_child ($el3);
     is $el->container, $el3;
     my $el4 = $doc->create_element_ns (undef, 'div');
@@ -213,7 +213,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element_ns (ATOM_NS, 'content');
-  my $div = $doc->create_element ('div');
+  my $div = $doc->create_element_ns (HTML_NS, 'div');
   $el->append_child ($div);
   $el->set_attribute (type => 'xhtml');
   $el->set_attribute (src => '');

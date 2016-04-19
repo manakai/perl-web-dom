@@ -57,8 +57,8 @@ test {
   
   my $doc = new Web::DOM::Document;
   $doc->append_child ($doc->create_document_type_definition ('FAaf'));
-  $doc->append_child ($doc->create_element ('hoge'))
-      ->append_child ($doc->create_element ('br'));
+  $doc->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge'))
+      ->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'br'));
   is $s->serialize_to_string ($doc),
       '<!DOCTYPE FAaf><hoge xmlns="http://www.w3.org/1999/xhtml"><br></br></hoge>';
 
@@ -72,8 +72,8 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
   $doc->append_child ($doc->create_document_type_definition ('FAaf'));
-  $doc->append_child ($doc->create_element ('hoge'))
-      ->append_child ($doc->create_element ('br'));
+  $doc->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge'))
+      ->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'br'));
   is $s->serialize_to_string ($doc),
       '<!DOCTYPE FAaf><hoge><br></hoge>';
 
@@ -86,7 +86,7 @@ test {
   
   my $doc = new Web::DOM::Document;
   $doc->dom_config->{manakai_strict_document_children} = 0;
-  my $el1 = $doc->create_element ('foo');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   my $el2 = $doc->create_element_ns (undef, 'foo');
   $doc->append_child ($el1);
   $doc->append_child ($el2);
@@ -103,8 +103,8 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->dom_config->{manakai_strict_document_children} = 0;
   $doc->manakai_is_html (1);
-  my $el1 = $doc->create_element ('foo');
-  my $el2 = $doc->create_element ('foo');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $doc->append_child ($el1);
   $doc->append_child ($el2);
   is $s->serialize_to_string ($doc), q{<foo></foo><foo></foo>};
@@ -117,7 +117,7 @@ test {
   my $s = new Web::DOM::XMLSerializer;
   
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->inner_html (q{<p>aaa<br/>bbbx&amp;s</p><img title="&quot;"/>});
   is $s->serialize_to_string ($el), q{<foo xmlns="http://www.w3.org/1999/xhtml"><p>aaa<br></br>bbbx&amp;s</p><img title="&quot;"></img></foo>};
 
@@ -130,7 +130,7 @@ test {
   
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->inner_html (q{<p>aaa<br/>bbbx&amp;s</p><img title>});
   is $s->serialize_to_string ($el),
       q{<foo><p>aaa<br>bbbx&amp;s</p><img title=""></foo>};

@@ -13,7 +13,7 @@ use Web::CSS::Parser;
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('style');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'style');
 
   is $el->sheet, undef;
 
@@ -23,7 +23,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('style');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'style');
 
   my $parser = Web::CSS::Parser->new;
   $parser->parse_style_element ($el);
@@ -49,7 +49,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('style');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'style');
 
   my $parser = Web::CSS::Parser->new;
   $parser->parse_style_element ($el);

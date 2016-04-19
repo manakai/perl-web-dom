@@ -1,7 +1,7 @@
 package Web::DOM::ParentNode;
 use strict;
 use warnings;
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Web::DOM::Node;
 use Web::DOM::Internal;
 push our @CARP_NOT, qw(
@@ -473,10 +473,13 @@ sub inner_html ($;$) {
       require Web::XML::Parser;
       $parser = Web::XML::Parser->new;
       my $orig_onerror = $parser->onerror;
+warn $_[1];
+warn $INC{"Web/XML/Parser.pm"};
       $parser->onerror (sub {
         my %args = @_;
         $orig_onerror->(@_);
         if (($args{level} || 'm') eq 'm') {
+warn join ' ', %args;
           $parser->throw (sub {
             undef $parser;
             _throw Web::DOM::Exception 'SyntaxError',
@@ -490,7 +493,7 @@ sub inner_html ($;$) {
     my $context =
         $nt == ELEMENT_NODE ? $self :
         $nt == DOCUMENT_NODE ? undef :
-        $self->owner_document->create_element ('body');
+        $self->owner_document->create_element_ns (HTML_NS, 'body');
     my $new_children = $parser->parse_char_string_with_context
         (defined $_[1] ? ''.$_[1] : '', $context, new Web::DOM::Document);
 

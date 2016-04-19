@@ -1484,14 +1484,14 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('template');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'template');
 
-  my $el2 = $doc->create_element ('p');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'p');
   $el->content->append_child ($el2);
   is $el->query_selector ('p'), undef;
   eq_or_diff $el->query_selector_all ('p')->to_a, [];
 
-  my $el3 = $doc->create_element ('p');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'p');
   $el->append_child ($el3);
   is $el->query_selector ('p'), $el3;
   eq_or_diff $el->query_selector_all ('p')->to_a, [$el3];

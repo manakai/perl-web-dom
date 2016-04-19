@@ -11,7 +11,7 @@ use Web::DOM::Document;
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
 
   is $el->outer_html,
       q{<hoge xmlns="http://www.w3.org/1999/xhtml"></hoge>};
@@ -26,7 +26,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->inner_html ('<!-- foo --><p>abc<bar title="a" xml:lang="en"/><br/></p>');
 
   is $el->outer_html,
@@ -43,7 +43,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
 
   $el->outer_html ('hoge <p> ');
   is $el->outer_html, q{<aa xmlns="http://www.w3.org/1999/xhtml"></aa>};
@@ -55,7 +55,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->inner_html ('hoge');
 
   $el->outer_html ('hoge <p> ');
@@ -67,8 +67,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el2);
 
@@ -85,8 +85,8 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el1 = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el2);
 
@@ -103,8 +103,8 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el1 = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el2);
 
@@ -120,8 +120,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el2);
 
@@ -141,8 +141,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el2);
 
@@ -163,10 +163,10 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el1 = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el3);
   $el1->append_child ($el2);
@@ -181,10 +181,10 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el3);
   $el1->append_child ($el2);
@@ -204,12 +204,12 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el1 = $doc->create_element ('aa');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el1->set_attribute_ns ('http://www.w3.org/2000/xmlns/', ['xmlns', 'abc'], 'http://ns1/');
-  my $el2 = $doc->create_element ('aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->set_attribute_ns ('http://www.w3.org/2000/xmlns/', ['xmlns', 'abc'], 'http://ns2/');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el3);
   $el1->append_child ($el2);
@@ -226,12 +226,12 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('aa');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el1->set_attribute_ns ('http://www.w3.org/2000/xmlns/', ['xmlns', 'abc'], 'http://ns1/');
-  my $el2 = $doc->create_element ('aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->set_attribute_ns ('http://www.w3.org/2000/xmlns/', ['xmlns', 'abc'], 'http://ns2/');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el3);
   $el1->append_child ($el2);
@@ -250,9 +250,9 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
   my $el1 = $doc->create_document_fragment;
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el3);
   $el1->append_child ($el2);
@@ -268,9 +268,9 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $el1 = $doc->create_document_fragment;
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->inner_html ('hoge');
   $el1->append_child ($el3);
   $el1->append_child ($el2);
@@ -285,7 +285,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->inner_html ('<q>aaa</q>');
   $doc->append_child ($el);
   
@@ -306,7 +306,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->inner_html ('<q>aaa</q>');
   $doc->append_child ($el);
   
@@ -350,11 +350,11 @@ for my $test (
     my $c = shift;
     my $doc = new Web::DOM::Document;
     $doc->manakai_is_html ($test->[0]);
-    my $el1 = $doc->create_element ('a');
-    my $el2 = $doc->create_element ('b');
-    my $el3 = $doc->create_element ('c');
-    my $el4 = $doc->create_element ('d');
-    my $el5 = $doc->create_element ('e');
+    my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
+    my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
+    my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'c');
+    my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'd');
+    my $el5 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e');
     $el1->append_child ($el2);
     $el1->append_child ($el3);
     $el1->append_child ($el4);
@@ -375,7 +375,7 @@ for my $test (
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hogte');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hogte');
   $doc->append_child ($el);
 
   dies_here_ok {
@@ -392,7 +392,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hogte');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hogte');
   $doc->append_child ($el);
 
   dies_here_ok {
@@ -409,7 +409,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hogte');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hogte');
 
   dies_here_ok {
     $el->insert_adjacent_html ('beforebegin', '<p>aa</p>');
@@ -424,7 +424,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hogte');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hogte');
 
   dies_here_ok {
     $el->insert_adjacent_html ('afterend', '<p>aa</p>');
@@ -439,7 +439,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hogte');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hogte');
   $el->inner_html ('<br/>');
   $doc->append_child ($el);
 
@@ -452,7 +452,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hogte');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hogte');
   $el->inner_html ('<br/>');
   $doc->append_child ($el);
 
@@ -465,7 +465,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hogte');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hogte');
   $el->inner_html ('<br/>');
 
   $el->insert_adjacent_html ('afterbegin', '<p>aa</p>');
@@ -476,7 +476,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hogte');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hogte');
   $el->inner_html ('<br/>');
 
   $el->insert_adjacent_html ('BeforEend', '<p>aa</p>');
@@ -487,7 +487,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->inner_html ('aa');
   dies_here_ok {
     $el->insert_adjacent_html ('after_end', 'hoge');
@@ -503,7 +503,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el1 = $doc->create_element ('html');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'html');
   $el1->insert_adjacent_html ('beforeend', '<p>hoge');
   is $el1->inner_html, '<p>hoge</p>';
   done $c;
@@ -514,7 +514,7 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
   my $df = $doc->create_document_fragment;
-  my $el1 = $doc->create_element ('html');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'html');
   $df->append_child ($el1);
   $el1->insert_adjacent_html ('afterend', '<p>hoge');
   is $df->inner_html, '<html></html><p>hoge</p>';
@@ -525,7 +525,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el1 = $doc->create_element ('table');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $el1->insert_adjacent_html ('beforeend', '<p>hoge<tr><td>foo<th>');
   is $el1->inner_html, '<p>hoge</p><tbody><tr><td>foo</td><th></th></tr></tbody>';
   done $c;
@@ -535,8 +535,8 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el1 = $doc->create_element ('table');
-  my $el2 = $doc->create_element ('p');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'p');
   $el1->append_child ($el2);
   $el2->insert_adjacent_html ('afterend', '<p>hoge<tr><td>foo<th>');
   is $el1->inner_html, '<p></p><p>hoge</p><tbody><tr><td>foo</td><th></th></tr></tbody>';
@@ -546,8 +546,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('table');
-  my $el2 = $doc->create_element ('hoge');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el1->append_child ($el2);
   $el1->set_attribute_ns ('http://www.w3.org/2000/xmlns/', ['xmlns', 'b'],
                           'http://ns1/');
@@ -564,8 +564,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('table');
-  my $el2 = $doc->create_element ('hoge');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el1->append_child ($el2);
   $el1->set_attribute_ns ('http://www.w3.org/2000/xmlns/', ['xmlns', 'b'],
                           'http://ns1/');
@@ -582,8 +582,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('table');
-  my $el2 = $doc->create_element ('hoge');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el1->append_child ($el2);
 
   dies_here_ok {
@@ -601,7 +601,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('template');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'template');
 
   $el->insert_adjacent_html ('afterbegin', '<p>abc</p>');
   is $el->child_nodes->length, 1;
@@ -618,7 +618,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('template');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'template');
 
   $el->insert_adjacent_html ('afterbegin', '<p>abc</p>');
   is $el->child_nodes->length, 1;

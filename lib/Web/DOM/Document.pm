@@ -392,7 +392,7 @@ sub title ($;$) {
       } else {
         my $head = $self->head;
         if (defined $head) {
-          $title_el = $self->create_element ('title');
+          $title_el = $self->create_element_ns (HTML_NS, 'title');
           if (@_ > 1) {
             $head->append_child ($title_el);
             $title_el->text_content ($_[1]);
