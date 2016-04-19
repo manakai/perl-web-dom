@@ -119,7 +119,8 @@ specified name.  [DOMDTDEF]
 =item $el = $doc->create_element ($local_name)
 
 Create a new element (L<Web::DOM::HTMLElement>) with the specified
-local name in the HTML namespace.  [DOM] [HTML] [MANAKAI]
+local name (in the HTML namespace if the document is an HTML or XHTML
+document, or in the null namespace otherwise).  [DOM] [HTML] [MANAKAI]
 
 =item $el = $doc->create_element_ns ($nsurl, $qname)
 
@@ -386,20 +387,20 @@ C<anchors>, C<applets>, and C<clear>.  [HTML]
 
 =item DOM
 
-DOM Standard <http://dom.spec.whatwg.org/#interface-document>.
+DOM Standard <https://dom.spec.whatwg.org/#interface-document>.
 
 =item DOMATTREXODUS
 
-DOM Standard <view-source:http://dom.spec.whatwg.org/>.
+DOM Standard <view-source:https://dom.spec.whatwg.org/>.
 
 =item DOM3CORE
 
 Document Object Model (DOM) Level 3 Core Specification
-<http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/DOM3-Core.html>.
+<https://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/DOM3-Core.html>.
 
 =item HTML
 
-HTML Standard <http://www.whatwg.org/specs/web-apps/current-work/>.
+HTML Standard <https://www.whatwg.org/specs/web-apps/current-work/>.
 
 =item SVG
 
@@ -414,26 +415,26 @@ Touch Events
 =item DOMDTDEF
 
 DOM Document Type Definitions
-<http://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
+<https://suika.suikawiki.org/www/markup/xml/domdtdef/domdtdef>.
 
 =item ATOMDOM
 
-Atom DOM <http://suika.suikawiki.org/www/markup/xml/atomdom>.
+Atom DOM <https://suika.suikawiki.org/www/markup/xml/atomdom>.
 
 =item DOMXPATH
 
 Document Object Model XPath
-<http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html#XPathEvaluator>.
+<https://www.w3.org/TR/DOM-Level-3-XPath/xpath.html#XPathEvaluator>.
 
 =item DOMPERL
 
 manakai's DOM Perl Binding
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding>.
 
 =item MANAKAI
 
 manakai DOM Extensions
-<http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
+<https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions>.
 
 =back
 
@@ -447,7 +448,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

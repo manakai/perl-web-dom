@@ -2,7 +2,7 @@ package Web::DOM::Document;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '4.0';
+our $VERSION = '5.0';
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
 use Web::DOM::XPathEvaluator;
@@ -616,13 +616,21 @@ sub create_element ($$) {
   }
 
   # 2.
+  my $ns;
   if ($$self->[2]->{is_html}) {
     $ln =~ tr/A-Z/a-z/; ## ASCII lowercase
+    $ns = $Web::DOM::Internal::Text->{(HTML_NS)};
+  } else {
+    my $ct = ${$_[0]}->[2]->{content_type}; # or application/xml
+    if (defined $ct and
+        ($ct eq 'text/html' or $ct eq 'application/xhtml+xml')) {
+      $ns = $Web::DOM::Internal::Text->{(HTML_NS)};
+    }
   }
 
   # 3.
   my $data = {node_type => ELEMENT_NODE,
-              namespace_uri => $Web::DOM::Internal::Text->{(HTML_NS)},
+              namespace_uri => $ns,
               local_name => ($Web::DOM::Internal::Text->{$ln} ||= \$ln)};
   my $id = $$self->[0]->add_data ($data);
   my $node = $$self->[0]->node ($id);

@@ -1,8 +1,10 @@
 use strict;
 use warnings;
-use Path::Class;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'modules', '*', 'lib')->stringify;
-use lib glob file (__FILE__)->dir->parent->parent->subdir ('t_deps', 'lib')->stringify;
+use Path::Tiny;
+use lib glob path (__FILE__)->parent->parent->parent->child
+    ('t_deps/modules/*/lib')->stringify;
+use lib glob path (__FILE__)->parent->parent->parent->child
+    ('t_deps/lib')->stringify;
 use Test::X1;
 use Test::More;
 use Test::DOM::Exception;
@@ -16,7 +18,7 @@ test {
   isa_ok $el, 'Web::DOM::Element';
   is $el->node_type, 1;
   is $el->prefix, undef;
-  is $el->namespace_uri, q<http://www.w3.org/1999/xhtml>;
+  is $el->namespace_uri, undef;
   is $el->manakai_local_name, q<abc>;
   is $el->tag_name, q<abc>;
   is $el->owner_document, $doc;
@@ -51,7 +53,7 @@ test {
   isa_ok $el, 'Web::DOM::Element';
   is $el->node_type, 1;
   is $el->prefix, undef;
-  is $el->namespace_uri, q<http://www.w3.org/1999/xhtml>;
+  is $el->namespace_uri, undef;
   is $el->manakai_local_name, qq<abc\x{5000}\x{1E000}>;
   is $el->tag_name, qq<abc\x{5000}\x{1E000}>;
   is $el->owner_document, $doc;
@@ -112,7 +114,7 @@ test {
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ('v:circle');
   is $el->prefix, undef;
-  is $el->namespace_uri, q<http://www.w3.org/1999/xhtml>;
+  is $el->namespace_uri, undef;
   is $el->manakai_local_name, 'v:circle';
   done $c;
 } n => 3, name => 'create_element local name with :';
@@ -122,7 +124,7 @@ test {
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element (':circle');
   is $el->prefix, undef;
-  is $el->namespace_uri, q<http://www.w3.org/1999/xhtml>;
+  is $el->namespace_uri, undef;
   is $el->manakai_local_name, ':circle';
   done $c;
 } n => 3, name => 'create_element local name starting with :';
@@ -132,7 +134,7 @@ test {
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element ("\x{6000}");
   is $el->prefix, undef;
-  is $el->namespace_uri, q<http://www.w3.org/1999/xhtml>;
+  is $el->namespace_uri, undef;
   is $el->manakai_local_name, "\x{6000}";
   done $c;
   undef $c;
@@ -149,6 +151,53 @@ test {
   is $@->message, 'The local name is not an XML Name';
   done $c;
 } n => 4, name => 'create_element undef';
+
+for my $mime (qw(
+  text/html application/xhtml+xml
+)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->_set_content_type ($mime);
+    my $el = $doc->create_element ('foo');
+    is $el->namespace_uri, 'http://www.w3.org/1999/xhtml';
+    done $c;
+  } n => 1, name => ['create_element', $mime];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    $doc->_set_content_type ($mime);
+    my $el = $doc->create_element ('foo');
+    is $el->namespace_uri, 'http://www.w3.org/1999/xhtml';
+    done $c;
+  } n => 1, name => ['create_element HTML', $mime];
+}
+
+for my $mime (qw(
+  application/xml text/xml text/plain application/rdf+xml image/svg+xml
+  application/octet-stream text/css text/javascript application/json
+)) {
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->_set_content_type ($mime);
+    my $el = $doc->create_element ('foo');
+    is $el->namespace_uri, undef;
+    done $c;
+  } n => 1, name => ['create_element', $mime];
+
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    $doc->manakai_is_html (1);
+    $doc->_set_content_type ($mime);
+    my $el = $doc->create_element ('foo');
+    is $el->namespace_uri, 'http://www.w3.org/1999/xhtml';
+    done $c;
+  } n => 1, name => ['create_element HTML', $mime];
+}
 
 test {
   my $c = shift;
@@ -518,7 +567,7 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->strict_error_checking (0);
   my $el = $doc->create_element ('124 aa');
-  is $el->namespace_uri, 'http://www.w3.org/1999/xhtml';
+  is $el->namespace_uri, undef;
   is $el->prefix, undef;
   is $el->local_name, '124 aa';
   done $c;
@@ -724,7 +773,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
