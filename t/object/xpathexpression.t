@@ -15,7 +15,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $doc->append_child ($el);
   my $expr = $eval->create_expression ('child::*');
   my $result = $expr->evaluate($doc);
@@ -57,7 +57,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $doc->append_child ($el);
   my $el2 = $doc->create_element_ns (undef, 'aaga');
   $el2->set_attribute (hoge => '');
@@ -78,7 +78,7 @@ test {
   my $c = shift;
   my $eval = new Web::DOM::XPathEvaluator;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $doc->append_child ($el);
   my $expr = $eval->create_expression ('child::*', undef);
   my $result = $expr->evaluate ($doc, 2**16+9);

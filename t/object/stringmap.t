@@ -18,7 +18,7 @@ use Web::DOM::Document;
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $ds = $el->dataset;
   $ds->{hoge} = 'foo';
   ok exists $ds->{hoge};
@@ -38,7 +38,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   my $ds = $el->dataset;
   $ds->{hoge_fuga_} = 124;
   ok exists $ds->{hoge_fuga_};
@@ -52,7 +52,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $ds = $el->dataset;
   is $ds->{'hoeg-fuga'}, undef;
   dies_here_ok {
@@ -73,7 +73,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   my $ds = $el->dataset;
   $ds->{''} = 124;
   ok exists $ds->{''};
@@ -87,7 +87,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute_ns (undef, 'data-hoge' => 12);
   $el->set_attribute_ns (undef, 'data-' => 5);
   $el->set_attribute_ns ('http://foo/', 'data-hoge2' => 6);
@@ -104,7 +104,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute_ns (undef, 'data-hoge' => 12);
   $el->set_attribute_ns (undef, 'data-' => 5);
   $el->set_attribute_ns ('http://foo/', 'data-hoge2' => 6);
@@ -126,7 +126,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hh');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hh');
   
   my $called;
   $el->set_user_data (destroy => bless sub {
@@ -151,7 +151,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   my $ds1 = $el->dataset;
   my $ds2 = $el->dataset;
 
@@ -165,7 +165,7 @@ test {
   ok undef ne $ds1;
   is $ds1 cmp $ds2, 0;
   
-  my $el2 = $doc->create_element ('aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $ds3 = $el2->dataset;
 
   ok not $ds1 eq $ds3;
@@ -185,7 +185,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $ds = $el->dataset;
   $ds->{'xml:lang'} = '&aa';
   is $ds->{'xml:lang'}, '&aa';

@@ -49,7 +49,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $doc->append_child ($el);
 
   my $clone = $doc->clone_node;
@@ -70,7 +70,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $doc->append_child ($el);
 
   my $clone = $doc->clone_node (1);
@@ -151,7 +151,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $df = $doc->create_document_fragment;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $df->append_child ($el);
 
   my $clone = $df->clone_node (0);
@@ -169,9 +169,9 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $df = $doc->create_document_fragment;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $df->append_child ($el);
-  my $el2 = $doc->create_element ('b');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
   $el->append_child ($el2);
 
   my $clone = $df->clone_node (1);
@@ -297,7 +297,7 @@ test {
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element_ns ('hoge', 'fuga:aAa');
   $el->text_content ('aaabb');
-  $el->append_child ($doc->create_element ('fuga'));
+  $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'fuga'));
   
   my $clone = $el->clone_node (1);
   isa_ok $clone, 'Web::DOM::Element';
@@ -360,8 +360,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('a');
-  my $el2 = $doc->create_element ('a');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el1->append_child ($el2);
 
   my $el3 = $el2->clone_node (1);
@@ -375,7 +375,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('a');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   my $el2 = $doc->create_attribute ('a');
   $el1->set_attribute_node ($el2);
 
@@ -479,7 +479,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->strict_error_checking (0);
-  my $el = $doc->create_element ('4412');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', '4412');
   $doc->strict_error_checking (1);
 
   my $el2 = $el->clone_node;
@@ -496,7 +496,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->strict_error_checking (0);
-  my $el = $doc->create_element ('4412');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', '4412');
 
   my $el2 = $el->clone_node;
   is $el2->node_type, $el2->ELEMENT_NODE;

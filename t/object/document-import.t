@@ -42,7 +42,7 @@ test {
   my $c = shift;
   my $doc1 = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
-  my $el = $doc1->create_element ('aaa');
+  my $el = $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
   $el->text_content ('hoge');
 
   my $el2 = $doc2->import_node ($el);
@@ -60,7 +60,7 @@ test {
   my $c = shift;
   my $doc1 = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
-  my $el = $doc1->create_element ('aaa');
+  my $el = $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
   $el->text_content ('hoge');
   $el->set_attribute (hoge => 'baaaa');
 
@@ -80,8 +80,8 @@ test {
   my $c = shift;
   my $doc1 = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
-  my $el = $doc1->create_element ('aaa');
-  my $el3 = $doc1->create_element ('aaa');
+  my $el = $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
+  my $el3 = $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
   $el->append_child ($el3);
   $el3->text_content ('hoge');
 
@@ -164,7 +164,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aaa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
   
   my $el2 = $doc->import_node ($el);
   isnt $el2, $el;
@@ -178,8 +178,8 @@ test {
   my $c = shift;
   my $doc1 = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
-  my $el1 = $doc1->create_element ('aaa');
-  my $el2 = $doc1->create_element ('aaa');
+  my $el1 = $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
+  my $el2 = $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
   $el1->append_child ($el2);
   
   my $el3 = $doc2->import_node ($el2);
@@ -194,7 +194,7 @@ test {
   my $c = shift;
   my $doc1 = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
-  my $el1 = $doc1->create_element ('aaa');
+  my $el1 = $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
   my $el2 = $doc1->create_attribute ('aaa');
   $el1->set_attribute_node ($el2);
   
@@ -292,7 +292,7 @@ test {
   my $doc = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
   $doc->strict_error_checking (0);
-  my $el = $doc->create_element ('4412');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', '4412');
   $doc->strict_error_checking (1);
 
   my $el2 = $doc2->import_node ($el);
@@ -311,7 +311,7 @@ test {
   my $doc = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
   $doc->strict_error_checking (0);
-  my $el = $doc->create_element ('4412');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', '4412');
 
   my $el2 = $doc2->import_node ($el);
   is $el2->node_type, $el2->ELEMENT_NODE;
@@ -329,7 +329,7 @@ test {
   my $doc = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
   $doc->strict_error_checking (0);
-  my $el = $doc->create_element ('4412');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', '4412');
   $doc2->strict_error_checking (0);
 
   my $el2 = $doc2->import_node ($el);

@@ -40,7 +40,7 @@ use Web::DOM::Document;
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   my $attrs = $el->attributes;
   isa_ok $attrs, 'Web::DOM::NamedNodeMap';
   is scalar @$attrs, 0;
@@ -51,7 +51,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute ('hoge' => '');
   my $attrs = $el->attributes;
   isa_ok $attrs, 'Web::DOM::NamedNodeMap';
@@ -63,7 +63,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('aa', 'hoge' => '');
   my $attrs = $el->attributes;
   isa_ok $attrs, 'Web::DOM::NamedNodeMap';
@@ -75,7 +75,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute ('hoge' => '');
   $el->set_attribute_ns ('fuga', 'aaa' => 'bb');
   my $attrs = $el->attributes;
@@ -88,7 +88,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (hoge => 'fuga');
 
   my $attrs = $el->attributes;
@@ -113,7 +113,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('aa', hoge => 'fuga');
 
   my $attrs = $el->attributes;
@@ -139,7 +139,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   is $el->get_attribute ('hoge'), undef;
   is $el->get_attribute ('fuga'), undef;
@@ -160,7 +160,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute (hoge => 'ab de');
   is $el->get_attribute ('hoge'), 'ab de';
@@ -174,7 +174,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns (undef, hoge => 'ab de');
   is $el->get_attribute ('hoge'), 'ab de';
@@ -188,7 +188,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns ('http://hoge/', 'foo' => 'aa');
   is $el->get_attribute ('foo'), 'aa';
@@ -204,7 +204,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns ('http://hoge/', 'hoge:foo' => 'aa');
   is $el->get_attribute ('foo'), undef;
@@ -223,7 +223,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (hoge => 'fuga');
 
   $el->set_attribute (hoge => 'aa bb');
@@ -239,7 +239,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('aa', hoge => 'fuga');
 
   $el->set_attribute (hoge => 'aa bb');
@@ -255,7 +255,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('aa', 'b:hoge' => 'fuga');
 
   $el->set_attribute ('b:hoge' => 'aa bb');
@@ -271,7 +271,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns (undef, hoge => 'fuga');
   $el->set_attribute_ns ('http://a/', hoge => 'a b');
@@ -291,7 +291,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('f');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'f');
   $el->set_attribute ('bb' => 'cc');
   $el->set_attribute ('xx' => 'cc');
   $el->set_attribute_ns ('undef', 'gg' => 'cc');
@@ -317,7 +317,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('f');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'f');
   $el->set_attribute ('bb' => 'cc');
   $el->set_attribute ('xx' => 'cc');
   $el->set_attribute_ns ('undef', 'gg' => 'cc');
@@ -344,7 +344,7 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
 
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (aai => '134 "');
 
   is $el->get_attribute ('aai'), '134 "';
@@ -375,7 +375,7 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
 
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute_ns ("bb", "d:aai" => '134 "');
 
   is $el->get_attribute ('d:aai'), '134 "';
@@ -406,7 +406,7 @@ test {
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
 
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute_ns ("bb", "aai:bb" => '134 "');
 
   is $el->get_attribute ('aai:bb'), '134 "';
@@ -428,7 +428,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (aai => '134 "');
 
   is $el->get_attribute ('aai'), '134 "';
@@ -491,7 +491,7 @@ for my $name (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('a');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
     dies_here_ok {
       $el->set_attribute ($name => 'abc');
@@ -508,7 +508,7 @@ for my $name (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('a');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
     dies_here_ok {
       $el->set_attribute_ns (undef, $name => 'abc');
@@ -526,7 +526,7 @@ for my $name (
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute ('hoge:fuga' => 'abc');
   is $el->get_attribute ('hoge:fuga'), 'abc';
@@ -538,7 +538,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute ("AB\x{0130}\x{0131}" => "ABC");
   is $el->get_attribute ("ab\x{0130}\x{0131}"), undef;
@@ -551,7 +551,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute ("AB\x{0130}\x{0131}" => "ABC");
   is $el->get_attribute ("ab\x{0130}\x{0131}"), "ABC";
@@ -568,7 +568,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ("foo", "ab\x{0130}\x{0131}:c" => "dd");
 
   $el->set_attribute ("AB\x{0130}\x{0131}:c" => "ABC");
@@ -588,7 +588,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ("foo", "c:ab\x{0130}\x{0131}" => "dd");
 
   $el->set_attribute ("c:AB\x{0130}\x{0131}" => "ABC");
@@ -624,7 +624,7 @@ for my $qname (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('a');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
     dies_here_ok {
       $el->set_attribute_ns ('hpofgexs', $qname => 'hh');
@@ -641,7 +641,7 @@ for my $qname (
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('x');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'x');
 
   dies_here_ok {
     $el->set_attribute_ns (undef, 'hoge:fuga' => 'a');
@@ -658,7 +658,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   dies_here_ok {
     $el->set_attribute_ns (undef, 'xml:lang' => 'en');
@@ -677,7 +677,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   dies_here_ok {
     $el->set_attribute_ns ('hoge', 'xml:lang' => 'en');
@@ -698,7 +698,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns ('http://www.w3.org/XML/1998/namespace', 'lang', 'ss');
   
@@ -710,7 +710,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns ('http://www.w3.org/XML/1998/namespace', 'xml:lang', 'ss');
   
@@ -722,7 +722,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   dies_here_ok {
     $el->set_attribute_ns ('hoge', 'xmlns:lang' => 'en');
@@ -743,7 +743,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   dies_here_ok {
     $el->set_attribute_ns ('hoge', 'xmlns' => 'en');
@@ -764,7 +764,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   dies_here_ok {
     $el->set_attribute_ns ('http://www.w3.org/2000/xmlns/', 'XMLns' => 'en');
@@ -785,7 +785,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   dies_here_ok {
     $el->set_attribute_ns ('http://www.w3.org/2000/xmlns/', 'XMLns:hoge' => 'en');
@@ -806,7 +806,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns ('http://www.w3.org/2000/xmlns/', 'xmlns', 'foo');
   is $el->get_attribute_ns ('http://www.w3.org/2000/xmlns/', 'xmlns'), 'foo';
@@ -817,7 +817,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns ('http://www.w3.org/2000/xmlns/', 'xmlns:hoge', 'foo');
   is $el->get_attribute_ns ('http://www.w3.org/2000/xmlns/', 'hoge'), 'foo';
@@ -828,7 +828,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns ('http://www.w3.org/2000/xmlns/', 'xmlns:xmlns', 'foo');
   is $el->get_attribute_ns ('http://www.w3.org/2000/xmlns/', 'xmlns'), 'foo';
@@ -839,7 +839,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute_ns ('http://www.w3.org/2000/xmlns/', 'xmlns:ab', 'foo');
   is $el->get_attribute_ns ('http://www.w3.org/2000/xmlns/', 'ab'), 'foo';
@@ -850,7 +850,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $doc->strict_error_checking (0);
 
   $el->set_attribute ('123 hoge' => 'abc');
@@ -867,7 +867,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $doc->strict_error_checking (0);
 
   dies_here_ok {
@@ -885,7 +885,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $doc->strict_error_checking (0);
 
   $el->set_attribute_ns (undef, '123 hoge' => 'abc');
@@ -902,7 +902,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $doc->strict_error_checking (0);
 
   dies_here_ok {
@@ -920,7 +920,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $doc->strict_error_checking (0);
 
   $el->set_attribute_ns (undef, ':hoge' => 'abc');
@@ -937,7 +937,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $doc->strict_error_checking (0);
 
   $el->set_attribute_ns (undef, 'hoge:' => 'abc');
@@ -954,7 +954,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $doc->strict_error_checking (0);
 
   $el->set_attribute_ns ('abc', 'hoge::fuga:' => 'abc');
@@ -984,7 +984,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('a');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
     $doc->strict_error_checking (0);
 
     $el->set_attribute_ns (@{$test->[0]} => 'abc');
@@ -1000,7 +1000,7 @@ for my $test (
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute_ns ('http://hoge', ['fuga', 'abc'] => 'a');
   my $attr = $el->attributes->[0];
   is $attr->prefix, 'fuga';
@@ -1012,7 +1012,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute_ns ('http://hoge', [undef, 'abc'] => 1);
   my $attr = $el->attributes->[0];
   is $attr->prefix, undef;
@@ -1024,7 +1024,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   dies_here_ok {
     $el->set_attribute_ns ('http://hoge', [undef, 'a:bc'] => 2);
   };
@@ -1038,7 +1038,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   dies_here_ok {
     $el->set_attribute_ns ('http://hoge', ['a:b', 'abc'] => 4);
   };
@@ -1052,7 +1052,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   dies_here_ok {
     $el->set_attribute_ns ('http://hoge', [':', 'abc'] => 45);
   };
@@ -1066,7 +1066,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   dies_here_ok {
     $el->set_attribute_ns ('http://hoge', ['', 'abc'] => 532);
   };
@@ -1081,7 +1081,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->strict_error_checking (0);
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute_ns ('http://hoge', [undef, 'a:bc'] => 442);
   my $attr = $el->attributes->[0];
   is $attr->prefix, undef;
@@ -1094,7 +1094,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->strict_error_checking (0);
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute_ns ('http://hoge', ['12:ab', 'abc'] => 2);
   my $attr = $el->attributes->[0];
   is $attr->prefix, '12:ab';
@@ -1107,7 +1107,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->strict_error_checking (0);
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute_ns ('http://hoge', ['12:ab', 'a:b:c'] => 42);
   my $attr = $el->attributes->[0];
   is $attr->prefix, '12:ab';
@@ -1119,7 +1119,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   
   ok not $el->has_attribute ('ab');
   ok not $el->has_attribute ('ab:foo');
@@ -1143,7 +1143,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (hoge => 'fua');
   
   ok $el->has_attribute ('hoge');
@@ -1160,7 +1160,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('aa', hoge => 'fua');
   
   ok $el->has_attribute ('hoge');
@@ -1177,7 +1177,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('aa', "bb:hoge" => 'fua');
   
   ok not $el->has_attribute ('hoge');
@@ -1197,7 +1197,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->set_attribute (hoge => '');
   ok $el->has_attribute ('hoge');
@@ -1213,7 +1213,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('hoge', 'foo:bar' => 'aa');
 
   ok $el->has_attribute ('foo:bar');
@@ -1229,7 +1229,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   $el->remove_attribute ('hoge');
   $el->remove_attribute ('120');
@@ -1248,7 +1248,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute ('hoge' => 'fuga');
 
   $el->remove_attribute ('hoge');
@@ -1261,7 +1261,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute ('hoge' => 'fuga');
 
   $el->remove_attribute_ns (undef, 'hoge');
@@ -1274,7 +1274,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute ('hoge' => 'fuga');
 
   $el->remove_attribute_ns ('', 'hoge');
@@ -1287,7 +1287,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('htoge', 'fuga' => '');
   
   $el->remove_attribute ('fuga');
@@ -1301,7 +1301,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('htoge', 'fuga' => '');
   
   $el->remove_attribute_ns (undef, 'fuga');
@@ -1315,7 +1315,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('htoge', 'fuga' => '');
   
   $el->remove_attribute_ns ('', 'fuga');
@@ -1329,7 +1329,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('htoge', 'fuga' => '');
   
   $el->remove_attribute_ns ('htoge', 'fuga');
@@ -1343,7 +1343,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('htoge', 'aa:fuga' => '');
   
   $el->remove_attribute ('fuga');
@@ -1357,7 +1357,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('htoge', 'aa:fuga' => '');
   
   $el->remove_attribute ('aa:fuga');
@@ -1373,7 +1373,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('htoge', 'aa:fuga' => '');
   
   $el->remove_attribute_ns ('htoge', 'fuga');
@@ -1387,7 +1387,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('abc', 'hoge' => 'fuga1');
   $el->set_attribute_ns (undef, 'hoge' => 'fuga2');
 
@@ -1402,7 +1402,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns (undef, 'hoge' => '1');
 
   $el->remove_attribute ('HOGE');
@@ -1421,7 +1421,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns (undef, 'hoge' => '1');
 
   $el->remove_attribute ('HOGE');
@@ -1434,7 +1434,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ('gg', 'fuga:hoge' => '1');
 
   $el->remove_attribute ('FuGA:HOGE');
@@ -1447,7 +1447,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns (undef, 'hOGe' => '1');
 
   $el->remove_attribute ('hoge');
@@ -1459,7 +1459,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   
   my $attr1 = $el->get_attribute_node ('hoge');
   is $attr1, undef;
@@ -1476,7 +1476,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute (hoge => 213);
 
   my $attr1 = $el->get_attribute_node ('hoge');
@@ -1493,7 +1493,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute (hoge => 213);
 
   my $attr1 = $el->get_attribute_node_ns (undef, 'hoge');
@@ -1510,7 +1510,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute (hoge => 213);
 
   my $attr1 = $el->get_attribute_node_ns ('', 'hoge');
@@ -1527,7 +1527,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute_ns ('fuga', "aab:hoge" => 213);
 
   my $attr1 = $el->get_attribute_node ('aab:hoge');
@@ -1544,7 +1544,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute_ns ('fuga', hoge => 213);
 
   my $attr1 = $el->get_attribute_node_ns ('fuga', 'hoge');
@@ -1561,7 +1561,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute (hoge1 => 33);
   $el->set_attribute_ns ('aaa', 'hoge1' => 424);
 
@@ -1580,7 +1580,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (hoge => 'aa');
 
   my $attr1 = $el->get_attribute_node ('HoGe');
@@ -1632,7 +1632,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
     my $attr = $doc->create_attribute ('hoge');
     $attr->value ('fuga');
     
-    my $el = $doc->create_element ('foo');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
 
     $el->$method ($attr);
 
@@ -1654,7 +1654,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
     my $attr = $doc->create_attribute_ns ('abc', 'a:hoge');
     $attr->value ('fuga');
     
-    my $el = $doc->create_element ('foo');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
 
     $el->$method ($attr);
 
@@ -1676,7 +1676,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
     my $attr = $doc->create_attribute ('hoge');
     $attr->value ('fuga');
     
-    my $el = $doc->create_element ('foo');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
     $el->set_attribute (hoge => '213');
 
     $el->$method ($attr);
@@ -1700,7 +1700,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
     my $attr = $doc->create_attribute_ns ('aa', 'hoge');
     $attr->value ('fuga');
     
-    my $el = $doc->create_element ('foo');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
     $el->set_attribute_ns ('aa', hoge => '213');
 
     $el->$method ($attr);
@@ -1723,7 +1723,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
     my $attr = $doc->create_attribute ('hoge');
     $attr->value ('fuga');
     
-    my $el = $doc->create_element ('foo');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
     $el->set_attribute (hoge => '213');
 
     my $old_attr = $el->$method ($attr);
@@ -1752,7 +1752,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
     my $attr = $doc->create_attribute_ns ('aa', 'b:hoge');
     $attr->value ('fuga');
     
-    my $el = $doc->create_element ('foo');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
     $el->set_attribute_ns ('aa', 'c:hoge' => '213');
 
     my $old_attr = $el->$method ($attr);
@@ -1781,7 +1781,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
     my $attr = $doc->create_attribute_ns ('aa', 'b:hoge');
     $attr->value ('fuga');
     
-    my $el = $doc->create_element ('foo');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
     $el->set_attribute_ns ('aa', 'c:hoge' => '213');
     my $called;
     $el->get_attribute_node_ns ('aa', 'hoge')
@@ -1802,7 +1802,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
     my $attr = $doc->create_attribute_ns ('aa', 'b:hoge');
     $attr->value ('fuga');
     
-    my $el = $doc->create_element ('foo');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
     $el->set_attribute_ns ('aa', 'c:hoge' => '213');
     my $called;
     $el->get_attribute_node_ns ('aa', 'hoge')
@@ -1820,11 +1820,11 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('a');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
     $el->set_attribute ('hoge' => 'aa');
     my $attr = $el->get_attribute_node ('hoge');
 
-    my $el2 = $doc->create_element ('b');
+    my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
     dies_here_ok {
       $el2->$method ($attr);
     };
@@ -1842,12 +1842,12 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('a');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
     $el->set_attribute ('hoge' => 'aa');
     my $attr = $el->get_attribute_node ('hoge');
 
     my $doc2 = new Web::DOM::Document;
-    my $el2 = $doc2->create_element ('b');
+    my $el2 = $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
     dies_here_ok {
       $el2->$method ($attr);
     };
@@ -1865,7 +1865,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('a');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
     $el->set_attribute (hoge => 4);
 
     my $attr = $el->get_attribute_node ('hoge');
@@ -1881,8 +1881,8 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('a');
-    my $el2 = $doc->create_element ('b');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
+    my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'b');
     
     dies_here_ok {
       $el->$method ($el2);
@@ -1899,7 +1899,7 @@ for my $method (qw(set_attribute_node set_attribute_node_ns)) {
     my $doc1 = new Web::DOM::Document;
     my $doc2 = new Web::DOM::Document;
 
-    my $el1 = $doc1->create_element ('a');
+    my $el1 = $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
     my $attr2 = $doc2->create_attribute ('hoge');
     $attr2->value ('fuga');
 
@@ -1917,7 +1917,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   my $attr = $doc->create_attribute ('hRef');
   $el->set_attribute (href => 12);
   my $old_attr = $el->get_attribute_node ('href');
@@ -1933,7 +1933,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   my $attr = $doc->create_attribute_ns (undef, 'hRef');
   $el->set_attribute (href => 12);
   my $old_attr = $el->get_attribute_node ('href');
@@ -1949,7 +1949,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (hoge => 4);
 
   my $attr = $el->get_attribute_node ('hoge');
@@ -1974,7 +1974,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns ("aaa", "bb:hoge" => 4);
 
   my $attr = $el->get_attribute_node ('bb:hoge');
@@ -1998,7 +1998,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute ('hh' => 44);
 
   my $attr = $el->get_attribute_node ('hh');
@@ -2015,7 +2015,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $attr = $doc->create_attribute ('b7a');
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
 
   dies_here_ok {
     $el->remove_attribute_node ($attr);
@@ -2034,8 +2034,8 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $attr = $doc->create_attribute ('b7a');
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->set_attribute_node ($attr);
 
   dies_here_ok {
@@ -2057,8 +2057,8 @@ test {
   my $doc = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
   my $attr = $doc2->create_attribute ('b7a');
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc2->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el2->set_attribute_node ($attr);
 
   dies_here_ok {
@@ -2080,7 +2080,7 @@ test {
   my $doc = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
   my $attr = $doc2->create_attribute ('b7a');
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
 
   dies_here_ok {
     $el->remove_attribute_node ($attr);
@@ -2098,7 +2098,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $doc->append_child ($el);
 
   dies_here_ok {
@@ -2118,7 +2118,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $doc->append_child ($el);
 
   dies_here_ok {
@@ -2141,7 +2141,7 @@ for my $test (
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element ('a');
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
     $el->manakai_set_attribute_indexed_string_ns
         (undef, foo => $test->[0]);
@@ -2156,7 +2156,7 @@ for my $test (
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
 
   is $el->manakai_get_attribute_indexed_string_ns (undef, 'aa'), undef;
   is $el->manakai_get_attribute_indexed_string_ns ('http://foo/', 'aa'), undef;
@@ -2168,7 +2168,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
 
   dies_here_ok {
     $el->manakai_set_attribute_indexed_string_ns
@@ -2187,7 +2187,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->strict_error_checking (0);
-  my $el = $doc->create_element ('foo');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
 
   is $el->manakai_set_attribute_indexed_string_ns
       (undef, [undef, '35foo!bar'] => [['ab', 4, 5]]), undef;
@@ -2204,7 +2204,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->manakai_set_attribute_indexed_string_ns
       ('http://a/b', ['foo', 'baz'] => [['aaa', 32, 44], ['e', 4, 66]]);
   is $el->get_attribute_ns ('http://a/b', 'baz'), 'aaae';
@@ -2216,7 +2216,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   dies_here_ok {
     $el->manakai_set_attribute_indexed_string_ns (undef, 'aaa' => 'abc');
   };
@@ -2229,7 +2229,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   dies_here_ok {
     $el->manakai_set_attribute_indexed_string_ns (undef, 'aaa' => ['abc']);
   };
@@ -2242,7 +2242,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute_ns ('http://foo', 'a:bar' => 'abc');
   eq_or_diff $el->manakai_get_attribute_indexed_string_ns
       ('http://foo', 'bar'), [['abc', -1, 0]];
@@ -2252,7 +2252,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   my $list = $el->get_attribute_names;
   is ref $list, 'ARRAY';
   is 0+@$list, 0;
@@ -2262,7 +2262,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (foo => 1);
   $el->set_attribute (hoge => 42);
   my $list = $el->get_attribute_names;
@@ -2276,7 +2276,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (foo => 1);
   $el->set_attribute_ns (q<about:blank>, hoge => 42);
   my $list = $el->get_attribute_names;
@@ -2290,7 +2290,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (foo => 1);
   $el->set_attribute_ns (q<about:blank>, 'abc:hoge' => 42);
   my $list = $el->get_attribute_names;
@@ -2304,7 +2304,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute_ns (undef, hoge => 1);
   $el->set_attribute_ns (q<about:blank>, hoge => 42);
   my $list = $el->get_attribute_names;
@@ -2318,7 +2318,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (foo => 1);
   $el->set_attribute (hoge => 42);
   my $list = $el->get_attribute_names;
@@ -2337,7 +2337,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('e');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e');
   my $attr1 = $doc->create_attribute ('a1');
   my $attr2 = $doc->create_attribute ('a2');
   my $attr3 = $doc->create_attribute ('a2');
@@ -2353,7 +2353,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('e');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e');
   my $attr1 = $doc->create_attribute ('a1');
   my $attr2 = $doc->create_attribute ('a2');
   my $attr3 = $doc->create_attribute ('a1');
@@ -2369,7 +2369,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('e');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e');
   my $attr1 = $doc->create_attribute ('a1');
   my $attr2 = $doc->create_attribute ('a2');
   my $attr3 = $doc->create_attribute ('a3');
@@ -2388,7 +2388,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('e');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e');
   my $attr1 = $doc->create_attribute ('a1');
   my $attr2 = $doc->create_attribute ('a2');
   my $attr3 = $doc->create_attribute ('a3');
@@ -2407,7 +2407,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('e');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e');
   my $attr1 = $doc->create_attribute ('a1');
   my $attr2 = $doc->create_attribute ('a2');
   my $attr3 = $doc->create_attribute ('a3');
@@ -2426,7 +2426,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('e');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e');
   my $attr1 = $doc->create_attribute ('a1');
   my $attr2 = $doc->create_attribute ('a2');
   my $attr3 = $doc->create_attribute ('a3');

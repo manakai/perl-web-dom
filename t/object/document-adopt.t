@@ -23,7 +23,7 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
 
   $doc2->adopt_node ($el);
 
@@ -48,7 +48,7 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $text = $doc->create_text_node ('bbb');
   $el->append_child ($text);
 
@@ -83,9 +83,9 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $text = $doc->create_text_node ('bbb');
   $el->append_child ($el2);
   $el2->append_child ($el3);
@@ -125,7 +125,7 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute ('hoge' => 'abb');
 
   $doc2->adopt_node ($el);
@@ -150,7 +150,7 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute_ns ('http://', 'fuga:hoge' => 'abb');
   my $attr = $el->get_attribute_node_ns ('http://', 'hoge');
 
@@ -178,8 +178,8 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el0 = $doc->create_element ('aa');
-  my $el = $doc->create_element ('aa');
+  my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute_ns ('http://', 'fuga:hoge' => 'abb');
   $el0->append_child ($el);
   my $attr = $el->get_attribute_node_ns ('http://', 'hoge');
@@ -208,10 +208,10 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->append_child ($el2);
   $el->append_child ($el3);
   $el->append_child ($el4);
@@ -225,7 +225,7 @@ test {
   is $children->[1], $el3;
   is $children->[2], $el4;
 
-  my $el5 = $doc2->create_element ('foo');
+  my $el5 = $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->append_child ($el5);
 
   is $children->length, 4;
@@ -240,10 +240,10 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->append_child ($el2);
   $el->append_child ($el3);
   $el->append_child ($el4);
@@ -257,7 +257,7 @@ test {
   is $children->[1], $el3;
   is $children->[2], $el4;
 
-  my $el5 = $doc2->create_element ('foo');
+  my $el5 = $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->append_child ($el5);
 
   is $children->length, 4;
@@ -272,11 +272,11 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el0 = $doc->create_element ('aa');
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el0->append_child ($el);
   $el->append_child ($el2);
   $el->append_child ($el3);
@@ -291,7 +291,7 @@ test {
   is $children->[1], $el3;
   is $children->[2], $el4;
 
-  my $el5 = $doc2->create_element ('foo');
+  my $el5 = $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->append_child ($el5);
 
   is $children->length, 4;
@@ -306,10 +306,10 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->append_child ($el2);
   $el->append_child ($el3);
   $el->append_child ($el4);
@@ -323,7 +323,7 @@ test {
   is $children->[1], $el3;
   is $children->[2], $el4;
 
-  my $el5 = $doc2->create_element ('foo');
+  my $el5 = $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->append_child ($el5);
 
   is $children->length, 4;
@@ -338,11 +338,11 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el0 = $doc->create_element ('aa');
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
-  my $el3 = $doc->create_element ('aa');
-  my $el4 = $doc->create_element ('aa');
+  my $el0 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el0->append_child ($el);
   $el->append_child ($el2);
   $el->append_child ($el3);
@@ -357,7 +357,7 @@ test {
   is $children->[1], $el3;
   is $children->[2], $el4;
 
-  my $el5 = $doc2->create_element ('foo');
+  my $el5 = $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
   $el->append_child ($el5);
 
   is $children->length, 4;
@@ -372,7 +372,7 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $called;
   $el->set_user_data (destroy => bless sub {
                         $called = 1;
@@ -393,8 +393,8 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->append_child ($el2);
   my $called;
   $el2->set_user_data (destroy => bless sub {
@@ -417,8 +417,8 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
-  my $el2 = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->append_child ($el2);
 
   $doc2->adopt_node ($el2);
@@ -438,7 +438,7 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $attr = $doc->create_attribute ('aa');
   $attr->value ('hoge');
   $el->set_attribute_node ($attr);
@@ -461,7 +461,7 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $called;
   $doc->set_user_data (destroy => bless sub {
                          $called = 1;
@@ -481,7 +481,7 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
   
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   $el->set_attribute ('fuga' => 12);
 
   my $called;
@@ -535,7 +535,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $node = $doc->create_element ('aaa');
+  my $node = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
   my $node2 = $doc->adopt_node ($node);
 
   is $node2, $node;
@@ -548,8 +548,8 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $node = $doc->create_element ('aaa');
-  my $el = $doc->create_element ('ab');
+  my $node = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ab');
   $node->append_child ($el);
 
   $doc->adopt_node ($node);
@@ -566,8 +566,8 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $node = $doc->create_element ('aaa');
-  my $el = $doc->create_element ('ab');
+  my $node = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ab');
   $node->append_child ($el);
 
   $doc->adopt_node ($el);
@@ -584,7 +584,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $node = $doc->create_element ('aaa');
+  my $node = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
   my $attr = $doc->create_attribute ('ab');
   $node->set_attribute_node ($attr);
 

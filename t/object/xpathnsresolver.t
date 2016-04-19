@@ -13,7 +13,7 @@ test {
   my $c = shift;
   my $doc1 = new Web::DOM::Document;
   my $doc2 = new Web::DOM::Document;
-  my $el2 = $doc2->create_element ('aa');
+  my $el2 = $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   my $node2 = $doc2->create_comment ('foo');
   $el2->append_child ($node2);
   my $resolver = $doc1->create_ns_resolver ($node2);

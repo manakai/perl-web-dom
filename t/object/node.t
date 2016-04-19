@@ -969,7 +969,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('aa');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aa');
   is $el->manakai_expanded_uri, 'http://www.w3.org/1999/xhtmlaa';
 
   $el->set_attribute (hoge => 'fuga');

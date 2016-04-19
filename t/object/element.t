@@ -339,7 +339,7 @@ test {
   my $c = shift;
   
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('el');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'el');
 
   isa_ok $el, 'Web::DOM::Element';
   is $el->node_type, $el->ELEMENT_NODE;
@@ -362,7 +362,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   $doc->manakai_is_html (1);
-  my $el = $doc->create_element ('abc');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'abc');
   is $el->local_name, 'abc';
   is $el->manakai_local_name, 'abc';
   is $el->prefix, undef;
@@ -494,7 +494,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
 
-  my $el = $doc->create_element ('hoGe');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoGe');
   ok $el->manakai_element_type_match
       ('http://www.w3.org/1999/xhtml', 'hoGe');
   ok not $el->manakai_element_type_match
@@ -523,7 +523,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   
   is $el->manakai_base_uri, undef;
 
@@ -542,9 +542,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el2 = $doc->create_element ('e2');
-  my $el3 = $doc->create_element ('e3');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e2');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
 
   $el1->append_child ($el2);
 
@@ -561,9 +561,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el2 = $doc->create_element ('e2');
-  my $el3 = $doc->create_element ('e3');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e2');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
 
   $el1->append_child ($el2);
 
@@ -580,10 +580,10 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el2 = $doc->create_element ('e2');
-  my $el3 = $doc->create_element ('e3');
-  my $el4 = $doc->create_element ('e4');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e2');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e4');
 
   $el1->append_child ($el2);
   $el2->append_child ($el4);
@@ -601,10 +601,10 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el2 = $doc->create_element ('e2');
-  my $el3 = $doc->create_element ('e3');
-  my $el4 = $doc->create_element ('e4');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e2');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e4');
 
   $el1->append_child ($el2);
   $el2->append_child ($el4);
@@ -622,8 +622,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el3 = $doc->create_element ('e3');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
 
   is $el1->insert_adjacent_element ('beforebegin', $el3), undef;
   is $el3->parent_node, undef;
@@ -634,8 +634,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el3 = $doc->create_element ('e3');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
 
   is $el1->insert_adjacent_element ('afterend', $el3), undef;
   is $el3->parent_node, undef;
@@ -646,8 +646,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el3 = $doc->create_element ('e3');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
 
   dies_here_ok {
     $el1->insert_adjacent_element ('hoge', $el3);
@@ -663,9 +663,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
   $doc->append_child ($el1);
-  my $el3 = $doc->create_element ('e3');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
 
   dies_here_ok {
     $el1->insert_adjacent_element ('beforebegin', $el3);
@@ -681,9 +681,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
   $doc->append_child ($el1);
-  my $el3 = $doc->create_element ('e3');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
 
   dies_here_ok {
     $el1->insert_adjacent_element ('afterend', $el3);
@@ -699,7 +699,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
 
   dies_here_ok {
     $el1->insert_adjacent_element ('beforeend', 'hoge');
@@ -713,8 +713,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el2 = $doc->create_element ('e2');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e2');
 
   $el1->append_child ($el2);
 
@@ -730,8 +730,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el2 = $doc->create_element ('e2');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e2');
 
   $el1->append_child ($el2);
 
@@ -747,9 +747,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el2 = $doc->create_element ('e2');
-  my $el4 = $doc->create_element ('e4');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e2');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e4');
 
   $el1->append_child ($el2);
   $el2->append_child ($el4);
@@ -766,9 +766,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
-  my $el2 = $doc->create_element ('e2');
-  my $el4 = $doc->create_element ('e4');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e2');
+  my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e4');
 
   $el1->append_child ($el2);
   $el2->append_child ($el4);
@@ -785,7 +785,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
 
   is $el1->insert_adjacent_text ('beforebegin', 'abcde'), undef;
   is $el1->child_nodes->length, 0;
@@ -796,7 +796,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
 
   is $el1->insert_adjacent_text ('afterend', 'abcde'), undef;
   is $el1->child_nodes->length, 0;
@@ -807,7 +807,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
 
   dies_here_ok {
     $el1->insert_adjacent_text ('hoge', 'foobar');
@@ -823,9 +823,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
   $doc->append_child ($el1);
-  my $el3 = $doc->create_element ('e3');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
 
   dies_here_ok {
     $el1->insert_adjacent_text ('beforebegin', 'foobar');
@@ -841,9 +841,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('e1');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e1');
   $doc->append_child ($el1);
-  my $el3 = $doc->create_element ('e3');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'e3');
 
   dies_here_ok {
     $el1->insert_adjacent_text ('afterend', 'foobar');

@@ -11,7 +11,7 @@ use Web::DOM::Document;
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('hoge');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->id ('foo');
   $doc->append_child ($el);
 
@@ -24,8 +24,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('hoge');
-  my $el2 = $doc->create_element ('hoge');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el2->id ('foo');
   $doc->append_child ($el1);
   $el1->append_child ($el2);
@@ -39,9 +39,9 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('hoge');
-  my $el2 = $doc->create_element ('hoge');
-  my $el3 = $doc->create_element ('hoge');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el2->id ('foo');
   $el3->id ('foo');
   $doc->append_child ($el1);
@@ -56,8 +56,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('hoge');
-  my $el2 = $doc->create_element ('hoge');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el2->id ('');
   $doc->append_child ($el1);
   $el1->append_child ($el2);
@@ -70,8 +70,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('hoge');
-  my $el2 = $doc->create_element ('hoge');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el2->id ('120');
   $doc->append_child ($el1);
   $el1->append_child ($el2);
@@ -84,8 +84,8 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element ('hoge');
-  my $el2 = $doc->create_element ('hoge');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el2->id ('abc  def');
   $doc->append_child ($el1);
   $el1->append_child ($el2);
@@ -103,14 +103,14 @@ test {
   is $col1->length, 0;
   is $doc->images, $col1;
 
-  my $el1 = $doc->create_element ('img');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'img');
   $doc->append_child ($el1);
 
   is $doc->images->length, 1;
   is $col1->length, 1;
   is $col1->[0], $el1;
 
-  my $el2 = $doc->create_element ('img');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'img');
   $el1->append_child ($el2);
 
   is $col1->length, 2;
@@ -127,14 +127,14 @@ test {
   is $col1->length, 0;
   is $doc->embeds, $col1;
 
-  my $el1 = $doc->create_element ('embed');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'embed');
   $doc->append_child ($el1);
 
   is $doc->embeds->length, 1;
   is $col1->length, 1;
   is $col1->[0], $el1;
 
-  my $el2 = $doc->create_element ('embed');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'embed');
   $el1->append_child ($el2);
 
   is $col1->length, 2;
@@ -154,14 +154,14 @@ test {
   is $col1->length, 0;
   is $doc->forms, $col1;
 
-  my $el1 = $doc->create_element ('form');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'form');
   $doc->append_child ($el1);
 
   is $doc->forms->length, 1;
   is $col1->length, 1;
   is $col1->[0], $el1;
 
-  my $el2 = $doc->create_element ('form');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'form');
   $el1->append_child ($el2);
 
   is $col1->length, 2;
@@ -178,14 +178,14 @@ test {
   is $col1->length, 0;
   is $doc->scripts, $col1;
 
-  my $el1 = $doc->create_element ('script');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'script');
   $doc->append_child ($el1);
 
   is $doc->scripts->length, 1;
   is $col1->length, 1;
   is $col1->[0], $el1;
 
-  my $el2 = $doc->create_element ('script');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'script');
   $el1->append_child ($el2);
 
   is $col1->length, 2;
@@ -202,14 +202,14 @@ test {
   is $col1->length, 0;
   is $doc->applets, $col1;
 
-  my $el1 = $doc->create_element ('applet');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'applet');
   $doc->append_child ($el1);
 
   is $doc->applets->length, 1;
   is $col1->length, 1;
   is $col1->[0], $el1;
 
-  my $el2 = $doc->create_element ('applet');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'applet');
   $el1->append_child ($el2);
 
   is $col1->length, 2;
@@ -226,12 +226,12 @@ test {
   isa_ok $col1, 'Web::DOM::HTMLCollection';
   is $col1->length, 0;
 
-  my $el1 = $doc->create_element ('a');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $doc->append_child ($el1);
 
   is $col1->length, 0;
 
-  my $el2 = $doc->create_element ('a');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el1->append_child ($el2);
   
   is $col1->length, 0;
@@ -241,7 +241,7 @@ test {
   is $col1->length, 1;
   is $col1->[0], $el2;
 
-  my $el3 = $doc->create_element ('area');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'area');
   $el1->append_child ($el3);
 
   is $col1->length, 1;
@@ -271,12 +271,12 @@ test {
   isa_ok $col1, 'Web::DOM::HTMLCollection';
   is $col1->length, 0;
 
-  my $el1 = $doc->create_element ('a');
+  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $doc->append_child ($el1);
 
   is $col1->length, 0;
 
-  my $el2 = $doc->create_element ('a');
+  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el1->append_child ($el2);
   
   is $col1->length, 0;
@@ -286,7 +286,7 @@ test {
   is $col1->length, 1;
   is $col1->[0], $el2;
 
-  my $el3 = $doc->create_element ('area');
+  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'area');
   $el1->append_child ($el3);
 
   is $col1->length, 1;
@@ -315,18 +315,18 @@ for my $name ('', 'aaa', 'abc d') {
     isa_ok $col1, 'Web::DOM::NodeList';
     is $col1->length, 0;
 
-    my $el1 = $doc->create_element ('agaw');
+    my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'agaw');
     $el1->set_attribute (name => 'abc');
     $doc->append_child ($el1);
 
-    my $el2 = $doc->create_element ('agaw');
+    my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'agaw');
     $el2->set_attribute (name => $name);
     $el1->append_child ($el2);
 
     is $col1->length, 1;
     is $col1->[0], $el2;
 
-    my $el3 = $doc->create_element ('input');
+    my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'input');
     $el3->set_attribute (name => 'aab');
     $el2->append_child ($el3);
 
@@ -389,7 +389,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->name ('');
   $doc->append_child ($el);
   is $doc->all->{''}, undef;
@@ -400,7 +400,7 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element ('a');
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->id ('');
   $doc->append_child ($el);
   is $doc->all->{''}, undef;

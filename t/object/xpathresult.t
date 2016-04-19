@@ -407,7 +407,7 @@ for my $result_type (UNORDERED_NODE_ITERATOR_TYPE,
     },
     sub {
       my ($doc, $el1) = @_;
-      $el1->append_child ($doc->create_element ('aaaa'));
+      $el1->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaaa'));
     },
     sub {
       my ($doc, $el1) = @_;
@@ -421,7 +421,7 @@ for my $result_type (UNORDERED_NODE_ITERATOR_TYPE,
       $doc->append_child ($doc->create_comment (''));
       my $result = $doc0->evaluate ('/fuga', $doc, undef, $result_type);
       ok not $result->invalid_iterator_state;
-      my $el1 = $doc->create_element ('aaa');
+      my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'aaa');
       ok not $result->invalid_iterator_state;
       $code->($doc, $el1);
       ok $result->invalid_iterator_state;
