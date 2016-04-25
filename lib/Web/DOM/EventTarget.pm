@@ -13,7 +13,7 @@ push our @CARP_NOT, qw(Web::DOM::TypeError Web::DOM::Exception);
 ##   0 - CODE
 ##   1 - capture flag
 ##   2 - removed flag
-##   3 - passive flag
+##   3 - Other options
 
 sub add_event_listener ($$;$$) {
   # WebIDL
@@ -40,10 +40,9 @@ sub add_event_listener ($$;$$) {
   my $list = $obj->{event_listeners}->{$type} ||= [];
   for (@$list) {
     return undef if $_->[0] eq $_[2] and
-                    $_->[1] == $capture and
-                    $_->[3] == $passive;
+                    $_->[1] == $capture;
   }
-  push @$list, [$_[2], $capture, 0, $passive];
+  push @$list, [$_[2], $capture, 0, {passive => $passive}];
   return undef;
 } # add_event_listener
 
@@ -55,20 +54,17 @@ sub remove_event_listener ($$;$$) {
 
   ## Flatten
   my $capture = 0;
-  my $passive = 0;
   if (defined $_[3] and ref $_[3] eq 'HASH') {
     $capture = $_[3]->{capture} ? 1 : 0;
-    $passive = $_[3]->{passive} ? 1 : 0;
   } elsif ($_[3]) {
     $capture = 1;
-    $passive = 0;
   }
 
   return undef unless defined $_[2];
   my $obj = $_[0]->isa ('Web::DOM::Node') ? ${$_[0]}->[2] : $_[0];
   my $list = $obj->{event_listeners}->{$type} ||= [];
   $obj->{event_listeners}->{$type} = [grep {
-    if ($_->[0] eq $_[2] and $_->[1] == $capture and $_->[3] == $passive) {
+    if ($_->[0] eq $_[2] and $_->[1] == $capture) {
       $_->[2] = 1; # removed
       ();
     } else {
@@ -176,7 +172,7 @@ sub _invoke_event_listeners ($$$) {
       next if $listener->[1] and $event->event_phase == BUBBLING_PHASE;
 
       # XXX exception handling
-      local $event->{in_passive_listener} = $listener->[3]; # passive
+      local $event->{in_passive_listener} = $listener->[3]->{passive};
       $listener->[0]->($event->current_target, $event);
     }
     return $found;

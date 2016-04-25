@@ -713,6 +713,25 @@ test {
   }, {passive => 1, capture => 0});
   $el1->remove_event_listener (aa => $code);
   $el2->dispatch_event ($ev);
+  is $invoked, 0;
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture, add -> remove';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  my $invoked = 0;
+  $el1->add_event_listener (aa => my $code = sub {
+    $invoked++;
+  }, {passive => 1, capture => 0});
+  $el1->remove_event_listener (aa => $code, {passive => 0, capture => 1});
+  $el2->dispatch_event ($ev);
   is $invoked, 1;
 
   done $c;
@@ -788,6 +807,25 @@ test {
     $invoked++;
   }, {passive => 1, capture => 1});
   $el1->remove_event_listener (aa => $code, []);
+  $el2->dispatch_event ($ev);
+  is $invoked, 0;
+
+  done $c;
+} n => 1, name => 'EventListenerOptions not capture, add -> remove';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el1 = $doc->create_element ('a');
+  my $el2 = $doc->create_element ('a');
+  $el1->append_child ($el2);
+  my $ev = new Web::DOM::Event 'aa', {bubbles => 1};
+
+  my $invoked = 0;
+  $el1->add_event_listener (aa => my $code = sub {
+    $invoked++;
+  }, {passive => 1, capture => 1});
+  $el1->remove_event_listener (aa => $code, {capture => 0, passive => 0});
   $el2->dispatch_event ($ev);
   is $invoked, 1;
 
