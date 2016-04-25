@@ -713,6 +713,38 @@ test {
   done $c;
 } n => 2, name => 'legacy event type';
 
+test {
+  my $c = shift;
+  my $et = create_event_target;
+  my $ev = new Web::DOM::Event 'aa', {cancelable => 1};
+
+  my $invoked = 0;
+  $et->add_event_listener (aa => sub {
+    $invoked++;
+  }, {once => 0});
+  $et->dispatch_event ($ev);
+  $et->dispatch_event ($ev);
+
+  is $invoked, 2;
+  done $c;
+} n => 1, name => 'once => 0';
+
+test {
+  my $c = shift;
+  my $et = create_event_target;
+  my $ev = new Web::DOM::Event 'aa', {cancelable => 1};
+
+  my $invoked = 0;
+  $et->add_event_listener (aa => sub {
+    $invoked++;
+  }, {once => 1});
+  $et->dispatch_event ($ev);
+  $et->dispatch_event ($ev);
+
+  is $invoked, 1;
+  done $c;
+} n => 1, name => 'once => 1';
+
 run_tests;
 
 =head1 LICENSE

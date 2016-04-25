@@ -23,13 +23,13 @@ sub add_event_listener ($$;$$) {
 
   ## Flatten
   my $capture = 0;
-  my $passive = 0;
+  my $options = {};
   if (defined $_[3] and ref $_[3] eq 'HASH') {
     $capture = $_[3]->{capture} ? 1 : 0;
-    $passive = $_[3]->{passive} ? 1 : 0;
+    $options->{passive} = 1 if $_[3]->{passive};
+    $options->{once} = 1 if $_[3]->{once};
   } elsif ($_[3]) {
     $capture = 1;
-    $passive = 0;
   }
 
   # 1.
@@ -42,7 +42,7 @@ sub add_event_listener ($$;$$) {
     return undef if $_->[0] eq $_[2] and
                     $_->[1] == $capture;
   }
-  push @$list, [$_[2], $capture, 0, {passive => $passive}];
+  push @$list, [$_[2], $capture, 0, $options];
   return undef;
 } # add_event_listener
 
@@ -154,9 +154,9 @@ sub _invoke_event_listeners ($$$) {
   
   # 2.
   my $obj = $_[2]->isa ('Web::DOM::Node') ? ${$_[2]}->[2] : $_[2];
-  my $orig_listeners = [@{$obj->{event_listeners}->{$orig_type} || []}];
+  my $orig_listeners = $obj->{event_listeners}->{$orig_type} || [];
   my $legacy_listeners = defined $legacy_type
-      ? [@{$obj->{event_listeners}->{$legacy_type} || []}] : [];
+      ? $obj->{event_listeners}->{$legacy_type} || [] : [];
 
   # 3.
   $event->{current_target} = $_[2];
@@ -164,7 +164,8 @@ sub _invoke_event_listeners ($$$) {
   # 4.
   my $inner = sub {
     my $found = 0;
-    for my $listener (@{$_[0]}) {
+    my @listener = @{$_[0]};
+    for my $listener (@listener) {
       return if $event->{stop_immediate_propagation};
       next if $listener->[2]; # removed
       $found = 1;
@@ -174,6 +175,11 @@ sub _invoke_event_listeners ($$$) {
       # XXX exception handling
       local $event->{in_passive_listener} = $listener->[3]->{passive};
       $listener->[0]->($event->current_target, $event);
+
+      if ($listener->[3]->{once}) {
+        $listener->[2] = 1; # removed
+        @{$_[0]} = grep { $_ ne $listener } @{$_[0]};
+      }
     }
     return $found;
   }; # $inner

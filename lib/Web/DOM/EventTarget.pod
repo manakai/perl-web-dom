@@ -14,15 +14,19 @@ Following methods are available:
 
 =over 4
 
-=item $et->add_event_listener ($type, $code, {capture => $boolean, passive => $boolean})
+=item $et->add_event_listener ($type, $code, {capture => $boolean, passive => $boolean, once => $boolean})
 
 Register a callback function as event listener for the event target.
 The first argument identifies the type of the event to listen,
 e.g. C<click> or C<resize>.  The second argument is a code reference,
-which is invoked when an event is dispatched.  The optional third
-argument can specify whether the code listens the capturing phase
-(true) or the bubbling phase (false, default) and whether the listner
-is passive or not.  [DOM] [DOMPERL]
+which is invoked when an event is dispatched.  [DOM] [DOMPERL]
+
+The optional third argument can specify following options as a hash
+reference: C<capture> represents whether the code should be invoked in
+the capturing phase; C<passive> rerepsents whether the event listener
+is passive (i.e. C<prevent_default> is not allowed) or not; C<once>
+represents whether the event listener should be automatically removed
+just after it is invoked for the first time.
 
 When an event of the specified type is dispatched, the code of the
 second argument is invoked with two arguments: I<$self> and I<$event>.
