@@ -15,6 +15,12 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
+=item $string = $el->abbr
+
+=item $el->abbr ($string)
+
+Return or set the C<abbr> attribute.  [HTML]
+
 =item $index = $el->cell_index
 
 Return the index of the cell in the list of the cells anchored in the
@@ -43,15 +49,17 @@ or set the C<headers> attribute to the specified string value.  [HTML]
 
 Return or set the C<rowspan> attribute.  [HTML]
 
+=item $string = $el->scope
+
+=item $el->scope ($string)
+
+Return or set the C<scope> attribute.  [HTML]
+
 =back
 
 Additionally, the following obsolete methods are available: C<align>,
 C<axis>, C<bgcolor>, C<ch>, C<ch_off>, C<height>, C<nowrap>,
 C<valign>, and C<width>.  [HTML]
-
-The C<td> element also implements the
-L<Web::DOM::HTMLTableDataCellElement> interface.  The C<th> element
-also implements the L<Web::DOM::HTMLTableHeaderCellElement> interface.
 
 =head1 SPECIFICATION
 

@@ -7,7 +7,7 @@ use Web::DOM::Internal;
 use Web::DOM::Element;
 use Web::DOM::Exception;
 
-# XXX implements *EventHandlers
+# XXX Constructor *EventHandlers
 
 _define_reflect_string title => 'title';
 _define_reflect_string lang => 'lang';
@@ -1187,7 +1187,7 @@ sub delete_cell ($$) {
 } # delete_cell
 
 package Web::DOM::HTMLTableCellElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Internal;
 use Web::DOM::Node;
@@ -1218,18 +1218,6 @@ sub cell_index ($) {
   }
   return -1;
 } # cell_index
-
-package Web::DOM::HTMLTableDataCellElement;
-our $VERSION = '1.0';
-push our @ISA, qw(Web::DOM::HTMLTableCellElement);
-use Web::DOM::Element;
-
-_define_reflect_string abbr => 'abbr';
-
-package Web::DOM::HTMLTableHeaderCellElement;
-our $VERSION = '1.0';
-push our @ISA, qw(Web::DOM::HTMLTableCellElement);
-use Web::DOM::Element;
 
 _define_reflect_enumerated scope => 'scope', {
   row => 'row',
@@ -1884,6 +1872,8 @@ sub content ($) {
 sub manakai_append_content ($$) {
   return $_[0]->content->manakai_append_content ($_[1]);
 } # manakai_append_content
+
+# XXX HTMLSlotElement
 
 1;
 
