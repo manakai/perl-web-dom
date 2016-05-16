@@ -377,7 +377,6 @@ for my $attr (qw(itemscope hidden)) {
 }
 
 for my $test (
-  ['style', 'scoped'],
   ['script', 'defer'],
   ['ol', 'reversed'],
   ['img', 'ismap'],

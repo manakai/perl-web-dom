@@ -34,13 +34,6 @@ Return or set the C<media> attribute.  [HTML]
 
 Return or set the C<nonce> attribute.  [HTML]
 
-=item $boolean = $el->scoped
-
-=item $el->scoped ($boolean)
-
-Return or set whether the C<scoped> attribute is specified or not.
-[HTML]
-
 =item $sheet = $el->sheet
 
 Return the L<Web::DOM::CSSStyleSheet> object representing the CSS
@@ -80,7 +73,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

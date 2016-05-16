@@ -311,13 +311,12 @@ _define_reflect_string http_equiv => 'http-equiv';
 _define_reflect_string scheme => 'scheme';
 
 package Web::DOM::HTMLStyleElement;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
 _define_reflect_string type => 'type';
 _define_reflect_string media => 'media';
-_define_reflect_boolean scoped => 'scoped';
 _define_reflect_string nonce => 'nonce';
 
 ## The |LinkStyle| interface [NoInterfaceObject]
