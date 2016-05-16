@@ -523,11 +523,11 @@ for my $test (
       [-0.1 => 0],
       [-0.6 => 0],
       [-0.9 => 0],
-      [(0+"inf") => 0],
-      [(0+"-inf") => 0],
-      [(0+"nan") => 0],
-      [(1/"inf") => 0],
-      [(1/"-inf") => 0],
+      [(0+"Inf") => 0],
+      [(0+"-Inf") => 0],
+      [(0+"NaN") => 0],
+      [(1/"Inf") => 0],
+      [(1/"-Inf") => 0],
       ["abc" => 0],
       ["-120abc" => -120],
       ["-120.524abc" => -120],
@@ -559,9 +559,9 @@ for my $test (
       ["1452151544454" => $test->[2]],
       ["-1452151544454" => $test->[2]],
       ["abc" => $test->[2]],
-      ["inf" => $test->[2]],
-      ["-inf" => $test->[2]],
-      ["nan" => $test->[2]],
+      ["Inf" => $test->[2]],
+      ["-Inf" => $test->[2]],
+      ["NaN" => $test->[2]],
       [" 535" => 535],
       [" -655" => -655],
       ["- 513" => $test->[2]],
@@ -625,11 +625,11 @@ for my $test (
       [-0.1 => 0],
       [-0.6 => 0],
       [-0.9 => 0],
-      [(0+"inf") => 0],
-      [(0+"-inf") => 0],
-      [(0+"nan") => 0],
-      [(1/"inf") => 0],
-      [(1/"-inf") => 0],
+      [(0+"Inf") => 0],
+      [(0+"-Inf") => 0],
+      [(0+"NaN") => 0],
+      [(1/"Inf") => 0],
+      [(1/"-Inf") => 0],
       ["abc" => 0],
       ["0 but true" => 0],
       [2**32 => 0],
@@ -676,9 +676,9 @@ for my $test (
       ["1452151544454" => $test->[2]],
       ["-1452151544454" => $test->[2]],
       ["abc" => $test->[2]],
-      ["inf" => $test->[2]],
-      ["-inf" => $test->[2]],
-      ["nan" => $test->[2]],
+      ["Inf" => $test->[2]],
+      ["-Inf" => $test->[2]],
+      ["NaN" => $test->[2]],
       [" 535" => 535],
       [" -655" => $test->[2]],
       ["- 513" => $test->[2]],
@@ -732,11 +732,11 @@ for my $test (
       [-0.1 => 0],
       [-0.6 => 0],
       [-0.9 => 0],
-      [(0+"inf") => 0],
-      [(0+"-inf") => 0],
-      [(0+"nan") => 0],
-      [(1/"inf") => 0],
-      [(1/"-inf") => 0],
+      [(0+"Inf") => 0],
+      [(0+"-Inf") => 0],
+      [(0+"NaN") => 0],
+      [(1/"Inf") => 0],
+      [(1/"-Inf") => 0],
       ["abc" => 0],
       ["-120abc" => $test->[2], 2**32-120],
       ["-120.524abc" => $test->[2], 2**32-120],
@@ -773,9 +773,9 @@ for my $test (
       ["1452151544454" => $test->[2]],
       ["-1452151544454" => $test->[2]],
       ["abc" => $test->[2]],
-      ["inf" => $test->[2]],
-      ["-inf" => $test->[2]],
-      ["nan" => $test->[2]],
+      ["Inf" => $test->[2]],
+      ["-Inf" => $test->[2]],
+      ["NaN" => $test->[2]],
       [" 535" => 535],
       [" -655" => $test->[2]],
       ["- 513" => $test->[2]],
@@ -838,11 +838,11 @@ for my $test (
       [-0.1 => 0],
       [-0.6 => 0],
       [-0.9 => 0],
-      [(0+"inf") => 0],
-      [(0+"-inf") => 0],
-      [(0+"nan") => 0],
-      [(1/"inf") => 0],
-      [(1/"-inf") => 0],
+      [(0+"Inf") => 0],
+      [(0+"-Inf") => 0],
+      [(0+"NaN") => 0],
+      [(1/"Inf") => 0],
+      [(1/"-Inf") => 0],
       ["abc" => 0],
       ["0 but true" => 0],
       [2**32 => 0],
@@ -869,9 +869,9 @@ for my $test (
       ["1452151544454" => $test->[2]],
       ["-1452151544454" => $test->[2]],
       ["abc" => $test->[2]],
-      ["inf" => $test->[2]],
-      ["-inf" => $test->[2]],
-      ["nan" => $test->[2]],
+      ["Inf" => $test->[2]],
+      ["-Inf" => $test->[2]],
+      ["NaN" => $test->[2]],
       [" 535" => 535],
       [" -655" => $test->[2]],
       ["- 513" => $test->[2]],
@@ -2312,8 +2312,8 @@ test {
   my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'table');
   $table->inner_html (q{<tbody><tr/></tbody><tr/>});
   
-  $table->insert_row (0+'nan')->set_attribute (id => 1);
-  $table->insert_row (0+'inf')->set_attribute (id => 2);
+  $table->insert_row (0+'NaN')->set_attribute (id => 1);
+  $table->insert_row (0+'Inf')->set_attribute (id => 2);
   $table->insert_row (1.41)->set_attribute (id => 3);
   $table->insert_row (2**32-1)->set_attribute (id => 4);
 
@@ -2443,8 +2443,8 @@ for my $section (qw(tbody thead tfoot)) {
     my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><tr/></tbody><tr/>});
     
-    $table->insert_row (0+'nan')->set_attribute (id => 1);
-    $table->insert_row (0+'inf')->set_attribute (id => 2);
+    $table->insert_row (0+'NaN')->set_attribute (id => 1);
+    $table->insert_row (0+'Inf')->set_attribute (id => 2);
     $table->insert_row (1.41)->set_attribute (id => 3);
     $table->insert_row (2**32-1)->set_attribute (id => 4);
     
@@ -2631,8 +2631,8 @@ for my $section (qw(tr)) {
     my $table = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $section);
     $table->inner_html (q{<tbody><td/></tbody><td/>});
     
-    $table->insert_cell (0+'nan')->set_attribute (id => 1);
-    $table->insert_cell (0+'inf')->set_attribute (id => 2);
+    $table->insert_cell (0+'NaN')->set_attribute (id => 1);
+    $table->insert_cell (0+'Inf')->set_attribute (id => 2);
     $table->insert_cell (1.41)->set_attribute (id => 3);
     $table->insert_cell (2**32-1)->set_attribute (id => 4);
     

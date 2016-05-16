@@ -268,7 +268,7 @@ test {
 test {
   my $c = shift;
   dies_here_ok {
-    new Web::DOM::WheelEvent 'h', {delta_x => 0+"inf",
+    new Web::DOM::WheelEvent 'h', {delta_x => 0+"Inf",
                                    delta_y => -21 + 2**55,
                                    delta_z => -10.5 + 2**13,
                                    delta_mode => -55.4 + 2**16 + 2**32};
@@ -282,7 +282,7 @@ test {
   my $c = shift;
   dies_here_ok {
     new Web::DOM::WheelEvent 'h', {delta_x => -21 + 2**55,
-                                   delta_y => 0+"-inf",
+                                   delta_y => 0+"-Inf",
                                    delta_z => -10.5 + 2**13,
                                    delta_mode => -55.4 + 2**16 + 2**32};
   };
@@ -296,7 +296,7 @@ test {
   dies_here_ok {
     new Web::DOM::WheelEvent 'h', {delta_x => -21 + 2**55,
                                    delta_y => -10.5 + 2**13,
-                                   delta_z => 0+"nan",
+                                   delta_z => 0+"NaN",
                                    delta_mode => -55.4 + 2**16 + 2**32};
   };
   isa_ok $@, 'Web::DOM::TypeError';

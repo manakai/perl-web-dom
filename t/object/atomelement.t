@@ -545,7 +545,7 @@ for my $test (
     my $doc = new Web::DOM::Document;
     my $el = $doc->create_element_ns (ATOM_NS, $test->[0]);
 
-    for my $value (0+"nan", 0+"inf", 0-"inf") {
+    for my $value (0+"NaN", 0+"Inf", 0-"Inf") {
       dies_here_ok {
         $el->value ($value);
       };
@@ -668,7 +668,7 @@ for my $test (
     my $el = $doc->create_element_ns (ATOM_NS, $test->{el});
 
     $method; # Perl 5.8 compat
-    for my $value (0+"nan", 0+"inf", 0-"inf") {
+    for my $value (0+"NaN", 0+"Inf", 0-"Inf") {
       dies_here_ok {
         $el->$method ($value);
       };
