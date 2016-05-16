@@ -180,9 +180,9 @@ test {
   is $nl->item (0), undef;
   is $nl->item (1), undef;
   is $nl->item (2), undef;
-  is $nl->item (0+"Inf"), undef;
-  is $nl->item (0+"-Inf"), undef;
-  is $nl->item (0+"NaN"), undef;
+  is $nl->item (0+"inf"), undef;
+  is $nl->item (0+"-inf"), undef;
+  is $nl->item (0+"nan"), undef;
   is $nl->item (+0**1), undef;
   is $nl->item (-0**1), undef;
   is $nl->item (-1), undef;
@@ -191,9 +191,9 @@ test {
   is $nl->[0], undef;
   is $nl->[1], undef;
   is $nl->[2], undef;
-  is scalar $nl->[0+"Inf"], undef;
-  is scalar $nl->[0+"-Inf"], undef;
-  is scalar $nl->[0+"NaN"], undef;
+  is scalar $nl->[0+"inf"], undef;
+  is scalar $nl->[0+"-inf"], undef;
+  is scalar $nl->[0+"nan"], undef;
   is $nl->[+0**1], undef;
   is $nl->[-0**1], undef;
   is scalar $nl->[-1], undef;
@@ -220,9 +220,9 @@ test {
 
   is $nl->item (1), undef;
   is $nl->item (2), undef;
-  is $nl->item (0+"Inf"), $el;
-  is $nl->item (0+"-Inf"), $el;
-  is $nl->item (0+"NaN"), $el;
+  is $nl->item (0+"inf"), $el;
+  is $nl->item (0+"-inf"), $el;
+  is $nl->item (0+"nan"), $el;
   is $nl->item (+0**1), $el;
   is $nl->item (-0**1), $el;
   is $nl->item (0.52), $el;
@@ -235,9 +235,9 @@ test {
   is $nl->[0], $el;
   is $nl->[1], undef;
   is $nl->[2], undef;
-  is scalar $nl->[0+"Inf"], $el;
-  is scalar $nl->[0+"-Inf"], [$el]->["-Inf"];
-  is scalar $nl->[0+"NaN"], $el;
+  is scalar $nl->[0+"inf"], $el;
+  is scalar $nl->[0+"-inf"], [$el]->["-inf"];
+  is scalar $nl->[0+"nan"], $el;
   is $nl->[+0**1], $el;
   is $nl->[-0**1], $el;
   is $nl->[0.542], $el;
