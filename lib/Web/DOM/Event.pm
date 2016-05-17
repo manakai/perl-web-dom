@@ -40,7 +40,7 @@ sub new ($$;$) {
         $self->{$key} = unpack 'S', pack 'S', $_[2]->{$key} % 2**16;
       } elsif ($type eq 'double') { # WebIDL double
         my $value = 0+$_[2]->{$key};
-        if ($value eq 'nan' or $value eq 'inf' or $value eq '-inf') {
+        if ($value =~ /\A-?(?:[Nn]a[Nn]|[Ii]nf)\z/) {
           _throw Web::DOM::TypeError "The |$key| value is out of range";
         }
         $self->{$key} = $value;

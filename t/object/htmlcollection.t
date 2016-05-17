@@ -232,7 +232,7 @@ test {
   is $nl->[1], undef;
   is $nl->[2], undef;
   is scalar $nl->[0+"inf"], $el;
-  is scalar $nl->[0+"-inf"], [$el]->["-inf"];
+  is scalar $nl->[0+"-inf"], [$el]->[0+"-inf"];
   is scalar $nl->[0+"nan"], $el;
   is $nl->[+0**1], $el;
   is $nl->[-0**1], $el;

@@ -153,7 +153,7 @@ sub value ($;$) {
   if (@_ > 1) {
     # WebIDL DOMTimeStamp (= WebIDL double in DOMPERL)
     my $value = 0+$_[1];
-    if ($value eq 'nan' or $value eq 'inf' or $value eq '-inf') {
+    if ($value =~ /\A-?(?:[Nn]a[Nn]|[Ii]nf)\z/) {
       _throw Web::DOM::TypeError "The value is out of range";
     }
 

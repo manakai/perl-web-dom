@@ -259,7 +259,7 @@ test {
                                           delta_z => -10.5 + 2**13,
                                           delta_mode => "120aa"};
   is $ev->delta_x, 0;
-  is $ev->delta_y, -21 + 2**55;
+  ok $ev->delta_y == -21 + 2**55;
   is $ev->delta_z, -10.5 + 2**13;
   is $ev->delta_mode, 120;
   done $c;
