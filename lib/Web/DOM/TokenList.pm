@@ -1,7 +1,8 @@
 package Web::DOM::TokenList;
 use strict;
 use warnings;
-our $VERSION = '5.0';
+our $VERSION = '6.0';
+use Web::DOM::Internal;
 use Web::DOM::Exception;
 use Carp;
 push our @CARP_NOT, qw(Web::DOM::Exception Web::DOM::StringArray);
@@ -23,9 +24,8 @@ sub length ($) {
 } # length
 
 sub item ($$) {
-  # WebIDL: unsigned long
-  my $n = $_[1] % 2**32;
-  return undef if $n >= 2**31;
+  my $n = _idl_unsigned_long $_[1];
+  return undef if $n >= 2**31; # perl array
   return $_[0]->[$n]; # or undef
 } # item
 

@@ -15,7 +15,7 @@ use Char::Class::XML qw(
   InXMLNameChar InXMLNameStartChar
   InXMLNCNameChar InXMLNCNameStartChar
 );
-# XXX EventHandlers
+# XXX EventHandlers DocumentOrShadowRoot
 
 sub new ($) {
   my $data = {node_type => DOCUMENT_NODE};
@@ -598,6 +598,7 @@ sub all ($) {
 
 ## ------ Node factory ------
 
+# XXX custom elements
 sub create_element ($$) {
   my $self = $_[0];
   my $ln = ''.$_[1];
@@ -1134,9 +1135,7 @@ sub create_node_iterator ($;$$$) {
   # WebIDL
   _throw Web::DOM::TypeError 'The first argument is not a Node'
       unless UNIVERSAL::isa ($_[1], 'Web::DOM::Node');
-  my $wts = defined $_[2]
-      ? unpack 'L', pack 'L', $_[2] % 2**32 # WebIDL unsigned long
-      : 0xFFFFFFFF;
+  my $wts = _idl_unsigned_long (defined $_[2] ? $_[2] : 0xFFFFFFFF);
   _throw Web::DOM::TypeError 'The third argument is not a code reference'
       if defined $_[3] and not ref $_[3] eq 'CODE';
   # $_[4] (expand entity references) is obsolete
@@ -1148,9 +1147,7 @@ sub create_tree_walker ($;$$$) {
   # WebIDL
   _throw Web::DOM::TypeError 'The first argument is not a Node'
       unless UNIVERSAL::isa ($_[1], 'Web::DOM::Node');
-  my $wts = defined $_[2]
-      ? unpack 'L', pack 'L', $_[2] % 2**32 # WebIDL unsigned long
-      : 0xFFFFFFFF;
+  my $wts = _idl_unsigned_long (defined $_[2] ? $_[2] : 0xFFFFFFFF);
   _throw Web::DOM::TypeError 'The third argument is not a code reference'
       if defined $_[3] and not ref $_[3] eq 'CODE';
   # $_[4] (expand entity references) is obsolete
@@ -1173,11 +1170,11 @@ sub create_touch ($$$$$$$$) {
   require Web::DOM::Touch;
   return bless {
     target => $_[2],
-    identifier => (unpack 'l', pack 'L', $_[3] % 2**32), # WebIDL long
-    page_x => (unpack 'l', pack 'L', $_[4] % 2**32), # WebIDL long
-    page_y => (unpack 'l', pack 'L', $_[5] % 2**32), # WebIDL long
-    screen_x => (unpack 'l', pack 'L', $_[6] % 2**32), # WebIDL long
-    screen_y => (unpack 'l', pack 'L', $_[7] % 2**32), # WebIDL long
+    identifier => (_idl_long $_[3]),
+    page_x => (_idl_long $_[4]),
+    page_y => (_idl_long $_[5]),
+    screen_x => (_idl_long $_[6]),
+    screen_y => (_idl_long $_[7]),
     client_x => 0,
     client_y => 0,
   }, 'Web::DOM::Touch';

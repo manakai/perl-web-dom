@@ -1,9 +1,10 @@
 package Web::DOM::CSSStyleDeclaration;
 use strict;
 use warnings;
-our $VERSION = '7.0';
+our $VERSION = '8.0';
 use Carp;
 use Web::CSS::Props;
+use Web::DOM::Internal;
 
 use overload
     '@{}' => sub {
@@ -28,8 +29,7 @@ sub length ($) {
 } # length
 
 sub item ($$) {
-  # WebIDL: unsigned long
-  my $n = $_[1] % 2**32;
+  my $n = _idl_unsigned_long $_[1];
   return '' if $n >= 2**31;
   my $key = ${$_[0]}->[3]->{prop_keys}->[$n];
   if (defined $key) {

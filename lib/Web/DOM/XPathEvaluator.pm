@@ -1,7 +1,8 @@
 package Web::DOM::XPathEvaluator;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
+use Web::DOM::Internal;
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
 push our @CARP_NOT, qw(Web::DOM::TypeError Web::DOM::Exception);
@@ -80,7 +81,7 @@ sub evaluate ($$$;$$$) {
           'The third argument is not an XPathNSResolver';
     }
   }
-  my $type = unpack 'S', pack 'S', ($_[4] || 0) % 2**16; # WebIDL unsigned short
+  my $type = _idl_unsigned_short (defined $_[4] ? $_[4] : 0);
   if (defined $_[5] and (not ref $_[5] or not UNIVERSAL::can ($_[5], 'isa'))) { # WebIDL object?
     _throw Web::DOM::TypeError 'The fifth argument is not an object';
   }
@@ -93,7 +94,7 @@ sub evaluate ($$$;$$$) {
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

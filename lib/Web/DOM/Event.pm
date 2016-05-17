@@ -1,7 +1,7 @@
 package Web::DOM::Event;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Internal;
 use Web::DOM::TypeError;
 
@@ -32,12 +32,12 @@ sub new ($$;$) {
         $self->{$key} = !!$_[2]->{$key};
       } elsif ($type eq 'any') {
         $self->{$key} = $_[2]->{$key};
-      } elsif ($type eq 'long') { # WebIDL long
-        $self->{$key} = unpack 'l', pack 'L', $_[2]->{$key} % 2**32;
-      } elsif ($type eq 'unsigned long') { # WebIDL unsigned long
-        $self->{$key} = unpack 'L', pack 'L', $_[2]->{$key} % 2**32;
-      } elsif ($type eq 'unsigned short') { # WebIDL unsigned short
-        $self->{$key} = unpack 'S', pack 'S', $_[2]->{$key} % 2**16;
+      } elsif ($type eq 'long') {
+        $self->{$key} = _idl_long $_[2]->{$key};
+      } elsif ($type eq 'unsigned long') {
+        $self->{$key} = _idl_unsigned_long $_[2]->{$key};
+      } elsif ($type eq 'unsigned short') {
+        $self->{$key} = _idl_unsigned_short $_[2]->{$key};
       } elsif ($type eq 'double') { # WebIDL double
         my $value = 0+$_[2]->{$key};
         if ($value =~ /\A-?(?:[Nn]a[Nn]|[Ii]nf)\z/) {
@@ -144,8 +144,9 @@ sub init_custom_event ($$;$$$) {
 } # init_custom_event
 
 package Web::DOM::UIEvent;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::Event);
+use Web::DOM::Internal;
 
 sub _init_members ($) { $_[0]->SUPER::_init_members,
                         [view => 'object?', 'WindowProxy'], # willful violation
@@ -159,7 +160,7 @@ sub init_ui_event ($$$$$$) {
   _throw Web::DOM::TypeError 'The fourth argument is not a WindowProxy'
       if defined $_[4] and not UNIVERSAL::isa ($_[4], 'Web::DOM::WindowProxy');
   ## s/AbstractView/WindowProxy/, this is a willful violation to DOM3Events
-  my $detail = unpack 'l', pack 'L', $_[5] % 2**32; # WebIDL long
+  my $detail = _idl_long ($_[5]);
   $_[0]->_initialize ($type, $bubbles, $cancelable) or return undef;
   $_[0]->{view} = $_[4];
   $_[0]->{detail} = $detail;
@@ -178,8 +179,9 @@ sub related_target ($) { $_[0]->{related_target} } # or undef
 # initFocusEvent not implemented by Chrome
 
 package Web::DOM::MouseEvent;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::UIEvent);
+use Web::DOM::Internal;
 
 sub _init_members ($) { $_[0]->SUPER::_init_members,
                         [screen_x => 'long'],
@@ -224,13 +226,13 @@ sub init_mouse_event ($$$$$$$$$$$$$$$$) {
   _throw Web::DOM::TypeError 'The fourth argument is not a WindowProxy'
       if defined $_[4] and not UNIVERSAL::isa ($_[4], 'Web::DOM::WindowProxy');
       ## A willful violation
-  my $detail = unpack 'l', pack 'L', $_[5] % 2**32; # WebIDL long
-  my $sx = unpack 'l', pack 'L', $_[6] % 2**32; # WebIDL long
-  my $sy = unpack 'l', pack 'L', $_[7] % 2**32; # WebIDL long
-  my $cx = unpack 'l', pack 'L', $_[8] % 2**32; # WebIDL long
-  my $cy = unpack 'l', pack 'L', $_[9] % 2**32; # WebIDL long
+  my $detail = _idl_long $_[5];
+  my $sx = _idl_long $_[6];
+  my $sy = _idl_long $_[7];
+  my $cx = _idl_long $_[8];
+  my $cy = _idl_long $_[9];
   my ($ctrl, $alt, $shift, $meta) = (!!$_[10], !!$_[11], !!$_[12], !!$_[13]);
-  my $button = unpack 'S', pack 'S', $_[14] % 2**16; # WebIDL unsigned short
+  my $button = _idl_unsigned_short $_[14];
   _throw Web::DOM::TypeError 'The 16th argument is not an EventTarget'
       if defined $_[15] and
          not UNIVERSAL::isa ($_[15], 'Web::DOM::EventTarget');
@@ -277,8 +279,9 @@ sub delta_mode ($) { $_[0]->{delta_mode} || 0 }
 # Chrome implements initWebkitWheelEvent, not initWheelEvent
 
 package Web::DOM::KeyboardEvent;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::UIEvent);
+use Web::DOM::Internal;
 
 sub _init_members ($) { $_[0]->SUPER::_init_members,
                         [char => 'string'],
@@ -346,7 +349,7 @@ sub init_keyboard_event ($$$$$$$$$$$) {
       if defined $_[4] and not UNIVERSAL::isa ($_[4], 'Web::DOM::WindowProxy');
   my $char = ''.$_[5];
   my $key = ''.$_[6];
-  my $location = unpack 'L', pack 'L', $_[7] % 2**32; # WebIDL unsigned long
+  my $location = _idl_unsigned_long $_[7];
   my $modifiers_list = ''.$_[8];
   my $repeat = !!$_[9];
   my $locale = ''.$_[10];

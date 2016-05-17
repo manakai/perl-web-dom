@@ -1,13 +1,14 @@
 package Web::DOM::Text;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Web::DOM::CharacterData;
 push our @ISA, qw(Web::DOM::CharacterData);
+use Web::DOM::Internal;
 use Web::DOM::Node;
 use Web::DOM::Exception;
 
-# XXX Constructor
+# XXX Constructor Slotable
 
 sub node_name ($) {
   return '#text';
@@ -15,8 +16,7 @@ sub node_name ($) {
 
 sub split_text ($$) {
   my $node = $_[0];
-  # WebIDL: unsigned long
-  my $offset = $_[1] % 2**32;
+  my $offset = _idl_unsigned_long $_[1];
 
   # Split
 
@@ -95,7 +95,7 @@ sub serialize_as_cdata ($;$) {
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

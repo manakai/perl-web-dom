@@ -1,8 +1,9 @@
 package Web::DOM::CSSStyleSheet;
 use strict;
 use warnings;
-our $VERSION = '6.0';
+our $VERSION = '7.0';
 use Carp;
+use Web::DOM::Internal;
 use Web::DOM::StyleSheet;
 push our @ISA, qw(Web::DOM::StyleSheet);
 push our @CARP_NOT, qw(Web::DOM::Exception);
@@ -45,8 +46,7 @@ sub css_rules ($) {
 sub insert_rule ($$$) {
   my $self = $_[0];
   my $rule = ''.$_[1];
-  # WebIDL: unsigned long
-  my $index = $_[2] % 2**32;
+  my $index = _idl_unsigned_long $_[2];
 
   ## 1.
   my $self_rule_type = ${$_[0]}->[2]->{rule_type};
@@ -151,8 +151,7 @@ sub insert_rule ($$$) {
 
 ## This method is also used by |Web::DOM::CSSGroupingRule|.
 sub delete_rule ($$) {
-  # WebIDL: unsigned long
-  my $index = $_[1] % 2**32;
+  my $index = _idl_unsigned_long $_[1];
   
   ## 1.
   if (${$_[0]}->[2]->{rule_type} eq 'sheet') {
@@ -255,7 +254,7 @@ sub manakai_lookup_namespace_uri ($$) {
 
 =head1 LICENSE
 
-Copyright 2007-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

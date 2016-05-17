@@ -451,9 +451,8 @@ sub type ($;$) {
 
 sub thread_count ($;$) {
   if (@_ > 1) {
-    # WebIDL: unsigned long
     $_[0]->set_attribute_ns
-        (ATOM_THREAD_NS, 'thr:count', unpack 'L', pack 'L', $_[1] % 2**32);
+        (ATOM_THREAD_NS, 'thr:count', _idl_unsigned_long $_[1]);
     return unless defined wantarray;
   }
 
@@ -494,11 +493,11 @@ _define_reflect_string type => 'type';
 package Web::DOM::AtomThreadTotalElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::AtomElement);
+use Web::DOM::Internal;
 
 sub value ($;$) {
   if (@_ > 1) {
-    # WebIDL: unsigned long
-    $_[0]->text_content (unpack 'L', pack 'L', $_[1] % 2**32);
+    $_[0]->text_content (_idl_unsigned_long $_[1]);
     return unless defined wantarray;
   }
 

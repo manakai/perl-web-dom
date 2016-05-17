@@ -1,7 +1,7 @@
 package Web::DOM::XPathResult;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Internal;
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
@@ -84,15 +84,14 @@ sub iterate_next ($) {
 } # iterate_next
 
 sub snapshot_item ($$) {
-  # WebIDL: unsigned long
-  my $n = $_[1] % 2**32;
-  return undef if $n >= 2**31;
+  my $n = _idl_unsigned_long $_[1];
 
   _throw Web::DOM::TypeError
       'The result is not compatible with the specified type'
           unless $_[0]->{result_type} == UNORDERED_NODE_SNAPSHOT_TYPE or
                  $_[0]->{result_type} == ORDERED_NODE_SNAPSHOT_TYPE;
 
+  return undef if $n >= 2**31; # perl array
   return $_[0]->{result}->{value}->[$n]; # or undef
 } # snapshot_item
 
@@ -108,7 +107,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2013-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

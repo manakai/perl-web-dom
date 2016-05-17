@@ -957,8 +957,7 @@ sub rows ($) {
 } # rows
 
 sub insert_row ($;$) {
-  # WebIDL: long optional
-  my $index = unpack 'l', pack 'L', (defined $_[1] ? $_[1] : -1) % 2**32;
+  my $index = _idl_long (defined $_[1] ? $_[1] : -1);
   my $rows = $_[0]->rows;
   my $row_count = $rows->length;
 
@@ -989,8 +988,7 @@ sub insert_row ($;$) {
 } # insert_row
 
 sub delete_row ($$) {
-  # WebIDL: long
-  my $index = unpack 'l', pack 'L', $_[1] % 2**32;
+  my $index = _idl_long $_[1];
   my $rows = $_[0]->rows;
   my $row_count = @$rows;
 
@@ -1054,8 +1052,7 @@ sub rows ($) {
 } # rows
 
 sub insert_row ($;$) {
-  # WebIDL: long optional
-  my $index = unpack 'l', pack 'L', (defined $_[1] ? $_[1] : -1) % 2**32;
+  my $index = _idl_long (defined $_[1] ? $_[1] : -1);
   my $rows = $_[0]->rows;
   my $row_count = $rows->length;
 
@@ -1073,8 +1070,7 @@ sub insert_row ($;$) {
 } # insert_row
 
 sub delete_row ($$) {
-  # WebIDL: long
-  my $index = unpack 'l', pack 'L', $_[1] % 2**32;
+  my $index = _idl_long $_[1];
   my $rows = $_[0]->rows;
 
   if ($index < 0 or $index >= @$rows) {
@@ -1153,8 +1149,7 @@ sub cells ($) {
 } # cells
 
 sub insert_cell ($;$) {
-  # WebIDL: long optional
-  my $index = unpack 'l', pack 'L', (defined $_[1] ? $_[1] : -1) % 2**32;
+  my $index = _idl_long (defined $_[1] ? $_[1] : -1);
   my $cells = $_[0]->cells;
   my $cell_count = $cells->length;
 
@@ -1172,8 +1167,7 @@ sub insert_cell ($;$) {
 } # insert_cell
 
 sub delete_cell ($$) {
-  # WebIDL: long
-  my $index = unpack 'l', pack 'L', $_[1] % 2**32;
+  my $index = _idl_long $_[1];
   my $cells = $_[0]->cells;
 
   if ($index < 0 or $index >= @$cells) {

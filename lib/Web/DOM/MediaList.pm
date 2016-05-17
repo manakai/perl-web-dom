@@ -1,8 +1,9 @@
 package Web::DOM::MediaList;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Carp;
+use Web::DOM::Internal;
 
 use overload
     '@{}' => sub {
@@ -30,9 +31,8 @@ sub length ($) {
 } # length
 
 sub item ($$) {
-  # WebIDL: unsigned long
-  my $n = $_[1] % 2**32;
-  return undef if $n >= 2**31;
+  my $n = _idl_unsigned_long $_[1];
+  return undef if $n >= 2**31; # perl array
 
   my $mq = ${${$_[0]}->[0]}->[2]->{mqs}->[$n];
   return undef if not defined $mq;
@@ -92,7 +92,7 @@ sub delete_medium ($$) {
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

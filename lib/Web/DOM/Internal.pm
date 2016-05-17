@@ -20,6 +20,72 @@ sub import ($;@) {
   }
 } # import
 
+push @EXPORT, qw(_idl_long);
+sub _idl_long ($) {
+  if (defined $_[0]) {
+    if (ref $_[0]) {
+      my $v = 0+$_[0]; # can throw
+      if ($v =~ /\A-?(?:[Nn]a[Nn]|[Ii]nf)\z/) {
+        return 0;
+      } else {
+        return unpack 'l', pack 'L', $v % 2**32;
+      }
+    } else {
+      if ($_[0] =~ /\A-?(?:[Nn]a[Nn]|[Ii]nf)\z/) {
+        return 0;
+      } else {
+        return unpack 'l', pack 'L', $_[0] % 2**32;
+      }
+    }
+  } else {
+    carp 'Use of uninitialized value in method argument';
+  }
+} # _idl_long
+
+push @EXPORT, qw(_idl_unsigned_long);
+sub _idl_unsigned_long ($) {
+  if (defined $_[0]) {
+    if (ref $_[0]) {
+      my $v = 0+$_[0]; # can throw
+      if ($v =~ /\A-?(?:[Nn]a[Nn]|[Ii]nf)\z/) {
+        return 0;
+      } else {
+        return unpack 'L', pack 'L', $v % 2**32;
+      }
+    } else {
+      if ($_[0] =~ /\A-?(?:[Nn]a[Nn]|[Ii]nf)\z/) {
+        return 0;
+      } else {
+        return unpack 'L', pack 'L', $_[0] % 2**32;
+      }
+    }
+  } else {
+    carp 'Use of uninitialized value in method argument';
+  }
+} # _idl_unsigned_long
+
+push @EXPORT, qw(_idl_unsigned_short);
+sub _idl_unsigned_short ($) {
+  if (defined $_[0]) {
+    if (ref $_[0]) {
+      my $v = 0+$_[0]; # can throw
+      if ($v =~ /\A-?(?:[Nn]a[Nn]|[Ii]nf)\z/) {
+        return 0;
+      } else {
+        return unpack 'S', pack 'S', $v % 2**16;
+      }
+    } else {
+      if ($_[0] =~ /\A-?(?:[Nn]a[Nn]|[Ii]nf)\z/) {
+        return 0;
+      } else {
+        return unpack 'S', pack 'S', $_[0] % 2**16;
+      }
+    }
+  } else {
+    carp 'Use of uninitialized value in method argument';
+  }
+} # _idl_unsigned_short
+
 ## "Interned" string
 ##
 ## Used to represent namespace URLs and node names.

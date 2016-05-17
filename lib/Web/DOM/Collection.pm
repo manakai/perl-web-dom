@@ -1,8 +1,9 @@
 package Web::DOM::Collection;
 use strict;
 use warnings;
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Carp;
+use Web::DOM::Internal;
 
 ## Collection - superclass of |Web::DOM::NodeList|,
 ## |Web::DOM::NamedNodeMap|, |Web::DOM::HTMLCollection|, and
@@ -50,9 +51,8 @@ use overload
     fallback => 1;
 
 sub item ($$) {
-  # WebIDL: unsigned long
-  my $n = $_[1] % 2**32;
-  return undef if $n >= 2**31;
+  my $n = _idl_unsigned_long $_[1];
+  return undef if $n >= 2**31; # perl array
   return $_[0]->[$n]; # or undef
 } # item
 
@@ -79,7 +79,7 @@ sub to_list ($) {
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

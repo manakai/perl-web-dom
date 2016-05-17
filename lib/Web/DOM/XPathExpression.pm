@@ -1,7 +1,8 @@
 package Web::DOM::XPathExpression;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
+use Web::DOM::Internal;
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
 use Web::DOM::XPathResult;
@@ -12,7 +13,7 @@ sub evaluate ($$;$$) {
   unless (UNIVERSAL::isa ($node, 'Web::DOM::Node')) {
     _throw Web::DOM::TypeError 'The first argument is not a Node';
   }
-  my $type = unpack 'S', pack 'S', ($_[2] || 0) % 2**16; # WebIDL unsigned short
+  my $type = _idl_unsigned_short (defined $_[2] ? $_[2] : 0);
   if (defined $_[3] and (not ref $_[3] or not UNIVERSAL::can ($_[3], 'isa'))) { # WebIDL object?
     _throw Web::DOM::TypeError 'The third argument is not an object';
   }
@@ -77,7 +78,7 @@ sub evaluate ($$;$$) {
 
 =head1 LICENSE
 
-Copyright 2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2014-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

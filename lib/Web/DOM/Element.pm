@@ -919,16 +919,15 @@ sub _define_reflect_long ($$$) {
   eval sprintf q{
     *%s::%s = sub ($;$) {
       if (@_ > 1) {
-        # WebIDL: long
         $_[0]->set_attribute_ns
-            (undef, '%s', unpack 'l', pack 'L', $_[1] %% 2**32);
+            (undef, '%s', Web::DOM::Internal::_idl_long $_[1]);
         return unless defined wantarray;
       }
 
       my $v = $_[0]->get_attribute_ns (undef, '%s');
       if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
         my $v = $1;
-        return 0+$v if -2**31 <= $v and $v <= 2**31-1;
+        return 0+$v if -2**31 <= $v and $v <= 2**31-1; # WebIDL long
       }
       return $get_default->($_[0]);
     };
@@ -943,8 +942,7 @@ sub _define_reflect_long_nn ($$$) {
   eval sprintf q{
     *%s::%s = sub ($;$) {
       if (@_ > 1) {
-        # WebIDL: long
-        my $v = unpack 'l', pack 'L', $_[1] %% 2**32;
+        my $v = Web::DOM::Internal::_idl_long $_[1];
         if ($v < 0) {
           _throw Web::DOM::Exception 'IndexSizeError',
               'The value cannot be set to a negative value';
@@ -956,7 +954,7 @@ sub _define_reflect_long_nn ($$$) {
       my $v = $_[0]->get_attribute_ns (undef, '%s');
       if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
         my $v = $1;
-        return 0+$v if 0 <= $v and $v <= 2**31-1;
+        return 0+$v if 0 <= $v and $v <= 2**31-1; # Web IDL long
       }
       return $get_default->($_[0]);
     };
@@ -971,16 +969,15 @@ sub _define_reflect_unsigned_long ($$$) {
   eval sprintf q{
     *%s::%s = sub ($;$) {
       if (@_ > 1) {
-        # WebIDL: unsigned long
         $_[0]->set_attribute_ns
-            (undef, '%s', unpack 'L', pack 'L', $_[1] %% 2**32);
+            (undef, '%s', Web::DOM::Internal::_idl_unsigned_long $_[1]);
         return unless defined wantarray;
       }
 
       my $v = $_[0]->get_attribute_ns (undef, '%s');
       if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
         my $v = $1;
-        return 0+$v if 0 <= $v and $v <= 2**31-1;
+        return 0+$v if 0 <= $v and $v <= 2**31-1; # Web IDL unsigned long
       }
       return $get_default->($_[0]);
     };
@@ -995,8 +992,7 @@ sub _define_reflect_unsigned_long_positive ($$$) {
   eval sprintf q{
     *%s::%s = sub ($;$) {
       if (@_ > 1) {
-        # WebIDL: unsigned long
-        my $v = unpack 'L', pack 'L', $_[1] %% 2**32;
+        my $v = Web::DOM::Internal::_idl_unsigned_long $_[1];
         if ($v == 0) {
           _throw Web::DOM::Exception 'IndexSizeError',
               'The value cannot be set to zero';
@@ -1008,7 +1004,7 @@ sub _define_reflect_unsigned_long_positive ($$$) {
       my $v = $_[0]->get_attribute_ns (undef, '%s');
       if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
         my $v = $1;
-        return 0+$v if 1 <= $v and $v <= 2**31-1;
+        return 0+$v if 1 <= $v and $v <= 2**31-1; # Web IDL unsigned long
       }
       return $get_default->($_[0]);
     };
@@ -1355,6 +1351,8 @@ sub _define_reflect_child_url ($$$) {
 } # _define_reflect_child_url
 
 # XXX scripting enabled flag consideration...
+
+# XXX Slotable slot assignShadow shadowRoot
 
 1;
 

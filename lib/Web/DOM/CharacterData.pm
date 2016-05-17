@@ -2,7 +2,8 @@ package Web::DOM::CharacterData;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '2.0';
+our $VERSION = '3.0';
+use Web::DOM::Internal;
 use Web::DOM::Node;
 use Web::DOM::ChildNode;
 push our @ISA, qw(Web::DOM::Node Web::DOM::ChildNode);
@@ -67,9 +68,8 @@ sub manakai_append_indexed_string ($$) {
 } # manakai_append_indexed_string
 
 sub substring_data ($$$) {
-  # WebIDL: unsigned long
-  my $offset = $_[1] % 2**32;
-  my $count = $_[2] % 2**32;
+  my $offset = _idl_unsigned_long $_[1];
+  my $count = _idl_unsigned_long $_[2];
 
   # Substring data
   my $data = $_[0]->data;
@@ -123,9 +123,8 @@ sub delete_data ($$$) {
 } # delete_data
 
 sub replace_data ($$$$) {
-  # WebIDL: unsigned long
-  my $offset = $_[1] % 2**32;
-  my $count = $_[2] % 2**32;
+  my $offset = _idl_unsigned_long $_[1];
+  my $count = _idl_unsigned_long $_[2];
   my $s = ''.$_[3];
 
   # IndexedString
@@ -194,7 +193,7 @@ sub replace_data ($$$$) {
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
