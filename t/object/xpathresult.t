@@ -123,7 +123,7 @@ for my $result_type (undef, ANY_TYPE, NUMBER_TYPE) {
     my $doc = new Web::DOM::Document;
     my $result = $doc->evaluate ('"abc" * 4', $doc, undef, $result_type);
     is $result->result_type, NUMBER_TYPE;
-    is $result->number_value, 'nan';
+    is lc $result->number_value, 'nan';
     $doc->append_child ($doc->create_element_ns (undef, 'fuga'));
     ok not $result->invalid_iterator_state;
     done $c;
