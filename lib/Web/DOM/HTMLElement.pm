@@ -479,7 +479,7 @@ use Web::DOM::Element;
 _define_reflect_string align => 'align';
 
 package Web::DOM::HTMLAnchorElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
@@ -489,7 +489,7 @@ _define_reflect_string rel => 'rel';
 _define_reflect_string hreflang => 'hreflang';
 _define_reflect_string type => 'type';
 _define_reflect_url href => 'href';
-_define_reflect_settable_token_list ping => 'ping';
+_define_reflect_string ping => 'ping';
 
 # XXX URLUtils toString
 
@@ -752,7 +752,7 @@ _define_reflect_string target => 'target';
 _define_reflect_string download => 'download';
 _define_reflect_string rel => 'rel';
 _define_reflect_url href => 'href';
-_define_reflect_settable_token_list ping => 'ping';
+_define_reflect_string ping => 'ping';
 
 # XXX URLUtils toString
 
@@ -1180,7 +1180,7 @@ sub delete_cell ($$) {
 } # delete_cell
 
 package Web::DOM::HTMLTableCellElement;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Internal;
 use Web::DOM::Node;
@@ -1188,7 +1188,7 @@ use Web::DOM::Element;
 
 _define_reflect_unsigned_long colspan => 'colspan', sub { 1 };
 _define_reflect_unsigned_long rowspan => 'rowspan', sub { 1 };
-_define_reflect_settable_token_list headers => 'headers';
+_define_reflect_string headers => 'headers';
 
 _define_reflect_string align => 'align';
 _define_reflect_string axis => 'axis';

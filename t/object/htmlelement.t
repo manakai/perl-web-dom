@@ -245,6 +245,10 @@ for my $test (
   ['tr', 'valign'],
   ['tr', 'bgcolor'],
   ['ul', 'type'],
+  ['td', 'headers'],
+  ['th', 'headers'],
+  ['a', 'ping'],
+  ['area', 'ping'],
 ) {
   my $attr = $test->[1];
   test {
@@ -1308,8 +1312,6 @@ for my $test (
   {element => 'a', attr => 'rel', method => 'rel_list'},
   {element => 'area', attr => 'rel', method => 'rel_list'},
   {element => 'link', attr => 'rel', method => 'rel_list'},
-  {element => 'td', attr => 'headers'},
-  {element => 'th', attr => 'headers'},
   {element => 'em', attr => 'dropzone'},
   {element => 'em', attr => 'itemprop'},
   {element => 'em', attr => 'itemref'},
@@ -1317,8 +1319,6 @@ for my $test (
   {element => 'link', attr => 'sizes'},
   {element => 'iframe', attr => 'sandbox'},
   {element => 'output', attr => 'for', method => 'html_for'},
-  {element => 'a', attr => 'ping', method => 'ping'},
-  {element => 'area', attr => 'ping', method => 'ping'},
 ) {
   my $el_name = $test->{element};
   my $method = $test->{method} || $test->{attr};

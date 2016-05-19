@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::HTMLAnchorElement - The DOM |HTMLAnchorElement| object
+Web::DOM::HTMLAnchorElement - DOM |HTMLAnchorElement| object
 
 =head1 DESCRIPTION
 
@@ -33,12 +33,11 @@ Return or set the C<href> attribute.  [HTML]
 
 Return or set the C<hreflang> attribute.  [HTML]
 
-=item $tokens = $el->ping
+=item $string = $el->ping
 
 =item $el->ping ($string)
 
-Return the L<Web::DOM::TokenList> object for the C<ping> attribute, or
-set the C<ping> attribute to the specified string value.  [HTML]
+Return or set the C<ping> attribute.  [HTML]
 
 =item $string = $el->rel
 
