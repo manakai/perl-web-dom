@@ -288,20 +288,20 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'td');
-  my $tokens = $el->headers;
+  my $tokens = $el->itemprop;
   $tokens->add ('foo');
   ok ! $tokens->add ('foo');
   is scalar @$tokens, 1;
-  is $el->get_attribute ('headers'), 'foo';
+  is $el->get_attribute ('itemprop'), 'foo';
   push @$tokens, 'foo';
   is scalar @$tokens, 1;
-  is $el->get_attribute ('headers'), 'foo';
+  is $el->get_attribute ('itemprop'), 'foo';
   $tokens->add ('bar', 'bar');
   is scalar @$tokens, 2;
-  is $el->get_attribute ('headers'), 'foo bar';
+  is $el->get_attribute ('itemprop'), 'foo bar';
   push @$tokens, 'baz', 'baz';
   is scalar @$tokens, 3;
-  is $el->get_attribute ('headers'), 'foo bar baz';
+  is $el->get_attribute ('itemprop'), 'foo bar baz';
   done $c;
 } n => 9, name => 'add unique DOMSettableTokenList';
 
@@ -800,7 +800,7 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'td');
-  my $list = $el->headers;
+  my $list = $el->itemprop;
   is $list->value, '';
   
   $list->value (' ');
@@ -810,17 +810,17 @@ test {
   $list->value ("\x0c\x0D\x0a\x20\x09def abc abc def");
   is $list->value, 'def abc';
   is scalar @$list, 2;
-  is $el->get_attribute ('headers'), 'def abc';
+  is $el->get_attribute ('itemprop'), 'def abc';
 
   $list->value ("bbb cddd");
   is $list->value, 'bbb cddd';
   is scalar @$list, 2;
-  is $el->get_attribute ('headers'), 'bbb cddd';
+  is $el->get_attribute ('itemprop'), 'bbb cddd';
 
   $list->value ("");
   is $list->value, '';
   is scalar @$list, 0;
-  is $el->get_attribute ('headers'), '';
+  is $el->get_attribute ('itemprop'), '';
 
   done $c;
 } n => 12, name => 'value';
@@ -829,8 +829,8 @@ test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'td');
-  my $tokens = $el->headers;
-  $el->set_attribute (headers => '  abc    def h');
+  my $tokens = $el->itemprop;
+  $el->set_attribute (itemprop => '  abc    def h');
 
   is ''.$tokens, '  abc    def h';
   is $tokens->value, '  abc    def h';
@@ -839,7 +839,7 @@ test {
   is ''.$tokens, 'abc def h hoge';
   is $tokens->value, 'abc def h hoge';
 
-  $el->set_attribute (headers => '  abc    def h hoge ');
+  $el->set_attribute (itemprop => '  abc    def h hoge ');
   is ''.$tokens, '  abc    def h hoge ';
   is $tokens->value, '  abc    def h hoge ';
 
