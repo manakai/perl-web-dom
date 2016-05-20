@@ -2,17 +2,13 @@ package Web::DOM::Implementation;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '4.0';
+our $VERSION = '5.0';
 use Carp;
 our @CARP_NOT = qw(Web::DOM::Document Web::DOM::TypeError);
 use Web::DOM::Node;
 use Web::DOM::Internal;
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
-use Char::Class::XML qw(
-  InXMLNameChar InXMLNameStartChar
-  InXMLNCNameChar InXMLNCNameStartChar
-);
 
 use overload
     '""' => sub {
@@ -207,13 +203,13 @@ sub create_document_type ($$;$$) {
 
   unless ($$self->[0]->{data}->[0]->{no_strict_error_checking}) {
     # 1.
-    unless ($qname =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($qname =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The qualified name is not an XML Name';
     }
 
     # 2.
-    unless ($qname =~ /\A\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*(?::\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*)?\z/) {
+    unless ($qname =~ /\A\p{InNCNameStartChar}\p{InNCNameChar}*(?::\p{InNCNameStartChar}\p{InNCNameChar}*)?\z/) {
       _throw Web::DOM::Exception 'NamespaceError',
           'The qualified name is not an XML QName';
     }

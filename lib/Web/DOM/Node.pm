@@ -2,7 +2,7 @@ package Web::DOM::Node;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
 use Web::DOM::Internal;
@@ -10,10 +10,6 @@ use Web::DOM::EventTarget;
 push our @ISA, qw(Web::DOM::EventTarget);
 use Carp;
 our @CARP_NOT = qw(Web::DOM::Exception Web::DOM::TypeError);
-use Char::Class::XML qw(
-  InXMLNameChar InXMLNameStartChar
-  InXMLNCNameChar InXMLNCNameStartChar
-);
 
 use overload
     '""' => sub {
@@ -89,13 +85,13 @@ sub prefix ($;$) {
     if (defined $prefix and length $prefix) {
       unless (${$_[0]}->[0]->{data}->[0]->{no_strict_error_checking}) {
         # 4.1.
-        unless ($prefix =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+        unless ($prefix =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
           _throw Web::DOM::Exception 'InvalidCharacterError',
               'The prefix is not an XML Name';
         }
 
         # 4.2.
-        unless ($prefix =~ /\A\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*\z/) {
+        unless ($prefix =~ /\A\p{InNCNameStartChar}\p{InNCNameChar}*\z/) {
           _throw Web::DOM::Exception 'NamespaceError',
               'The prefix is not an XML NCName';
         }

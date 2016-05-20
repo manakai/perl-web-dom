@@ -276,10 +276,6 @@ of the modules.
 
 The modules require Perl 5.8 or later.
 
-The only fatal dependency is the perl-charclass package
-<https://github.com/wakaba/perl-charclass>, which is the submodule of
-the Git repository.
-
 Following features require the perl-web-markup package
 <https://github.com/manakai/perl-web-markup> (L<Web::HTML::Parser> and
 its family): C<inner_html>, C<outer_html>, C<insert_adjacent_html>,
@@ -458,6 +454,10 @@ prepend, append, before, after, replace, remove
 DOM Ranges interfaces and methods [DOM]; Ranges support in DOM Core
 methods and attributes [DOM]; Range.prototype.createContextualFragment
 [DOMPARSING].
+
+=item Shadow DOM [DOM]
+
+=item Custom Elements [DOM, HTML]
 
 =back
 

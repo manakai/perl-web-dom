@@ -2,7 +2,7 @@ package Web::DOM::Internal;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '4.0';
+our $VERSION = '5.0';
 use Carp;
 
 ## Web::DOM internal data structure and core utilities
@@ -19,6 +19,11 @@ sub import ($;@) {
     *{$to_class . '::' . $_} = $code;
   }
 } # import
+
+use Web::DOM::_CharClasses;
+push @EXPORT, qw(InNameStartChar InNameChar
+                 InNCNameStartChar InNCNameChar
+                 InPCENChar);
 
 push @EXPORT, qw(_idl_long);
 sub _idl_long ($) {

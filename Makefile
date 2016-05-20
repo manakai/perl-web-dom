@@ -1,19 +1,23 @@
-all: deps all-data
+all: deps build
 
-updatenightly: local/bin/pmbp.pl updatedata
-	curl https://gist.githubusercontent.com/wakaba/34a71d3137a52abb562d/raw/gistfile1.txt | sh
-	git add modules t_deps/modules
-	perl local/bin/pmbp.pl --update
-	git add config lib/
-
-updatedata: clean-data all-data
-
-## ------ Setup ------
-
+CURL = curl
 GIT = git
 WGET = wget
 PERL = ./perl
 PMBP_OPTIONS =
+
+updatenightly: local/bin/pmbp.pl updatedata
+	$(CURL) -f -l https://gist.githubusercontent.com/wakaba/34a71d3137a52abb562d/raw/gistfile1.txt | sh
+	git add modules t_deps/modules
+	perl local/bin/pmbp.pl --update
+	git add config lib/
+
+updatedata: clean build
+
+clean: clean-data
+	rm -fr lib/Web/DOM/_CharClasses.pm
+
+## ------ Setup ------
 
 deps: git-submodules pmbp-install
 
@@ -33,6 +37,8 @@ pmbp-install: pmbp-upgrade
             --create-perl-command-shortcut prove
 
 ## ------ Build ------
+
+build: all-data lib/Web/DOM/_CharClasses.pm
 
 all-data: json-ps lib/Web/DOM/_Defs.pm
 clean-data: clean-json-ps
@@ -55,6 +61,16 @@ clean-json-ps:
 local/perl-latest/pm/lib/perl5/JSON/PS.pm:
 	mkdir -p local/perl-latest/pm/lib/perl5/JSON
 	$(WGET) -O $@ https://raw.githubusercontent.com/wakaba/perl-json-ps/master/lib/JSON/PS.pm
+
+lib/Web/DOM/_CharClasses.pm:
+	echo 'package Web::DOM::Internal;' > $@;
+	$(CURL) -f -l https://chars.suikawiki.org/set/perlrevars?item=InNameStartChar=%24xml10-5e%3ANameStartChar >> $@
+	$(CURL) -f -l https://chars.suikawiki.org/set/perlrevars?item=InNameChar=%24xml10-5e%3ANameChar >> $@
+	$(CURL) -f -l https://chars.suikawiki.org/set/perlrevars?item=InNCNameStartChar=%24xml10-5e%3ANCNameStartChar >> $@
+	$(CURL) -f -l https://chars.suikawiki.org/set/perlrevars?item=InNCNameChar=%24xml10-5e%3ANCNameChar >> $@
+	$(CURL) -f -l https://chars.suikawiki.org/set/perlrevars?item=InPCENChar=%24html%3APCENChar >> $@
+	echo '1;' >> $@
+	$(PERL) -c $@
 
 ## ------ Tests ------
 

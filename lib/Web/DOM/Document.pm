@@ -2,7 +2,7 @@ package Web::DOM::Document;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '5.0';
+our $VERSION = '6.0';
 use Web::DOM::Node;
 use Web::DOM::ParentNode;
 use Web::DOM::XPathEvaluator;
@@ -11,10 +11,6 @@ push our @ISA, qw(Web::DOM::ParentNode Web::DOM::XPathEvaluator
 use Web::DOM::Internal;
 use Web::DOM::TypeError;
 use Web::DOM::Exception;
-use Char::Class::XML qw(
-  InXMLNameChar InXMLNameStartChar
-  InXMLNCNameChar InXMLNCNameStartChar
-);
 # XXX EventHandlers DocumentOrShadowRoot
 
 sub new ($) {
@@ -610,7 +606,7 @@ sub create_element ($$) {
           'The local name is not an XML Name';
     }
   } else {
-    unless ($ln =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($ln =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The local name is not an XML Name';
     }
@@ -670,7 +666,7 @@ sub create_element_ns {
     }
   } else {
     # 2.
-    unless ($qname =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($qname =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The qualified name is not an XML Name';
     }
@@ -678,16 +674,16 @@ sub create_element_ns {
     # 3.
     if (defined $ln) {
       if (defined $prefix and
-          not $prefix =~ /\A\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*\z/) {
+          not $prefix =~ /\A\p{InNCNameStartChar}\p{InNCNameChar}*\z/) {
         _throw Web::DOM::Exception 'NamespaceError',
             'The prefix is not an XML NCName';
       }
-      unless ($ln =~ /\A\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*\z/) {
+      unless ($ln =~ /\A\p{InNCNameStartChar}\p{InNCNameChar}*\z/) {
         _throw Web::DOM::Exception 'NamespaceError',
             'The local name is not an XML NCName';
       }
     }
-    unless ($qname =~ /\A\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*(?::\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*)?\z/) {
+    unless ($qname =~ /\A\p{InNCNameStartChar}\p{InNCNameChar}*(?::\p{InNCNameStartChar}\p{InNCNameChar}*)?\z/) {
       _throw Web::DOM::Exception 'NamespaceError',
           'The qualified name is not an XML QName';
     }
@@ -759,7 +755,7 @@ sub create_attribute ($$) {
           'The local name is not an XML Name';
     }
   } else {
-    unless ($ln =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($ln =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The local name is not an XML Name';
     }
@@ -805,7 +801,7 @@ sub create_attribute_ns {
     }
   } else {
     # 2.
-    unless ($qname =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($qname =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The qualified name is not an XML Name';
     }
@@ -813,16 +809,16 @@ sub create_attribute_ns {
     # 3.
     if (defined $ln) {
       if (defined $prefix and
-          not $prefix =~ /\A\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*\z/) {
+          not $prefix =~ /\A\p{InNCNameStartChar}\p{InNCNameChar}*\z/) {
         _throw Web::DOM::Exception 'NamespaceError',
             'The prefix is not an XML NCName';
       }
-      unless ($ln =~ /\A\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*\z/) {
+      unless ($ln =~ /\A\p{InNCNameStartChar}\p{InNCNameChar}*\z/) {
         _throw Web::DOM::Exception 'NamespaceError',
             'The local name is not an XML NCName';
       }
     }
-    unless ($qname =~ /\A\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*(?::\p{InXMLNCNameStartChar}\p{InXMLNCNameChar}*)?\z/) {
+    unless ($qname =~ /\A\p{InNCNameStartChar}\p{InNCNameChar}*(?::\p{InNCNameStartChar}\p{InNCNameChar}*)?\z/) {
       _throw Web::DOM::Exception 'NamespaceError',
           'The qualified name is not an XML QName';
     }
@@ -926,7 +922,7 @@ sub create_processing_instruction ($$$) {
     }
   } else {
     # 1.
-    unless ($target =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($target =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The target is not an XML Name';
     }
@@ -951,7 +947,7 @@ sub create_document_type_definition ($$) {
   my $qname = ''.$_[1];
 
   unless ($$self->[2]->{no_strict_error_checking}) {
-    unless ($qname =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($qname =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The qualified name is not an XML Name';
     }
@@ -970,7 +966,7 @@ sub create_element_type_definition ($$) {
   my $qname = ''.$_[1];
 
   unless ($$self->[2]->{no_strict_error_checking}) {
-    unless ($qname =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($qname =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The qualified name is not an XML Name';
     }
@@ -987,7 +983,7 @@ sub create_attribute_definition ($$) {
   my $qname = ''.$_[1];
 
   unless ($$self->[2]->{no_strict_error_checking}) {
-    unless ($qname =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($qname =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The qualified name is not an XML Name';
     }
@@ -1005,7 +1001,7 @@ sub create_general_entity ($$) {
   my $qname = ''.$_[1];
 
   unless ($$self->[2]->{no_strict_error_checking}) {
-    unless ($qname =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($qname =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The qualified name is not an XML Name';
     }
@@ -1024,7 +1020,7 @@ sub create_notation ($$) {
   my $qname = ''.$_[1];
 
   unless ($$self->[2]->{no_strict_error_checking}) {
-    unless ($qname =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+    unless ($qname =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
       _throw Web::DOM::Exception 'InvalidCharacterError',
           'The qualified name is not an XML Name';
     }

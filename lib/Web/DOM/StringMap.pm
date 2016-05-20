@@ -2,7 +2,7 @@ package Web::DOM::StringMap;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Carp;
 
 use overload
@@ -22,10 +22,8 @@ use overload
 
 package Web::DOM::StringMap::Hash;
 use Web::DOM::Exception;
+use Web::DOM::Internal;
 push our @CARP_NOT, qw(Web::DOM::Exception);
-use Char::Class::XML qw(
-  InXMLNameChar InXMLNameStartChar
-);
 
 sub TIEHASH ($$) {
   return bless [$_[1]], $_[0]
@@ -43,7 +41,7 @@ sub STORE ($$$) {
   _throw Web::DOM::Exception 'SyntaxError',
       'Key cannot contain the hyphen character' if $key =~ /-/;
   $key =~ tr/_/-/;
-  unless ("data-$key" =~ /\A\p{InXMLNameStartChar}\p{InXMLNameChar}*\z/) {
+  unless ("data-$key" =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
     my $value = ''.$_[2];
     _throw Web::DOM::Exception 'SyntaxError',
         'The attribute name is not an XML Name';
