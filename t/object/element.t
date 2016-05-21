@@ -240,6 +240,8 @@ for my $test (
    ['HTMLUnknownElement']],
   [[HTML_NS, 'template'], ['Element', 'HTMLElement', 'HTMLTemplateElement'],
    ['HTMLUnknownElement']],
+  [[HTML_NS, 'slot'], ['Element', 'HTMLElement', 'HTMLSlotElement'],
+   ['HTMLUnknownElement']],
   [[HTML_NS, 'picture'], ['Element', 'HTMLElement', 'HTMLPictureElement'],
    ['HTMLUnknownElement']],
   [[HTML_NS, 'applet'], ['Element', 'HTMLElement', 'HTMLAppletElement'],

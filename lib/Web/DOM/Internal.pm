@@ -466,6 +466,7 @@ for (
   ['nobr' => 'HTMLElement'],
   ['tt' => 'HTMLElement'],
   ['template' => 'HTMLTemplateElement'],
+  ['slot' => 'HTMLSlotElement'],
   ['picture' => 'HTMLPictureElement'],
 ) {
   $ElementClass->{Web::DOM::Internal::HTML_NS}->{$_->[0]}

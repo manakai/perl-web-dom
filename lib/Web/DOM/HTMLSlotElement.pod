@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::HTMLTemplateElement - DOM |HTMLTemplateElement| object
+Web::DOM::HTMLSlotElement - DOM |HTMLSlotElement| object
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::HTMLTemplateElement> class implements the DOM
-C<HTMLTemplateElement> interface.  The class is used by the HTML
-C<template> element.
+The C<Web::DOM::HTMLSlotElement> class implements the DOM
+C<HTMLSlotElement> interface.  The class is used by the HTML C<slot>
+element.
 
 =head1 METHODS
 
@@ -15,10 +15,11 @@ and L<Web::DOM::HTMLElement>, the following method is available:
 
 =over 4
 
-=item $df = $el->content
+=item $string = $el->name
 
-Return the L<Web::DOM::DocumentFragment> representing the template
-content of the element.  [HTML]
+=item $el->name ($string)
+
+Return or set the C<name> content attribute of the element.  [HTML]
 
 =back
 
@@ -28,8 +29,7 @@ content of the element.  [HTML]
 
 =item HTML
 
-HTML Standard
-<https://www.whatwg.org/specs/web-apps/current-work/#the-template-element>.
+HTML Standard <https://html.spec.whatwg.org/#the-slot-element>.
 
 =back
 

@@ -1866,7 +1866,14 @@ sub manakai_append_content ($$) {
   return $_[0]->content->manakai_append_content ($_[1]);
 } # manakai_append_content
 
-# XXX HTMLSlotElement
+package Web::DOM::HTMLSlotElement;
+our $VERSION = '1.0';
+push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Element;
+
+_define_reflect_string name => 'name';
+
+# XXX assigned_nodes
 
 1;
 

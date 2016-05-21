@@ -203,8 +203,6 @@ L<Web::DOM::HTMLTableColElement>,
 L<Web::DOM::HTMLTableSectionElement>,
 L<Web::DOM::HTMLTableRowElement>,
 L<Web::DOM::HTMLTableCellElement>,
-L<Web::DOM::HTMLTableDataCellElement>,
-L<Web::DOM::HTMLTableHeaderCellElement>,
 L<Web::DOM::HTMLFormElement>,
 L<Web::DOM::HTMLFieldSetElement>,
 L<Web::DOM::HTMLLegendElement>,
@@ -231,6 +229,7 @@ L<Web::DOM::HTMLFrameElement>,
 L<Web::DOM::HTMLDirectoryElement>,
 L<Web::DOM::HTMLFontElement>,
 L<Web::DOM::HTMLTemplateElement>,
+L<Web::DOM::HTMLSlotElement>,
 L<Web::DOM::HTMLPictureElement>.
 
 The L<Web::DOM::HTMLBaseFontElement> class is no longer available, as
