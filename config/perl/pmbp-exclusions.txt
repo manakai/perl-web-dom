@@ -1,7 +1,7 @@
-- "../../modules/charclass" tests build
 - "../../t_deps/modules/web-css" tests
 - "../../t_deps/modules/web-encodings" tests
 - "../../t_deps/modules/web-markup" tests tests-json
 - "../../t_deps/modules/web-url" tests
 - "../../t_deps/modules/web-datetime" tests
 - "../../t_deps/modules/test-x1" tests
+- "../../t_deps/modules/charclass" build tests
