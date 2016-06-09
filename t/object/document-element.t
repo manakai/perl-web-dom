@@ -153,7 +153,7 @@ test {
 } n => 4, name => 'create_element undef';
 
 for my $mime (qw(
-  text/html application/xhtml+xml
+  application/xhtml+xml
 )) {
   test {
     my $c = shift;
@@ -178,6 +178,7 @@ for my $mime (qw(
 for my $mime (qw(
   application/xml text/xml text/plain application/rdf+xml image/svg+xml
   application/octet-stream text/css text/javascript application/json
+  text/html
 )) {
   test {
     my $c = shift;

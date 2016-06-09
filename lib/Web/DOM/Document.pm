@@ -619,8 +619,7 @@ sub create_element ($$) {
     $ns = $Web::DOM::Internal::Text->{(HTML_NS)};
   } else {
     my $ct = ${$_[0]}->[2]->{content_type}; # or application/xml
-    if (defined $ct and
-        ($ct eq 'text/html' or $ct eq 'application/xhtml+xml')) {
+    if (defined $ct and $ct eq 'application/xhtml+xml') {
       $ns = $Web::DOM::Internal::Text->{(HTML_NS)};
     }
   }
