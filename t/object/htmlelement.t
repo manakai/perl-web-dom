@@ -385,6 +385,7 @@ for my $test (
   ['ol', 'reversed'],
   ['img', 'ismap'],
   ['iframe', 'allowfullscreen'],
+  ['iframe', 'allowusermedia'],
   ['object', 'typemustmatch'],
   ['track', 'default'],
   ['video', 'autoplay'],

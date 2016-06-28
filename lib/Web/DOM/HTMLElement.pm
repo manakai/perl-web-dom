@@ -582,6 +582,7 @@ _define_reflect_string srcdoc => 'srcdoc';
 _define_reflect_string name => 'name';
 _define_reflect_neurl src => 'src';
 _define_reflect_boolean allowfullscreen => 'allowfullscreen';
+_define_reflect_boolean allowusermedia => 'allowusermedia';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
 _define_reflect_settable_token_list sandbox => 'sandbox';

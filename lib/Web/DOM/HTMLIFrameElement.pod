@@ -22,6 +22,13 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 Return or set whether the C<allowfullscreen> attribute is specified or
 not.  [HTML]
 
+=item $boolean = $el->allowusermedia
+
+=item $el->allowusermedia ($boolean)
+
+Return or set whether the C<allowusermedia> attribute is specified or
+not.  [HTML]
+
 =item $string = $el->height
 
 =item $el->height ($string)
