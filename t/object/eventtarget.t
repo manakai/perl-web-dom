@@ -745,6 +745,25 @@ test {
   done $c;
 } n => 1, name => 'once => 1';
 
+test {
+  my $c = shift;
+  my $et = create_event_target;
+
+  ## c.f. <https://github.com/whatwg/dom/issues/265>
+
+  my $invoked = 0;
+  $et->add_event_listener (aa => sub {
+    $invoked++;
+    if ($invoked == 1) {
+      $_[0]->dispatch_event (new Web::DOM::Event 'aa', {});
+    }
+  }, {once => 1});
+  $et->dispatch_event (new Web::DOM::Event 'aa', {});
+
+  is $invoked, 1;
+  done $c;
+} n => 1, name => 'once reentrance';
+
 run_tests;
 
 =head1 LICENSE

@@ -172,14 +172,11 @@ sub _invoke_event_listeners ($$$) {
       next if not $listener->[1] and $event->event_phase == CAPTURING_PHASE;
       next if $listener->[1] and $event->event_phase == BUBBLING_PHASE;
 
+      @{$_[0]} = grep { $_ ne $listener } @{$_[0]} if $listener->[3]->{once};
+
       # XXX exception handling
       local $event->{in_passive_listener} = $listener->[3]->{passive};
       $listener->[0]->($event->current_target, $event);
-
-      if ($listener->[3]->{once}) {
-        $listener->[2] = 1; # removed
-        @{$_[0]} = grep { $_ ne $listener } @{$_[0]};
-      }
     }
     return $found;
   }; # $inner
