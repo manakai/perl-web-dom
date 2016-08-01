@@ -885,7 +885,25 @@ sub _define_reflect_nullable_enumerated ($$$) {
     };
     1;
   }, $class, $perl_name, $content_name, $content_name, $content_name or die $@;
-} # _define_reflect_enumerated
+} # _define_reflect_nullable_enumerated
+
+push @EXPORT, qw(_define_reflect_idl_enumerated);
+sub _define_reflect_idl_enumerated ($$$) {
+  my ($perl_name, $content_name, $values) = @_;
+  my $class = caller;
+  eval sprintf q{
+    *%s::%s = sub ($;$) {
+      if (@_ > 1) {
+        $_[0]->set_attribute_ns (undef, '%s', $_[1]);
+        return unless defined wantarray;
+      }
+
+      my $v = $_[0]->get_attribute_ns (undef, '%s');
+      return defined $v ? defined $values->{$v} ? $values->{$v} : '' : '';
+    };
+    1;
+  }, $class, $perl_name, $content_name, $content_name or die $@;
+} # _define_reflect_idl_enumerated
 
 push @EXPORT, qw(_define_reflect_boolean);
 sub _define_reflect_boolean ($$) {

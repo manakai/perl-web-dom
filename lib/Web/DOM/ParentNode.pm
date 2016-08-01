@@ -473,13 +473,10 @@ sub inner_html ($;$) {
       require Web::XML::Parser;
       $parser = Web::XML::Parser->new;
       my $orig_onerror = $parser->onerror;
-warn $_[1];
-warn $INC{"Web/XML/Parser.pm"};
       $parser->onerror (sub {
         my %args = @_;
         $orig_onerror->(@_);
         if (($args{level} || 'm') eq 'm') {
-warn join ' ', %args;
           $parser->throw (sub {
             undef $parser;
             _throw Web::DOM::Exception 'SyntaxError',

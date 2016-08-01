@@ -396,6 +396,7 @@ for my $test (
   ['audio', 'controls'],
   ['video', 'muted', 'default_muted'],
   ['audio', 'muted', 'default_muted'],
+  ['video', 'playsinline'],
   ['form', 'novalidate'],
   ['fieldset', 'disabled'],
   ['input', 'autofocus'],
@@ -1246,6 +1247,44 @@ for my $test (
   } n => 3 + @{$test->{valid_values}}*2 +
       (@{$test->{valid_values}} + @{$test->{invalid_values}} + 1)*2,
       name => ['reflect enumerated attr', $test->{element}, $test->{attr}];
+}
+
+for my $test (
+  {element => 'link',
+   attr => 'as',
+   default => '',
+   valid_values => [
+     ['' => ''],
+     [image => 'image'],
+     ['script' => 'script'],
+   ],
+   invalid_values => [['IMAGE'], ['fetch'], ['as']]},
+) {
+  my $attr = $test->{attr};
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{element});
+    is $el->$attr, $test->{default};
+    for (@{$test->{valid_values}}) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, $_->[1];
+      is $el->get_attribute ($test->{content_attr} || $attr), $_->[0];
+    }
+    for (
+      (map { [$_->[0].'  '] } @{$test->{valid_values}}),
+      @{$test->{invalid_values}},
+      ['#invalid'],
+      ['#missing'],
+    ) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, defined $test->{invalid_default} ? $test->{invalid_default} : $test->{default};
+      is $el->get_attribute ($test->{content_attr} || $attr), defined $_->[0] ? $_->[0] : undef;
+    }
+    done $c;
+  } n => 3 + @{$test->{valid_values}}*2 +
+      (@{$test->{valid_values}} + @{$test->{invalid_values}} + 1)*2,
+      name => ['reflect IDL enumerated attr', $test->{element}, $test->{attr}];
 }
 
 test {

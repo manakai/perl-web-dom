@@ -15,6 +15,12 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
+=item $string = $el->as
+
+=item $el->as ($string)
+
+Return or set the C<as> attribute.  [HTML]
+
 =item $string = $el->crossorigin
 
 =item $el->crossorigin ($string)

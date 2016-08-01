@@ -140,7 +140,7 @@ sub supports ($$) {
 
 sub value ($;$) {
   if (@_ > 1) {
-    (tied @{$_[0]})->replace_by_bare (grep { length $_ }
+    (tied @{$_[0]})->replace_by_bare (grep { CORE::length $_ }
                                       split /[\x09\x0A\x0C\x0D\x20]+/, $_[1]);
   }
   return ''.$_[0];

@@ -1,18 +1,18 @@
 =head1 NAME
 
-Web::DOM::HTMLVideoElement - The DOM |HTMLVideoElement| object
+Web::DOM::HTMLVideoElement - DOM |HTMLVideoElement| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::HTMLVideoElement> class implements the DOM
-C<HTMLVideoElement> interface.  The class is used by the HTML C<video>
-element.
+C<HTMLVideoElement> interface.  The class is used by HTML C<video>
+elements.
 
 =head1 METHODS
 
-In addition to the methods available for classes L<Web::DOM::Element>,
-L<Web::DOM::HTMLElement>, and L<Web::DOM::HTMLMediaElement>, the
-following methods are available:
+In addition to the methods of classes L<Web::DOM::EventTarget>,
+L<Web::DOM::Node>, L<Web::DOM::Element>, L<Web::DOM::HTMLElement>, and
+L<Web::DOM::HTMLMediaElement>, the following methods are available:
 
 =over 4
 
@@ -21,6 +21,12 @@ following methods are available:
 =item $el->height ($integer)
 
 Return or set the C<height> attribute.  [HTML]
+
+=item $boolean = $el->playsinline
+
+=item $el->playsinline ($boolean)
+
+Return or set the C<playsinline> attribute.  [HTML]
 
 =item $string = $el->poster
 
@@ -43,7 +49,7 @@ Return or set the C<width> attribute.  [HTML]
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-video-element>.
+<https://www.whatwg.org/specs/web-apps/current-work/#the-video-element>.
 
 =back
 
@@ -57,7 +63,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

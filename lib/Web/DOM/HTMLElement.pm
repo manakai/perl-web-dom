@@ -293,6 +293,15 @@ _define_reflect_string rev => 'rev';
 _define_reflect_string target => 'target';
 _define_reflect_settable_token_list rel_list => 'rel';
 
+_define_reflect_idl_enumerated as => 'as', {
+  '' => '',
+  map { $_ => $_ }
+qw(
+document embed font image manifest media object report script
+serviceworker sharedworker style worker xslt
+)
+};
+
 # XXX LinkStyle
 
 # XXX <link> -> StyleSheet reflection
@@ -675,6 +684,7 @@ use Web::DOM::Element;
 _define_reflect_unsigned_long width => 'width', sub { 0 };
 _define_reflect_unsigned_long height => 'height', sub { 0 };
 _define_reflect_neurl poster => 'poster';
+_define_reflect_boolean playsinline => 'playsinline';
 
 # XXX video_width video_height
 
