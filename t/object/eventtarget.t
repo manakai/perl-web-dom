@@ -764,6 +764,44 @@ test {
   done $c;
 } n => 1, name => 'once reentrance';
 
+test {
+  my $c = shift;
+  my $et = create_event_target;
+
+  $et->add_event_listener (aa => sub {
+    my $ev = $_[1];
+    $ev->stop_propagation;
+    test {
+      ok $ev->manakai_propagation_stopped;
+    } $c;
+  });
+
+  my $ev = new Web::DOM::Event 'aa', {};
+  $et->dispatch_event ($ev);
+
+  ok ! $ev->manakai_propagation_stopped;
+  done $c;
+} n => 2, name => 'stop propagation flag after dispatch';
+
+test {
+  my $c = shift;
+  my $et = create_event_target;
+
+  $et->add_event_listener (aa => sub {
+    my $ev = $_[1];
+    $ev->stop_immediate_propagation;
+    test {
+      ok $ev->manakai_immediate_propagation_stopped;
+    } $c;
+  });
+
+  my $ev = new Web::DOM::Event 'aa', {};
+  $et->dispatch_event ($ev);
+
+  ok ! $ev->manakai_immediate_propagation_stopped;
+  done $c;
+} n => 2, name => 'stop immediate propagation flag after dispatch';
+
 run_tests;
 
 =head1 LICENSE

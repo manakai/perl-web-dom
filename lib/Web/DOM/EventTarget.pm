@@ -141,6 +141,8 @@ sub _dispatch_event ($$) {
 
   # 10.-13.
   delete $event->{dispatch};
+  delete $event->{stop_propagation};
+  delete $event->{stop_immediate_propagation};
   delete $event->{event_phase};
   delete $event->{current_target};
   return not $event->{canceled};
