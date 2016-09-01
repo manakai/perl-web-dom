@@ -1,10 +1,22 @@
 package Test::DOM::Destroy;
 use strict;
 use warnings;
-use Exporter::Lite;
+use Carp;
+
+our @EXPORT;
+
+sub import ($;@) {
+  my $from_class = shift;
+  my ($to_class, $file, $line) = caller;
+  no strict 'refs';
+  for (@_ ? @_ : @{$from_class . '::EXPORT'}) {
+    my $code = $from_class->can ($_)
+        or croak qq{"$_" is not exported by the $from_class module at $file line $line};
+    *{$to_class . '::' . $_} = $code;
+  }
+} # import
 
 push our @EXPORT, qw(ondestroy);
-
 sub ondestroy (&$) {
   my ($code, $obj) = @_;
   my $watcher = bless $code, 'Test::DOM::Destroy::Watcher';
