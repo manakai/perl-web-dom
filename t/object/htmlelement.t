@@ -352,10 +352,10 @@ for my $test (
     is $el->$attr, 'htTp://fo:a';
     is $el->get_attribute ($attr), 'htTp://fo:a';
     $el->$attr ('');
-    is $el->$attr, '';
+    is $el->$attr, 'http://foo/bar/';
     is $el->get_attribute ($attr), '';
     $el->set_attribute_ns (XML_NS, 'base' => 'ftp://hoge');
-    is $el->$attr, '';
+    is $el->$attr, 'http://foo/bar/';
     done $c;
   } n => 10, name => ['reflect neurl', $test->[0], $test->[1]];
 }

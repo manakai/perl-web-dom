@@ -788,27 +788,7 @@ sub _define_reflect_url ($$) {
 } # _define_reflect_url
 
 push @EXPORT, qw(_define_reflect_neurl);
-sub _define_reflect_neurl ($$) {
-  my ($perl_name, $content_name) = @_;
-  my $class = caller;
-  eval sprintf q{
-    *%s::%s = sub ($;$) {
-      if (@_ > 1) {
-        $_[0]->set_attribute_ns (undef, '%s', $_[1]);
-        return unless defined wantarray;
-      }
-
-      my $v = $_[0]->get_attribute_ns (undef, '%s');
-      if (defined $v and length $v) {
-        my $w = _resolve_url $v, $_[0]->base_uri;
-        return defined $w ? $w : $v;
-      } else {
-        return '';
-      }
-    };
-    1;
-  }, $class, $perl_name, $content_name, $content_name or die $@;
-} # _define_reflect_neurl
+*_define_reflect_neurl = \&_define_reflect_url;
 
 push @EXPORT, qw(_define_reflect_string_undef);
 sub _define_reflect_string_undef ($$) {
