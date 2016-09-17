@@ -1026,6 +1026,30 @@ sub _define_reflect_unsigned_long_positive ($$$) {
   }, $class, $perl_name, $content_name, $content_name or die $@;
 } # _define_reflect_unsigned_long_positive
 
+push @EXPORT, qw(_define_reflect_unsigned_long_positive_fb);
+sub _define_reflect_unsigned_long_positive_fb ($$$) {
+  my ($perl_name, $content_name, $get_default) = @_;
+  my $class = caller;
+  eval sprintf q{
+    *%s::%s = sub ($;$) {
+      if (@_ > 1) {
+        my $v = Web::DOM::Internal::_idl_unsigned_long $_[1];
+        $v = $get_default->($_[0]) if $v == 0;
+        $_[0]->set_attribute_ns (undef, '%s', $v);
+        return unless defined wantarray;
+      }
+
+      my $v = $_[0]->get_attribute_ns (undef, '%s');
+      if (defined $v and $v =~ /\A[\x09\x0A\x0C\x0D\x20]*([+-]?[0-9]+)/) {
+        my $v = $1;
+        return 0+$v if 1 <= $v and $v <= 2**31-1; # Web IDL unsigned long
+      }
+      return $get_default->($_[0]);
+    };
+    1;
+  }, $class, $perl_name, $content_name, $content_name or die $@;
+} # _define_reflect_unsigned_long_positive_fb
+
 my $SupportedTokensList = {rel => {}, sandbox => {}, dropzone => {}}; # XXX
 
 push @EXPORT, qw(_define_reflect_settable_token_list);

@@ -1030,7 +1030,7 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-_define_reflect_unsigned_long_positive span => 'span', sub { 1 };
+_define_reflect_unsigned_long_positive_fb span => 'span', sub { 1 };
 
 _define_reflect_string align => 'align';
 _define_reflect_string width => 'width';
@@ -1397,7 +1397,7 @@ _define_reflect_string pattern => 'pattern';
 _define_reflect_string placeholder => 'placeholder';
 _define_reflect_boolean readonly => 'readonly';
 _define_reflect_boolean required => 'required';
-_define_reflect_unsigned_long size => 'size', sub { 0 };
+_define_reflect_unsigned_long_positive size => 'size', sub { 20 };
 _define_reflect_string step => 'step';
 _define_reflect_neurl src => 'src';
 _define_reflect_enumerated type => 'type', {
@@ -1596,7 +1596,7 @@ use Web::DOM::Element;
 # XXX autocomplete form
 
 _define_reflect_boolean autofocus => 'autofocus';
-_define_reflect_unsigned_long_positive cols => 'cols', sub { 20 };
+_define_reflect_unsigned_long_positive_fb cols => 'cols', sub { 20 };
 _define_reflect_string dirname => 'dirname';
 _define_reflect_boolean disabled => 'disabled';
 _define_reflect_enumerated inputmode => 'inputmode', {
@@ -1618,7 +1618,7 @@ _define_reflect_string name => 'name';
 _define_reflect_string placeholder => 'placeholder';
 _define_reflect_boolean readonly => 'readonly';
 _define_reflect_boolean required => 'required';
-_define_reflect_unsigned_long_positive rows => 'rows', sub { 2 };
+_define_reflect_unsigned_long_positive_fb rows => 'rows', sub { 2 };
 _define_reflect_enumerated wrap => 'wrap', {
   soft => 'soft',
   hard => 'hard',

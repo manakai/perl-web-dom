@@ -710,7 +710,6 @@ for my $test (
   ['td', 'rowspan', 1],
   ['th', 'colspan', 1],
   ['th', 'rowspan', 1],
-  ['input', 'size', 0],
   ['select', 'size', 0],
   ['applet', 'hspace', 0],
   ['applet', 'vspace', 0],
@@ -799,10 +798,11 @@ for my $test (
 }
 
 for my $test (
-  ['colgroup', 'span', 1],
-  ['col', 'span', 1],
-  ['textarea', 'cols', 20],
-  ['textarea', 'rows', 2],
+  ['input', 'size', 20, undef],
+  ['colgroup', 'span', 1, 1],
+  ['col', 'span', 1, 1],
+  ['textarea', 'cols', 20, 20],
+  ['textarea', 'rows', 2, 2],
 ) {
   test {
     my $c = shift;
@@ -854,14 +854,24 @@ for my $test (
       [2**32 => 0],
       ["34e-6" => 0],
     ) {
-      dies_here_ok {
+      if (defined $test->[3]) {
         $el->$attr ($_->[0]);
-      };
-      isa_ok $@, 'Web::DOM::Exception';
-      is $@->name, 'IndexSizeError';
-      is $@->message, 'The value cannot be set to zero';
-      is $el->$attr, 361;
-      is $el->get_attribute ($attr), 361;
+        is $el->$attr, $test->[3];
+        is $el->get_attribute ($attr), $test->[3];
+        ok 1;
+        ok 1;
+        ok 1;
+        ok 1;
+      } else {
+        dies_here_ok {
+          $el->$attr ($_->[0]);
+        };
+        isa_ok $@, 'Web::DOM::Exception';
+        is $@->name, 'IndexSizeError';
+        is $@->message, 'The value cannot be set to zero';
+        is $el->$attr, 361;
+        is $el->get_attribute ($attr), 361;
+      }
     }
     for (
       ["" => $test->[2]],
