@@ -434,7 +434,7 @@ use Web::DOM::Element;
 _define_reflect_url cite => 'cite';
 
 package Web::DOM::HTMLOListElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Internal;
 use Web::DOM::Node;
@@ -442,19 +442,7 @@ use Web::DOM::Element;
 
 _define_reflect_string type => 'type';
 _define_reflect_boolean reversed => 'reversed';
-
-_define_reflect_long start => 'start', sub {
-  if ($_[0]->reversed) {
-    my @n = grep {
-      $_->node_type == ELEMENT_NODE and
-      $_->manakai_element_type_match (HTML_NS, 'li');
-    } $_[0]->child_nodes->to_list;
-    return scalar @n;
-  } else {
-    return 1;
-  }
-};
-
+_define_reflect_long start => 'start', sub { 1 };
 _define_reflect_boolean compact => 'compact';
 
 package Web::DOM::HTMLUListElement;

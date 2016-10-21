@@ -589,7 +589,7 @@ test {
   my $doc = new Web::DOM::Document;
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ol');
   $el->reversed (1);
-  is $el->start, 0;
+  is $el->start, 1;
   $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'li'));
   is $el->start, 1;
   $el->append_child ($doc->create_element_ns (undef, 'li'));
@@ -599,7 +599,7 @@ test {
   $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'ul'))
       ->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'li'));
   $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'li'));
-  is $el->start, 3;
+  is $el->start, 1;
   $el->start (4);
   is $el->start, 4;
   $el->start (-13);
