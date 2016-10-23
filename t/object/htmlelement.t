@@ -2412,6 +2412,16 @@ test {
   done $c;
 } n => 4*5 + 1, name => 'delete_row error';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $el = $doc->create_element ('table');
+  $el->delete_row (-1);
+  is $el->first_child, undef;
+  done $c;
+} n => 1, name => '<table>.delete_row (-1) where <table> has no <tr>';
+
 for my $section (qw(tbody thead tfoot)) {
   test {
     my $c = shift;

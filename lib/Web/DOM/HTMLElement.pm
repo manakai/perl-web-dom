@@ -991,16 +991,14 @@ sub delete_row ($$) {
   my $rows = $_[0]->rows;
   my $row_count = @$rows;
 
-  # 1.
+  return if $index == -1 and $row_count == 0;
   $index = $row_count - 1 if $index == -1;
 
-  # 2.
   if ($index < 0 or $index >= $row_count) {
     _throw Web::DOM::Exception 'IndexSizeError',
         'The specified row index is invalid';
   }
 
-  # 3.
   my $row = $rows->[$index];
   $row->parent_node->remove_child ($row);
   return;
