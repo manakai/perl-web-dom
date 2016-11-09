@@ -271,7 +271,7 @@ sub href ($;$) {
 _define_reflect_string target => 'target';
 
 package Web::DOM::HTMLLinkElement;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
@@ -287,6 +287,7 @@ _define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
   # #missing => no cors
 };
 _define_reflect_settable_token_list sizes => 'sizes';
+_define_reflect_string nonce => 'nonce';
 
 _define_reflect_string charset => 'charset';
 _define_reflect_string rev => 'rev';

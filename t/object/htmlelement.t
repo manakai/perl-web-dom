@@ -37,6 +37,7 @@ for my $test (
   ['link', 'media'],
   ['link', 'hreflang'],
   ['link', 'type'],
+  ['link', 'nonce'],
   ['meta', 'name'],
   ['meta', 'content'],
   ['meta', 'http_equiv', 'http-equiv'],

@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::HTMLLinkElement - The DOM |HTMLLinkElement| object
+Web::DOM::HTMLLinkElement - DOM |HTMLLinkElement| object
 
 =head1 DESCRIPTION
 
@@ -10,8 +10,9 @@ element.
 
 =head1 METHODS
 
-In addition to the methods available for classes L<Web::DOM::Element>
-and L<Web::DOM::HTMLElement>, the following methods are available:
+In addition to the methods for classes L<Web::DOM::EventTarget>,
+L<Web::DOM::Node>, L<Web::DOM::ParentNode>, L<Web::DOM::Element>, and
+L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
@@ -44,6 +45,12 @@ Return or set the C<hreflang> attribute.  [HTML]
 =item $el->media ($string)
 
 Return or set the C<media> attribute.  [HTML]
+
+=item $string = $el->nonce
+
+=item $el->nonce ($string)
+
+Return or set the C<nonce> attribute.  [HTML]
 
 =item $string = $el->rel
 
@@ -82,8 +89,7 @@ C<charset>, C<rev>, and C<target>.  [HTML]
 
 =item HTML
 
-HTML Standard
-<https://www.whatwg.org/specs/web-apps/current-work/#the-link-element>.
+HTML Standard <https://html.spec.whatwg.org/#the-link-element>.
 
 =back
 
