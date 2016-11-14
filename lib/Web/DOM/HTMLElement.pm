@@ -288,6 +288,7 @@ _define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
 };
 _define_reflect_settable_token_list sizes => 'sizes';
 _define_reflect_string nonce => 'nonce';
+_define_reflect_string integrity => 'integrity';
 
 _define_reflect_string charset => 'charset';
 _define_reflect_string rev => 'rev';
@@ -369,6 +370,7 @@ _define_reflect_boolean defer => 'defer';
 _define_reflect_string event => 'event';
 _define_reflect_string html_for => 'for';
 _define_reflect_string nonce => 'nonce';
+_define_reflect_string integrity => 'integrity';
 
 # XXX async
 

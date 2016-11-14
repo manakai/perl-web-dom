@@ -34,6 +34,12 @@ Return or set whether the C<defer> attribute is specified or not.
 
 Return or set the C<crossorigin> attribute.  [HTML]
 
+=item $string = $el->integrity
+
+=item $el->integrity ($string)
+
+Return or set the C<integrity> attribute.  [HTML]
+
 =item $string = $el->nonce
 
 =item $el->nonce ($string)

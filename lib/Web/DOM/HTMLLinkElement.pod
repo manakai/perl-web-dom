@@ -40,6 +40,12 @@ Return or set the C<href> attribute.  [HTML]
 
 Return or set the C<hreflang> attribute.  [HTML]
 
+=item $string = $el->integrity
+
+=item $el->integrity ($string)
+
+Return or set the C<integrity> attribute.  [HTML]
+
 =item $string = $el->media
 
 =item $el->media ($string)
