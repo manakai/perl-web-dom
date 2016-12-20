@@ -65,14 +65,18 @@ Prevent any execution of the default action of the event.  [DOM]
 
 =item $boolean = $ev->manakai_propagation_stopped
 
+=item $boolean = $ev->cancel_bubble
+
 Return whether the C<stop_propagation> method has been invoked or not.
-[MANAKAI]
+[DOM] [MANAKAI]
 
 =item $ev->stop_immediate_propagation
 
 Stop the propagation of the event immediately.  [DOM]
 
 =item $ev->stop_propagation
+
+=item $ev->cancel_bubble (1)
 
 Stop the propagation of the event.  [DOM]
 

@@ -283,6 +283,40 @@ test {
   done $c;
 } n => 8, name => 'constructor then init_event';
 
+test {
+  my $c = shift;
+  my $ev = new Web::DOM::Event 'x';
+  ok ! $ev->cancel_bubble;
+  $ev->cancel_bubble (0);
+  ok ! $ev->cancel_bubble;
+  $ev->cancel_bubble (1);
+  ok $ev->cancel_bubble;
+  ok $ev->manakai_propagation_stopped;
+  done $c;
+} n => 4, name => 'cancel_bubble';
+
+test {
+  my $c = shift;
+  my $ev = new Web::DOM::Event 'x';
+  ok ! $ev->cancel_bubble;
+  $ev->stop_immediate_propagation;
+  ok $ev->cancel_bubble;
+  $ev->stop_propagation;
+  ok $ev->cancel_bubble;
+  ok $ev->manakai_propagation_stopped;
+  done $c;
+} n => 4, name => 'cancel_bubble';
+
+test {
+  my $c = shift;
+  my $ev = new Web::DOM::Event 'x';
+  ok ! $ev->cancel_bubble;
+  $ev->stop_propagation;
+  ok $ev->cancel_bubble;
+  ok $ev->manakai_propagation_stopped;
+  done $c;
+} n => 3, name => 'cancel_bubble';
+
 ## init_event after create_event tests found in document-events.t.
 ## init_event after dispatch tests found in eventtarget.t.
 
@@ -290,7 +324,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

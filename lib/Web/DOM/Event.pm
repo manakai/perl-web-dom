@@ -80,6 +80,13 @@ sub manakai_dispatched ($) { $_[0]->{dispatch} }
 sub stop_propagation ($) { $_[0]->{stop_propagation} = 1; undef }
 sub manakai_propagation_stopped ($) { $_[0]->{stop_propagation} }
 
+sub cancel_bubble ($;$) {
+  if (@_ > 1) {
+    $_[0]->{stop_propagation} = 1 if $_[1];
+  }
+  return $_[0]->{stop_propagation};
+} # cancel_bubble
+
 sub stop_immediate_propagation ($) {
   $_[0]->{stop_propagation} = 1;
   $_[0]->{stop_immediate_propagation} = 1;
