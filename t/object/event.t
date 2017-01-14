@@ -292,8 +292,11 @@ test {
   $ev->cancel_bubble (1);
   ok $ev->cancel_bubble;
   ok $ev->manakai_propagation_stopped;
+  $ev->cancel_bubble (0);
+  ok $ev->cancel_bubble;
+  ok $ev->manakai_propagation_stopped;
   done $c;
-} n => 4, name => 'cancel_bubble';
+} n => 6, name => 'cancel_bubble';
 
 test {
   my $c = shift;

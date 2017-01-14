@@ -438,7 +438,7 @@ for (
   ['optgroup' => 'HTMLOptGroupElement'],
   ['option' => 'HTMLOptionElement'],
   ['textarea' => 'HTMLTextAreaElement'],
-  ['keygen' => 'HTMLKeygenElement'],
+  ['keygen' => 'HTMLUnknownElement'],
   ['output' => 'HTMLOutputElement'],
   ['progress' => 'HTMLProgressElement'],
   ['meter' => 'HTMLMeterElement'],

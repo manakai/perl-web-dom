@@ -873,6 +873,7 @@ sub _clone ($$$) {
 
     $$copy->[2]->{$_} = $$node->[2]->{$_}
         for qw(content_type is_html compat_mode encoding);
+    # XXX and origin
 
     $orig_strict_error_checking = $od->strict_error_checking;
     $od->strict_error_checking (0);

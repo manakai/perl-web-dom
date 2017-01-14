@@ -1303,7 +1303,6 @@ _define_reflect_string html_for => 'for';
 my $LabelableLocalNames = {
   button => 1,
   #input => 1,
-  keygen => 1,
   meter => 1,
   output => 1,
   progress => 1,
@@ -1624,22 +1623,6 @@ sub default_value ($;$) {
 } # default_value
 
 # XXX value text_length; validation API; labels; selection API
-
-package Web::DOM::HTMLKeygenElement;
-our $VERSION = '1.0';
-push our @ISA, qw(Web::DOM::HTMLElement);
-use Web::DOM::Element;
-
-# XXX form keytype
-
-_define_reflect_boolean autofocus => 'autofocus';
-_define_reflect_string challenge => 'challenge';
-_define_reflect_boolean disabled => 'disabled';
-_define_reflect_string name => 'name';
-
-sub type ($) { 'keygen' }
-
-# XXX validitation API; labels
 
 package Web::DOM::HTMLOutputElement;
 our $VERSION = '1.0';

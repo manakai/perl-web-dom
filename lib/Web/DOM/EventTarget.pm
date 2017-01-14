@@ -94,6 +94,8 @@ sub dispatch_event ($$) {
 
 sub _dispatch_event ($$) {
   ## Dispatch <https://dom.spec.whatwg.org/#concept-event-dispatch>.
+
+  # XXX Shadow DOM, relatedTarget
   
   # 1.-3.
   my $event = $_[1];

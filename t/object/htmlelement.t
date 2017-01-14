@@ -116,8 +116,6 @@ for my $test (
   ['textarea', 'dirname'],
   ['textarea', 'name'],
   ['textarea', 'placeholder'],
-  ['keygen', 'challenge'],
-  ['keygen', 'name'],
   ['output', 'name'],
   ['menu', 'label'],
   ['menuitem', 'radiogroup'],
@@ -423,8 +421,6 @@ for my $test (
   ['textarea', 'disabled'],
   ['textarea', 'readonly'],
   ['textarea', 'required'],
-  ['keygen', 'autofocus'],
-  ['keygen', 'disabled'],
   ['details', 'open'],
   ['menuitem', 'checked'],
   ['menuitem', 'default'],
@@ -1813,14 +1809,6 @@ test {
 test {
   my $c = shift;
   my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'keygen');
-  is $el->type, 'keygen';
-  done $c;
-} n => 1, name => 'keygen type';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'output');
   is $el->type, 'output';
   done $c;
@@ -2777,7 +2765,7 @@ test {
   done $c;
 } n => 2, name => 'cell_index has tr parent';
 
-for my $control_name (qw(input button keygen meter output progress select
+for my $control_name (qw(input button meter output progress select
                          textarea)) {
   test {
     my $c = shift;
