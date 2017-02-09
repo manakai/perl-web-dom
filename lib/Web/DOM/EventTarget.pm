@@ -185,7 +185,7 @@ sub _invoke_event_listeners ($$$) {
     return $found;
   }; # $inner
   my $found = $inner->($orig_listeners);
-  if (not $found and @$legacy_listeners) {
+  if (not $found and $event->{is_trusted} and @$legacy_listeners) {
     local $event->{type} = $legacy_type;
     $inner->($legacy_listeners);
   }
@@ -194,8 +194,6 @@ sub _invoke_event_listeners ($$$) {
 sub _fire_simple_event ($$$) {
   ## Fire an event named e
   ## <https://dom.spec.whatwg.org/#concept-event-fire>.
-  ## Fire a simple event named e
-  ## <https://www.whatwg.org/specs/web-apps/current-work/#fire-a-simple-event>.
 
   require Web::DOM::Event;
   my $ev = Web::DOM::Event->new ($_[1], $_[2]);
@@ -207,7 +205,7 @@ sub _fire_simple_event ($$$) {
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

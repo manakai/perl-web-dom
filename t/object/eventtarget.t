@@ -681,6 +681,41 @@ test {
 test {
   my $c = shift;
   my $et = create_event_target;
+
+  my $invoked = 0;
+  $et->add_event_listener (webkitAnimationEnd => sub {
+    $invoked++;
+  });
+
+  $et->_fire_simple_event ('animationend', {});
+
+  is $invoked, 1;
+  done $c;
+} n => 1, name => 'legacy event type';
+
+test {
+  my $c = shift;
+  my $et = create_event_target;
+
+  my $invoked1 = 0;
+  my $invoked2 = 0;
+  $et->add_event_listener (webkitAnimationEnd => sub {
+    $invoked1++;
+  });
+  $et->add_event_listener (animationend => sub {
+    $invoked2++;
+  });
+
+  $et->_fire_simple_event ('animationend', {});
+
+  is $invoked1, 0;
+  is $invoked2, 1;
+  done $c;
+} n => 2, name => 'legacy event type';
+
+test {
+  my $c = shift;
+  my $et = create_event_target;
   my $ev = new Web::DOM::Event 'animationend';
 
   my $invoked = 0;
@@ -689,7 +724,7 @@ test {
   });
   $et->dispatch_event ($ev);
 
-  is $invoked, 1;
+  is $invoked, 0;
   done $c;
 } n => 1, name => 'legacy event type';
 
@@ -806,7 +841,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
