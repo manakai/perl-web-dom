@@ -295,12 +295,12 @@ _define_reflect_string rev => 'rev';
 _define_reflect_string target => 'target';
 _define_reflect_settable_token_list rel_list => 'rel';
 
-_define_reflect_idl_enumerated as => 'as', {
+_define_reflect_enumerated as => 'as', {
   '' => '',
   map { $_ => $_ }
 qw(
-document embed font image manifest media object report script
-serviceworker sharedworker style worker xslt
+audio document embed font image manifest object report script
+serviceworker sharedworker style track video worker xslt
 )
 };
 
