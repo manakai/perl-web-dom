@@ -290,7 +290,7 @@ test {
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'InvalidCharacterError';
-  is $@->message, 'The qualified name is not an XML Name';
+  is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_element_ns bad name';
 
@@ -301,7 +301,7 @@ test {
     $doc->create_element_ns (undef, ':hoge');
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_element_ns bad qname';
@@ -313,7 +313,7 @@ test {
     $doc->create_element_ns (undef, 'hoge:');
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_element_ns bad qname';
@@ -325,7 +325,7 @@ test {
     $doc->create_element_ns (undef, ':');
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_element_ns bad qname';
@@ -337,7 +337,7 @@ test {
     $doc->create_element_ns (q<fuga>, 'hoge:120');
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_element_ns bad qname';
@@ -349,7 +349,7 @@ test {
     $doc->create_element_ns (undef, 'hoge:fuga:abbc');
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_element_ns bad qname';
@@ -559,7 +559,7 @@ test {
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'InvalidCharacterError';
-  is $@->message, 'The qualified name is not an XML Name';
+  is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_element_ns undef';
 
@@ -597,7 +597,7 @@ test {
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'InvalidCharacterError';
-  is $@->message, 'The qualified name is not an XML Name';
+  is $@->message, 'The qualified name is not an XML QName';
 
   done $c;
 } n => 4, name => 'create_element_ns not strict empty';
@@ -696,7 +696,7 @@ test {
     $doc->create_element_ns ('http://hoge', [undef, 'a:bc']);
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The local name is not an XML NCName';
   done $c;
 } n => 4, name => 'create_element_ns arrayref error';
@@ -708,7 +708,7 @@ test {
     $doc->create_element_ns ('http://hoge', ['a:b', 'abc']);
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The prefix is not an XML NCName';
   done $c;
 } n => 4, name => 'create_element_ns arrayref error';
@@ -720,7 +720,7 @@ test {
     $doc->create_element_ns ('http://hoge', [':', 'abc']);
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The prefix is not an XML NCName';
   done $c;
 } n => 4, name => 'create_element_ns arrayref error';
@@ -732,7 +732,7 @@ test {
     $doc->create_element_ns ('http://hoge', ['', 'abc']);
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The prefix is not an XML NCName';
   done $c;
 } n => 4, name => 'create_element_ns arrayref error';

@@ -202,20 +202,12 @@ sub create_document_type ($$;$$) {
   my $sysid = defined $_[3] ? ''.$_[3] : '';
 
   unless ($$self->[0]->{data}->[0]->{no_strict_error_checking}) {
-    # 1.
-    unless ($qname =~ /\A\p{InNameStartChar}\p{InNameChar}*\z/) {
-      _throw Web::DOM::Exception 'InvalidCharacterError',
-          'The qualified name is not an XML Name';
-    }
-
-    # 2.
     unless ($qname =~ /\A\p{InNCNameStartChar}\p{InNCNameChar}*(?::\p{InNCNameStartChar}\p{InNCNameChar}*)?\z/) {
-      _throw Web::DOM::Exception 'NamespaceError',
+      _throw Web::DOM::Exception 'InvalidCharacterError',
           'The qualified name is not an XML QName';
     }
   } # strict
 
-  # 3.
   my $data = {node_type => DOCUMENT_TYPE_NODE,
               name => Web::DOM::Internal->text ($qname),
               public_id => Web::DOM::Internal->text ($pubid),
@@ -230,7 +222,7 @@ sub has_feature ($) { 1 }
 
 =head1 LICENSE
 
-Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

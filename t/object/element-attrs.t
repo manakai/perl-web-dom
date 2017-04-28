@@ -515,7 +515,7 @@ for my $name (
     };
     isa_ok $@, 'Web::DOM::Exception';
     is $@->name, 'InvalidCharacterError';
-    is $@->message, 'The qualified name is not an XML Name';
+    is $@->message, 'The qualified name is not an XML QName';
     
     is $el->get_attribute ($name), undef;
 
@@ -630,7 +630,7 @@ for my $qname (
       $el->set_attribute_ns ('hpofgexs', $qname => 'hh');
     };
     isa_ok $@, 'Web::DOM::Exception';
-    is $@->name, 'NamespaceError';
+    is $@->name, 'InvalidCharacterError';
     is $@->message, 'The qualified name is not an XML QName';
     
     is $el->get_attribute_ns (undef, $qname), undef;
@@ -910,7 +910,7 @@ test {
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'InvalidCharacterError';
-  is $@->message, 'The qualified name is not an XML Name';
+  is $@->message, 'The qualified name is not an XML QName';
   is $el->get_attribute (''), undef;
   is $el->attributes->length, 0;
 
@@ -1029,7 +1029,7 @@ test {
     $el->set_attribute_ns ('http://hoge', [undef, 'a:bc'] => 2);
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The local name is not an XML NCName';
   is $el->attributes->length, 0;
   done $c;
@@ -1043,7 +1043,7 @@ test {
     $el->set_attribute_ns ('http://hoge', ['a:b', 'abc'] => 4);
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The prefix is not an XML NCName';
   is $el->attributes->length, 0;
   done $c;
@@ -1057,7 +1057,7 @@ test {
     $el->set_attribute_ns ('http://hoge', [':', 'abc'] => 45);
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The prefix is not an XML NCName';
   is $el->attributes->length, 0;
   done $c;
@@ -1071,7 +1071,7 @@ test {
     $el->set_attribute_ns ('http://hoge', ['', 'abc'] => 532);
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The prefix is not an XML NCName';
   is $el->attributes->length, 0;
   done $c;

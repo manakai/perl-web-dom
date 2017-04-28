@@ -192,7 +192,7 @@ test {
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'InvalidCharacterError';
-  is $@->message, 'The qualified name is not an XML Name';
+  is $@->message, 'The qualified name is not an XML QName';
 
   done $c;
 } n => 4, name => 'create_document / bad qname';
@@ -233,7 +233,7 @@ test {
     $impl->create_document (undef, 'aa:12hoge');
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The qualified name is not an XML QName';
 
   done $c;
@@ -331,7 +331,7 @@ test {
         ('undef', ['aa', 'ho:ge'], $dt);
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The local name is not an XML NCName';
   is $dt->parent_node, undef;
   done $c;
@@ -409,7 +409,7 @@ test {
   };
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'InvalidCharacterError';
-  is $@->message, 'The qualified name is not an XML Name';
+  is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_document_type not Name';
 
@@ -421,7 +421,7 @@ test {
     $impl->create_document_type ('abc:120', '', '');
   };
   isa_ok $@, 'Web::DOM::Exception';
-  is $@->name, 'NamespaceError';
+  is $@->name, 'InvalidCharacterError';
   is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_document_type not QName';
@@ -476,7 +476,7 @@ test {
   ok 1;
   isa_ok $@, 'Web::DOM::Exception';
   is $@->name, 'InvalidCharacterError';
-  is $@->message, 'The qualified name is not an XML Name';
+  is $@->message, 'The qualified name is not an XML QName';
   done $c;
 } n => 4, name => 'create_document_type U+FFFF';
 
@@ -850,7 +850,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
