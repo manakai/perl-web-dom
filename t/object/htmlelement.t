@@ -383,6 +383,7 @@ for my $attr (qw(itemscope hidden)) {
 
 for my $test (
   ['script', 'defer'],
+  ['script', 'nomodule'],
   ['ol', 'reversed'],
   ['img', 'ismap'],
   ['iframe', 'allowfullscreen'],

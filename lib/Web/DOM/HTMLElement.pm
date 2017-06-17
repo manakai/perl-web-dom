@@ -367,6 +367,7 @@ _define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
   # #missing => no cors
 };
 _define_reflect_boolean defer => 'defer';
+_define_reflect_boolean nomodule => 'nomodule';
 _define_reflect_string event => 'event';
 _define_reflect_string html_for => 'for';
 _define_reflect_string nonce => 'nonce';
