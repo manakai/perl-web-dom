@@ -1110,7 +1110,6 @@ for my $test (
      [submit => 'submit'],
      [reset => 'reset'],
      [button => 'button'],
-     [menu => 'menu'],
    ],
    invalid_values => [[''], ['0'], [undef], ['default']]},
   {element => 'textarea',
@@ -1403,7 +1402,6 @@ for my $test (
 
 for my $test (
   {element => 'dfn', attr => 'contextmenu', target_element => 'menu'},
-  {element => 'button', attr => 'menu', target_element => 'menu'},
 ) {
   my $attr = $test->{attr};
   test {
