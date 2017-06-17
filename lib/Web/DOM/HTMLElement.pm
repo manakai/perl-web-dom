@@ -1466,13 +1466,11 @@ _define_reflect_enumerated formmethod => 'formmethod', {
 };
 _define_reflect_boolean formnovalidate => 'formnovalidate';
 _define_reflect_string formtarget => 'formtarget';
-_define_reflect_idref menu => 'menu', 'Web::DOM::HTMLMenuElement';
 _define_reflect_string name => 'name';
 _define_reflect_enumerated type => 'type', {
   submit => 'submit',
   reset => 'reset',
   button => 'button',
-  menu => 'menu',
   '#missing' => 'submit',
 };
 _define_reflect_string value => 'value';
