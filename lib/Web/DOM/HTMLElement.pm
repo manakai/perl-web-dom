@@ -583,6 +583,7 @@ _define_reflect_string name => 'name';
 _define_reflect_neurl src => 'src';
 _define_reflect_boolean allowfullscreen => 'allowfullscreen';
 _define_reflect_boolean allowusermedia => 'allowusermedia';
+_define_reflect_boolean allowpaymentrequest => 'allowpaymentrequest';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';
 _define_reflect_settable_token_list sandbox => 'sandbox';
@@ -1862,7 +1863,7 @@ _define_reflect_string name => 'name';
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

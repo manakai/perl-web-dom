@@ -19,27 +19,34 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =item $el->allowfullscreen ($boolean)
 
-Return or set whether the C<allowfullscreen> attribute is specified or
+Get or set whether the C<allowfullscreen> attribute is specified or
 not.  [HTML]
+
+=item $boolean = $el->allowpaymentrequest
+
+=item $el->allowpaymentrequest ($boolean)
+
+Get or set whether the C<allowpaymentrequest> attribute is specified
+or not.  [HTML]
 
 =item $boolean = $el->allowusermedia
 
 =item $el->allowusermedia ($boolean)
 
-Return or set whether the C<allowusermedia> attribute is specified or
+Get or set whether the C<allowusermedia> attribute is specified or
 not.  [HTML]
 
 =item $string = $el->height
 
 =item $el->height ($string)
 
-Return or set the C<height> attribute.  [HTML]
+Get or set the C<height> attribute value.  [HTML]
 
 =item $string = $el->name
 
 =item $el->name ($string)
 
-Return or set the C<name> attribute.  [HTML]
+Get or set the C<name> attribute value.  [HTML]
 
 =item $tokens = $el->sandbox
 
@@ -52,19 +59,19 @@ or set the C<sandbox> attribute to the specified string value.  [HTML]
 
 =item $el->src ($string)
 
-Return or set the C<src> attribute.  [HTML]
+Get or set the C<src> attribute value.  [HTML]
 
 =item $string = $el->srcdoc
 
 =item $el->srcdoc ($string)
 
-Return or set the C<srcdoc> attribute.  [HTML]
+Get or set the C<srcdoc> attribute value.  [HTML]
 
 =item $string = $el->width
 
 =item $el->width ($string)
 
-Return or set the C<width> attribute.  [HTML]
+Get or set the C<width> attribute value.  [HTML]
 
 =back
 
@@ -78,8 +85,7 @@ C<scrolling>.  [HTML]
 
 =item HTML
 
-HTML Standard
-<https://www.whatwg.org/specs/web-apps/current-work/#the-iframe-element>.
+HTML Standard <https://html.spec.whatwg.org/#the-iframe-element>.
 
 =back
 
@@ -93,7 +99,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

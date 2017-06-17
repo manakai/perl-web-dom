@@ -387,6 +387,7 @@ for my $test (
   ['img', 'ismap'],
   ['iframe', 'allowfullscreen'],
   ['iframe', 'allowusermedia'],
+  ['iframe', 'allowpaymentrequest'],
   ['object', 'typemustmatch'],
   ['track', 'default'],
   ['video', 'autoplay'],
