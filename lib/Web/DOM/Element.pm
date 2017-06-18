@@ -1033,47 +1033,6 @@ sub _define_reflect_settable_token_list ($$) {
   $DOMTokenListAttributeMapping->{$content_name} = $perl_name;
 } # _define_reflect_settable_token_list
 
-push @EXPORT, qw(_define_reflect_idref);
-sub _define_reflect_idref ($$$) {
-  my ($perl_name, $content_name, $el_class) = @_;
-  my $class = caller;
-  eval sprintf q{
-    *%s::%s = sub ($;$) {
-      if (@_ > 1) {
-        # WebIDL: object
-        _throw Web::DOM::TypeError 'The argument is not a ' . $el_class
-            unless UNIVERSAL::isa ($_[1], $el_class);
-
-        my $id = $_[1]->get_attribute_ns (undef, 'id');
-        my $el = defined $id
-            ? $_[0]->owner_document->get_element_by_id ($id) : undef;
-        if (defined $el and $el eq $_[1]) {
-          $_[0]->set_attribute_ns (undef, '%s', $id);
-        } else {
-          $_[0]->set_attribute_ns (undef, '%s', '');
-        }
-        return unless defined wantarray;
-      }
-
-      my $v = $_[0]->get_attribute_ns (undef, '%s');
-
-      # 1.
-      return undef unless defined $v;
-
-      # 2.
-      my $cand = $_[0]->owner_document->get_element_by_id ($v);
-
-      # 3.
-      return undef unless defined $cand;
-      return undef unless $cand->isa ($el_class);
-
-      # 4.
-      return $cand;
-    };
-    1;
-  }, $class, $perl_name, $content_name, $content_name, $content_name or die $@;
-} # _define_reflect_idref
-
 _define_reflect_string id => 'id';
 
 sub manakai_ids ($) {

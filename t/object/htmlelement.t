@@ -117,8 +117,6 @@ for my $test (
   ['textarea', 'name'],
   ['textarea', 'placeholder'],
   ['output', 'name'],
-  ['menu', 'label'],
-  ['menuitem', 'radiogroup'],
   ['applet', 'align'],
   ['applet', 'alt'],
   ['applet', 'archive'],
@@ -335,7 +333,6 @@ for my $test (
   ['input', 'src'],
   ['input', 'formaction'],
   ['button', 'formaction'],
-  ['menuitem', 'icon'],
 ) {
   my $attr = $test->[1];
   test {
@@ -425,9 +422,6 @@ for my $test (
   ['textarea', 'readonly'],
   ['textarea', 'required'],
   ['details', 'open'],
-  ['menuitem', 'checked'],
-  ['menuitem', 'default'],
-  ['menuitem', 'disabled'],
   ['dialog', 'open'],
   ['marquee', 'truespeed'],
   ['frame', 'noresize'],
@@ -1121,23 +1115,6 @@ for my $test (
      ['HARd' => 'hard'],
    ],
    invalid_values => [[''], ['0'], [undef]]},
-  {element => 'menuitem',
-   attr => 'type',
-   default => 'command',
-   valid_values => [
-     [command => 'command'],
-     [checkbox => 'checkbox'],
-     [radio => 'radio'],
-   ],
-   invalid_values => [[''], ['0'], [undef], ['default']]},
-  {element => 'menu',
-   attr => 'type',
-   default => 'toolbar',
-   valid_values => [
-     [toolbar => 'toolbar'],
-     [ConteXt => 'context'],
-   ],
-   invalid_values => [[''], ['0'], [undef], ['menu'], ['Popup']]},
   {element => 'link',
    attr => 'workertype',
    default => 'classic',
@@ -1320,67 +1297,6 @@ for my $test (
       name => ['reflect enumerated attr', $test->{element}, $test->{attr}];
 }
 
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
-  my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
-  $el1->append_child ($el2);
-  is $el2->type, 'toolbar';
-  $el1->type ('popup');
-  is $el2->type, 'toolbar';
-  $el1->type ('context');
-  is $el2->type, 'context';
-  $el1->set_attribute (type => 'hoge');
-  is $el2->type, 'toolbar';
-  $el1->set_attribute (type => 'Toolbar');
-  is $el2->type, 'toolbar';
-  $el2->set_attribute (type => '');
-  is $el2->type, 'toolbar';
-  $el2->set_attribute (type => 'ConText');
-  is $el2->type, 'context';
-  done $c;
-} n => 7, name => 'menu.type parent is menu'; 
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
-  my $el2 = $doc->create_element_ns (undef, 'menu');
-  my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
-  $el1->append_child ($el2);
-  $el2->append_child ($el3);
-  is $el3->type, 'toolbar';
-  $el1->type ('context');
-  is $el3->type, 'toolbar';
-  $el1->set_attribute (type => 'hoge');
-  is $el3->type, 'toolbar';
-  $el1->set_attribute (type => 'Toolbar');
-  is $el3->type, 'toolbar';
-  $el2->set_attribute (type => '');
-  is $el3->type, 'toolbar';
-  $el2->set_attribute (type => 'context');
-  is $el3->type, 'toolbar';
-  $el3->set_attribute (type => 'context');
-  is $el3->type, 'context';
-  done $c;
-} n => 7, name => 'menu.type parent is not menu'; 
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menu');
-  $doc->append_child ($el);
-  is $el->type, 'toolbar';
-  $el->type ('hoge');
-  is $el->get_attribute ('type'), 'hoge';
-  is $el->type, 'toolbar';
-  $el->type ('Context');
-  is $el->get_attribute ('type'), 'Context';
-  is $el->type, 'context';
-  done $c;
-} n => 5, name => 'menu.type parent is document';
-
 for my $test (
   {element => 'a', attr => 'rel', method => 'rel_list'},
   {element => 'area', attr => 'rel', method => 'rel_list'},
@@ -1447,85 +1363,6 @@ for my $test (
     done $c;
   } n => 3, name => ['reflect DOMSettableTokenList',
                      $el_name, $test->{attr}];
-}
-
-for my $test (
-  {element => 'dfn', attr => 'contextmenu', target_element => 'menu'},
-) {
-  my $attr = $test->{attr};
-  test {
-    my $c = shift;
-    my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{element});
-    is $el->$attr, undef;
-
-    my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{target_element});
-    $el2->set_attribute (id => 'abc');
-    $doc->append_child ($el2);
-    my $el5 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
-    $el5->set_attribute (id => 'abc');
-    $el2->append_child ($el5);
-    my $el3 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{target_element});
-    $el3->set_attribute (id => 'abc');
-    $el2->append_child ($el3);
-
-    $el->$attr ($el2);
-    is $el->$attr, $el2;
-    is $el->get_attribute ($attr), 'abc';
-    
-    $el->$attr ($el3);
-    is $el->$attr, undef;
-    is $el->get_attribute ($attr), '';
-
-    $el->remove_attribute ($attr);
-    my $el4 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{target_element});
-    $el4->set_attribute (id => 'abc');
-    $el->$attr ($el4);
-    is $el->$attr, undef;
-    is $el->get_attribute ($attr), '';
-
-    $el->remove_attribute ($attr);
-    $el4->append_child ($el);
-    $el->$attr ($el4);
-    is $el->$attr, undef;
-    is $el->get_attribute ($attr), '';
-
-    $el->remove_attribute ($attr);
-    $el2->id ('');
-    $el->$attr ($el2);
-    is $el->$attr, undef;
-    is $el->get_attribute ($attr), '';
-
-    $el->set_attribute ($attr => $el5->id);
-    is $el->$attr, undef;
-
-    $el->remove_attribute ($attr);
-    $el->$attr ($el3);
-    is $el->$attr, undef;
-    is $el->get_attribute ($attr), '';
-
-    $el->set_attribute ($attr => 'fuga');
-    is $el->$attr, undef;
-
-    done $c;
-  } n => 15, name => ['reflect HTMLElement', $test->{element}, $attr];
-
-  test {
-    my $c = shift;
-    my $doc = new Web::DOM::Document;
-    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{element});
-    $el->set_attribute ($attr => 'aa');
-    my $e = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo');
-    dies_here_ok {
-      $el->$attr ($e);
-    };
-    isa_ok $@, 'Web::DOM::TypeError';
-    is $@->name, 'TypeError';
-    is $@->message, 'The argument is not a Web::DOM::HTMLMenuElement';
-    is $el->get_attribute ($attr), 'aa';
-    done $c;
-  } n => 5, name => ['reflect HTMLElement', $test->{element},
-                     $attr, 'bad new value'];
 }
 
 for (
@@ -3251,86 +3088,11 @@ test {
   done $c;
 } n => 1, name => 'style setter';
 
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menuitem');
-  is $el->label, '';
-  $el->label ('abc');
-  is $el->label, 'abc';
-  $el->label ("   ");
-  is $el->label, '   ';
-  $el->label ("\x09\x20abc\x0A");
-  is $el->label, "\x09\x20abc\x0A";
-  $el->label ('');
-  is $el->label, '';
-  $el->label ('0');
-  is $el->label, '0';
-  done $c;
-} n => 6, name => '<menuitem label>';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menuitem');
-  $el->inner_html (q{  });
-  is $el->label, '';
-  $el->label ('abc');
-  is $el->label, 'abc';
-  $el->label ("   ");
-  is $el->label, '   ';
-  $el->label ("\x09\x20abc\x0A");
-  is $el->label, "\x09\x20abc\x0A";
-  $el->label ('');
-  is $el->label, '';
-  $el->label ('0');
-  is $el->label, '0';
-  done $c;
-} n => 6, name => '<menuitem label>';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menuitem');
-  $el->inner_html (qq{  <p>xy</p>\x09});
-  is $el->label, '';
-  $el->label ('abc');
-  is $el->label, 'abc';
-  $el->label ("   ");
-  is $el->label, '   ';
-  $el->label ("\x09\x20abc\x0A");
-  is $el->label, "\x09\x20abc\x0A";
-  $el->label ('');
-  is $el->label, '';
-  $el->label ('0');
-  is $el->label, '0';
-  done $c;
-} n => 6, name => '<menuitem label>';
-
-test {
-  my $c = shift;
-  my $doc = new Web::DOM::Document;
-  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'menuitem');
-  $el->inner_html (q{  a  b  c  });
-  is $el->label, 'a b c';
-  $el->label ('abc');
-  is $el->label, 'abc';
-  $el->label ("   ");
-  is $el->label, '   ';
-  $el->label ("\x09\x20abc\x0A");
-  is $el->label, "\x09\x20abc\x0A";
-  $el->label ('');
-  is $el->label, '';
-  $el->label ('0');
-  is $el->label, '0';
-  done $c;
-} n => 6, name => '<menuitem label>';
-
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

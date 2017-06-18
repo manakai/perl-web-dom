@@ -26,13 +26,6 @@ Return or set the C<accesskey> attribute.  [HTML]
 
 Return or set the C<contenteditable> attribute.  [HTML]
 
-=item $el2 = $el->contextmenu
-
-=item $el->contextmenu ($el2)
-
-Return or set the element pointed by the C<contextmenu> attribute.
-[HTML]
-
 =item $map = $el->dataset
 
 Return the L<Web::DOM::StringMap> object represeting the C<data-*>
@@ -219,7 +212,6 @@ L<Web::DOM::HTMLProgressElement>,
 L<Web::DOM::HTMLMeterElement>,
 L<Web::DOM::HTMLDetailsElement>,
 L<Web::DOM::HTMLMenuElement>,
-L<Web::DOM::HTMLMenuItemElement>,
 L<Web::DOM::HTMLDialogElement>,
 L<Web::DOM::HTMLAppletElement>,
 L<Web::DOM::HTMLMarqueeElement>,
@@ -231,8 +223,9 @@ L<Web::DOM::HTMLTemplateElement>,
 L<Web::DOM::HTMLSlotElement>,
 L<Web::DOM::HTMLPictureElement>.
 
-The L<Web::DOM::HTMLBaseFontElement> class is no longer available, as
-it is now dropped from the HTML Standard.
+Classes L<Web::DOM::HTMLBaseFontElement> and
+L<Web::DOM::HTMLMenuItemElement> are no longer available, as they are
+dropped from the HTML Standard.
 
 =head1 SPECIFICATIONS
 
@@ -240,8 +233,7 @@ it is now dropped from the HTML Standard.
 
 =item HTML
 
-HTML Standard
-<https://www.whatwg.org/specs/web-apps/current-work/#htmlelement>.
+HTML Standard <https://html.spec.whatwg.org/>.
 
 =item CSSOM
 
@@ -274,7 +266,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
