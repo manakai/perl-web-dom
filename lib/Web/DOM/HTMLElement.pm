@@ -289,18 +289,30 @@ _define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
 _define_reflect_settable_token_list sizes => 'sizes';
 _define_reflect_string nonce => 'nonce';
 _define_reflect_string integrity => 'integrity';
-
 _define_reflect_string charset => 'charset';
 _define_reflect_string rev => 'rev';
 _define_reflect_string target => 'target';
 _define_reflect_settable_token_list rel_list => 'rel';
+_define_reflect_enumerated workertype => 'workertype', {
+  classic => 'classic',
+  module => 'module',
+  '#missing' => 'classic',
+  '#invalid' => '',
+};
+_define_reflect_enumerated updateviacache => 'updateviacache', {
+  all => 'all',
+  imports => 'imports',
+  none => 'none',
+  '#missing' => 'imports',
+};
+_define_reflect_url scope => 'scope';
 
 _define_reflect_enumerated as => 'as', {
-  '' => '',
   map { $_ => $_ }
 qw(
 audio document embed font image manifest object report script
 serviceworker sharedworker style track video worker xslt
+fetch
 )
 };
 
@@ -1767,20 +1779,9 @@ our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
 use Web::DOM::Element;
 
-_define_reflect_enumerated behavior => 'behavior', {
-  'scroll' => 'scroll',
-  'slide' => 'slide',
-  'alternate' => 'alternate',
-  '#missing' => 'scroll',
-};
+_define_reflect_string behavior => 'behavior';
 _define_reflect_string bgcolor => 'bgcolor';
-_define_reflect_enumerated direction => 'direction', {
-  'left' => 'left',
-  'right' => 'right',
-  'up' => 'up',
-  'down' => 'down',
-  '#missing' => 'left',
-};
+_define_reflect_string direction => 'direction';
 _define_reflect_string height => 'height';
 _define_reflect_unsigned_long hspace => 'hspace', sub { 0 };
 _define_reflect_unsigned_long scrollamount => 'scrollamount', sub { 6 };

@@ -20,43 +20,43 @@ L<Web::DOM::HTMLElement>, the following methods are available:
 
 =item $el->as ($string)
 
-Return or set the C<as> attribute.  [HTML]
+Get or set the C<as> attribute value.  [HTML]
 
 =item $string = $el->crossorigin
 
 =item $el->crossorigin ($string)
 
-Return or set the C<crossorigin> attribute.  [HTML]
+Get or set the C<crossorigin> attribute value.  [HTML]
 
 =item $string = $el->href
 
 =item $el->href ($string)
 
-Return or set the C<href> attribute.  [HTML]
+Get or set the C<href> attribute value.  [HTML]
 
 =item $string = $el->hreflang
 
 =item $el->hreflang ($string)
 
-Return or set the C<hreflang> attribute.  [HTML]
+Get or set the C<hreflang> attribute value.  [HTML]
 
 =item $string = $el->integrity
 
 =item $el->integrity ($string)
 
-Return or set the C<integrity> attribute.  [HTML]
+Get or set the C<integrity> attribute value.  [HTML]
 
 =item $string = $el->media
 
 =item $el->media ($string)
 
-Return or set the C<media> attribute.  [HTML]
+Get or set the C<media> attribute value.  [HTML]
 
 =item $string = $el->nonce
 
 =item $el->nonce ($string)
 
-Return or set the C<nonce> attribute.  [HTML]
+Get or set the C<nonce> attribute value.  [HTML]
 
 =item $string = $el->rel
 
@@ -64,25 +64,45 @@ Return or set the C<nonce> attribute.  [HTML]
 
 =item $el->rel_list ($string)
 
-Return or set the C<rel> attribute.  [HTML]
+Get or set the C<rel> attribute value.  [HTML]
 
 =item $tokens = $el->rel_list
 
 Return the L<Web::DOM::TokenList> object for the C<rel> attribute.
 [HTML]
 
-=item $tokens = $el->sizes
+=item $string = $el->scope
+
+=item $el->scope ($string)
+
+Get or set the C<scope> attribute value.  [HTML]
 
 =item $el->sizes ($string)
 
-Return the L<Web::DOM::TokenList> object for the C<sizes> attribute,
-or set the C<sizes> attribute to the specified string value.  [HTML]
+Set the C<sizes> attribute value.  [HTML]
+
+=item $tokens = $el->sizes
+
+Return the L<Web::DOM::TokenList> object for the C<sizes> attribute.
+[HTML]
 
 =item $string = $el->type
 
 =item $el->type ($string)
 
-Return or set the C<type> attribute.  [HTML]
+Get or set the C<type> attribute value.  [HTML]
+
+=item $string = $el->updateviacache
+
+=item $el->updateviacache ($string)
+
+Get or set the C<updateviacache> attribute value.  [HTML]
+
+=item $string = $el->workertype
+
+=item $el->workertype ($string)
+
+Get or set the C<workertype> attribute value.  [HTML]
 
 =back
 
@@ -95,7 +115,7 @@ C<charset>, C<rev>, and C<target>.  [HTML]
 
 =item HTML
 
-HTML Standard <https://html.spec.whatwg.org/#the-link-element>.
+HTML Standard <https://html.spec.whatwg.org/>.
 
 =back
 
@@ -109,7 +129,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

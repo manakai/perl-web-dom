@@ -292,6 +292,7 @@ for my $test (
   ['object', 'codebase'],
   ['applet', 'object'],
   ['applet', 'codebase'],
+  ['link', 'scope'],
 ) {
   my $attr = $test->[1];
   test {
@@ -1129,25 +1130,6 @@ for my $test (
      [radio => 'radio'],
    ],
    invalid_values => [[''], ['0'], [undef], ['default']]},
-  {element => 'marquee',
-   attr => 'behavior',
-   default => 'scroll',
-   valid_values => [
-     [Scroll => 'scroll'],
-     [SliDe => 'slide'],
-     [alTErnate => 'alternate'],
-   ],
-   invalid_values => [[''], ['0'], [undef], ['default']]},
-  {element => 'marquee',
-   attr => 'direction',
-   default => 'left',
-   valid_values => [
-     [LEFT => 'left'],
-     [righT => 'right'],
-     [up => 'up'],
-     [dOWN => 'down'],
-   ],
-   invalid_values => [[''], ['0'], [undef], ['default']]},
   {element => 'menu',
    attr => 'type',
    default => 'toolbar',
@@ -1156,6 +1138,24 @@ for my $test (
      [ConteXt => 'context'],
    ],
    invalid_values => [[''], ['0'], [undef], ['menu'], ['Popup']]},
+  {element => 'link',
+   attr => 'workertype',
+   default => 'classic',
+   valid_values => [
+     [ClaSsic => 'classic'],
+     [MODULE => 'module'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['menu'], ['Popup'], ['invalid']],
+   invalid_default => ''},
+  {element => 'link',
+   attr => 'updateviacache',
+   default => 'imports',
+   valid_values => [
+     [aLL => 'all'],
+     [imports => 'imports'],
+     [NONE => 'none'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['menu'], ['Popup'], ['invalid']]},
 ) {
   my $attr = $test->{attr};
   test {
@@ -1177,6 +1177,55 @@ for my $test (
       $el->$attr ($_->[0]);
       is $el->$attr, defined $test->{invalid_default} ? $test->{invalid_default} : $test->{default};
       is $el->get_attribute ($test->{content_attr} || $attr), defined $_->[0] ? $_->[0] : '';
+    }
+    done $c;
+  } n => 3 + @{$test->{valid_values}}*2 +
+      (@{$test->{valid_values}} + @{$test->{invalid_values}} + 1)*2,
+      name => ['reflect enumerated attr', $test->{element}, $test->{attr}];
+
+}
+
+for my $test (
+  {element => 'marquee',
+   attr => 'behavior',
+   default => 'scroll',
+   valid_values => [
+     [Scroll => 'scroll'],
+     [SliDe => 'slide'],
+     [alTErnate => 'alternate'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default']]},
+  {element => 'marquee',
+   attr => 'direction',
+   default => 'left',
+   valid_values => [
+     [LEFT => 'left'],
+     [righT => 'right'],
+     [up => 'up'],
+     [dOWN => 'down'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default']]},
+) {
+  my $attr = $test->{attr};
+  test {
+    my $c = shift;
+    my $doc = new Web::DOM::Document;
+    my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $test->{element});
+    is $el->$attr, '';
+    for (@{$test->{valid_values}}) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, $_->[0];
+      is $el->get_attribute ($test->{content_attr} || $attr), $_->[0];
+    }
+    for (
+      (map { [$_->[0].'  '] } @{$test->{valid_values}}),
+      @{$test->{invalid_values}},
+      ['#invalid'],
+      ['#missing'],
+    ) {
+      $el->$attr ($_->[0]);
+      is $el->$attr, defined $_->[0] ? $_->[0] : '', $_->[0];
+      is $el->get_attribute ($test->{content_attr} || $attr), defined $_->[0] ? $_->[0] : '', $_->[0];
     }
     done $c;
   } n => 3 + @{$test->{valid_values}}*2 +
@@ -1235,14 +1284,14 @@ for my $test (
    attr => 'as',
    default => '',
    valid_values => [
-     ['' => ''],
      [image => 'image'],
      ['script' => 'script'],
      ['audio' => 'audio'],
      ['VideO' => 'video'],
      ['TRACK' => 'track'],
+     [FETCH => 'fetch'],
    ],
-   invalid_values => [['hoge'], ['fetch'], ['as'], ['media']]},
+   invalid_values => [['hoge'], ['fetch!'], ['as'], ['media'], ['']]},
 ) {
   my $attr = $test->{attr};
   test {
