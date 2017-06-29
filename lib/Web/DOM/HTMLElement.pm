@@ -218,7 +218,8 @@ sub text ($;$) {
   if (@_ > 1) {
     $_[0]->text_content ($_[1]);
   }
-  
+
+  ## Child text content
   return join '',
       map { $_->data }
       grep { $_->node_type == TEXT_NODE } @{$_[0]->child_nodes};
@@ -388,7 +389,8 @@ sub text ($;$) {
   if (@_ > 1) {
     $_[0]->text_content ($_[1]);
   }
-  
+
+  ## Child text content
   return join '',
       map { $_->data }
       grep { $_->node_type == TEXT_NODE } @{$_[0]->child_nodes};
@@ -1588,6 +1590,7 @@ sub value ($;$) {
 package Web::DOM::HTMLTextAreaElement;
 our $VERSION = '1.0';
 push our @ISA, qw(Web::DOM::HTMLElement);
+use Web::DOM::Node;
 use Web::DOM::Element;
 
 # XXX autocomplete form
@@ -1628,7 +1631,11 @@ sub default_value ($;$) {
   if (@_ > 1) {
     $_[0]->text_content ($_[1]);
   }
-  return $_[0]->text_content;
+
+  ## Child text content
+  return join '',
+      map { $_->data }
+      grep { $_->node_type == TEXT_NODE } @{$_[0]->child_nodes};
 } # default_value
 
 # XXX value text_length; validation API; labels; selection API

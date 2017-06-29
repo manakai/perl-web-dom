@@ -455,32 +455,36 @@ for my $test (
   } n => 7, name => ['boolean reflect attributes', @$test];
 }
 
-for my $el_name (qw(title script)) {
+for (
+  ['title', 'text'],
+  ['script', 'text'],
+  ['textarea', 'default_value'],
+) {
+  my ($el_name, $attr_name) = @$_;
   test {
     my $c = shift;
     my $doc = new Web::DOM::Document;
     my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', $el_name);
-    is $el->text, '';
-    $el->text ('hoge');
-    is $el->text, 'hoge';
+    is $el->$attr_name, '';
+    $el->$attr_name ('hoge');
+    is $el->$attr_name, 'hoge';
     $el->append_child ($doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'foo'))->text_content ('abc');
     my $node1 = $el->append_child ($doc->create_text_node ('ahq'));
-    is $el->text, 'hogeahq';
-    $el->text ('');
+    is $el->$attr_name, 'hogeahq';
+    $el->$attr_name ('');
     is $el->first_child, undef;
     is $node1->parent_node, undef;
-    $el->text ('abc');
-    is $el->text, 'abc';
+    $el->$attr_name ('abc');
+    is $el->$attr_name, 'abc';
     my $text = $el->first_child;
-    $el->text ('bbqa');
+    $el->$attr_name ('bbqa');
     is $text->parent_node, undef;
     done $c;
-  } n => 7, name => [$el_name, 'text'];
+  } n => 7, name => [$el_name, $attr_name];
 }
 
 for my $test (
   ['a', 'text'],
-  ['textarea', 'default_value'],
 ) {
   my $attr = $test->[1];
   test {
