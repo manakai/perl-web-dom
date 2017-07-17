@@ -22,7 +22,7 @@ sub is_error ($$) {
 
 sub new ($$) {
   my $self = bless {name => 'Error',
-                    message => defined $_[1] ? $_[1] : ''}, $_[0];
+                    message => defined $_[1] ? ''.$_[1] : ''}, $_[0];
   $self->_set_stacktrace;
   return $self;
 } # new
@@ -35,6 +35,13 @@ sub _set_stacktrace ($) {
   }
   # XXX stack
 } # _set_stacktrace
+
+sub wrap ($$) {
+  return $_[1] if $_[0]->is_error ($_[1]);
+  return $_[0]->new (
+    (defined $_[1] && length $_[1]) ? $_[1] : "Something's wrong"
+  );
+} # wrap
 
 sub name ($) { $_[0]->{name} }
 sub file_name ($) { $_[0]->{file_name} }

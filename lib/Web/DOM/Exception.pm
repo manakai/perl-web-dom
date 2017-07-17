@@ -76,7 +76,7 @@ my $NameToCode = {
 
 sub new ($$$) {
   my $self = bless {name => defined $_[2] ? ''.$_[2] : 'Error',
-                    message => defined $_[1] ? $_[1] : ''}, $_[0];
+                    message => defined $_[1] ? ''.$_[1] : ''}, $_[0];
   $self->_set_stacktrace;
   return $self;
 } # new

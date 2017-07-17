@@ -18,8 +18,11 @@ test {
   my $c = shift;
   my $e = Web::DOM::Exception->new;
   ok + Web::DOM::Error->is_error ($e);
+  my $f = Web::DOM::Error->wrap ($e);
+  is $f, $e;
+  isa_ok $f, 'Web::DOM::Exception';
   done $c;
-} n => 1, name => 'is_error true';
+} n => 3, name => 'is_error true';
 
 test {
   my $c = shift;

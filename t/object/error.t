@@ -16,19 +16,47 @@ test {
   my $c = shift;
   my $e = Web::DOM::Error->new;
   ok + Web::DOM::Error->is_error ($e);
+  my $f = Web::DOM::Error->wrap ($e);
+  is $f, $e;
+  isa_ok $f, 'Web::DOM::Error';
   done $c;
-} n => 1, name => 'is_error true';
+} n => 3, name => 'is_error true';
 
 test {
   my $c = shift;
   my $e = bless {}, 'test::customexception1';
   local $Web::DOM::Error::L1ObjectClass->{'test::customexception1'} = 1;
   ok + Web::DOM::Error->is_error ($e);
+  my $f = Web::DOM::Error->wrap ($e);
+  is $f, $e;
+  isa_ok $f, 'test::customexception1';
   done $c;
-} n => 1, name => 'is_error true custom class';
+} n => 3, name => 'is_error true custom class';
 
 for my $value (
-  undef, '', 'aava', 0, 532, -3141, 44.4, 0+'nan',
+  undef, '',
+) {
+  test {
+    my $c = shift;
+    ok ! Web::DOM::Error->is_error ($value);
+    done $c;
+  } n => 1, name => 'is_error false';
+
+  test {
+    my $c = shift;
+    my $e = Web::DOM::Error->wrap ($value);
+    isa_ok $e, 'Web::DOM::Error';
+    is $e->name, 'Error';
+    is $e->message, "Something's wrong";
+    is $e->file_name, __FILE__;
+    is $e->line_number, __LINE__-5;
+    is $e . '', "Error: ".$e->message." at ".$e->file_name." line ".$e->line_number.".\n";
+    done $c;
+  } n => 6, name => 'is_error false';
+}
+
+for my $value (
+  'aava', 0, 532, -3141, 44.4, 0+'nan',
   [], {}, \"abc", (bless {}, 'test::foo'),
 ) {
   test {
@@ -36,6 +64,19 @@ for my $value (
     ok ! Web::DOM::Error->is_error ($value);
     done $c;
   } n => 1, name => 'is_error false';
+
+  test {
+    my $c = shift;
+    my $e = Web::DOM::Error->wrap ($value);
+    isa_ok $e, 'Web::DOM::Error';
+    is $e->name, 'Error';
+    is $e->message, $value . '';
+    ok ! ref $e->message;
+    is $e->file_name, __FILE__;
+    is $e->line_number, __LINE__-6;
+    is $e . '', "Error: ".$e->message." at ".$e->file_name." line ".$e->line_number.".\n";
+    done $c;
+  } n => 7, name => 'is_error false';
 }
 
 sub create_error (;%) {

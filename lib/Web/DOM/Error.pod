@@ -55,6 +55,16 @@ Stringifying the error object returns the error message with its
 location in the Perl standard format (i.e. C<Error message at
 path/to/script.pl line 123.\n>).
 
+=item $error = Web::DOM::Error->wrap ($value)
+
+If the argument is an error object (C<< Web::DOM::Error->is_error >>
+with that object would return true), return the argument as is.
+
+Otherwise, create and return a new C<Web::DOM::Error> object whose
+C<message> is the value obtained by evaluating the argument as a
+string (C<Something's wrong> if the value is C<undef> or the empty
+string).
+
 =item $boolean = Web::DOM::Error->is_error ($error)
 
 Return whether the argument is an object implementing the Perl Error

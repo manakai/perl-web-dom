@@ -9,7 +9,7 @@ $Web::DOM::Error::L1ObjectClass->{(__PACKAGE__)} = 1;
 
 sub new ($$) {
   my $self = bless {name => 'TypeError',
-                    message => defined $_[1] ? $_[1] : ''}, $_[0];
+                    message => defined $_[1] ? ''.$_[1] : ''}, $_[0];
   $self->_set_stacktrace;
   return $self;
 } # new
