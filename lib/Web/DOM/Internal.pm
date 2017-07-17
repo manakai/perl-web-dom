@@ -445,7 +445,6 @@ for (
   ['details' => 'HTMLDetailsElement'],
   ['summary' => 'HTMLElement'],
   ['menu' => 'HTMLMenuElement'],
-  ['menuitem' => 'HTMLMenuItemElement'],
   ['dialog' => 'HTMLDialogElement'],
   ['applet' => 'HTMLAppletElement'],
   ['marquee' => 'HTMLMarqueeElement'],
