@@ -6,6 +6,38 @@ use Test::X1;
 use Test::More;
 use Web::DOM::Error;
 
+test {
+  my $c = shift;
+  ok $Web::DOM::Error::L1ObjectClass->{'Web::DOM::Error'};
+  done $c;
+} n => 1, name => 'Perl Error Object Interface Level 1';
+
+test {
+  my $c = shift;
+  my $e = Web::DOM::Error->new;
+  ok + Web::DOM::Error->is_error ($e);
+  done $c;
+} n => 1, name => 'is_error true';
+
+test {
+  my $c = shift;
+  my $e = bless {}, 'test::customexception1';
+  local $Web::DOM::Error::L1ObjectClass->{'test::customexception1'} = 1;
+  ok + Web::DOM::Error->is_error ($e);
+  done $c;
+} n => 1, name => 'is_error true custom class';
+
+for my $value (
+  undef, '', 'aava', 0, 532, -3141, 44.4, 0+'nan',
+  [], {}, \"abc", (bless {}, 'test::foo'),
+) {
+  test {
+    my $c = shift;
+    ok ! Web::DOM::Error->is_error ($value);
+    done $c;
+  } n => 1, name => 'is_error false';
+}
+
 sub create_error (;%) {
   return bless {name => 'Error', @_}, 'Web::DOM::Error';
 } # create_error

@@ -5,6 +5,8 @@ use Web::DOM::Error;
 push our @ISA, qw(Web::DOM::Error);
 our $VERSION = '2.0';
 
+$Web::DOM::Error::L1ObjectClass->{(__PACKAGE__)} = 1;
+
 sub new ($$) {
   my $self = bless {name => 'TypeError',
                     message => defined $_[1] ? $_[1] : ''}, $_[0];

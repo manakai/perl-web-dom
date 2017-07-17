@@ -55,6 +55,11 @@ Stringifying the error object returns the error message with its
 location in the Perl standard format (i.e. C<Error message at
 path/to/script.pl line 123.\n>).
 
+=item $boolean = Web::DOM::Error->is_error ($error)
+
+Return whether the argument is an object implementing the Perl Error
+Object Interface Level 1 (see L</ERROR OBJECT API>).
+
 =back
 
 =head1 ERROR OBJECT API
@@ -91,6 +96,8 @@ The returned value must end with C< at FILE line LINE.> followed by
 C<\n>, where I<FILE> is C<< $error->file_name >> and I<LINE> is C<<
 $error->line_number >>.  It should also contain the C<<
 $error->message >>.
+
+=item C<< $Web::DOM::Error::L1ObjectClass->{ref $error} >> is true.
 
 =back
 

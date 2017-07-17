@@ -10,6 +10,19 @@ use Web::DOM::Exception;
 
 test {
   my $c = shift;
+  ok $Web::DOM::Error::L1ObjectClass->{'Web::DOM::Exception'};
+  done $c;
+} n => 1, name => 'Perl Error Object Interface Level 1';
+
+test {
+  my $c = shift;
+  my $e = Web::DOM::Exception->new;
+  ok + Web::DOM::Error->is_error ($e);
+  done $c;
+} n => 1, name => 'is_error true';
+
+test {
+  my $c = shift;
 
   my $error = new Web::DOM::Exception;
   is $error->name, 'Error';

@@ -5,6 +5,8 @@ no warnings 'utf8';
 our $VERSION = '2.0';
 use Carp;
 
+$Web::DOM::Error::L1ObjectClass->{(__PACKAGE__)} = 1;
+
 use overload
     '""' => 'stringify', bool => sub { 1 },
     cmp => sub {
@@ -13,6 +15,10 @@ use overload
       overload::StrVal ($_[0]) cmp overload::StrVal ($_[1])
     },
     fallback => 1;
+
+sub is_error ($$) {
+  return $Web::DOM::Error::L1ObjectClass->{ref $_[1]};
+} # is_error
 
 sub new ($$) {
   my $self = bless {name => 'Error',

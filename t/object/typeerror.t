@@ -10,6 +10,19 @@ use Web::DOM::TypeError;
 
 test {
   my $c = shift;
+  ok $Web::DOM::Error::L1ObjectClass->{'Web::DOM::TypeError'};
+  done $c;
+} n => 1, name => 'Perl Error Object Interface Level 1';
+
+test {
+  my $c = shift;
+  my $e = Web::DOM::TypeError->new;
+  ok + Web::DOM::Error->is_error ($e);
+  done $c;
+} n => 1, name => 'is_error true';
+
+test {
+  my $c = shift;
 
   my $error = new Web::DOM::TypeError ('Error message');
   isa_ok $error, 'Web::DOM::TypeError';

@@ -7,6 +7,8 @@ push our @ISA, qw(Web::DOM::Error);
 our $VERSION = '3.0';
 use Web::DOM::Internal;
 
+$Web::DOM::Error::L1ObjectClass->{(__PACKAGE__)} = 1;
+
 our @EXPORT;
 *import = \&Web::DOM::Internal::import;
 

@@ -12,6 +12,10 @@ interface.
 In addition to the methods of the class L<Web::DOM::Error>, a
 deprecated method C<code> is available.  [DOM]
 
+An instance of the C<Web::DOM::Exception> class is implementing the
+Perl Error Object Interface Level 1 (see L<Web::DOM::Error/ERROR
+OBJECT API>).
+
 =head1 CONSTANTS
 
 This class exports several constants for error codes for the C<code>
