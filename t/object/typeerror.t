@@ -17,9 +17,9 @@ test {
 
   is $error->name, 'TypeError';
   is $error->message, 'Error message';
-  is $error->file_name, undef;
-  is $error->line_number, 0;
-  is $error . '', "Error message at (unknown) line 0.\n";
+  is $error->file_name, __FILE__;
+  is $error->line_number, __LINE__-7;
+  is $error . '', "Error message at ".$error->file_name." line ".$error->line_number.".\n";
 
   done $c;
 } name => 'with message', n => 7;
@@ -30,9 +30,9 @@ test {
   my $error = new Web::DOM::TypeError;
   is $error->name, 'TypeError';
   is $error->message, 'TypeError';
-  is $error->file_name, undef;
-  is $error->line_number, 0;
-  is $error . '', "TypeError at (unknown) line 0.\n";
+  is $error->file_name, __FILE__;
+  is $error->line_number, __LINE__-4;
+  is $error . '', "TypeError at ".$error->file_name." line ".$error->line_number.".\n";
   done $c;
 } name => 'without message', n => 5;
 
@@ -74,7 +74,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

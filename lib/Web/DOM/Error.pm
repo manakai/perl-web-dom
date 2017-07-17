@@ -2,7 +2,7 @@ package Web::DOM::Error;
 use strict;
 use warnings;
 no warnings 'utf8';
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Carp;
 
 use overload
@@ -14,7 +14,24 @@ use overload
     },
     fallback => 1;
 
-sub name ($) { 'Error' }
+sub new ($$) {
+  my $self = bless {name => 'Error',
+                    message => defined $_[1] ? $_[1] : ''}, $_[0];
+  $self->_set_stacktrace;
+  return $self;
+} # new
+
+sub _set_stacktrace ($) {
+  my $self = $_[0];
+  eval { Carp::croak };
+  if ($@ =~ /at (.+) line ([0-9]+)\.?$/) {
+    $self->{file_name} = $1;
+    $self->{line_number} = $2;
+  }
+  # XXX stack
+} # _set_stacktrace
+
+sub name ($) { $_[0]->{name} }
 sub file_name ($) { $_[0]->{file_name} }
 sub line_number ($) { $_[0]->{line_number} || 0 }
 
@@ -33,7 +50,7 @@ sub _stringify ($) {
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

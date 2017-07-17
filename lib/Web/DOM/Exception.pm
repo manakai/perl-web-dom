@@ -4,7 +4,7 @@ use warnings;
 no warnings 'utf8';
 use Web::DOM::Error;
 push our @ISA, qw(Web::DOM::Error);
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Web::DOM::Internal;
 
 our @EXPORT;
@@ -72,21 +72,16 @@ my $NameToCode = {
   "DataCloneError" => DATA_CLONE_ERR,
 }; # $NameToCode
 
-sub _throw ($$$) {
-  my $class = shift;
-  my $self = bless {name => $_[0], message => $_[1]}, $class;
-  eval { Carp::croak };
-  if ($@ =~ /at (.+) line ([0-9]+)\.?$/) {
-    $self->{file_name} = $1;
-    $self->{line_number} = $2;
-  }
-  # XXX stack
-  die $self;
-} # _throw
+sub new ($$$) {
+  my $self = bless {name => defined $_[2] ? ''.$_[2] : 'Error',
+                    message => defined $_[1] ? $_[1] : ''}, $_[0];
+  $self->_set_stacktrace;
+  return $self;
+} # new
 
-sub name ($) {
-  return $_[0]->{name};
-} # name
+sub _throw ($$$) {
+  die $_[0]->new ($_[2], $_[1]);
+} # _throw
 
 sub code ($) {
   return $NameToCode->{$_[0]->name} || 0;
@@ -96,7 +91,7 @@ sub code ($) {
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

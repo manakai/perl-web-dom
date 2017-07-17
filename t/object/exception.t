@@ -10,6 +10,66 @@ use Web::DOM::Exception;
 
 test {
   my $c = shift;
+
+  my $error = new Web::DOM::Exception;
+  is $error->name, 'Error';
+  is $error->message, 'Error';
+  is $error->file_name, __FILE__;
+  is $error->line_number, __LINE__-4;
+  is $error . '', "Error at ".$error->file_name." line ".$error->line_number.".\n";
+  done $c;
+} name => 'new without message', n => 5;
+
+test {
+  my $c = shift;
+
+  my $error = new Web::DOM::Exception ('Error message');
+  isa_ok $error, 'Web::DOM::Exception';
+  isa_ok $error, 'Web::DOM::Error';
+
+  is $error->name, 'Error';
+  is $error->message, 'Error message';
+  is $error->file_name, __FILE__;
+  is $error->line_number, __LINE__-7;
+  is $error . '', "Error message at ".$error->file_name." line ".$error->line_number.".\n";
+
+  done $c;
+} name => 'new with message', n => 7;
+
+test {
+  my $c = shift;
+
+  my $error = new Web::DOM::Exception ('Error message', 'Fuga error');
+  isa_ok $error, 'Web::DOM::Exception';
+  isa_ok $error, 'Web::DOM::Error';
+
+  is $error->name, 'Fuga error';
+  is $error->message, 'Error message';
+  is $error->file_name, __FILE__;
+  is $error->line_number, __LINE__-7;
+  is $error . '', "Error message at ".$error->file_name." line ".$error->line_number.".\n";
+
+  done $c;
+} name => 'new with message and name', n => 7;
+
+test {
+  my $c = shift;
+
+  my $error = new Web::DOM::Exception (undef, 'Fuga error');
+  isa_ok $error, 'Web::DOM::Exception';
+  isa_ok $error, 'Web::DOM::Error';
+
+  is $error->name, 'Fuga error';
+  is $error->message, 'Fuga error';
+  is $error->file_name, __FILE__;
+  is $error->line_number, __LINE__-7;
+  is $error . '', "Fuga error at ".$error->file_name." line ".$error->line_number.".\n";
+
+  done $c;
+} name => 'new with name', n => 7;
+
+test {
+  my $c = shift;
   is NO_MODIFICATION_ALLOWED_ERR, 7;
   is DATA_CLONE_ERR, 25;
   is +Web::DOM::Exception->NOT_SUPPORTED_ERR, 9;
@@ -71,11 +131,29 @@ test {
   done $c;
 } n => 9, name => 'Error name has no corresponding code';
 
+test {
+  my $c = shift;
+  my $e1 = Web::DOM::Exception->new;
+  my $e2 = Web::DOM::Exception->new;
+  isnt $e1, $e2;
+  is $e1, $e1;
+  done $c;
+} n => 2, name => 'cmp';
+
+test {
+  my $c = shift;
+  my $e1 = Web::DOM::Exception->new ('Hoge');
+  my $e2 = Web::DOM::Exception->new ('Hoge');
+  isnt $e1, $e2;
+  is $e1, $e1;
+  done $c;
+} n => 2, name => 'cmp';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -1,42 +1,48 @@
 =head1 NAME
 
-Web::DOM::TypeError - The WebIDL |TypeError| object
+Web::DOM::TypeError - |TypeError| object
 
 =head1 DESCRIPTION
 
-The C<Web::DOM::TypeError> class implements the WebIDL C<TypeError>
-object.
+A C<Web::DOM::TypeError> object is intended to be equivalent to
+JavaScript C<TypeError>.
 
 =head1 METHODS
 
-The C<Web::DOM::TypeError> class inherits from C<Web::DOM::Error>.
-[DOMPERL]
+In addition to the methods of the L<Web::DOM:Error>, following method
+is available:
 
-In addition, the C<Web::DOM::TypeError> constructor can be used to
-create a new instance of the C<Web::DOM::TypeError> object.  If the
-argument is specified, it is used as the C<message> for the object.
-[DOMPERL]
+=over 4
 
-=head1 SPECIFICATIONS
+=item $error = Web::DOM::TypeError->new ($message)
+
+Create and return a new type error object.
+
+If a character string is specified as an argument, the error's
+C<message> is set to the argument.  Otherwise, the C<message> is set
+to the empty string.
+
+=back
+
+=head1 SPECIFICATION
 
 =over 4
 
 =item WEBIDL
 
-WebIDL
-<http://dev.w3.org/2006/webapi/WebIDL/#dfn-predefined-exception>.
-
-=item ECMASCRIPT
-
-ECMAScript Language Specification
-<http://people.mozilla.org/~jorendorff/es6-draft.html#sec-15.11.6.5>.
-
-=item DOMPERL
-
-manakai's DOM Perl Binding
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding$2233#anchor-54>.
+WebIDL <https://heycam.github.io/webidl/>.
 
 =back
+
+=head1 SEE ALSO
+
+L<Web::DOM::TypeError>.
+
+ECMAScript C<TypeError>
+<https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror>.
+
+Web IDL C<TypeError>
+<https://heycam.github.io/webidl/#exceptiondef-typeerror>.
 
 =head1 AUTHOR
 
@@ -44,7 +50,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

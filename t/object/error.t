@@ -7,7 +7,7 @@ use Test::More;
 use Web::DOM::Error;
 
 sub create_error (;%) {
-  return bless {@_}, 'Web::DOM::Error';
+  return bless {name => 'Error', @_}, 'Web::DOM::Error';
 } # create_error
 
 test {
@@ -25,16 +25,27 @@ test {
 
 test {
   my $c = shift;
+  my $error = Web::DOM::Error->new ('Error message');
+  isa_ok $error, 'Web::DOM::Error';
+  is $error->name, 'Error';
+  is $error->message, 'Error message';
+  is $error->file_name, __FILE__;
+  is $error->line_number, __LINE__-5;
+  is $error . '', "Error message at ".$error->file_name." line ".$error->line_number.".\n";
+  done $c;
+} name => 'new with message', n => 6;
 
-  my $error = create_error
-      file_name => 'path/to file', line_number => 120;
+test {
+  my $c = shift;
+  my $error = Web::DOM::Error->new;
+  isa_ok $error, 'Web::DOM::Error';
   is $error->name, 'Error';
   is $error->message, 'Error';
-  is $error->file_name, 'path/to file';
-  is $error->line_number, 120;
-  is $error . '', "Error at path/to file line 120.\n";
+  is $error->file_name, __FILE__;
+  is $error->line_number, __LINE__-5;
+  is $error . '', "Error at ".$error->file_name." line ".$error->line_number.".\n";
   done $c;
-} name => 'without message', n => 5;
+} name => 'new without message', n => 6;
 
 test {
   my $c = shift;
@@ -62,7 +73,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
