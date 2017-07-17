@@ -13,7 +13,7 @@ test {
 
   my $error = new Web::DOM::Exception;
   is $error->name, 'Error';
-  is $error->message, 'Error';
+  is $error->message, '';
   is $error->file_name, __FILE__;
   is $error->line_number, __LINE__-4;
   is $error . '', "Error at ".$error->file_name." line ".$error->line_number.".\n";
@@ -31,7 +31,7 @@ test {
   is $error->message, 'Error message';
   is $error->file_name, __FILE__;
   is $error->line_number, __LINE__-7;
-  is $error . '', "Error message at ".$error->file_name." line ".$error->line_number.".\n";
+  is $error . '', "Error: Error message at ".$error->file_name." line ".$error->line_number.".\n";
 
   done $c;
 } name => 'new with message', n => 7;
@@ -47,10 +47,11 @@ test {
   is $error->message, 'Error message';
   is $error->file_name, __FILE__;
   is $error->line_number, __LINE__-7;
-  is $error . '', "Error message at ".$error->file_name." line ".$error->line_number.".\n";
+  is $error . '', "Fuga error: Error message at ".$error->file_name." line ".$error->line_number.".\n";
+  is $error->stringify, $error . '';
 
   done $c;
-} name => 'new with message and name', n => 7;
+} name => 'new with message and name', n => 8;
 
 test {
   my $c = shift;
@@ -60,7 +61,7 @@ test {
   isa_ok $error, 'Web::DOM::Error';
 
   is $error->name, 'Fuga error';
-  is $error->message, 'Fuga error';
+  is $error->message, '';
   is $error->file_name, __FILE__;
   is $error->line_number, __LINE__-7;
   is $error . '', "Fuga error at ".$error->file_name." line ".$error->line_number.".\n";
@@ -88,7 +89,7 @@ test {
   is $e->message, 'Something timeouted';
   is $e->file_name, __FILE__;
   is $e->line_number, __LINE__ - 8;
-  is $e . '', "Something timeouted at " . __FILE__ . ' line ' .
+  is $e . '', "TimeoutError: Something timeouted at " . __FILE__ . ' line ' .
       (__LINE__ - 10) . ".\n";
 
   done $c;
@@ -106,7 +107,7 @@ test {
   is $e->message, 'Something timeouted';
   is $e->file_name, __FILE__;
   is $e->line_number, __LINE__ - 8;
-  is $e . '', "Something timeouted at " . __FILE__ . ' line ' .
+  is $e . '', "InUseAttributeError: Something timeouted at " . __FILE__ . ' line ' .
       (__LINE__ - 10) . ".\n";
 
   done $c;
@@ -123,7 +124,7 @@ test {
   is $e->message, 'Some encoding error';
   is $e->file_name, __FILE__;
   is $e->line_number, __LINE__ - 7;
-  is $e . '', "Some encoding error at " . __FILE__ . ' line ' .
+  is $e . '', "EncodingError: Some encoding error at " . __FILE__ . ' line ' .
       (__LINE__ - 9) . ".\n";
   ok $e;
   is $e->TYPE_MISMATCH_ERR, 17;

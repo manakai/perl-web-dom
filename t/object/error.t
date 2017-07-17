@@ -19,9 +19,10 @@ test {
   is $error->message, 'Error message';
   is $error->file_name, 'path/to file';
   is $error->line_number, 120;
-  is $error . '', "Error message at path/to file line 120.\n";
+  is $error . '', "Error: Error message at path/to file line 120.\n";
+  is $error->stringify, $error . '';
   done $c;
-} name => 'with message', n => 5;
+} name => 'with message', n => 6;
 
 test {
   my $c = shift;
@@ -31,16 +32,29 @@ test {
   is $error->message, 'Error message';
   is $error->file_name, __FILE__;
   is $error->line_number, __LINE__-5;
-  is $error . '', "Error message at ".$error->file_name." line ".$error->line_number.".\n";
+  is $error . '', "Error: Error message at ".$error->file_name." line ".$error->line_number.".\n";
+  is $error->stringify, $error . '';
   done $c;
-} name => 'new with message', n => 6;
+} name => 'new with message', n => 7;
+
+test {
+  my $c = shift;
+  my $error = Web::DOM::Error->new ('');
+  isa_ok $error, 'Web::DOM::Error';
+  is $error->name, 'Error';
+  is $error->message, '';
+  is $error->file_name, __FILE__;
+  is $error->line_number, __LINE__-5;
+  is $error . '', "Error at ".$error->file_name." line ".$error->line_number.".\n";
+  done $c;
+} name => 'new with empty message', n => 6;
 
 test {
   my $c = shift;
   my $error = Web::DOM::Error->new;
   isa_ok $error, 'Web::DOM::Error';
   is $error->name, 'Error';
-  is $error->message, 'Error';
+  is $error->message, '';
   is $error->file_name, __FILE__;
   is $error->line_number, __LINE__-5;
   is $error . '', "Error at ".$error->file_name." line ".$error->line_number.".\n";

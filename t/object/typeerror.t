@@ -19,7 +19,7 @@ test {
   is $error->message, 'Error message';
   is $error->file_name, __FILE__;
   is $error->line_number, __LINE__-7;
-  is $error . '', "Error message at ".$error->file_name." line ".$error->line_number.".\n";
+  is $error . '', "TypeError: Error message at ".$error->file_name." line ".$error->line_number.".\n";
 
   done $c;
 } name => 'with message', n => 7;
@@ -29,12 +29,13 @@ test {
 
   my $error = new Web::DOM::TypeError;
   is $error->name, 'TypeError';
-  is $error->message, 'TypeError';
+  is $error->message, '';
   is $error->file_name, __FILE__;
   is $error->line_number, __LINE__-4;
   is $error . '', "TypeError at ".$error->file_name." line ".$error->line_number.".\n";
+  is $error->stringify, $error . '';
   done $c;
-} name => 'without message', n => 5;
+} name => 'without message', n => 6;
 
 test {
   my $c = shift;
@@ -66,7 +67,7 @@ test {
   is $@->message, 'hoge fuga';
   is $@->file_name, __FILE__;
   is $@->line_number, __LINE__ - 6;
-  is $@ . '', 'hoge fuga at ' . __FILE__ . ' line ' . (__LINE__ - 7) . ".\n";
+  is $@ . '', 'TypeError: hoge fuga at ' . __FILE__ . ' line ' . (__LINE__ - 7) . ".\n";
   done $c;
 } name => '_throw', n => 7;
 

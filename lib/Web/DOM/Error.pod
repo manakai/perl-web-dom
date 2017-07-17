@@ -28,42 +28,74 @@ to the empty string.
 
 =item $string = $error->name
 
-Return the name of the error, e.g. C<TimeoutError>.  [DOMPERL]
+Return the name of the error, e.g. C<TimeoutError>.
 
 =item $string = $error->message
 
-Return a message describing the error.  This message can be used for
-debugging purpose.  The value returned by this method is
+Return a short message describing the error.  This message can be used
+for debugging purpose.  The value returned by this method is
 implementation-dependent.  Applications should not rely on the value
-returned by this method.  [DOMPERL]
+returned by this method.
 
 =item $string = $error->file_name
 
-Return the file name of the location of the error.  [DOMPERL]
+Return the file name of the location of the error.  It is intended to
+be a short string similar to C<__FILE__>.
 
 =item $number = $error->line_number
 
-Return the line number, in the file, of the location of the error.
-[DOMPERL]
+Return the line number, in the file, of the location of the error.  It
+is intended to be an integer similar to C<__LINE__>.
 
 =item $string = '' . $error
 
+=item $string = $error->stringify
+
 Stringifying the error object returns the error message with its
 location in the Perl standard format (i.e. C<Error message at
-path/to/script.pl line 123.\n>).  [DOMPERL]
+path/to/script.pl line 123.\n>).
 
 =back
 
-=head1 SPECIFICATION
+=head1 ERROR OBJECT API
+
+A value I<$error> is B<implementing> the Perl Error Object Interface
+Level 1 iff all of the following conditions are true:
 
 =over 4
 
-=item DOMPERL
+=item C<< $error->name >> returns a string.
 
-manakai's DOM Perl Binding - Exceptions and errors
-<http://suika.fam.cx/~wakaba/wiki/sw/n/manakai%27s%20DOM%20Perl%20Binding$2233#anchor-54>.
+The returned value should be a short string identifying the type of
+the error.
+
+=item C<< $error->message >> returns a string.
+
+The returned value should be a short English string describing the
+error.
+
+=item C<< $error->file_name >> returns a string.
+
+The returned value should be a short string identifying the location
+of the Perl script throwing the error.  It should not contain U+000D
+or U+000A.
+
+=item C<< $error->line_number >> returns an integer.
+
+The returned value should be a line number identifying the location of
+the error within the script denoted by C<< $error->file_name >>.
+
+=item '' . $error (i.e. evaluation as a string) returns a string.
+
+The returned value must end with C< at FILE line LINE.> followed by
+C<\n>, where I<FILE> is C<< $error->file_name >> and I<LINE> is C<<
+$error->line_number >>.  It should also contain the C<<
+$error->message >>.
 
 =back
+
+An instance of the C<Web::DOM::Error> class is implementing the Perl
+Error Object Interface Level 1.
 
 =head1 SEE ALSO
 

@@ -6,7 +6,7 @@ our $VERSION = '2.0';
 use Carp;
 
 use overload
-    '""' => \&_stringify, bool => sub { 1 },
+    '""' => 'stringify', bool => sub { 1 },
     cmp => sub {
       carp "Use of uninitialized value in string comparison (cmp)"
           unless defined $_[1];
@@ -23,8 +23,7 @@ sub new ($$) {
 
 sub _set_stacktrace ($) {
   my $self = $_[0];
-  eval { Carp::croak };
-  if ($@ =~ /at (.+) line ([0-9]+)\.?$/) {
+  if (Carp::shortmess =~ /at (.+) line ([0-9]+)\.?$/) {
     $self->{file_name} = $1;
     $self->{line_number} = $2;
   }
@@ -34,17 +33,21 @@ sub _set_stacktrace ($) {
 sub name ($) { $_[0]->{name} }
 sub file_name ($) { $_[0]->{file_name} }
 sub line_number ($) { $_[0]->{line_number} || 0 }
+sub message ($) { $_[0]->{message} }
 
-sub message ($) {
-  return defined $_[0]->{message} && length $_[0]->{message}
-      ? $_[0]->{message} : $_[0]->name;
-} # message
-
-sub _stringify ($) {
-  my $fn = $_[0]->file_name;
+sub stringify ($) {
+  my $self = $_[0];
+  my $name = $self->name;
+  my $msg = $self->message;
+  if (length $msg) {
+    $msg = $name . ': ' . $msg if length $name;
+  } else {
+    $msg = $name;
+  }
+  my $fn = $self->file_name;
   return sprintf "%s at %s line %d.\n",
-      $_[0]->message, defined $fn ? $fn : '(unknown)', $_[0]->line_number;
-} # _stringify
+      $msg, defined $fn ? $fn : '(unknown)', $self->line_number || 0;
+} # stringify
 
 1;
 
