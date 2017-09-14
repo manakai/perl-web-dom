@@ -2,7 +2,6 @@ $Web::DOM::_Defs = {
           'all_named' => {
                            'http://www.w3.org/1999/xhtml' => {
                                                              'a' => 1,
-                                                             'applet' => 1,
                                                              'button' => 1,
                                                              'embed' => 1,
                                                              'form' => 1,
