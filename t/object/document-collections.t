@@ -205,18 +205,16 @@ test {
   my $el1 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'applet');
   $doc->append_child ($el1);
 
-  is $doc->applets->length, 1;
-  is $col1->length, 1;
-  is $col1->[0], $el1;
+  is $doc->applets->length, 0;
+  is $col1->length, 0;
 
   my $el2 = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'applet');
   $el1->append_child ($el2);
 
-  is $col1->length, 2;
-  is $col1->[1], $el2;
+  is $col1->length, 0;
 
   done $c;
-} n => 8, name => 'applets';
+} n => 6, name => 'applets';
 
 test {
   my $c = shift;
@@ -412,7 +410,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

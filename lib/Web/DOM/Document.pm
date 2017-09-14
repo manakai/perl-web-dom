@@ -502,7 +502,7 @@ sub scripts ($) {
 } # scripts
 
 sub applets ($) {
-  return ${$_[0]}->[0]->collection_by_el ($_[0], 'applets', HTML_NS, 'applet');
+  return ${$_[0]}->[0]->collection_by_el ($_[0], 'applets', HTML_NS, '');
 } # applets
 
 sub links ($) {
