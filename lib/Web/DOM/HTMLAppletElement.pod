@@ -1,6 +1,6 @@
 =head1 NAME
 
-Web::DOM::HTMLAppletElement - The DOM |HTMLAppletElement| object
+Web::DOM::HTMLAppletElement - DOM |HTMLAppletElement| object
 
 =head1 DESCRIPTION
 
@@ -8,7 +8,11 @@ The C<Web::DOM::HTMLAppletElement> class implements the DOM
 C<HTMLAppletElement> interface.  The class is used by the HTML
 C<applet> element.
 
-The interface, as well as the C<applet> element, is obsolete.
+The interface, as well as the C<applet> element, is obsolete.  Though
+this interface has been removed from the HTML Standard in 2017, it is
+still included in this implementation for API compatibility.  (A Perl
+DOM module has different compatibility requirements from Web browser
+DOM API implementations.)
 
 =head1 METHODS
 
@@ -23,8 +27,8 @@ C<hspace>, C<name>, C<object>, C<vspace>, and C<width>.  [HTML]
 
 =item HTML
 
-HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-applet-element>.
+HTML Standard (until August 2017)
+<https://github.com/whatwg/html/commit/b9b9d60f9451c05f8e8d542e4094f987ae1a5fb8>.
 
 =back
 
@@ -38,7 +42,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
