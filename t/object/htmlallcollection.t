@@ -558,7 +558,7 @@ test {
 } n => 8, name => 'all nameditem mutation';
 
 for my $name (qw(
-  a applet button embed form frame frameset iframe img input map meta
+  a button embed form frame frameset iframe img input map meta
   object select textarea
 )) {
   test {
@@ -598,7 +598,7 @@ for my $name (qw(
 }
 
 for my $name (qw(
-  p div option
+  p div option applet
 )) {
   test {
     my $c = shift;
@@ -628,7 +628,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
