@@ -136,8 +136,8 @@ for my $test (
   ['X-User-Defined' => 'x-user-defined'],
   ['utf-16BE' => 'UTF-16BE'],
   ['unicode' => undef],
-  ['iso-2022-cn' => undef],
-  ['replacement' => undef],
+  ['iso-2022-cn' => 'replacement'],
+  ['replacement' => 'replacement'],
   [" euc-JP\x09" => 'EUC-JP'],
 ) {
   test {
@@ -1348,7 +1348,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
