@@ -5,5 +5,5 @@ Path::Class~0.37
 Path::Tiny~0.104
 Scalar::Util~1.50
 Term::ANSIColor~4.06
-Test::Builder~1.302122
+Test::Builder~1.302125
 Time::HiRes~1.9754
