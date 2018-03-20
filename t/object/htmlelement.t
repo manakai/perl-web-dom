@@ -290,7 +290,6 @@ for my $test (
   ['object', 'codebase'],
   ['applet', 'object'],
   ['applet', 'codebase'],
-  ['link', 'scope'],
 ) {
   my $attr = $test->[1];
   test {
@@ -1119,24 +1118,6 @@ for my $test (
      ['HARd' => 'hard'],
    ],
    invalid_values => [[''], ['0'], [undef]]},
-  {element => 'link',
-   attr => 'workertype',
-   default => 'classic',
-   valid_values => [
-     [ClaSsic => 'classic'],
-     [MODULE => 'module'],
-   ],
-   invalid_values => [[''], ['0'], [undef], ['menu'], ['Popup'], ['invalid']],
-   invalid_default => ''},
-  {element => 'link',
-   attr => 'updateviacache',
-   default => 'imports',
-   valid_values => [
-     [aLL => 'all'],
-     [imports => 'imports'],
-     [NONE => 'none'],
-   ],
-   invalid_values => [[''], ['0'], [undef], ['menu'], ['Popup'], ['invalid']]},
 ) {
   my $attr = $test->{attr};
   test {
