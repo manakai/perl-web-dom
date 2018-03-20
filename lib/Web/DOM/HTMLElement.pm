@@ -291,19 +291,6 @@ _define_reflect_string charset => 'charset';
 _define_reflect_string rev => 'rev';
 _define_reflect_string target => 'target';
 _define_reflect_settable_token_list rel_list => 'rel';
-_define_reflect_enumerated workertype => 'workertype', {
-  classic => 'classic',
-  module => 'module',
-  '#missing' => 'classic',
-  '#invalid' => '',
-};
-_define_reflect_enumerated updateviacache => 'updateviacache', {
-  all => 'all',
-  imports => 'imports',
-  none => 'none',
-  '#missing' => 'imports',
-};
-_define_reflect_url scope => 'scope';
 
 _define_reflect_enumerated as => 'as', {
   map { $_ => $_ }

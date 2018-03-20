@@ -71,12 +71,6 @@ Get or set the C<rel> attribute value.  [HTML]
 Return the L<Web::DOM::TokenList> object for the C<rel> attribute.
 [HTML]
 
-=item $string = $el->scope
-
-=item $el->scope ($string)
-
-Get or set the C<scope> attribute value.  [HTML]
-
 =item $el->sizes ($string)
 
 Set the C<sizes> attribute value.  [HTML]
@@ -91,18 +85,6 @@ Return the L<Web::DOM::TokenList> object for the C<sizes> attribute.
 =item $el->type ($string)
 
 Get or set the C<type> attribute value.  [HTML]
-
-=item $string = $el->updateviacache
-
-=item $el->updateviacache ($string)
-
-Get or set the C<updateviacache> attribute value.  [HTML]
-
-=item $string = $el->workertype
-
-=item $el->workertype ($string)
-
-Get or set the C<workertype> attribute value.  [HTML]
 
 =back
 
