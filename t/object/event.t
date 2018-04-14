@@ -37,6 +37,7 @@ test {
   isa_ok $ev, 'Web::DOM::Event';
   is $ev->type, '';
   is $ev->target, undef;
+  is $ev->src_element, $ev->target;
   is $ev->current_target, undef;
   is $ev->event_phase, 0;
   is $ev->NONE, 0;
@@ -53,7 +54,7 @@ test {
   ok $ev->{initialized};
   ok not $ev->manakai_dispatched;
   done $c;
-} n => 18, name => 'constructor with no args';
+} n => 19, name => 'constructor with no args';
 
 test {
   my $c = shift;
@@ -62,6 +63,7 @@ test {
   isa_ok $ev, 'Web::DOM::Event';
   is $ev->type, 'Hoge fuga';
   is $ev->target, undef;
+  is $ev->src_element, $ev->target;
   is $ev->current_target, undef;
   is $ev->event_phase, 0;
   is $ev->NONE, 0;
@@ -78,7 +80,7 @@ test {
   ok $ev->{initialized};
   ok not $ev->manakai_dispatched;
   done $c;
-} n => 18, name => 'constructor with type';
+} n => 19, name => 'constructor with type';
 
 test {
   my $c = shift;
@@ -178,20 +180,60 @@ test {
   my $ev = new Web::DOM::Event 'h';
   $ev->prevent_default;
   ok not $ev->default_prevented;
+  ok $ev->return_value;
   $ev->prevent_default;
   ok not $ev->default_prevented;
-  done $c;  
-} n => 2, name => 'prevent_default not cancelable';
+  ok $ev->return_value;
+  done $c;
+} n => 4, name => 'prevent_default not cancelable';
+
+test {
+  my $c = shift;
+  my $ev = new Web::DOM::Event 'h';
+  $ev->return_value (1);
+  ok not $ev->default_prevented;
+  ok $ev->return_value;
+  $ev->return_value (0);
+  ok not $ev->default_prevented;
+  ok $ev->return_value;
+  $ev->return_value (0);
+  ok not $ev->default_prevented;
+  ok $ev->return_value;
+  $ev->return_value (1);
+  ok not $ev->default_prevented;
+  ok $ev->return_value;
+  done $c;
+} n => 8, name => 'return_value not cancelable';
 
 test {
   my $c = shift;
   my $ev = new Web::DOM::Event 'h', {cancelable => 1};
   $ev->prevent_default;
   ok $ev->default_prevented;
+  ok ! $ev->return_value;
   $ev->prevent_default;
   ok $ev->default_prevented;
-  done $c;  
-} n => 2, name => 'prevent_default cancelable';
+  ok ! $ev->return_value;
+  done $c;
+} n => 4, name => 'prevent_default cancelable';
+
+test {
+  my $c = shift;
+  my $ev = new Web::DOM::Event 'h', {cancelable => 1};
+  $ev->return_value (1);
+  ok ! $ev->default_prevented;
+  ok $ev->return_value;
+  $ev->return_value (0);
+  ok $ev->default_prevented;
+  ok ! $ev->return_value;
+  $ev->return_value (0);
+  ok $ev->default_prevented;
+  ok ! $ev->return_value;
+  $ev->return_value (1);
+  ok $ev->default_prevented;
+  ok ! $ev->return_value;
+  done $c;
+} n => 8, name => 'return_value cancelable';
 
 ## prevent_default passive flag tests are in eventtarget.t.
 
@@ -327,7 +369,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

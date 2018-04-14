@@ -59,6 +59,7 @@ test {
     is $_[0], $node2;
     is $_[1]->current_target, $node2;
     is $_[1]->target, $node;
+    is $_[1]->src_element, $_[1]->target;
     is $_[1]->event_phase, $_[1]->BUBBLING_PHASE;
   });
 
@@ -68,7 +69,7 @@ test {
   undef $node;
   undef $node2;
   done $c;
-} n => 6, name => 'dispatch_event has parent';
+} n => 7, name => 'dispatch_event has parent';
 
 test {
   my $c = shift;
@@ -87,6 +88,7 @@ test {
     is $_[0], $node3;
     is $_[1]->current_target, $node3;
     is $_[1]->target, $node;
+    is $_[1]->src_element, $_[1]->target;
     is $_[1]->event_phase, $_[1]->BUBBLING_PHASE;
   });
 
@@ -97,7 +99,7 @@ test {
   undef $node2;
   undef $node3;
   done $c;
-} n => 6, name => 'dispatch_event has ancestor';
+} n => 7, name => 'dispatch_event has ancestor';
 
 test {
   my $c = shift;
@@ -138,6 +140,7 @@ test {
     is $_[0], $node3;
     is $_[1]->current_target, $node3;
     is $_[1]->target, $node;
+    is $_[1]->src_element, $_[1]->target;
     is $_[1]->event_phase, $_[1]->CAPTURING_PHASE;
   }, 1);
 
@@ -148,7 +151,7 @@ test {
   undef $node2;
   undef $node3;
   done $c;
-} n => 6, name => 'dispatch_event has ancestor, capturing';
+} n => 7, name => 'dispatch_event has ancestor, capturing';
 
 test {
   my $c = shift;
@@ -547,6 +550,7 @@ test {
     ok $_[1]->bubbles;
     is $_[1]->current_target, $doc;
     is $_[1]->target, $el;
+    is $_[1]->src_element, $_[1]->target;
     is $_[1]->event_phase, $_[1]->BUBBLING_PHASE;
   });
 
@@ -556,7 +560,7 @@ test {
   done $c;
   undef $doc;
   undef $el;
-} n => 7, name => '_fire_simple_event bubbles';
+} n => 8, name => '_fire_simple_event bubbles';
 
 test {
   my $c = shift;
@@ -941,7 +945,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

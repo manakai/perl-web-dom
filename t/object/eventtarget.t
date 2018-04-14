@@ -26,6 +26,7 @@ test {
     is $event, $ev;
     is $event->type, 'hoge';
     is $event->target, $et;
+    is $event->src_element, $event->target;
     is $event->current_target, $et;
     is $event->event_phase, $ev->AT_TARGET;
     ok not $event->default_prevented;
@@ -36,11 +37,12 @@ test {
   is $ev->type, 'hoge';
   is $ev->event_phase, $ev->NONE;
   is $ev->target, $et;
+  is $ev->src_element, $ev->target;
   is $ev->current_target, undef;
   ok not $ev->default_prevented;
 
   done $c;
-} n => 13;
+} n => 15;
 
 test {
   my $c = shift;
@@ -584,6 +586,7 @@ test {
     is ref $_[1], 'Web::DOM::Event';
     is $_[0], $_[1]->target;
     is $_[1]->target, $_[1]->current_target;
+    is $_[1]->src_element, $_[1]->target;
     is $_[1]->type, 'hoge';
     ok not $_[1]->bubbles;
     ok $_[1]->cancelable;
@@ -595,7 +598,7 @@ test {
   is $invoked, 1;
 
   done $c;
-} n => 10, name => '_fire_simple_event with event listener';
+} n => 11, name => '_fire_simple_event with event listener';
 
 test {
   my $c = shift;
@@ -669,6 +672,21 @@ test {
   my $ev = new Web::DOM::Event 'aa', {cancelable => 1};
 
   $et->add_event_listener (aa => sub {
+    $_[1]->return_value (0);
+    ok 1;
+  }, {passive => 0});
+  $et->dispatch_event ($ev);
+
+  ok $ev->default_prevented;
+  done $c;
+} n => 2, name => 'return_value in non-passive listener';
+
+test {
+  my $c = shift;
+  my $et = create_event_target;
+  my $ev = new Web::DOM::Event 'aa', {cancelable => 1};
+
+  $et->add_event_listener (aa => sub {
     $_[1]->prevent_default;
     ok 1;
   }, {passive => 1});
@@ -677,6 +695,21 @@ test {
   ok !$ev->default_prevented;
   done $c;
 } n => 2, name => 'prevent_default in passive listener';
+
+test {
+  my $c = shift;
+  my $et = create_event_target;
+  my $ev = new Web::DOM::Event 'aa', {cancelable => 1};
+
+  $et->add_event_listener (aa => sub {
+    $_[1]->return_value (0);
+    ok 1;
+  }, {passive => 1});
+  $et->dispatch_event ($ev);
+
+  ok !$ev->default_prevented;
+  done $c;
+} n => 2, name => 'return_value in passive listener';
 
 test {
   my $c = shift;
@@ -841,7 +874,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

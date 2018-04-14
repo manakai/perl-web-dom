@@ -67,6 +67,7 @@ sub new ($$;$) {
 
 sub type ($) { $_[0]->{type} }
 sub target ($) { $_[0]->{target} } # or undef
+*src_element = \&target;
 sub current_target ($) { $_[0]->{current_target} } # or undef
 
 push @EXPORT, qw(NONE CAPTURING_PHASE AT_TARGET BUBBLING_PHASE);
@@ -101,12 +102,22 @@ sub bubbles ($) { $_[0]->{bubbles} }
 sub cancelable ($) { $_[0]->{cancelable} }
 
 sub prevent_default ($) {
+  ## Set the canceled flag
   $_[0]->{canceled} = 1 if $_[0]->{cancelable} and
                            not $_[0]->{in_passive_listener};
   return undef;
 } # prevent_default
-
 sub default_prevented ($) { $_[0]->{canceled} }
+sub return_value ($;$) {
+  if (@_ > 1) {
+    if (not $_[1]) {
+      ## Set the canceled flag
+      $_[0]->{canceled} = 1 if $_[0]->{cancelable} and
+                               not $_[0]->{in_passive_listener};
+    }
+  }
+  return not $_[0]->{canceled};
+} # return_value
 
 sub is_trusted ($) { $_[0]->{is_trusted} }
 sub timestamp ($) { $_[0]->{timestamp} }
@@ -461,7 +472,7 @@ sub ports ($) { $_[0]->{ports} }
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -96,7 +96,8 @@ Return the event type.  [DOM]
 
 =back
 
-In addition, it also supports C<init_event> method.  [DOM]
+In addition, it also supports historical C<init_event>,
+C<return_value>, and C<src_element> methods.  [DOM]
 
 =head1 CONSTANTS
 
@@ -141,7 +142,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

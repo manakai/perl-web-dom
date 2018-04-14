@@ -147,6 +147,9 @@ sub _dispatch_event ($$) {
   delete $event->{stop_immediate_propagation};
   delete $event->{event_phase};
   delete $event->{current_target};
+
+  # XXX if shadow tree, ...
+
   return not $event->{canceled};
 } # _dispatch_event
 
