@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::HTMLInputElement - The DOM |HTMLInputElement| object
+Web::DOM::HTMLInputElement - DOM |HTMLInputElement| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::HTMLInputElement> class implements the DOM
-C<HTMLInputElement> interface.  The class is used by the HTML C<input>
-element.
+C<HTMLInputElement> interface.  The class is used by HTML C<input>
+elements.
 
 =head1 METHODS
 
@@ -90,12 +90,6 @@ not.  [HTML]
 =item $el->formtarget ($string)
 
 Return or set the C<formtarget> attribute.  [HTML]
-
-=item $string = $el->inputmode
-
-=item $el->inputmode ($string)
-
-Return or set the C<inputmode> attribute.  [HTML]
 
 =item $el2 = $el->list
 
@@ -209,7 +203,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -65,6 +65,12 @@ For example:
   $el->hidden (1);
   ok $el->hidden; # <span hidden>
 
+=item $string = $el->inputmode
+
+=item $el->inputmode ($string)
+
+Return or set the C<inputmode> attribute.  [HTML]
+
 =item $string = $el->itemid
 
 =item $el->itemid ($string)
@@ -266,7 +272,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -24,6 +24,16 @@ _define_reflect_enumerated dir => 'dir', {
   rtl => 'rtl',
   auto => 'auto',
 };
+_define_reflect_enumerated inputmode => 'inputmode', {
+  none => 'none',
+  text => 'text',
+  tel => 'tel',
+  email => 'email',
+  url => 'url',
+  numeric => 'numeric',
+  decimal => 'decimal',
+  search => 'search',
+};
 
 sub translate ($;$) {
   if (@_ > 1) {
@@ -1362,20 +1372,6 @@ _define_reflect_enumerated formmethod => 'formmethod', {
 };
 _define_reflect_boolean formnovalidate => 'formnovalidate';
 _define_reflect_string formtarget => 'formtarget';
-_define_reflect_enumerated inputmode => 'inputmode', {
-  verbatim => 'verbatim',
-  latin => 'latin',
-  'latin-name' => 'latin-name',
-  'latin-prose' => 'latin-prose',
-  'full-width-latin' => 'full-width-latin',
-  kana => 'kana',
-  katakana => 'katakana',
-  numeric => 'numeric',
-  tel => 'tel',
-  email => 'email',
-  url => 'url',
-  # #missing => default
-};
 _define_reflect_string max => 'max';
 _define_reflect_long_nn maxlength => 'maxlength', sub { -1 };
 _define_reflect_string min => 'min';
@@ -1586,20 +1582,6 @@ _define_reflect_boolean autofocus => 'autofocus';
 _define_reflect_unsigned_long_positive_fb cols => 'cols', sub { 20 };
 _define_reflect_string dirname => 'dirname';
 _define_reflect_boolean disabled => 'disabled';
-_define_reflect_enumerated inputmode => 'inputmode', {
-  verbatim => 'verbatim',
-  latin => 'latin',
-  'latin-name' => 'latin-name',
-  'latin-prose' => 'latin-prose',
-  'full-width-latin' => 'full-width-latin',
-  kana => 'kana',
-  katakana => 'katakana',
-  numeric => 'numeric',
-  tel => 'tel',
-  email => 'email',
-  url => 'url',
-  # #missing => default
-};
 _define_reflect_long_nn maxlength => 'maxlength', sub { -1 };
 _define_reflect_string name => 'name';
 _define_reflect_string placeholder => 'placeholder';
@@ -1790,7 +1772,7 @@ _define_reflect_string name => 'name';
 
 =head1 LICENSE
 
-Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

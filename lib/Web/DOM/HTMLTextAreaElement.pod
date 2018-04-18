@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::HTMLTextAreaElement - The DOM |HTMLTextAreaElement| object
+Web::DOM::HTMLTextAreaElement - DOM |HTMLTextAreaElement| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::HTMLTextAreaElement> class implements the DOM
-C<HTMLTextAreaElement> interface.  The class is used by the HTML
-C<textarea> element.
+C<HTMLTextAreaElement> interface.  The class is used by HTML
+C<textarea> elements.
 
 =head1 METHODS
 
@@ -46,12 +46,6 @@ Return or set the C<dirname> attribute.  [HTML]
 
 Return or set whether the C<disabled> attribute is specified or not.
 [HTML]
-
-=item $string = $el->inputmode
-
-=item $el->inputmode ($string)
-
-Return or set the C<inputmode> attribute.  [HTML]
 
 =item $integer = $el->maxlength
 
@@ -110,7 +104,7 @@ Return the string C<textarea>.  [HTML]
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-textarea-element>.
+<https://www.whatwg.org/specs/web-apps/current-work/#the-textarea-element>.
 
 =back
 
@@ -124,7 +118,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
