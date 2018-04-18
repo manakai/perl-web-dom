@@ -1,12 +1,12 @@
 =head1 NAME
 
-Web::DOM::HTMLImageElement - The DOM |HTMLImageElement| object
+Web::DOM::HTMLImageElement - DOM |HTMLImageElement| object
 
 =head1 DESCRIPTION
 
 The C<Web::DOM::HTMLImageElement> class implements the DOM
-C<HTMLImageElement> interface.  The class is used by the HTML C<img>
-element.
+C<HTMLImageElement> interface.  The class is used by HTML C<img>
+elements.
 
 =head1 METHODS
 
@@ -26,6 +26,12 @@ Return or set the C<alt> attribute.  [HTML]
 =item $el->crossorigin ($string)
 
 Return or set the C<crossorigin> attribute.  [HTML]
+
+=item $string = $el->decoding
+
+=item $el->decoding ($string)
+
+Return or set the C<decoding> attribute.  [HTML]
 
 =item $boolean = $el->ismap
 
@@ -65,7 +71,7 @@ C<border>, C<hspace>, C<longdesc>, C<lowsrc>, C<name>, and C<vspace>.
 =item HTML
 
 HTML Standard
-<http://www.whatwg.org/specs/web-apps/current-work/#the-img-element>.
+<https://www.whatwg.org/specs/web-apps/current-work/#the-img-element>.
 
 =back
 
@@ -79,7 +85,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

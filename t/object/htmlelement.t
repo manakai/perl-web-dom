@@ -1129,6 +1129,15 @@ for my $test (
      ['HARd' => 'hard'],
    ],
    invalid_values => [[''], ['0'], [undef]]},
+  {element => 'img',
+   attr => 'decoding',
+   default => 'auto',
+   valid_values => [
+     ['SYNC' => 'sync'],
+     ['aSync' => 'async'],
+     ['auto' => 'auto'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['true'], ['synchronous']]},
 ) {
   my $attr = $test->{attr};
   test {

@@ -199,6 +199,8 @@ sub style ($;$) {
   return $style;
 } # style
 
+# XXX autocapitalize
+
 ## ------ User interaction ------
 
 # XXX tabindex click focus blur accesskey_label is_contenteditable
@@ -569,6 +571,13 @@ _define_reflect_nullable_enumerated crossorigin => 'crossorigin', {
 };
 _define_reflect_string usemap => 'usemap';
 _define_reflect_boolean ismap => 'ismap';
+_define_reflect_enumerated decoding => 'decoding', {
+  sync => 'sync',
+  async => 'async',
+  auto => 'auto',
+  '#missing' => 'auto',
+  '#invalid', 'auto',
+};
 
 # XXX width height natural_width natural_height complete current_src
 
