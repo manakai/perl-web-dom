@@ -47,9 +47,10 @@ Return the number of the tokens in the list.  [DOM] [DOMPERL]
 
 Remove the specified tokens from the list.  [DOM]
 
-=item $tokens->replace ($token, $new_token)
+=item $boolean = $tokens->replace ($token, $new_token)
 
-Replace the token, if any, by a new token.  [DOM]
+Replace the token, if any, by a new token and return whether any token
+is replaced or not.  [DOM]
 
 =item $bool = $tokens->toggle ($token)
 
@@ -102,7 +103,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

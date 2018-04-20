@@ -127,11 +127,11 @@ sub replace ($$$) {
   }
 
   # 3.
-  return unless $replaced;
+  return 0 unless $replaced;
 
   # 5.
   (tied @$self)->replace_by_bare (@new);
-  return;
+  return 1;
 } # replace
 
 sub supports ($$) {
@@ -158,7 +158,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

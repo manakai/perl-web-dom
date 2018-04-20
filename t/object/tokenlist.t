@@ -586,7 +586,7 @@ test {
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs  ');
   my $tokens = $el->class_list;
-  ok ! $tokens->replace ('hoge', 'fuga');
+  ok $tokens->replace ('hoge', 'fuga');
   is ''.$tokens, 'ab fuga ss xs';
   is $el->get_attribute ('class'), 'ab fuga ss xs';
   done $c;
@@ -598,7 +598,7 @@ test {
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs hoge  ');
   my $tokens = $el->class_list;
-  ok ! $tokens->replace ('hoge', 'fuga');
+  ok $tokens->replace ('hoge', 'fuga');
   is ''.$tokens, 'ab fuga ss xs';
   is $el->get_attribute ('class'), 'ab fuga ss xs';
   done $c;
@@ -610,7 +610,7 @@ test {
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs Hoge   ');
   my $tokens = $el->class_list;
-  ok ! $tokens->replace ('hoge', 'fuga');
+  ok $tokens->replace ('hoge', 'fuga');
   is ''.$tokens, 'ab fuga ss xs Hoge';
   is $el->get_attribute ('class'), 'ab fuga ss xs Hoge';
   done $c;
@@ -622,7 +622,7 @@ test {
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hogE ss xs hoge  ');
   my $tokens = $el->class_list;
-  ok ! $tokens->replace ('hogE', 'fuga');
+  ok $tokens->replace ('hogE', 'fuga');
   is ''.$tokens, 'ab fuga ss xs hoge';
   is $el->get_attribute ('class'), 'ab fuga ss xs hoge';
   done $c;
@@ -634,7 +634,7 @@ test {
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'hoge');
   $el->set_attribute (class => 'ab  hoge ss xs fuga ');
   my $tokens = $el->class_list;
-  ok ! $tokens->replace ('hoge', 'fuga');
+  ok $tokens->replace ('hoge', 'fuga');
   is ''.$tokens, 'ab fuga ss xs';
   is $el->get_attribute ('class'), 'ab fuga ss xs';
   done $c;
@@ -731,7 +731,7 @@ test {
   my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'a');
   $el->set_attribute (rel => 'ab  hoge ss xs Hoge   ');
   my $tokens = $el->rel_list;
-  ok ! $tokens->replace ('hoge', 'fuga');
+  ok $tokens->replace ('hoge', 'fuga');
   is ''.$tokens, 'ab fuga ss xs Hoge';
   is $el->get_attribute ('rel'), 'ab fuga ss xs Hoge';
   done $c;
@@ -850,7 +850,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
