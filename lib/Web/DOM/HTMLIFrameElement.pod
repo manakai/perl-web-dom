@@ -15,6 +15,12 @@ and L<Web::DOM::HTMLElement>, the following methods are available:
 
 =over 4
 
+=item $string = $el->allow
+
+=item $el->allow ($string)
+
+Get or set the C<allow> attribute value.  [HTML]
+
 =item $boolean = $el->allowfullscreen
 
 =item $el->allowfullscreen ($boolean)
@@ -99,7 +105,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

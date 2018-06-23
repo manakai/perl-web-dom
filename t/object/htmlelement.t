@@ -68,6 +68,7 @@ for my $test (
   ['iframe', 'srcdoc'],
   ['iframe', 'width'],
   ['iframe', 'height'],
+  ['iframe', 'allow'],
   ['embed', 'type'],
   ['embed', 'width'],
   ['embed', 'height'],
