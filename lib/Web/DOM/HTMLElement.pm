@@ -34,6 +34,9 @@ _define_reflect_enumerated inputmode => 'inputmode', {
   decimal => 'decimal',
   search => 'search',
 };
+_define_reflect_enumerated enterkeyhint => 'enterkeyhint', {
+  map { $_ => $_ } qw(enter done go next previous search send)
+};
 
 sub translate ($;$) {
   if (@_ > 1) {
