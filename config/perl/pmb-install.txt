@@ -1,4 +1,4 @@
-AnyEvent~7.14
+AnyEvent~7.15
 Carp~1.50
 Data::Dumper~2.173
 Path::Class~0.37
@@ -8,3 +8,5 @@ Term::ANSIColor~4.06
 Test::Builder~1.302160
 Time::HiRes~1.9758
 Test::Differences
+Test::More~1.302164
+Time::HiRes~1.9760
