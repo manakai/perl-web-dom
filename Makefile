@@ -11,6 +11,7 @@ updatenightly: local/bin/pmbp.pl updatedata
 	git add t_deps/modules
 	perl local/bin/pmbp.pl --update
 	git add config lib/
+	$(CURL) -sSLf https://raw.githubusercontent.com/wakaba/ciconfig/master/ciconfig | RUN_GIT=1 REMOVE_UNUSED=1 perl
 
 updatedata: clean build
 

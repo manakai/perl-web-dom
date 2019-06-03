@@ -274,7 +274,7 @@ of the modules.
 
 =head1 DEPENDENCY
 
-The modules require Perl 5.8 or later.
+The modules require Perl 5.10 or later.
 
 Following features require the perl-web-markup package
 <https://github.com/manakai/perl-web-markup> (L<Web::HTML::Parser> and
@@ -500,7 +500,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2007-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2019 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
