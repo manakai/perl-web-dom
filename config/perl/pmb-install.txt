@@ -1,12 +1,13 @@
+Algorithm::Diff~1.1903
 AnyEvent~7.15
+Capture::Tiny~0.48
 Carp~1.50
 Data::Dumper~2.173
 Path::Class~0.37
 Path::Tiny~0.108
 Scalar::Util~1.50
 Term::ANSIColor~4.06
-Test::Builder~1.302160
-Time::HiRes~1.9758
-Test::Differences
-Test::More~1.302164
+Test::Builder~1.302164
+Test::Differences~0.67
+Text::Diff~1.45
 Time::HiRes~1.9760
