@@ -385,7 +385,6 @@ for my $test (
   ['ol', 'reversed'],
   ['img', 'ismap'],
   ['iframe', 'allowfullscreen'],
-  ['iframe', 'allowusermedia'],
   ['iframe', 'allowpaymentrequest'],
   ['object', 'typemustmatch'],
   ['track', 'default'],
@@ -1063,6 +1062,20 @@ for my $test (
    ],
    invalid_values => [[''], ['0'], [undef], ['default'], ['verbatim'],
                       ['latin'], ['kana']]},
+  {element => 'p',
+   attr => 'enterkeyhint',
+   default => '',
+   valid_values => [
+     [Go => 'go'],
+     [Next => 'next'],
+     [previous => 'previous'],
+     [search => 'search'],
+     [SEND => 'send'],
+     [Enter => 'enter'],
+     [dONE => 'done'],
+   ],
+   invalid_values => [[''], ['0'], [undef], ['default'], ['return'],
+                      ['prev'], ['auto']]},
   {element => 'input',
    attr => 'type',
    default => 'text',
@@ -3098,7 +3111,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2013-2017 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2019 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

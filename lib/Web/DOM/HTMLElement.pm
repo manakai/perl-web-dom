@@ -34,6 +34,9 @@ _define_reflect_enumerated inputmode => 'inputmode', {
   decimal => 'decimal',
   search => 'search',
 };
+_define_reflect_enumerated enterkeyhint => 'enterkeyhint', {
+  map { $_ => $_ } qw(enter done go next previous search send)
+};
 
 sub translate ($;$) {
   if (@_ > 1) {
@@ -601,7 +604,6 @@ _define_reflect_string name => 'name';
 _define_reflect_neurl src => 'src';
 _define_reflect_string allow => 'allow';
 _define_reflect_boolean allowfullscreen => 'allowfullscreen';
-_define_reflect_boolean allowusermedia => 'allowusermedia';
 _define_reflect_boolean allowpaymentrequest => 'allowpaymentrequest';
 _define_reflect_string width => 'width';
 _define_reflect_string height => 'height';

@@ -35,13 +35,6 @@ not.  [HTML]
 Get or set whether the C<allowpaymentrequest> attribute is specified
 or not.  [HTML]
 
-=item $boolean = $el->allowusermedia
-
-=item $el->allowusermedia ($boolean)
-
-Get or set whether the C<allowusermedia> attribute is specified or
-not.  [HTML]
-
 =item $string = $el->height
 
 =item $el->height ($string)
@@ -105,7 +98,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2013-2018 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2019 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
