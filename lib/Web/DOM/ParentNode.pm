@@ -1,7 +1,7 @@
 package Web::DOM::ParentNode;
 use strict;
 use warnings;
-our $VERSION = '4.0';
+our $VERSION = '5.0';
 use Web::DOM::Node;
 use Web::DOM::Internal;
 push our @CARP_NOT, qw(
@@ -457,13 +457,13 @@ sub inner_html ($;$) {
   my $self = $_[0];
   if (@_ > 1) {
     ## For elements:
-    ##   - <http://domparsing.spec.whatwg.org/#innerhtml>
-    ##   - <http://domparsing.spec.whatwg.org/#parsing>
+    ##   - <https://domparsing.spec.whatwg.org/#innerhtml>
+    ##   - <https://domparsing.spec.whatwg.org/#parsing>
     ## For documents:
-    ##   - <http://html5.org/tools/web-apps-tracker?from=6531&to=6532>
+    ##   - <https://html5.org/tools/web-apps-tracker?from=6531&to=6532>
     ##   - <https://github.com/whatwg/domparsing/commit/59301cd77d4badbe16489087132a35621a2d460c>
     ## For document fragments:
-    ##   - <http://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions#anchor-143>
+    ##   - <https://suika.suikawiki.org/~wakaba/wiki/sw/n/manakai++DOM%20Extensions#anchor-143>
     
     my $parser;
     if ($$self->[0]->{data}->[0]->{is_html}) {
@@ -523,7 +523,7 @@ sub inner_html ($;$) {
 
 =head1 LICENSE
 
-Copyright 2012-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2019 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

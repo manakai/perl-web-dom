@@ -272,11 +272,26 @@ test {
   done $c;
 } n => 7, name => '<template>.innerHTML XML';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  $doc->manakai_is_html (1);
+  my $el = $doc->create_element_ns ('http://www.w3.org/1999/xhtml', 'br');
+
+  is $el->inner_html, '';
+
+  $el->inner_html ('<p title>ho&ge</P>foo<p>bar');
+  ok $el->first_child;
+  is $el->inner_html, '';
+
+  done $c;
+} n => 3, name => 'element.inner_html void element';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2013-2019 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
