@@ -1,24 +1,24 @@
 [submodule "t_deps/modules/test-x1"]
 	path = t_deps/modules/test-x1
-	url = git://github.com/wakaba/perl-test-x1
+	url = https://github.com/wakaba/perl-test-x1
         track = master
 [submodule "t_deps/modules/web-markup"]
 	path = t_deps/modules/web-markup
-	url = git://github.com/manakai/perl-web-markup
+	url = https://github.com/manakai/perl-web-markup
         track = master
 [submodule "t_deps/modules/web-css"]
 	path = t_deps/modules/web-css
-	url = git://github.com/manakai/perl-web-css
+	url = https://github.com/manakai/perl-web-css
         track = master
 [submodule "t_deps/modules/web-encodings"]
 	path = t_deps/modules/web-encodings
-	url = git://github.com/manakai/perl-web-encodings
+	url = https://github.com/manakai/perl-web-encodings
         track = master
 [submodule "t_deps/modules/web-url"]
 	path = t_deps/modules/web-url
-	url = git://github.com/manakai/perl-web-url
+	url = https://github.com/manakai/perl-web-url
         track = master
 [submodule "t_deps/modules/web-datetime"]
 	path = t_deps/modules/web-datetime
-	url = git://github.com/manakai/perl-web-datetime
+	url = https://github.com/manakai/perl-web-datetime
         track = master
