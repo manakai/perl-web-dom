@@ -135,7 +135,7 @@ for my $test (
   ['CESU-8' => undef],
   ['X-User-Defined' => 'x-user-defined'],
   ['utf-16BE' => 'UTF-16BE'],
-  ['unicode' => undef],
+  ['unicode' => "UTF-16LE"],
   ['iso-2022-cn' => 'replacement'],
   ['replacement' => 'replacement'],
   [" euc-JP\x09" => 'EUC-JP'],
