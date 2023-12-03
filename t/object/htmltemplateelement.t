@@ -335,7 +335,7 @@ test {
   my $doc2 = $df1->owner_document;
 
   my $doc3 = new Web::DOM::Document;
-  $doc3->adopt_node ($df1);
+  is $doc3->adopt_node ($df1), $df1;
 
   is $df1->owner_document, $doc2, "unchanged";
   is $el1->content, $df1;
@@ -344,7 +344,7 @@ test {
   is $el2->content->owner_document, $doc2;
 
   done $c;
-} n => 3, name => 'adopt template content';
+} n => 4, name => 'adopt template content';
 
 test {
   my $c = shift;
@@ -361,13 +361,13 @@ test {
   is $doc3, $doc2;
 
   my $doc4 = new Web::DOM::Document;
-  $doc4->adopt_node ($el2);
+  is $doc4->adopt_node ($el2), $el2;
 
   is $el2->owner_document, $doc4;
   isnt $df2->owner_document, $doc3;
 
   done $c;
-} n => 3, name => 'adopt nested template element';
+} n => 4, name => 'adopt nested template element';
 
 test {
   my $c = shift;
@@ -384,14 +384,14 @@ test {
   is $doc3, $doc2;
 
   my $doc4 = new Web::DOM::Document;
-  $doc4->adopt_node ($df2);
+  is $doc4->adopt_node ($df2), $df2;
 
   is $el2->content, $df2;
   is $df2->owner_document, $doc3, "unchanged";
   is $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'template')->content->owner_document, $doc3;
 
   done $c;
-} n => 4, name => 'adopt nested template content';
+} n => 5, name => 'adopt nested template content';
 
 test {
   my $c = shift;
@@ -400,7 +400,7 @@ test {
   my $df1 = $el1->content;
   my $doc2 = $df1->owner_document;
 
-  $doc1->adopt_node ($df1);
+  is $doc1->adopt_node ($df1), $df1;
 
   is $df1->owner_document, $doc2, "unchanged";
   is $el1->content, $df1;
@@ -408,7 +408,7 @@ test {
   is $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'template')->content->owner_document, $doc2;
 
   done $c;
-} n => 3, name => 'adopt template content to document of host';
+} n => 4, name => 'adopt template content to document of host';
 
 test {
   my $c = shift;
@@ -422,7 +422,7 @@ test {
   my $doc3 = $df2->owner_document;
   is $doc3, $doc2;
 
-  $doc1->adopt_node ($df1);
+  is $doc1->adopt_node ($df1), $df1;
 
   is $df1->owner_document, $doc2;
   is $el1->content, $df1;
@@ -431,7 +431,7 @@ test {
   is $df2->owner_document, $doc2;
 
   done $c;
-} n => 6, name => 'adopt template content with nested template element to document of host';
+} n => 7, name => 'adopt template content with nested template element to document of host';
 
 test {
   my $c = shift;
@@ -441,7 +441,7 @@ test {
   my $doc2 = $df1->owner_document;
   isnt $doc2, $doc1;
 
-  $doc2->adopt_node ($el1);
+  is $doc2->adopt_node ($el1), $el1;
 
   is $el1->owner_document, $doc2;
   is $el1->content, $df1;
@@ -449,7 +449,7 @@ test {
   is $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'template')->content->owner_document, $doc2;
 
   done $c;
-} n => 4, name => 'adopt host element to template content document';
+} n => 5, name => 'adopt host element to template content document';
 
 test {
   my $c = shift;
@@ -465,7 +465,7 @@ test {
   my $df3 = $el3->content;
 
   my $doc4 = new Web::DOM::Document;
-  $doc4->adopt_node ($el1);
+  is $doc4->adopt_node ($el1), $el1;
 
   is $el1->owner_document, $doc4;
   my $doc5 = $el1->content->owner_document;
@@ -479,7 +479,7 @@ test {
   isnt $doc5, $doc4;
 
   done $c;
-} n => 9, name => 'adopt multiple nested templates';
+} n => 10, name => 'adopt multiple nested templates';
 
 test {
   my $c = shift;
@@ -498,7 +498,7 @@ test {
   $doc1->adopt_node ($df3);
 
   my $doc4 = new Web::DOM::Document;
-  $doc4->adopt_node ($el1);
+  is $doc4->adopt_node ($el1), $el1;
 
   is $el1->owner_document, $doc4;
   my $doc5 = $el1->content->owner_document;
@@ -512,7 +512,7 @@ test {
   isnt $doc5, $doc4;
 
   done $c;
-} n => 9, name => 'adopt multiple nested templates with multiple docs';
+} n => 10, name => 'adopt multiple nested templates with multiple docs';
 
 for my $method (qw(append_child insert_before replace_child)) {
   test {

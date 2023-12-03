@@ -668,11 +668,11 @@ test {
   my $df = $doc1->create_document_fragment;
   is $df->owner_document, $doc1;
 
-  $doc2->adopt_node ($df);
+  is $doc2->adopt_node ($df), $df;
   is $df->owner_document, $doc2;
 
   done $c;
-} n => 2, name => 'adopt document fragment, normal, no child';
+} n => 3, name => 'adopt document fragment, normal, no child';
 
 test {
   my $c = shift;
@@ -685,12 +685,12 @@ test {
   is $df->owner_document, $doc1;
   is $el->owner_document, $doc1;
 
-  $doc2->adopt_node ($df);
+  is $doc2->adopt_node ($df), $df;
   is $df->owner_document, $doc2;
   is $el->owner_document, $doc2;
 
   done $c;
-} n => 4, name => 'adopt document fragment, normal, with child';
+} n => 5, name => 'adopt document fragment, normal, with child';
 
 run_tests;
 

@@ -1054,7 +1054,7 @@ sub adopt_node ($$) {
 
   # 3.
   if (defined $$node->[2]->{host_el}) {
-    return;
+    return $node;
   }
 
   # 4. Adopt
