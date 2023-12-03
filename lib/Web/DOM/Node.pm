@@ -562,27 +562,12 @@ sub _pre_insert ($$;$$) {
       $insert_position--;
     }
   }
-  
-  # 9. adopt
-  {
-    # Adopt 2.
-    my $old_parent_id = $$node->[2]->{parent_node};
-    $$node->[0]->remove_node ($old_parent_id, $$node->[1], 0)
-        if defined $old_parent_id;
 
-    # Adopt 3.
-    $$parent->[0]->adopt ($node);
-
-    # Adopt 4. Adopting steps
-    if ($$node->[2]->{node_type} == ELEMENT_NODE) {
-      # XXX
-    }
-  } # adopt
 
   # Replace 10.
-  $$node->[0]->remove_node ($$parent->[1], $$old_child->[1], 'suppress')
+  $$parent->[0]->remove_node ($$parent->[1], $$old_child->[1], 'suppress')
       if defined $old_child;
-
+  
   # Pre-insert 10. / Replace 11. insert
   {
     # XXX "suppress observers flag" is set if it's replace.
@@ -604,6 +589,18 @@ sub _pre_insert ($$;$$) {
         # Insert 5.
         my @ref = $$node->[0]->remove_children ($$node->[1], 'suppress');
 
+        # Adopt
+        for my $node_id (@node) {
+          # Adopt 2.
+          $$node->[0]->remove_node ($$node->[1], $node_id, 0);
+
+          # Adopt 3.
+          $$parent->[0]->adopt ($$node->[0]->node ($node_id));
+
+          # Adopt 4. Adopting steps
+          # XXX
+        } # adopt
+
         # Insert 6.
         # XXX mutation
         
@@ -624,6 +621,22 @@ sub _pre_insert ($$;$$) {
         # XXX insertion steps
       }
     } else {
+      # Adopt
+      {
+        # Adopt 2.
+        my $old_parent_id = $$node->[2]->{parent_node};
+        $$node->[0]->remove_node ($old_parent_id, $$node->[1], 0)
+            if defined $old_parent_id;
+
+        # Adopt 3.
+        $$parent->[0]->adopt ($node);
+
+        # Adopt 4. Adopting steps
+        if ($$node->[2]->{node_type} == ELEMENT_NODE) {
+          # XXX
+        }
+      } # adopt
+      
       # Insert 6.
       # XXX mutation
       

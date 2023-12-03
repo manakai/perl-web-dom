@@ -878,9 +878,9 @@ test {
   my $doc2 = new Web::DOM::Document;
   $doc2->create_text_node ('a') for 1..rand 10;
 
-  my $el1 = $doc1->create_element ('a');
-  my $el2 = $doc1->create_element ('a');
-  my $el3 = $doc2->create_element ('a');
+  my $el1 = $doc1->create_element ('b');
+  my $el2 = $doc1->create_element ('c');
+  my $el3 = $doc2->create_element ('d');
   $el1->append_child ($el2);
 
   my $el4 = $el1->replace_child ($el3, $el2);
@@ -1239,7 +1239,7 @@ run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2023 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

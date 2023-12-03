@@ -1049,7 +1049,15 @@ sub adopt_node ($$) {
         'Cannot adopt document node';
   }
 
-  # 2. Adopt
+  # 2.
+  #XXX If shadow root, HierarchyRequestError.
+
+  # 3.
+  if (defined $$node->[2]->{host_el}) {
+    return;
+  }
+
+  # 4. Adopt
   {
     # Adopt 2. Remove
     if (defined $$node->[2]->{parent_node}) {
@@ -1082,7 +1090,7 @@ sub adopt_node ($$) {
     }
   }
 
-  # 3.
+  # 5.
   return $node;
 } # adopt_node
 
@@ -1191,7 +1199,7 @@ sub clear ($) { }
 
 =head1 LICENSE
 
-Copyright 2007-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2023 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -337,7 +337,7 @@ test {
   my $doc3 = new Web::DOM::Document;
   $doc3->adopt_node ($df1);
 
-  is $df1->owner_document, $doc3;
+  is $df1->owner_document, $doc2, "unchanged";
   is $el1->content, $df1;
 
   my $el2 = $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'template');
@@ -387,7 +387,7 @@ test {
   $doc4->adopt_node ($df2);
 
   is $el2->content, $df2;
-  is $df2->owner_document, $doc4;
+  is $df2->owner_document, $doc3, "unchanged";
   is $doc2->create_element_ns ('http://www.w3.org/1999/xhtml', 'template')->content->owner_document, $doc3;
 
   done $c;
@@ -402,7 +402,7 @@ test {
 
   $doc1->adopt_node ($df1);
 
-  is $df1->owner_document, $doc1;
+  is $df1->owner_document, $doc2, "unchanged";
   is $el1->content, $df1;
 
   is $doc1->create_element_ns ('http://www.w3.org/1999/xhtml', 'template')->content->owner_document, $doc2;
@@ -424,9 +424,9 @@ test {
 
   $doc1->adopt_node ($df1);
 
-  is $df1->owner_document, $doc1;
+  is $df1->owner_document, $doc2;
   is $el1->content, $df1;
-  is $el2->owner_document, $doc1;
+  is $el2->owner_document, $doc2;
   is $el2->content, $df2;
   is $df2->owner_document, $doc2;
 

@@ -1526,13 +1526,83 @@ test {
   done $c;
 } n => 5, name => 'df child GC';
 
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $df = $doc->create_document_fragment;
+
+  my $doc2 = new Web::DOM::Document;
+  my $el2 = $doc2->create_element ('x');
+
+  $el2->append_child ($df);
+
+  is $df->owner_document, $doc;
+
+  done $c;
+} n => 1, name => 'df owner document 1';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $df = $doc->create_document_fragment;
+  my $el1 = $doc->create_element ('x');
+  $df->append_child ($el1);
+
+  my $doc2 = new Web::DOM::Document;
+  my $el2 = $doc2->create_element ('x');
+
+  $el2->append_child ($df);
+
+  is $df->owner_document, $doc;
+  is $el1->owner_document, $doc2;
+
+  done $c;
+} n => 2, name => 'df owner document 2';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el0 = $doc->create_element_ns ("http://www.w3.org/1999/xhtml", 'template');
+  my $df = $el0->content;
+  my $doc1 = $df->owner_document;
+
+  my $doc2 = new Web::DOM::Document;
+  my $el2 = $doc2->create_element ('x');
+
+  $el2->append_child ($df);
+
+  is $df->owner_document, $doc1;
+
+  done $c;
+} n => 1, name => 'df owner document template content 1';
+
+test {
+  my $c = shift;
+  my $doc = new Web::DOM::Document;
+  my $el0 = $doc->create_element_ns ("http://www.w3.org/1999/xhtml", 'template');
+  my $df = $el0->content;
+  my $doc1 = $df->owner_document;
+  my $el1 = $doc->create_element ('x');
+  $df->append_child ($el1);
+
+  my $doc2 = new Web::DOM::Document;
+  my $el2 = $doc2->create_element ('x');
+
+  $el2->append_child ($df);
+
+  is $df->owner_document, $doc1;
+  is $el1->owner_document, $doc2;
+
+  done $c;
+} n => 2, name => 'df owner document, template content 2';
+
 run_tests;
 
 ## See also: htmltemplateelement.t
 
 =head1 LICENSE
 
-Copyright 2012-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2023 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

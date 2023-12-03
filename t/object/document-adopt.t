@@ -660,11 +660,43 @@ test {
   done $c;
 } n => 22, name => 'adopt document type';
 
+test {
+  my $c = shift;
+  my $doc1 = new Web::DOM::Document;
+  my $doc2 = new Web::DOM::Document;
+
+  my $df = $doc1->create_document_fragment;
+  is $df->owner_document, $doc1;
+
+  $doc2->adopt_node ($df);
+  is $df->owner_document, $doc2;
+
+  done $c;
+} n => 2, name => 'adopt document fragment, normal, no child';
+
+test {
+  my $c = shift;
+  my $doc1 = new Web::DOM::Document;
+  my $doc2 = new Web::DOM::Document;
+
+  my $df = $doc1->create_document_fragment;
+  my $el = $doc1->create_element ('x');
+  $df->append_child ($el);
+  is $df->owner_document, $doc1;
+  is $el->owner_document, $doc1;
+
+  $doc2->adopt_node ($df);
+  is $df->owner_document, $doc2;
+  is $el->owner_document, $doc2;
+
+  done $c;
+} n => 4, name => 'adopt document fragment, normal, with child';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2012-2013 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2023 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
