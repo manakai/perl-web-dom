@@ -596,31 +596,33 @@ sub _pre_insert ($$;$$) {
     if ($node_nt == DOCUMENT_FRAGMENT_NODE) {
       # Insert 3.
       my @node = @{$$node->[2]->{child_nodes} or []};
-      
-      # Insert 4.
-      # XXX mutation
 
-      # Insert 5.
-      my @ref = $$node->[0]->remove_children ($$node->[1], 'suppress');
+      if (@node) {
+        # Insert 4.
+        # XXX mutation
 
-      # Insert 6.
-      # XXX mutation
-      
-      # Insert 7.
-      splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, @node;
-      $$parent->[0]->{revision}++;
-      for my $node_id (@node) {
-        $$node->[0]->{data}->[$node_id]->{parent_node} = $$parent->[1];
-        $$parent->[0]->connect ($node_id => $$parent->[1]);
-      }
-      {
-        for ($insert_position..$#{$$parent->[2]->{child_nodes}}) {
-          $$node->[0]->{data}->[$$parent->[2]->{child_nodes}->[$_]]->{i_in_parent} = $_;
+        # Insert 5.
+        my @ref = $$node->[0]->remove_children ($$node->[1], 'suppress');
+
+        # Insert 6.
+        # XXX mutation
+        
+        # Insert 7.
+        splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, @node;
+        $$parent->[0]->{revision}++;
+        for my $node_id (@node) {
+          $$node->[0]->{data}->[$node_id]->{parent_node} = $$parent->[1];
+          $$parent->[0]->connect ($node_id => $$parent->[1]);
         }
+        {
+          for ($insert_position..$#{$$parent->[2]->{child_nodes}}) {
+            $$node->[0]->{data}->[$$parent->[2]->{child_nodes}->[$_]]->{i_in_parent} = $_;
+          }
+        }
+        
+        # Insert 8.
+        # XXX insertion steps
       }
-      
-      # Insert 8.
-      # XXX insertion steps
     } else {
       # Insert 6.
       # XXX mutation
@@ -1611,7 +1613,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2007-2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2023 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
