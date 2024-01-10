@@ -1233,13 +1233,162 @@ test {
   done $c;
 } n => 6, name => 'doc > df > el + doctype, allowed';
 
+test {
+  my $c = shift;
+
+  my $doc = new Web::DOM::Document;
+  my $df = $doc->create_document_fragment;
+
+  my $e1 = $doc->create_element ('e1');
+  my $e2 = $doc->create_element ('e2');
+  $df->append_child ($e1);
+  $df->append_child ($e2);
+  $e1->text_content ('abc');
+  undef $e1;
+  undef $e2;
+
+  my $f1 = $doc->create_element ('f1');
+  my $f2 = $doc->create_element ('f2');
+  $f1->append_child ($f2);
+  $f1->replace_child ($df, $f2);
+  undef $df;
+
+  is $f1->child_nodes->[0]->local_name, 'e1';
+  is $f1->child_nodes->[1]->local_name, 'e2';
+
+  is $f1->inner_html, q{<e1 xmlns="">abc</e1><e2 xmlns=""></e2>};
+
+  done $c;
+} n => 3, name => 'replace df';
+
+test {
+  my $c = shift;
+
+  my $doc = new Web::DOM::Document;
+  my $df = $doc->create_document_fragment;
+
+  my $e1 = $doc->create_element ('e1');
+  my $e2 = $doc->create_element ('e2');
+  $df->append_child ($e1);
+  $df->append_child ($e2);
+  $e1->text_content ('abc');
+  $e2->inner_html (q{<p>abc<q foo="124">X&lt;<!--AB--></q></p>});
+  undef $e1;
+  undef $e2;
+
+  my $f1 = $doc->create_element ('f1');
+  my $f2 = $doc->create_element ('f2');
+  $f2->text_content ('abc');
+  my $f3 = $doc->create_element ('f3');
+  my $f4 = $doc->create_element ('f4');
+  $f1->append_child ($f4);
+  $f1->append_child ($f2);
+  $f1->append_child ($f3);
+  $f1->replace_child ($df, $f2);
+  undef $df;
+
+  is $f1->inner_html, q{<f4 xmlns=""></f4><e1 xmlns="">abc</e1><e2 xmlns=""><p>abc<q foo="124">X&lt;<!--AB--></q></p></e2><f3 xmlns=""></f3>};
+  is $f1->inner_html, q{<f4 xmlns=""></f4><e1 xmlns="">abc</e1><e2 xmlns=""><p>abc<q foo="124">X&lt;<!--AB--></q></p></e2><f3 xmlns=""></f3>};
+  is $f2->inner_html, q{abc};
+
+  done $c;
+} n => 3, name => 'replace df';
+
+test {
+  my $c = shift;
+
+  my $doc = new Web::DOM::Document;
+  my $df = $doc->create_document_fragment;
+
+  my $f1 = $doc->create_element ('f1');
+  my $f2 = $doc->create_element ('f2');
+  my $f3 = $doc->create_element ('f3');
+  my $f4 = $doc->create_element ('f4');
+  $f1->append_child ($f4);
+  $f1->append_child ($f2);
+  $f1->append_child ($f3);
+  $f1->replace_child ($df, $f2);
+  undef $df;
+
+  is $f1->inner_html, q{<f4 xmlns=""></f4><f3 xmlns=""></f3>};
+
+  done $c;
+} n => 1, name => 'replace df';
+
+test {
+  my $c = shift;
+
+  my $doc = new Web::DOM::Document;
+  my $df = $doc->create_document_fragment;
+  my $doc2 = new Web::DOM::Document;
+
+  my $e1 = $doc->create_element ('e1');
+  my $e2 = $doc->create_element ('e2');
+  $df->append_child ($e1);
+  $df->append_child ($e2);
+  $e1->text_content ('abd');
+  $e2->inner_html (q{<p>xbc<q foo="124">X&lt;<!--AB--></q></p>});
+  undef $e1;
+  undef $e2;
+
+  my $f1 = $doc2->create_element ('f1');
+  my $f2 = $doc2->create_element ('f2');
+  $f2->text_content ('abC');
+  my $f3 = $doc2->create_element ('f3');
+  my $f4 = $doc2->create_element ('f4');
+  $f1->append_child ($f4);
+  $f1->append_child ($f2);
+  $f1->append_child ($f3);
+  $f1->replace_child ($df, $f2);
+  undef $df;
+  my $f5 = $doc2->create_element ('f5');
+  $f5->text_content ('abc');
+  undef $doc2;
+  undef $f5;
+
+  is $f1->inner_html, q{<f4 xmlns=""></f4><e1 xmlns="">abd</e1><e2 xmlns=""><p>xbc<q foo="124">X&lt;<!--AB--></q></p></e2><f3 xmlns=""></f3>};
+  is $f1->inner_html, q{<f4 xmlns=""></f4><e1 xmlns="">abd</e1><e2 xmlns=""><p>xbc<q foo="124">X&lt;<!--AB--></q></p></e2><f3 xmlns=""></f3>};
+  is $f2->inner_html, q{abC};
+
+  done $c;
+} n => 3, name => 'replace df';
+
+test {
+  my $c = shift;
+
+  my $doc = new Web::DOM::Document;
+  my $df = $doc->create_document_fragment;
+  my $doc2 = new Web::DOM::Document;
+
+  my $f1 = $doc2->create_element ('f1');
+  my $f2 = $doc2->create_element ('f2');
+  $f2->text_content ('abc');
+  my $f3 = $doc2->create_element ('f3');
+  my $f4 = $doc2->create_element ('f4');
+  $f1->append_child ($f4);
+  $f1->append_child ($f2);
+  $f1->append_child ($f3);
+  $f1->replace_child ($df, $f2);
+  undef $df;
+  my $f5 = $doc2->create_element ('f5');
+  $f5->text_content ('abc');
+  undef $doc2;
+  undef $f5;
+  undef $f2;
+
+  is $f1->inner_html, q{<f4 xmlns=""></f4><f3 xmlns=""></f3>};
+  is $f1->inner_html, q{<f4 xmlns=""></f4><f3 xmlns=""></f3>};
+
+  done $c;
+} n => 2, name => 'replace df';
+
 run_tests;
 
 ## See also: htmltemplateelement.t
 
 =head1 LICENSE
 
-Copyright 2012-2023 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2024 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

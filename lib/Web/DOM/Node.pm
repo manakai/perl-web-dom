@@ -580,34 +580,36 @@ sub _pre_insert ($$;$$) {
 
     if ($node_nt == DOCUMENT_FRAGMENT_NODE) {
       # Insert 3.
-      my @node = @{$$node->[2]->{child_nodes} or []};
+      #my @child_node_id = @{$$node->[2]->{child_nodes} or []};
 
-      if (@node) {
-        # Insert 4.
-        # XXX mutation
+      # Insert 4.
+      # XXX mutation
 
-        # Insert 5.
-        my @ref = $$node->[0]->remove_children ($$node->[1], 'suppress');
+      # Insert 5.
+      my @child_node = $$node->[0]->remove_children ($$node->[1], 'suppress');
 
-        # Adopt
-        for my $node_id (@node) {
-          # Adopt 2.
-          $$node->[0]->remove_node ($$node->[1], $node_id, 0);
+      # Adopt
+      for my $child_node (@child_node) {
+        # Adopt 2.
+        #$$node->[0]->remove_node ($$node->[1], node_id, 0);
 
-          # Adopt 3.
-          $$parent->[0]->adopt ($$node->[0]->node ($node_id));
+        # Adopt 3.
+        $$parent->[0]->adopt ($child_node);
 
-          # Adopt 4. Adopting steps
-          # XXX
-        } # adopt
+        # Adopt 4. Adopting steps
+        # XXX
+      } # adopt
 
-        # Insert 6.
-        # XXX mutation
+      # Insert 6.
+      # XXX mutation
+
+      if (@child_node or defined $old_child) {
+        my @child_node_id = map { $$_->[1] } @child_node;
         
         # Insert 7.
-        splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, @node;
+        splice @{$$parent->[2]->{child_nodes}}, $insert_position, 0, @child_node_id;
         $$parent->[0]->{revision}++;
-        for my $node_id (@node) {
+        for my $node_id (@child_node_id) {
           $$node->[0]->{data}->[$node_id]->{parent_node} = $$parent->[1];
           $$parent->[0]->connect ($node_id => $$parent->[1]);
         }
@@ -1626,7 +1628,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2007-2023 Wakaba <wakaba@suikawiki.org>.
+Copyright 2007-2024 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -2,6 +2,7 @@ package Web::DOM::Internal;
 use strict;
 use warnings;
 no warnings 'utf8';
+use warnings FATAL => 'uninitialized';
 our $VERSION = '5.0';
 use Carp;
 
@@ -684,7 +685,7 @@ sub remove_children ($$$$) {
   my ($int, $parent_id, $suppress_observers) = @_;
   my $parent_data = $int->{data}->[$parent_id];
   my @removed = @{$parent_data->{child_nodes} or []};
-  return unless @removed;
+  return () unless @removed;
 
   ## 9. removing steps
   ## Before a node is removed from the iterator collection
@@ -1302,7 +1303,7 @@ sub TIEHASH ($$) {
 } # TIEHASH
 
 sub FETCH ($$) {
-  return $_[0]->{$_[1]}; # or undef
+  return $_[0]->{$_[1] // ''}; # or undef
 } # FETCH
 
 sub STORE ($$$) {
@@ -1345,7 +1346,7 @@ sub DESTROY ($) {
 
 =head1 LICENSE
 
-Copyright 2012-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2012-2024 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
