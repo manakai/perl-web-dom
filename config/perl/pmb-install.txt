@@ -5,9 +5,9 @@ Carp~1.50
 Data::Dumper~2.183
 Path::Class~0.37
 Path::Tiny~0.146
-Scalar::Util~1.63
+Scalar::Util~1.64
 Term::ANSIColor~5.01
-Test::Builder~1.302199
 Test::Differences~0.71
+Test::More~1.302199
 Text::Diff~1.45
 Time::HiRes~1.9764
